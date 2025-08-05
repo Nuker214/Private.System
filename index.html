@@ -35,30 +35,6 @@
       border-radius: 12px;
       color: #000;
       margin-bottom: 20px;
-      gap: 20px; /* spacing between flex children */
-    }
-
-    .header-left {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-    }
-
-    #searchInput {
-      flex-grow: 1;
-      max-width: 300px;
-      padding: 8px 12px;
-      border-radius: 8px;
-      border: none;
-      font-size: 14px;
-      font-family: 'Montserrat', sans-serif;
-      outline: none;
-      box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
-      min-width: 150px;
-    }
-
-    #searchInput::placeholder {
-      color: #666;
     }
 
     .dashboard-header h1 {
@@ -75,7 +51,6 @@
       border-radius: 8px;
       color: #000;
       font-weight: bold;
-      white-space: nowrap; /* keep text in one line */
     }
 
     .quick-bar {
@@ -290,13 +265,10 @@
 
   <!-- Header -->
   <div class="dashboard-header" id="dashboardHeader">
-    <div class="header-left">
+    <div>
       <h1>Private Dashboard GUI</h1>
       <div class="user-info">User - Beta.user | ID: 281573</div>
     </div>
-
-    <input type="text" id="searchInput" placeholder="Search..." />
-
     <div class="version-box">Version 1.5.6</div>
   </div>
 
@@ -560,3 +532,55 @@
       link.href = canvas.toDataURL('image/png');
       link.click();
     });
+
+    // Toggle sections button - toggle #mainGrid visibility
+    const toggleBtn = document.getElementById('toggleSectionsBtn');
+    toggleBtn.addEventListener('click', () => {
+      if (mainGrid.style.display === 'none') {
+        mainGrid.style.display = 'grid';
+        toggleBtn.innerText = '⬆️ Toggle Sections';
+      } else {
+        mainGrid.style.display = 'none';
+        toggleBtn.innerText = '⬇️ Toggle Sections';
+      }
+    });
+
+    // Initialize timers and calendar
+    updateSessionTime();
+    setInterval(updateSessionTime, 1000);
+
+    updateClock();
+    setInterval(updateClock, 1000);
+
+   generateCalendar();
+
+    // Moving announcement bar logic
+    const announcementBar = document.getElementById('announcementBar');
+    const announcementText = document.getElementById('announcementText');
+
+    let announcementMessages = [
+      "Welcome to the Private Dashboard GUI!",
+      "New Exploits Added!",
+      "UI Overhaul Deployed!",
+      "Stay safe and productive!",
+      "Remember to save your notes frequently!"
+    ];
+
+    let currentMessageIndex = 0;
+
+    function showNextAnnouncement() {
+      announcementText.innerText = announcementMessages[currentMessageIndex];
+      currentMessageIndex = (currentMessageIndex + 1) % announcementMessages.length;
+    }
+
+    // Show first message immediately
+    showNextAnnouncement();
+
+    // Change message every 8 seconds
+    setInterval(() => {
+      showNextAnnouncement();
+    }, 8000);
+  </script>
+
+</body>
+</html>
