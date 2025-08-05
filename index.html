@@ -122,17 +122,9 @@
       color: #000;
     }
 
-    /* Layout grid with 2 columns on top row */
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-      gap: 20px;
-    }
-
-    /* New top-row subgrid for calendar + announcement panel */
-    .top-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 20px;
     }
 
@@ -265,7 +257,6 @@
     #canvasControls button:hover {
       background-color: #ffb67a;
     }
-
   </style>
   <!-- Add html2canvas CDN for screenshot -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -290,7 +281,7 @@
     <button id="exportNotesBtn">💾 Export Notes</button>
     <button id="screenshotBtn">📸 Screenshot</button>
     <button id="toggleSectionsBtn">⬆️ Toggle Sections</button>
-    <button id="fixIssuesBtn">🛠️ Fix Issues</button>
+    <button id="fixIssuesBtn">🛠️ Fix Issues</button> <!-- New Fix Issues Button -->
     <button id="restartBtn">🔄 Restart</button>
     <button id="panicBtn">🚨 Panic</button>
     <button id="themeToggle">🌙 Dark Mode</button>
@@ -304,25 +295,11 @@
 
   <!-- Layout Grid -->
   <div class="grid" id="mainGrid">
-
-    <!-- Top Row: Calendar + Announcement Panel side by side -->
-    <div class="top-row">
-      <!-- Calendar box -->
-      <div class="box">
-        <h2>📅 Calendar</h2>
-        <div class="calendar" id="calendar">
-          <!-- Filled by JS -->
-        </div>
-      </div>
-
-      <!-- Announcement panel box -->
-      <div class="box">
-        <h2>📢 Announcement Panel</h2>
-        <p>Welcome to the Private Dashboard GUI!</p>
-        <p>New Exploits Added!</p>
-        <p>UI Overhaul Deployed!</p>
-        <p>Stay safe and productive!</p>
-        <p>Remember to save your notes frequently!</p>
+    <!-- Calendar (top) -->
+    <div class="box">
+      <h2>📅 Calendar</h2>
+      <div class="calendar" id="calendar">
+        <!-- Filled by JS -->
       </div>
     </div>
 
@@ -549,48 +526,61 @@
     });
 
     // Export notes button - download canvas as PNG
-document.getElementById('exportNotesBtn').addEventListener('click', () => {
-  const link = document.createElement('a');
-  link.download = 'notes_canvas.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-});
-    // Screenshot button (captures dashboardHeader + quickBar + mainGrid)
-document.getElementById('screenshotBtn').addEventListener('click', () => {
-  const elementToCapture = document.body; // entire body for full dashboard
-  html2canvas(elementToCapture).then(canvasImg => {
-    const link = document.createElement('a');
-    link.download = 'dashboard_screenshot.png';
-    link.href = canvasImg.toDataURL('image/png');
-    link.click();
-  });
-});
+    document.getElementById('exportNotesBtn').addEventListener('click', () => {
+      const link = document.createElement('a');
+      link.download = 'notes_canvas.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    });
 
-// Export notes button - download canvas as PNG
-document.getElementById('exportNotesBtn').addEventListener('click', () => {
-  const link = document.createElement('a');
-  link.download = 'notes_canvas.png';
-  link.href = canvas.toDataURL('image/png');
-  link.click();
-});
+    // Toggle sections button - toggle #mainGrid visibility
+    const toggleBtn = document.getElementById('toggleSectionsBtn');
+    toggleBtn.addEventListener('click', () => {
+      if (mainGrid.style.display === 'none') {
+        mainGrid.style.display = 'grid';
+        toggleBtn.innerText = '⬆️ Toggle Sections';
+      } else {
+        mainGrid.style.display = 'none';
+        toggleBtn.innerText = '⬇️ Toggle Sections';
+      }
+    });
 
-// Toggle sections button - toggle #mainGrid visibility
-const toggleBtn = document.getElementById('toggleSectionsBtn');
-toggleBtn.addEventListener('click', () => {
-  if (mainGrid.style.display === 'none') {
-    mainGrid.style.display = 'grid';
-    toggleBtn.innerText = '⬆️ Toggle Sections';
-  } else {
-    mainGrid.style.display = 'none';
-    toggleBtn.innerText = '⬇️ Toggle Sections';
-  }
-});
+    // Initialize timers and calendar
+    updateSessionTime();
+    setInterval(updateSessionTime, 1000);
 
-// Initialize timers and calendar
-updateSessionTime();
-setInterval(updateSessionTime, 1000);
+    updateClock();
+    setInterval(updateClock, 1000);
 
-updateClock();
-setInterval(updateClock, 1000);
+   generateCalendar();
 
-generateCalendar();
+    // Moving announcement bar logic
+    const announcementBar = document.getElementById('announcementBar');
+    const announcementText = document.getElementById('announcementText');
+
+    let announcementMessages = [
+      "Welcome to the Private Dashboard GUI!",
+      "New Exploits Added!",
+      "UI Overhaul Deployed!",
+      "Stay safe and productive!",
+      "Remember to save your notes frequently!"
+    ];
+
+    let currentMessageIndex = 0;
+
+    function showNextAnnouncement() {
+      announcementText.innerText = announcementMessages[currentMessageIndex];
+      currentMessageIndex = (currentMessageIndex + 1) % announcementMessages.length;
+    }
+
+    // Show first message immediately
+    showNextAnnouncement();
+
+    // Change message every 8 seconds
+    setInterval(() => {
+      showNextAnnouncement();
+    }, 8000);
+  </script>
+
+</body>
+</html>
