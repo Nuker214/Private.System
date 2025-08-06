@@ -316,22 +316,19 @@
     </div>
   </div>
 
-  <!-- Other boxes below main row -->
-  <div class="grid" style="grid-template-columns: 1fr 1fr; gap: 20px;">
-    <!-- Updates -->
-    <div class="box">
-      <h2>🔄 Updates</h2>
-      <div class="update-entry">Dashboard Interface Update!</div>
-      <div class="update-entry">New Exploits Added</div>
-      <div class="update-entry">UI Overhaul Deployed</div>
-    </div>
-
-    <!-- Notifications -->
-    <div class="box">
-      <h2>🔔 Notifications</h2>
-      <p>Nothing New Right Now</p>
-    </div>
+  <div id="updatesNotifications" style="display: flex; gap: 20px; justify-content: center; flex-wrap: nowrap; margin-top: 20px;">
+  <div class="box" style="flex: 1 1 300px; min-width: 300px;">
+    <h2>🔄 Updates</h2>
+    <div class="update-entry">Dashboard Interface Update!</div>
+    <div class="update-entry">New Exploits Added</div>
+    <div class="update-entry">UI Overhaul Deployed</div>
   </div>
+
+  <div class="box" style="flex: 1 1 300px; min-width: 300px;">
+    <h2>🔔 Notifications</h2>
+    <p>Nothing New Right Now</p>
+  </div>
+</div>
 
   <!-- Canvas Section for Notes -->
   <div id="canvasContainer">
@@ -604,4 +601,3 @@
 
 </body>
 </html>
-
