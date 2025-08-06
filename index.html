@@ -97,24 +97,8 @@
       user-select: none;
       height: 30px;
       line-height: 13px;
-    }
-
-    .announcement-bar span {
-      display: inline-block;
-      white-space: nowrap;
-      position: absolute;
-      will-change: transform;
-      animation: scrollLeft 15s linear infinite;
-      padding-left: 100%;
-    }
-
-    @keyframes scrollLeft {
-      0% {
-        transform: translateX(0%);
-      }
-      100% {
-        transform: translateX(-100%);
-      }
+      text-align: center;
+      font-size: 14px;
     }
 
     body.light-theme .announcement-bar {
@@ -257,6 +241,12 @@
     #canvasControls button:hover {
       background-color: #ffb67a;
     }
+
+    /* Zoom and transform styles */
+    #mainGrid {
+      transform-origin: top center;
+      transition: transform 0.25s ease;
+    }
   </style>
   <!-- Add html2canvas CDN for screenshot -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -281,16 +271,19 @@
     <button id="exportNotesBtn">💾 Export Notes</button>
     <button id="screenshotBtn">📸 Screenshot</button>
     <button id="toggleSectionsBtn">⬆️ Toggle Sections</button>
-    <button id="fixIssuesBtn">🛠️ Fix Issues</button> <!-- New Fix Issues Button -->
+    <button id="fixIssuesBtn">🛠️ Fix Issues</button>
     <button id="restartBtn">🔄 Restart</button>
     <button id="panicBtn">🚨 Panic</button>
     <button id="themeToggle">🌙 Dark Mode</button>
+    <button id="fullScreenBtn">🖥️ Full Screen</button>
+    <button id="zoomOutBtn">➖ Zoom Out</button>
+    <button id="zoomInBtn">➕ Zoom In</button>
     <button id="logoutBtn">🔓 Log Out</button>
   </div>
 
   <!-- Announcement Bar -->
   <div id="announcementBar" class="announcement-bar">
-    <span>🚨 Welcome to the Private Dashboard GUI. Stay tuned for updates and alerts! 🚨</span>
+    <span id="announcementText">🚨 Welcome to the Private Dashboard GUI. Stay tuned for updates and alerts! 🚨</span>
   </div>
 
   <!-- Layout Grid -->
@@ -514,9 +507,9 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     });
 
-    // Screenshot button (captures dashboardHeader + quickBar + mainGrid)
+    // Screenshot button (captures entire body)
     document.getElementById('screenshotBtn').addEventListener('click', () => {
-      const elementToCapture = document.body; // entire body for full dashboard
+      const elementToCapture = document.body;
       html2canvas(elementToCapture).then(canvasImg => {
         const link = document.createElement('a');
         link.download = 'dashboard_screenshot.png';
@@ -546,41 +539,63 @@
     });
 
     // Initialize timers and calendar
-    updateSessionTime();
     setInterval(updateSessionTime, 1000);
 
     updateClock();
     setInterval(updateClock, 1000);
 
-   generateCalendar();
+    generateCalendar();
 
-    // Moving announcement bar logic
-    const announcementBar = document.getElementById('announcementBar');
+    // Announcement bar cycling messages
     const announcementText = document.getElementById('announcementText');
-
-    let announcementMessages = [
-      "Welcome to the Private Dashboard GUI!",
-      "New Exploits Added!",
-      "UI Overhaul Deployed!",
-      "Stay safe and productive!",
-      "Remember to save your notes frequently!"
+    const announcementMessages = [
+      "🚨 Welcome to the Private Dashboard GUI!",
+      "🚀 New Exploits Added!",
+      "🎨 UI Overhaul Deployed!",
+      "🛡️ Stay safe and productive!",
+      "💾 Remember to save your notes frequently!"
     ];
+    let currentAnnouncementIndex = 0;
 
-    let currentMessageIndex = 0;
-
-    function showNextAnnouncement() {
-      announcementText.innerText = announcementMessages[currentMessageIndex];
-      currentMessageIndex = (currentMessageIndex + 1) % announcementMessages.length;
+    function cycleAnnouncement() {
+      announcementText.innerText = announcementMessages[currentAnnouncementIndex];
+      currentAnnouncementIndex = (currentAnnouncementIndex + 1) % announcementMessages.length;
     }
+    cycleAnnouncement();
+    setInterval(cycleAnnouncement, 8000);
 
-    // Show first message immediately
-    showNextAnnouncement();
+    // Full Screen Button
+    const fullScreenBtn = document.getElementById('fullScreenBtn');
+    fullScreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        fullScreenBtn.innerText = '🖥️ Exit Full Screen';
+      } else {
+        document.exitFullscreen();
+        fullScreenBtn.innerText = '🖥️ Full Screen';
+      }
+    });
 
-    // Change message every 8 seconds
-    setInterval(() => {
-      showNextAnnouncement();
-    }, 8000);
-  </script>
+    // Zoom Buttons
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+    const mainGrid = document.getElementById('mainGrid');
+    let zoomLevel = 1;
+    const zoomStep = 0.1;
+    const minZoom = 0.5;
+    const maxZoom = 2;
 
-</body>
-</html>
+    zoomInBtn.addEventListener('click', () => {
+      if (zoomLevel < maxZoom) {
+        zoomLevel += zoomStep;
+        mainGrid.style.transform = `scale(${zoomLevel})`;
+      }
+    });
+
+    zoomOutBtn.addEventListener('click', () => {
+      if (zoomLevel > minZoom) {
+        zoomLevel -= zoomStep;
+        mainGrid.style.transform = `scale(${zoomLevel})`;
+      }
+    });
+    setInterval(updateSessionTime,
