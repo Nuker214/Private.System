@@ -587,6 +587,595 @@
     generateCalendar();
 
   </script>
+  
+<script>
+// ========== PANEL MANAGEMENT SYSTEM ==========
+const infoPanelsContainer = document.getElementById('infoPanelsContainer');
+let currentPanel = null;
 
+function togglePanel(panelType) {
+  // Close current panel if clicking the same button
+  if (currentPanel === panelType) {
+    infoPanelsContainer.innerHTML = '';
+    currentPanel = null;
+    return;
+  }
+  
+  // Clear previous panel
+  infoPanelsContainer.innerHTML = '';
+  
+  // Create new panel based on type
+  switch(panelType) {
+    case 'wifiPanel':
+      createWifiPanel();
+      break;
+    case 'ipadPanel':
+      createIpadPanel();
+      break;
+    case 'handbookPanel':
+      createHandbookPanel();
+      break;
+    case 'mapPanel':
+      createMapPanel();
+      break;
+    case 'studentWebsitesPanel':
+      createStudentWebsitesPanel();
+      break;
+    case 'teacherWebsitesPanel':
+      createTeacherWebsitesPanel();
+      break;
+    case 'phoneDirectoryPanel':
+      createPhoneDirectoryPanel();
+      break;
+    case 'cameraPanel':
+      createCameraPanel();
+      break;
+    case 'schoolInfoPanel':
+      createSchoolInfoPanel();
+      break;
+    case 'exploitPanel':
+      createExploitPanel();
+      break;
+    case 'bypassPanel':
+      createBypassPanel();
+      break;
+    case 'vpnPanel':
+      createVpnPanel();
+      break;
+    case 'gamingPanel':
+      createGamingPanel();
+      break;
+    case 'musicPanel':
+      createMusicPanel();
+      break;
+    case 'keyboardPanel':
+      createKeyboardPanel();
+      break;
+  }
+  
+  currentPanel = panelType;
+}
+
+// ========== PANEL CREATION FUNCTIONS ==========
+function createWifiPanel() {
+  const wifiNetworks = [
+    {
+      name: "Middletown_Core",
+      level: "High",
+      security: "WPA3 Enterprise",
+      encryption: "High",
+      hidden: "No",
+      monitored: "Yes",
+      username: "Unknown",
+      password: "Unknown"
+    },
+    {
+      name: "Mtown_Core",
+      level: "High",
+      security: "WPA3 Enterprise",
+      encryption: "High",
+      hidden: "Yes",
+      monitored: "Unknown",
+      username: "Unknown",
+      password: "Unknown"
+    },
+    {
+      name: "Mtown Guest",
+      level: "Medium",
+      security: "WPA3 Enterprise",
+      encryption: "Medium",
+      hidden: "No",
+      monitored: "Rare",
+      username: "msguest",
+      password: "M@ms2021#"
+    },
+    {
+      name: "Radius Test",
+      level: "Low",
+      security: "WPA3 Enterprise",
+      encryption: "Low",
+      hidden: "No",
+      monitored: "Rarely",
+      username: "msguest",
+      password: "M@ms2021#"
+    }
+  ];
+
+  let html = `
+    <div class="box" style="margin-top: 20px;">
+      <h2>📡 School WiFi Information</h2>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background-color: #ff914d; color: black;">
+              <th style="padding: 10px; text-align: left; border: 1px solid #ff914d;">Network Name</th>
+              <th style="padding: 10px; text-align: left; border: 1px solid #ff914d;">Wifi Level</th>
+              <th style="padding: 10px; text-align: left; border: 1px solid #ff914d;">Security Type</th>
+              <th style="padding: 10px; text-align: left; border: 1px solid #ff914d;">Encryption</th>
+              <th style="padding: 10px; text-align: left; border: 1px solid #ff914d;">Hidden?</th>
+              <th style="padding: 10px; text-align: left; border: 1px solid #ff914d;">Monitored?</th>
+              <th style="padding: 10px; text-align: left; border: 1px solid #ff914d;">Username</th>
+              <th style="padding: 10px; text-align: left; border: 1px solid #ff914d;">Password</th>
+            </tr>
+          </thead>
+          <tbody>
+  `;
+
+  wifiNetworks.forEach(network => {
+    html += `
+      <tr style="border-bottom: 1px solid #ff914d;">
+        <td style="padding: 8px; border: 1px solid #ff914d;">${network.name}</td>
+        <td style="padding: 8px; border: 1px solid #ff914d;">${network.level}</td>
+        <td style="padding: 8px; border: 1px solid #ff914d;">${network.security}</td>
+        <td style="padding: 8px; border: 1px solid #ff914d;">${network.encryption}</td>
+        <td style="padding: 8px; border: 1px solid #ff914d;">${network.hidden}</td>
+        <td style="padding: 8px; border: 1px solid #ff914d;">${network.monitored}</td>
+        <td style="padding: 8px; border: 1px solid #ff914d;">${network.username}</td>
+        <td style="padding: 8px; border: 1px solid #ff914d;">${network.password}</td>
+      </tr>
+    `;
+  });
+
+  html += `
+          </tbody>
+        </table>
+      </div>
+      <button onclick="togglePanel('wifiPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createIpadPanel() {
+  const html = `
+    <div class="box" style="margin-top: 20px;">
+      <h2>📱 School iPad Restrictions</h2>
+      <div style="display: flex; gap: 15px; margin-top: 15px;">
+        <div style="flex: 1;">
+          <button onclick="showIpadSection('restrictions')" style="width: 100%; background-color: #ff914d; border: none; padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 10px;">Restrictions</button>
+          <div id="restrictionsContent" style="display: none; background-color: #333; padding: 15px; border-radius: 8px;">
+            <p>Coming soon</p>
+          </div>
+        </div>
+        <div style="flex: 1;">
+          <button onclick="showIpadSection('bypasses')" style="width: 100%; background-color: #ff914d; border: none; padding: 10px; border-radius: 8px; cursor: pointer; margin-bottom: 10px;">Bypasses</button>
+          <div id="bypassesContent" style="display: none; background-color: #333; padding: 15px; border-radius: 8px;">
+            <p>Coming soon</p>
+          </div>
+        </div>
+      </div>
+      <button onclick="togglePanel('ipadPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+
+  infoPanelsContainer.innerHTML = html;
+}
+
+function showIpadSection(section) {
+  document.getElementById('restrictionsContent').style.display = section === 'restrictions' ? 'block' : 'none';
+  document.getElementById('bypassesContent').style.display = section === 'bypasses' ? 'block' : 'none';
+}
+
+function createHandbookPanel() {
+  const handbooks = [
+    {
+      name: "Elementary Handbook (Jan 2025)",
+      url: "https://cdnsm5-ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Elementary%20Handbook.pdf"
+    },
+    {
+      name: "Secondary Student Handbook (Jan 2025)",
+      url: "https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Secondary%20Student%20Handbook.pdf"
+    },
+    {
+      name: "District Handbook",
+      url: "https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/District%20Handbook%20copy.pdf"
+    },
+    {
+      name: "RA Academy Handbook (Jan 2025)",
+      url: "https://middletown.ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025B%20RA%20Academy%20Handbook%20copy.pdf"
+    },
+    {
+      name: "Virtual Learning Plan (2024-2025)",
+      url: "https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/MASD%202024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf"
+    },
+    {
+      name: "Dress Code (2024-2025)",
+      url: "https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Dress%20Code.docx.pdf"
+    }
+  ];
+
+  let html = `
+    <div class="box" style="margin-top: 20px;">
+      <h2>📘 Student Handbooks Information</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 10px; margin-top: 15px;">
+  `;
+
+  handbooks.forEach(book => {
+    html += `
+      <button onclick="window.open('${book.url}', '_blank')" style="background-color: #ff914d; border: none; padding: 10px; border-radius: 8px; cursor: pointer; text-align: left;">
+        ${book.name}
+      </button>
+    `;
+  });
+
+  html += `
+      </div>
+      <button onclick="togglePanel('handbookPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createMapPanel() {
+  const html = `
+    <div class="box" style="margin-top: 20px; text-align: center;">
+      <h2>🏫 School Building Map Information</h2>
+      <div style="margin: 20px 0; font-size: 18px; font-weight: bold;">
+        Building Map Display
+      </div>
+      <div style="background-color: #333; padding: 15px; border-radius: 8px;">
+        Building Map Coming Soon
+      </div>
+      <button onclick="togglePanel('mapPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createStudentWebsitesPanel() {
+  const websites = [
+    "https://www.raiderweb.org",
+    "https://middletownsd.instructure.com/login",
+    "https://caresolace.com/site/middletownarea",
+    "https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379",
+    "https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org",
+    "https://myhealthyzone.fitnessgram.net",
+    "https://www.raiderweb.org/student_services/hazing_reporting",
+    "https://www.youtube.com/user/MAHSAnnouncements?app=desktop",
+    "https://id.naviance.com",
+    "https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F",
+    "https://powerschool.raiderweb.org/public/",
+    "https://idp-awsprod1.education.scholastic.com/idp/",
+    "https://www.safe2saypa.org",
+    "https://mail.google.com/mail/",
+    "https://www.balfour.com/pennsylvania/middletown/middletown-area-high-school",
+    "https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#"
+  ];
+
+  let html = `
+    <div class="box" style="margin-top: 20px;">
+      <h2>🌐 Student Website's Information</h2>
+      <div style="max-height: 400px; overflow-y: auto; margin-top: 15px;">
+  `;
+
+  websites.forEach(site => {
+    html += `
+      <div style="margin-bottom: 8px;">
+        <a href="${site}" target="_blank" style="color: #ff914d; text-decoration: none; word-break: break-all;">${site}</a>
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+      <button onclick="togglePanel('studentWebsitesPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createTeacherWebsitesPanel() {
+  const websites = [
+    "https://alo.acadiencelearning.org/login",
+    "https://app.aimswebplus.com/#/login",
+    "https://ep1.erplinq.com/MIDDLETOWN/",
+    "https://sso.barracuda.com/u/login/identifier?state=hKFo2SBFYnNBRjVRYmczc2t0ZjlSNmwxel9GT25LZ2o3QzVDV6Fur3VuaXZlcnNhbC1sb2dpbqN0aWTZIDQ1U0hHOGVubzF0eE10WlhiSkRZRnNQSmJqY1dwcnFlo2NpZNkgQk1yY2JuRWdkS3BkSjZRWGVjN0hiRHdlTkpMUW1MSUk",
+    "https://shop.buyguernsey.com/thmBootstrapHome.aspx",
+    "https://middletownsd.instructure.com/login/ldap",
+    "https://caresolace.com/site/middletownarea",
+    "https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379",
+    "https://www.discoveryeducation.com",
+    "https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org",
+    "https://raiderweb.gofmx.com/login",
+    "https://myhealthyzone.fitnessgram.net",
+    "https://login.frontlineeducation.com/login?signin=d0e98b785fd46dad06ce5509e61ef781&productId=ABSMGMT&clientId=ABSMGMT#/login",
+    "https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#",
+    "https://id.naviance.com",
+    "https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F",
+    "https://paetep.edulinksolutions.com/login",
+    "https://powerschool.raiderweb.org/teachers/pw.html",
+    "https://idp-awsprod1.education.scholastic.com/idp/",
+    "https://go.schoolmessenger.com/#/home",
+    "https://www.pdesas.org/standard/",
+    "https://www.pbisapps.org",
+    "https://masd.happyfox.com/home/",
+    "https://middletownasd-pa.safeschools.com/login",
+    "https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b\"id_token\"%3a%7b\"xms_cc\"%3a%7b\"values\"%3a%5b\"CP1\"%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8"
+  ];
+
+  let html = `
+    <div class="box" style="margin-top: 20px;">
+      <h2>👩‍🏫 Teacher Websites Information</h2>
+      <div style="max-height: 400px; overflow-y: auto; margin-top: 15px;">
+  `;
+
+  websites.forEach(site => {
+    html += `
+      <div style="margin-bottom: 8px;">
+        <a href="${site}" target="_blank" style="color: #ff914d; text-decoration: none; word-break: break-all;">${site}</a>
+      </div>
+    `;
+  });
+
+  html += `
+      </div>
+      <button onclick="togglePanel('teacherWebsitesPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createPhoneDirectoryPanel() {
+  const html = `
+    <div class="box" style="margin-top: 20px;">
+      <h2>📞 School Phone Directory Information</h2>
+      <div style="margin-top: 15px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+          <div style="font-weight: bold; background-color: #ff914d; color: black; padding: 8px; border-radius: 5px;">Teachers Name</div>
+          <div style="font-weight: bold; background-color: #ff914d; color: black; padding: 8px; border-radius: 5px;">Room Number</div>
+          <div style="font-weight: bold; background-color: #ff914d; color: black; padding: 8px; border-radius: 5px;">Call ID</div>
+        </div>
+        <div style="background-color: #333; padding: 15px; border-radius: 8px; text-align: center;">
+          Update Coming Soon!
+        </div>
+      </div>
+      <button onclick="togglePanel('phoneDirectoryPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createCameraPanel() {
+  const html = `
+    <div class="box" style="margin-top: 20px; text-align: center;">
+      <h2>📷 School Camera Information</h2>
+      <div style="background-color: #333; padding: 15px; border-radius: 8px; margin-top: 15px;">
+        Update Coming Soon
+      </div>
+      <button onclick="togglePanel('cameraPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createSchoolInfoPanel() {
+  const html = `
+    <div class="box" style="margin-top: 20px;">
+      <h2>🏫 School Information</h2>
+      <div style="margin-top: 15px; line-height: 1.6;">
+        <p><strong>School Name:</strong> Middletown Area Middle School</p>
+        <p><strong>School Address:</strong> 215 Oberlin Road Middletown, PA 17057</p>
+        <p><strong>School Phone:</strong> 717-930-0739</p>
+        <p><strong>School Fax:</strong> 717-944-0591</p>
+        <br>
+        <p><strong>School Principal:</strong> Dr. Shannon L. Wevodau</p>
+        <p><strong>Principal's Phone:</strong> 717-930-0739</p>
+        <p><strong>Principal's Email:</strong> swevodau@raiderweb.org</p>
+        <br>
+        <p><strong>Assistant Principal:</strong> Mr. Michael DeFilippo</p>
+        <p><strong>Assistant Principal's Phone:</strong> 717-930-0739</p>
+        <p><strong>Assistant Principal's Email:</strong> mdefilippo@raiderweb.org</p>
+      </div>
+      <button onclick="togglePanel('schoolInfoPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createExploitPanel() {
+  const exploits = [
+    { name: "Blooket Exploit", url: "https://sites.google.com/view/tools-2/blooket-exploit" },
+    { name: "Kahoot Exploit", url: "https://sites.google.com/view/tools-2/blooket-exploit" },
+    { name: "Gimkit Exploit", url: "https://sites.google.com/view/tools-2/blooket-exploit" },
+    { name: "Quizlet Exploit", url: "https://sites.google.com/view/tools-2/blooket-exploit" },
+    { name: "Quizzes Exploit", url: "https://sites.google.com/view/tools-2/blooket-exploit" },
+    { name: "Quills Exploit", url: "https://sites.google.com/view/tools-2/blooket-exploit" },
+    { name: "Edpuzzle Exploit", url: "https://sites.google.com/view/tools-2/blooket-exploit" },
+    { name: "Nearpod Exploit", url: "https://sites.google.com/view/tools-2/blooket-exploit" }
+  ];
+
+  let html = `
+    <div class="box" style="margin-top: 20px;">
+      <h2>🧨 Exploiting Tools</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 15px;">
+  `;
+
+  exploits.forEach(exploit => {
+    html += `
+      <button onclick="window.open('${exploit.url}', '_blank')" style="background-color: #ff914d; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+        ${exploit.name}
+      </button>
+    `;
+  });
+
+  html += `
+      </div>
+      <button onclick="togglePanel('exploitPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createBypassPanel() {
+  const html = `
+    <div class="box" style="margin-top: 20px;">
+      <h2>🚪 Bypassing Tools</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 15px;">
+        <button onclick="showBypassContent('bathroom')" style="background-color: #ff914d; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+          Bathroom bypass
+        </button>
+        <button onclick="showBypassContent('wifi')" style="background-color: #ff914d; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+          Wifi Bypass
+        </button>
+        <button onclick="showBypassContent('monitoring')" style="background-color: #ff914d; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+          Teacher Monitoring Bypass
+        </button>
+        <button onclick="showBypassContent('coming1')" style="background-color: #ff914d; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+          COMING SOON
+        </button>
+        <button onclick="showBypassContent('coming2')" style="background-color: #ff914d; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+          COMING SOON
+        </button>
+        <button onclick="showBypassContent('coming3')" style="background-color: #ff914d; border: none; padding: 10px; border-radius: 8px; cursor: pointer;">
+          COMING SOON
+        </button>
+      </div>
+      <div id="bypassContent" style="display: none; background-color: #333; padding: 15px; border-radius: 8px; margin-top: 15px;">
+        <!-- Content will be shown here -->
+      </div>
+      <button onclick="togglePanel('bypassPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+
+  infoPanelsContainer.innerHTML = html;
+}
+
+function showBypassContent(type) {
+  const contentDiv = document.getElementById('bypassContent');
+  contentDiv.style.display = 'block';
+  
+  switch(type) {
+    case 'bathroom':
+      contentDiv.innerHTML = '<p>COMING SOON</p>';
+      break;
+    case 'wifi':
+      contentDiv.innerHTML = '<p>Go to School Wifi Information</p>';
+      break;
+    case 'monitoring':
+      contentDiv.innerHTML = '<p>COMING SOON</p>';
+      break;
+    default:
+      contentDiv.innerHTML = '<p>COMING SOON</p>';
+  }
+}
+
+function createVpnPanel() {
+  const html = `
+    <div class="box" style="margin-top: 20px; text-align: center;">
+      <h2>🔐 VPN Websites</h2>
+      <div style="background-color: #333; padding: 15px; border-radius: 8px; margin-top: 15px;">
+        Update Coming Soon
+      </div>
+      <button onclick="togglePanel('vpnPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createGamingPanel() {
+  const html = `
+    <div class="box" style="margin-top: 20px; text-align: center;">
+      <h2>🎮 Gaming Websites</h2>
+      <div style="background-color: #333; padding: 15px; border-radius: 8px; margin-top: 15px;">
+        COMING SOON
+      </div>
+      <button onclick="togglePanel('gamingPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createMusicPanel() {
+  const html = `
+    <div class="box" style="margin-top: 20px; text-align: center;">
+      <h2>🎵 Music Websites</h2>
+      <div style="background-color: #333; padding: 15px; border-radius: 8px; margin-top: 15px;">
+        COMING SOON
+      </div>
+      <button onclick="togglePanel('musicPanel')" style="margin-top: 15px; background-color: #ff4c4c; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer;">Close Panel</button>
+    </div>
+  `;
+  infoPanelsContainer.innerHTML = html;
+}
+
+function createKeyboardPanel() {
+  const html = `
+    <div class="box" style="margin-top: 20px;">
+      <h2>🎹 Keyboard Tricks</h2>
+      <div style="margin-top: 15px; line-height: 1.6;">
+        <h3>System Shortcuts:</h3>
+        <ul style="margin-left: 20px;">
+          <li>Access Spotlight Search: Press Command (⌘) + Space bar.</li>
+          <li>Return to the Home screen: Press Command (⌘) + H.</li>
+          <li>Show the Dock: Press Command (⌘) + Option (⌥) + D.</li>
+          <li>Show the App Library: Press Shift (⇧) + Globe + A.</li>
+          <li>Open Quick Note: Press Globe + Q.</li>
+          <li>Open Siri: Press Globe + S.</li>
+          <li>Open Control Center: Press Globe + C.</li>
+          <li>Open Notification Center: Press Globe + N.</li>
+          <li>Show all windows: Press Globe + Down Arrow.</li>
+          <li>Open the App Switcher: Press Globe + Up Arrow.</li>
+        </ul>
+        
+        <h3>Multitasking Shortcuts:</h3>
+        <ul style="margin-left: 20px;">
+          <li>Switch to the last active app: Press Command (⌘) + Tab.</li>
+          <li>View all active apps: Press and hold Command (⌘) + Tab.</li>
+          <li>Open Split View: Press Control (⌃) + Globe + Left Arrow to move an app to the left, or Control (⌃) + Globe + Right Arrow to move it to the right.</li>
+          <li>Switch the position of apps in Split View: Press Control (⌃) + Globe + Left or Right Arrow.</li>
+          <li>Open Slide Over: Press Globe + Backslash.</li>
+          <li>Move the Slide Over window: Press Option (⌥) + Globe + Left or Right Arrow.</li>
+        </ul>
+        
+        <h3>Safari and App-Specific Shortcuts:</h3>
+        <ul style="margin-left: 20px;">
+          <li>Take a full-screen screenshot: Press Command (⌘) + Shift + 3.</li>
+          <li>Take a screenshot and enter markup immediately: Press Command (⌘) + Shift + 4.</li>
+          <li>Open a new private tab: Press Command (⌘) + Shift + N.</li>
+          <li>Open a new tab: Press Command (⌘) + T or Command (⌘) + N.</li>
+          <li>Close the current tab: Press Command (⌘) + W.</li>
+          <li>Close all tabs in Tab Grid: Press Shift + Command (⌘) + W.</li>
+          <li>Go to the next tab: Press Option (⌥) + Command (⌘) + Right Arrow, or Control (⌃) + Tab, or Command (⌘) + }.</li>
+          <li>Go to the previous tab: Press Option (⌥) + Command (⌘) + Left Arrow, or Shift + Control (⌃) + Tab, or Command (⌘) + {.</li>
+          <li>Reopen the last closed tab: Press Shift + Command (⌘) + T.</li>
+          <li>Go to a specific tab (1-8): Press Command (⌘) + (1-8).</li>
+          <li>Go to the last tab: Press Command (⌘) + 9.</li>
+          <li>Open the Tab Grid: Press Shift + Command (⌘) + .</li>
+          <li>Open a new Incognito tab: Press Shift + Command (⌘) + N.</li>
+          <li>Open a new Incognito window: Press Option (⌥) + Shift + Command (⌘) + N.</li>
+          <li>Open a new window: Press Option (⌥) + Command (⌘) + N.</li>
+        </ul>
+        
+        <h3>General Navigation and Text Editing:</h3>
+        <ul style="margin-left: 20px;">
+          <li>Navigate between elements in an app (like fields, lists, buttons): Press Tab.</li>
+          <li>Select all text: Press Command (⌘) + A.</li>
+          <li
+          
 </body>
 </html>
