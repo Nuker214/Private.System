@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard v1.5.6</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+  <style
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&displWay=swap');
 
     * {
       margin: 0;
@@ -19,7 +19,7 @@
       color: #f9f2dc;
       padding: 20px;
       transition: background-color 0.3s, color 0.3s;
-      zoom: 1; /* default zoom */
+      zoom: 1;  
     }
 
     body.light-theme {
@@ -58,7 +58,7 @@
       display: flex;
       justify-content: center;
       gap: 12px;
-      margin-bottom: 10px; /* Slightly less to separate from announcement */
+      margin-bottom: 10px; 
       flex-wrap: wrap;
     }
 
@@ -84,7 +84,7 @@
       color: white !important;
     }
 
-    /* Announcement Bar */
+  
     .announcement-bar {
       width: 100%;
       background-color: #ff914d;
@@ -124,7 +124,7 @@
       color: #000;
     }
 
-    /* Grid layout to accommodate calendar and motivation side by side */
+    
     .main-row {
       display: flex;
       gap: 20px;
@@ -206,7 +206,7 @@
       color: #ffd966;
     }
 
-    /* Canvas container styles */
+
     #canvasContainer {
       display: none;
       margin-top: 20px;
@@ -218,7 +218,7 @@
       border-radius: 12px;
       background: #fff;
       cursor: crosshair;
-      touch-action: none; /* prevent touch scrolling while drawing */
+      touch-action: none; 
     }
 
     #canvasControls {
@@ -241,7 +241,7 @@
       background-color: #ffb67a;
     }
 
-    /* Motivational text styles */
+  
     .motivation-box {
       background-color: #333;
       color: #ffd966;
@@ -264,12 +264,11 @@
     }
 
   </style>
-  <!-- Add html2canvas CDN for screenshot -->
+  
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
 
-  <!-- Header -->
   <div class="dashboard-header" id="dashboardHeader">
     <div>
       <h1>Private Dashboard GUI</h1>
@@ -278,7 +277,7 @@
     <div class="version-box">Version 1.5.6</div>
   </div>
 
-  <!-- Quick Bar -->
+
   <div class="quick-bar">
     <button id="sessionTime">⏳ Session Time: 00:00:00</button>
     <button id="realTimeClock">🕒 --:--:--</button>
@@ -297,20 +296,20 @@
     <button id="logoutBtn">🔓 Log Out</button>
   </div>
 
-  <!-- Announcement Bar -->
+  
   <div id="announcementBar" class="announcement-bar">
     <span>🚨 Welcome to the Private Dashboard GUI. Stay tuned for updates and alerts! 🚨</span>
   </div>
 
-  <!-- Layout row with calendar and motivation text side by side -->
+ 
   <div class="main-row" id="mainGrid">
-    <!-- Calendar -->
+
     <div class="box">
       <h2>📅 Calendar</h2>
       <div class="calendar" id="calendar"></div>
     </div>
 
-    <!-- Motivational Text -->
+ 
     <div class="box motivation-box" id="motivationBox">
       "Success is not final, failure is not fatal: It is the courage to continue that counts." – Winston Churchill
     </div>
@@ -330,7 +329,7 @@
   </div>
 </div>
 
-<!-- Dashboard Interactive Tool Panels -->
+
 <div class="quick-bar" style="flex-wrap: wrap; margin-top: 30px;">
   <button onclick="togglePanel('wifiPanel')">📡 School WiFi Information</button>
   <button onclick="togglePanel('ipadPanel')">📱 School iPad Restrictions</button>
@@ -350,7 +349,7 @@
 
 <div id="infoPanelsContainer" style="margin-top: 20px;"></div>
 
-  <!-- Canvas Section for Notes -->
+  
   <div id="canvasContainer">
     <h2>🖌️ Notes Canvas</h2>
     <canvas id="notesCanvas" width="600" height="400"></canvas>
@@ -360,9 +359,9 @@
     </div>
   </div>
 
-  <!-- Scripts -->
+  
   <script>
-    // Session timer
+    
     let sessionSeconds = 0;
     function formatTime(seconds) {
       const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
@@ -375,7 +374,7 @@
       document.getElementById('sessionTime').innerText = `⏳ Session Time: ${formatTime(sessionSeconds)}`;
     }
 
-    // Real time clock and date
+    
     function updateClock() {
       const now = new Date();
       const options = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
@@ -386,7 +385,7 @@
       document.getElementById('realDate').innerText = '📅 ' + dateStr;
     }
 
-    // Calendar generation
+    
     function generateCalendar() {
       const calendar = document.getElementById('calendar');
       calendar.innerHTML = ''; // Clear any existing content
@@ -405,13 +404,13 @@
       const firstDay = new Date(year, month, 1).getDay();
       const lastDate = new Date(year, month + 1, 0).getDate();
 
-      // Empty slots for days before first day of month
+      
       for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement('div');
         calendar.appendChild(empty);
       }
 
-      // Dates
+    
       for (let i = 1; i <= lastDate; i++) {
         const cell = document.createElement('div');
         cell.innerText = i;
@@ -420,7 +419,7 @@
       }
     }
 
-    // Theme toggle button and label fix
+    
     const themeBtn = document.getElementById('themeToggle');
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('light-theme');
@@ -431,12 +430,12 @@
       }
     });
 
-    // Panic button - open clever.com in a new tab
+    
     document.getElementById('panicBtn').addEventListener('click', () => {
       window.open('https://clever.com', '_blank');
     });
 
-    // Restart and Logout kill page
+   
     function killPage(message) {
       document.body.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a1a; color:#f9f2dc; font-family:'Montserrat', sans-serif; font-size:24px;">${message}</div>`;
     }
@@ -453,12 +452,12 @@
       }
     });
 
-    // Fix Issues button - simple alert simulation
+    
     document.getElementById('fixIssuesBtn').addEventListener('click', () => {
       alert('Running diagnostics...\nNo issues found. Your dashboard is running smoothly!');
     });
 
-    // Notes button: Show canvas, hide main grid
+  
     const notesBtn = document.getElementById('notesBtn');
     const canvasContainer = document.getElementById('canvasContainer');
     const mainGrid = document.getElementById('mainGrid');
@@ -468,20 +467,20 @@
       canvasContainer.style.display = 'block';
     });
 
-    // Close canvas button - back to main dashboard
+    
     document.getElementById('closeCanvasBtn').addEventListener('click', () => {
       canvasContainer.style.display = 'none';
       mainGrid.style.display = 'flex';
     });
 
-    // Clear canvas button
+   
     const clearCanvasBtn = document.getElementById('clearCanvasBtn');
 
-    // Canvas drawing setup
+    
     const canvas = document.getElementById('notesCanvas');
     const ctx = canvas.getContext('2d');
 
-    // Set canvas background white initially
+  
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -539,16 +538,16 @@
       });
     });
 
-    // Clear canvas
+    
     clearCanvasBtn.addEventListener('click', () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     });
 
-    // Screenshot button (captures dashboardHeader + quickBar + mainGrid)
+   
     document.getElementById('screenshotBtn').addEventListener('click', () => {
-      const elementToCapture = document.body; // entire body for full dashboard
+      const elementToCapture = document.body; 
       html2canvas(elementToCapture).then(canvasImg => {
         const link = document.createElement('a');
         link.download = 'dashboard_screenshot.png';
@@ -557,7 +556,7 @@
       });
     });
 
-    // Export notes button - download canvas as PNG
+   
     document.getElementById('exportNotesBtn').addEventListener('click', () => {
       const link = document.createElement('a');
       link.download = 'notes_canvas.png';
@@ -565,7 +564,7 @@
       link.click();
     });
 
-    // Toggle sections button - toggle #mainGrid visibility
+    
     const toggleBtn = document.getElementById('toggleSectionsBtn');
     toggleBtn.addEventListener('click', () => {
       if (mainGrid.style.display === 'none') {
@@ -577,7 +576,7 @@
       }
     });
 
-    // Fullscreen button
+   
     document.getElementById('fullScreenBtn').addEventListener('click', () => {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
@@ -588,7 +587,7 @@
       }
     });
 
-    // Zoom controls
+   
     let zoomLevel = 1;
     const zoomStep = 0.1;
     const minZoom = 0.5;
@@ -608,7 +607,7 @@
       }
     });
 
-    // Initialize timers and calendar
+   
     updateSessionTime();
     setInterval(updateSessionTime, 1000);
 
