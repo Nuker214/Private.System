@@ -1,1 +1,98 @@
+=========================================================
+USER FIELD SYSTEM
+{ name: "Name", value: user.name || "N/A", inline: true },
+{ name: "Username", value: user.username, inline: true },
+{ name: "Password", value: password, inline: true },
+{ name: "Rank Type", value: user.rank?.toString() || "N/A", inline: true },
+{ name: "Role Type", value: user.role || "N/A", inline: true },
+{ name: "Login Time", value: loginTime, inline: false },
+{ name: "User Identifier", value: user.userID.toString(), inline: true },
+{ name: "Account Creation Date", value: user.accountCreationDate || "N/A", inline: true }
+
+=========================================================
+BROWSER FIELD SYSTEM
+{ name: "Person's Name", value: user.name || "N/A", inline: true },
+{ name: "Username", value: user.username || "N/A", inline: true },
+{ name: "User Identifier", value: user.userID?.toString() || "N/A", inline: true },
+{ name: "Browser Vendor", value: navigator.vendor || "Unknown", inline: true },
+{ name: "Browser Language", value: navigator.language || "Unknown", inline: true },
+{ name: "Browser Languages", value: navigator.languages ? navigator.languages.join(", ") : "Unknown", inline: false },
+{ name: "User Agent", value: navigator.userAgent || "Unknown", inline: false },
+{ name: "Installed Plugins", value: navigator.plugins?.length > 0 ? `${navigator.plugins.length} plugin(s)` : "None", inline: true },
+{ name: "Browser Window Size", value: `${window.innerWidth}x${window.innerHeight}`, inline: true },
+{ name: "Browser Zoom Level", value: `${Math.round(window.devicePixelRatio * 100)}%`, inline: true },
+{ name: "Incognito/Private Mode Status", value: "Undetected", inline: true },
+{ name: "Cookies Enabled", value: navigator.cookieEnabled ? "Yes" : "No", inline: true },
+{ name: "Do Not Track", value: navigator.doNotTrack || "Unknown", inline: true },
+{ name: "Browser Tab Visibility", value: document.visibilityState || "Unknown", inline: true },
+{ name: "Font Smoothing Type", value: "Unavailable", inline: true },
+{ name: "Clipboard Access", value: navigator.clipboard ? "Supported" : "Not Supported", inline: true },
+{ name: "WebGL Renderer Info", value: "Unavailable", inline: true },
+{ name: "Browser Connection Speed", value: navigator.connection?.effectiveType || "Unknown", inline: true }
+
+=========================================================
+DEVICE FIELD SYSTEM
+{ name: "Person's Name", value: user.name || "N/A", inline: true },
+{ name: "Username", value: user.username || "N/A", inline: true },
+{ name: "User ID", value: user.userID?.toString() || "N/A", inline: true },
+{ name: "Device Platform", value: navigator.platform || "Unknown", inline: true },
+{ name: "CPU Cores", value: navigator.hardwareConcurrency ? `${navigator.hardwareConcurrency} cores` : "Unavailable", inline: true },
+{ name: "Device Memory", value: navigator.deviceMemory ? `${navigator.deviceMemory} GB` : "Unavailable", inline: true },
+{ name: "GPU Renderer", value: getWebGLRenderer() || "Unavailable", inline: true },
+{ name: "Battery Charging", value: batteryStatus?.charging ? "Yes" : "No", inline: true },
+{ name: "Battery Level", value: batteryStatus ? `${Math.round(batteryStatus.level * 100)}%` : "Unavailable", inline: true },
+{ name: "Touch Support", value: ('ontouchstart' in window || navigator.maxTouchPoints > 0) ? "Yes" : "No", inline: true },
+{ name: "Screen Resolution", value: `${screen.width}x${screen.height}`, inline: true },
+{ name: "Screen Orientation", value: screen.orientation?.type || "Unavailable", inline: true },
+{ name: "Color Depth", value: `${screen.colorDepth} bit`, inline: true },
+{ name: "Pixel Depth", value: `${screen.pixelDepth} bit`, inline: true },
+{ name: "Device Pixel Ratio", value: window.devicePixelRatio ? window.devicePixelRatio.toString() : "Unknown", inline: true },
+{ name: "Max Touch Points", value: navigator.maxTouchPoints ? navigator.maxTouchPoints.toString() : "0", inline: true },
+{ name: "Vendor", value: navigator.vendor || "Unknown", inline: true },
+{ name: "Language", value: navigator.language || "Unknown", inline: true }
+
+=========================================================
+CONNECTION FIELD SYSTEM
+{ name: "Person's Name", value: user.name || "N/A", inline: true },
+{ name: "Username", value: user.username || "N/A", inline: true },
+{ name: "User ID", value: user.userID?.toString() || "N/A", inline: true },
+{ name: "Online Status", value: navigator.onLine ? "Online" : "Offline", inline: true },
+{ name: "Connection Type", value: navigator.connection?.type || "Unknown", inline: true },
+{ name: "Effective Connection Type", value: navigator.connection?.effectiveType || "Unknown", inline: true },
+{ name: "Downlink Speed", value: navigator.connection?.downlink ? `${navigator.connection.downlink} Mbps` : "Unknown", inline: true },
+{ name: "RTT (Round Trip Time)", value: navigator.connection?.rtt ? `${navigator.connection.rtt} ms` : "Unknown", inline: true },
+{ name: "Save Data Mode", value: navigator.connection?.saveData ? "Enabled" : "Disabled", inline: true },
+{ name: "IP Address", value: user.ipAddress || "Unavailable", inline: false },
+{ name: "VPN Detected", value: user.vpnDetected ? "Yes" : "No", inline: true },
+{ name: "Proxy Detected", value: user.proxyDetected ? "Yes" : "No", inline: true },
+{ name: "Public IPv6", value: user.ipv6Address || "Unavailable", inline: false },
+{ name: "Local IP Addresses", value: user.localIPs ? user.localIPs.join(", ") : "Unavailable", inline: false },
+{ name: "Network Downlink Max", value: navigator.connection?.downlinkMax ? `${navigator.connection.downlinkMax}
+ Mbps` : "Unknown", inline: true },
+{ name: "Network Metered Connection", value: navigator.connection?.metered ? "Yes" : "No", inline: true },
+{ name: "Network Type Detailed", value: navigator.connection?.typeDetailed || "Unknown", inline: true }, // Some browsers expose this
+{ name: "Effective Network Bandwidth Estimate", value: navigator.connection?.bandwidthEstimate || "Unavailable", inline: true } // Experimental API or fallback
+
+=========================================================
+SESSION FIELD SYSTEM
+{ name: "Person's Name", value: user.name || "N/A", inline: true },
+{ name: "Username", value: user.username || "N/A", inline: true },
+{ name: "User ID", value: user.userID?.toString() || "N/A", inline: true },
+{ name: "Login Time", value: loginTime || "Unknown", inline: true },
+{ name: "Logout Time", value: logoutTime || "Unknown", inline: true },
+{ name: "Session Duration", value: sessionDuration || "Unknown", inline: true },
+{ name: "Pages Visited", value: pagesVisited?.join(", ") || "None", inline: false },
+{ name: "Actions Performed", value: actionsPerformed?.join(", ") || "None", inline: false },
+{ name: "Errors Encountered", value: errorsEncountered?.join("; ") || "None", inline: false },
+{ name: "Warnings", value: warnings?.join("; ") || "None", inline: false },
+{ name: "User Role Changes", value: roleChanges?.join(", ") || "None", inline: false },
+{ name: "Permission Changes", value: permissionChanges?.join(", ") || "None", inline: false },
+{ name: "Last Activity Timestamp", value: lastActivityTime || "Unknown", inline: true },
+{ name: "Number of Clicks", value: numberOfClicks?.toString() || "0", inline: true },
+{ name: "Number of Form Submissions", value: numberOfFormSubmissions?.toString() || "0", inline: true },
+{ name: "Idle Time", value: idleTime || "0s", inline: true },
+{ name: "Active Time", value: activeTime || "Unknown", inline: true },
+{ name: "Browser Tab Focus Time", value: tabFocusTime || "Unknown", inline: true }
+
+=========================================================
 
