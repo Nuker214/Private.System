@@ -19,6 +19,7 @@
       color: #f9f2dc;
       padding: 20px;
       transition: background-color 0.3s, color 0.3s;
+      transform-origin: top left;
     }
 
     body.light-theme {
@@ -286,6 +287,10 @@
     <button id="panicBtn">🚨 Panic</button>
     <button id="themeToggle">🌙 Dark Mode</button>
     <button id="logoutBtn">🔓 Log Out</button>
+    <!-- New buttons for fullscreen and zoom -->
+    <button id="fullscreenBtn">🖥️ Fullscreen</button>
+    <button id="zoomInBtn">🔍 Zoom In</button>
+    <button id="zoomOutBtn">🔎 Zoom Out</button>
   </div>
 
   <!-- Announcement Bar -->
@@ -514,7 +519,7 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     });
 
-    // Screenshot button (captures dashboardHeader + quickBar + mainGrid)
+    // Screenshot button (captures entire body)
     document.getElementById('screenshotBtn').addEventListener('click', () => {
       const elementToCapture = document.body; // entire body for full dashboard
       html2canvas(elementToCapture).then(canvasImg => {
@@ -540,6 +545,10 @@
         mainGrid.style.display = 'grid';
         toggleBtn.innerText = '⬆️ Toggle Sections';
       } else {
+        if (mainGrid.style.display === 'none') {
+        mainGrid.style.display = 'grid';
+        toggleBtn.innerText = '⬆️ Toggle Sections';
+      } else {
         mainGrid.style.display = 'none';
         toggleBtn.innerText = '⬇️ Toggle Sections';
       }
@@ -552,34 +561,49 @@
     updateClock();
     setInterval(updateClock, 1000);
 
-   generateCalendar();
+    generateCalendar();
 
-    // Moving announcement bar logic
-    const announcementBar = document.getElementById('announcementBar');
-    const announcementText = document.getElementById('announcementText');
+    // Moving announcement bar logic (simple version without changing text)
+    // (Your announcement bar animation is handled by CSS @keyframes scrollLeft)
 
-    let announcementMessages = [
-      "Welcome to the Private Dashboard GUI!",
-      "New Exploits Added!",
-      "UI Overhaul Deployed!",
-      "Stay safe and productive!",
-      "Remember to save your notes frequently!"
-    ];
+    // Fullscreen button functionality
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    fullscreenBtn.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch((err) => {
+          alert(`Error attempting to enable fullscreen mode: ${err.message} (${err.name})`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    });
 
-    let currentMessageIndex = 0;
+    // Zoom controls
+    let currentScale = 1;
+    const zoomStep = 0.1;
+    const minScale = 0.5;
+    const maxScale = 2;
 
-    function showNextAnnouncement() {
-      announcementText.innerText = announcementMessages[currentMessageIndex];
-      currentMessageIndex = (currentMessageIndex + 1) % announcementMessages.length;
+    const zoomInBtn = document.getElementById('zoomInBtn');
+    const zoomOutBtn = document.getElementById('zoomOutBtn');
+
+    function applyZoom() {
+      document.body.style.transform = `scale(${currentScale})`;
     }
 
-    // Show first message immediately
-    showNextAnnouncement();
+    zoomInBtn.addEventListener('click', () => {
+      if (currentScale < maxScale) {
+        currentScale = +(currentScale + zoomStep).toFixed(2);
+        applyZoom();
+      }
+    });
 
-    // Change message every 8 seconds
-    setInterval(() => {
-      showNextAnnouncement();
-    }, 8000);
+    zoomOutBtn.addEventListener('click', () => {
+      if (currentScale > minScale) {
+        currentScale = +(currentScale - zoomStep).toFixed(2);
+        applyZoom();
+      }
+    });
   </script>
 
 </body>
