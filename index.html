@@ -285,7 +285,6 @@
     <button id="restartBtn">🔄 Restart</button>
     <button id="panicBtn">🚨 Panic</button>
     <button id="themeToggle">🌙 Dark Mode</button>
-    <button id="fullscreenBtn">🖥️ Full Screen</button>
     <button id="logoutBtn">🔓 Log Out</button>
   </div>
 
@@ -541,10 +540,6 @@
         mainGrid.style.display = 'grid';
         toggleBtn.innerText = '⬆️ Toggle Sections';
       } else {
-        if (mainGrid.style.display === 'none') {
-        mainGrid.style.display = 'grid';
-        toggleBtn.innerText = '⬆️ Toggle Sections';
-      } else {
         mainGrid.style.display = 'none';
         toggleBtn.innerText = '⬇️ Toggle Sections';
       }
@@ -557,33 +552,34 @@
     updateClock();
     setInterval(updateClock, 1000);
 
-    generateCalendar();
+   generateCalendar();
 
-    // Fullscreen button functionality
-    const fullscreenBtn = document.getElementById('fullscreenBtn');
-    fullscreenBtn.addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-        });
-      } else {
-        document.exitFullscreen();
-      }
-    });
-
-    // Optional: Change button text based on fullscreen state
-    document.addEventListener('fullscreenchange', () => {
-      if (document.fullscreenElement) {
-        fullscreenBtn.innerText = '🖥️ Exit Full Screen';
-      } else {
-        fullscreenBtn.innerText = '🖥️ Full Screen';
-      }
-    });
-
-    // Moving announcement bar logic (if needed)
+    // Moving announcement bar logic
     const announcementBar = document.getElementById('announcementBar');
-    // Since your announcement bar uses CSS animation already, no further JS needed here
+    const announcementText = document.getElementById('announcementText');
 
+    let announcementMessages = [
+      "Welcome to the Private Dashboard GUI!",
+      "New Exploits Added!",
+      "UI Overhaul Deployed!",
+      "Stay safe and productive!",
+      "Remember to save your notes frequently!"
+    ];
+
+    let currentMessageIndex = 0;
+
+    function showNextAnnouncement() {
+      announcementText.innerText = announcementMessages[currentMessageIndex];
+      currentMessageIndex = (currentMessageIndex + 1) % announcementMessages.length;
+    }
+
+    // Show first message immediately
+    showNextAnnouncement();
+
+    // Change message every 8 seconds
+    setInterval(() => {
+      showNextAnnouncement();
+    }, 8000);
   </script>
 
 </body>
