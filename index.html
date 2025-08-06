@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard v1.5.6</title>
-  <style
-    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&displWay=swap');
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
 
     * {
       margin: 0;
@@ -19,7 +19,7 @@
       color: #f9f2dc;
       padding: 20px;
       transition: background-color 0.3s, color 0.3s;
-      zoom: 1;  
+      zoom: 1; 
     }
 
     body.light-theme {
@@ -84,7 +84,6 @@
       color: white !important;
     }
 
-  
     .announcement-bar {
       width: 100%;
       background-color: #ff914d;
@@ -124,7 +123,6 @@
       color: #000;
     }
 
-    
     .main-row {
       display: flex;
       gap: 20px;
@@ -206,7 +204,6 @@
       color: #ffd966;
     }
 
-
     #canvasContainer {
       display: none;
       margin-top: 20px;
@@ -218,7 +215,7 @@
       border-radius: 12px;
       background: #fff;
       cursor: crosshair;
-      touch-action: none; 
+      touch-action: none;
     }
 
     #canvasControls {
@@ -241,7 +238,6 @@
       background-color: #ffb67a;
     }
 
-  
     .motivation-box {
       background-color: #333;
       color: #ffd966;
@@ -277,7 +273,6 @@
     <div class="version-box">Version 1.5.6</div>
   </div>
 
-
   <div class="quick-bar">
     <button id="sessionTime">⏳ Session Time: 00:00:00</button>
     <button id="realTimeClock">🕒 --:--:--</button>
@@ -295,21 +290,18 @@
     <button id="themeToggle">🌙 Dark Mode</button>
     <button id="logoutBtn">🔓 Log Out</button>
   </div>
-
   
   <div id="announcementBar" class="announcement-bar">
     <span>🚨 Welcome to the Private Dashboard GUI. Stay tuned for updates and alerts! 🚨</span>
   </div>
-
- 
+  
   <div class="main-row" id="mainGrid">
-
+    
     <div class="box">
       <h2>📅 Calendar</h2>
       <div class="calendar" id="calendar"></div>
     </div>
 
- 
     <div class="box motivation-box" id="motivationBox">
       "Success is not final, failure is not fatal: It is the courage to continue that counts." – Winston Churchill
     </div>
@@ -328,7 +320,6 @@
     <p>Nothing New Right Now</p>
   </div>
 </div>
-
 
 <div class="quick-bar" style="flex-wrap: wrap; margin-top: 30px;">
   <button onclick="togglePanel('wifiPanel')">📡 School WiFi Information</button>
@@ -349,7 +340,6 @@
 
 <div id="infoPanelsContainer" style="margin-top: 20px;"></div>
 
-  
   <div id="canvasContainer">
     <h2>🖌️ Notes Canvas</h2>
     <canvas id="notesCanvas" width="600" height="400"></canvas>
@@ -359,7 +349,6 @@
     </div>
   </div>
 
-  
   <script>
     
     let sessionSeconds = 0;
@@ -374,7 +363,6 @@
       document.getElementById('sessionTime').innerText = `⏳ Session Time: ${formatTime(sessionSeconds)}`;
     }
 
-    
     function updateClock() {
       const now = new Date();
       const options = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
@@ -385,10 +373,9 @@
       document.getElementById('realDate').innerText = '📅 ' + dateStr;
     }
 
-    
     function generateCalendar() {
       const calendar = document.getElementById('calendar');
-      calendar.innerHTML = ''; // Clear any existing content
+      calendar.innerHTML = ''; 
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       days.forEach(day => {
         const div = document.createElement('div');
@@ -404,13 +391,11 @@
       const firstDay = new Date(year, month, 1).getDay();
       const lastDate = new Date(year, month + 1, 0).getDate();
 
-      
       for (let i = 0; i < firstDay; i++) {
         const empty = document.createElement('div');
         calendar.appendChild(empty);
       }
 
-    
       for (let i = 1; i <= lastDate; i++) {
         const cell = document.createElement('div');
         cell.innerText = i;
@@ -419,7 +404,6 @@
       }
     }
 
-    
     const themeBtn = document.getElementById('themeToggle');
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('light-theme');
@@ -429,13 +413,11 @@
         themeBtn.innerText = '🌙 Dark Mode';
       }
     });
-
     
     document.getElementById('panicBtn').addEventListener('click', () => {
       window.open('https://clever.com', '_blank');
     });
 
-   
     function killPage(message) {
       document.body.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a1a; color:#f9f2dc; font-family:'Montserrat', sans-serif; font-size:24px;">${message}</div>`;
     }
@@ -452,12 +434,10 @@
       }
     });
 
-    
     document.getElementById('fixIssuesBtn').addEventListener('click', () => {
       alert('Running diagnostics...\nNo issues found. Your dashboard is running smoothly!');
     });
-
-  
+    
     const notesBtn = document.getElementById('notesBtn');
     const canvasContainer = document.getElementById('canvasContainer');
     const mainGrid = document.getElementById('mainGrid');
@@ -467,20 +447,16 @@
       canvasContainer.style.display = 'block';
     });
 
-    
     document.getElementById('closeCanvasBtn').addEventListener('click', () => {
       canvasContainer.style.display = 'none';
       mainGrid.style.display = 'flex';
     });
 
-   
     const clearCanvasBtn = document.getElementById('clearCanvasBtn');
 
-    
     const canvas = document.getElementById('notesCanvas');
     const ctx = canvas.getContext('2d');
 
-  
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -538,14 +514,12 @@
       });
     });
 
-    
     clearCanvasBtn.addEventListener('click', () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     });
 
-   
     document.getElementById('screenshotBtn').addEventListener('click', () => {
       const elementToCapture = document.body; 
       html2canvas(elementToCapture).then(canvasImg => {
@@ -555,8 +529,7 @@
         link.click();
       });
     });
-
-   
+    
     document.getElementById('exportNotesBtn').addEventListener('click', () => {
       const link = document.createElement('a');
       link.download = 'notes_canvas.png';
@@ -564,7 +537,6 @@
       link.click();
     });
 
-    
     const toggleBtn = document.getElementById('toggleSectionsBtn');
     toggleBtn.addEventListener('click', () => {
       if (mainGrid.style.display === 'none') {
@@ -576,7 +548,6 @@
       }
     });
 
-   
     document.getElementById('fullScreenBtn').addEventListener('click', () => {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
@@ -586,8 +557,7 @@
         document.exitFullscreen();
       }
     });
-
-   
+    
     let zoomLevel = 1;
     const zoomStep = 0.1;
     const minZoom = 0.5;
@@ -607,7 +577,6 @@
       }
     });
 
-   
     updateSessionTime();
     setInterval(updateSessionTime, 1000);
 
