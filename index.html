@@ -598,6 +598,391 @@
     generateCalendar();
 
   </script>
+<!-- Add this inside your body, maybe near the bottom -->
+
+<!-- Main info buttons -->
+<div class="quick-bar" style="margin-top: 30px; justify-content: center;">
+  <button class="infoBtn" data-popup="wifiInfo">School Wifi Information</button>
+  <button class="infoBtn" data-popup="ipadRestrictions">School iPad Restrictions</button>
+  <button class="infoBtn" data-popup="studentHandbooks">Student Handbooks Information</button>
+  <button class="infoBtn" data-popup="buildingMap">School Building Map Information</button>
+  <button class="infoBtn" data-popup="studentWebsites">Student Website's Information</button>
+  <button class="infoBtn" data-popup="teacherWebsites">Teacher Websites Information</button>
+  <button class="infoBtn" data-popup="phoneDirectory">School Phone Directory Information</button>
+  <button class="infoBtn" data-popup="cameraInfo">School Camera Information</button>
+  <button class="infoBtn" data-popup="schoolInfo">School Information</button>
+  <button class="infoBtn" data-popup="exploitingTools">Exploiting Tools</button>
+  <button class="infoBtn" data-popup="bypassingTools">Bypassing Tools</button>
+  <button class="infoBtn" data-popup="vpnWebsites">VPN Websites</button>
+  <button class="infoBtn" data-popup="gamingWebsites">Gameing Websites</button>
+  <button class="infoBtn" data-popup="musicWebsites">Music Websites</button>
+</div>
+
+<!-- Popup overlay and container -->
+<div id="popupOverlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.75);z-index:9999;overflow:auto;">
+  <div id="popupContent" style="background:#ff914d; max-width: 800px; margin: 40px auto; border-radius: 12px; padding: 20px; color:#000; position:relative; font-family: 'Montserrat', sans-serif;">
+    <button id="popupCloseBtn" style="position:absolute; top:10px; right:15px; background:#ff4c4c; border:none; padding:5px 10px; border-radius:6px; color:#fff; font-weight:bold; cursor:pointer;">Close</button>
+    <div id="popupInnerContent" style="margin-top: 40px;"></div>
+  </div>
+</div>
+
+<style>
+  /* Scrollable text boxes for content */
+  .popup-textbox {
+    width: 100%;
+    height: 250px;
+    resize: none;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif;
+    overflow-y: auto;
+    box-sizing: border-box;
+  }
+
+  /* WiFi info boards container */
+  .wifi-boards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: space-between;
+  }
+
+  .wifi-board {
+    background: #fff3cc;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 0 10px #ff914d88;
+    width: calc(50% - 10px);
+    box-sizing: border-box;
+    color: #994d00;
+  }
+
+  .wifi-board h3 {
+    margin-bottom: 8px;
+  }
+
+  .wifi-board label {
+    font-weight: 700;
+  }
+
+  .wifi-board div {
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+
+  /* Button group inside popup */
+  .popup-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .popup-button-group button {
+    background-color: #ff914d;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    min-width: 130px;
+    white-space: nowrap;
+    transition: background 0.2s;
+  }
+
+  .popup-button-group button:hover {
+    background-color: #ffb67a;
+  }
+
+  /* Link style inside textarea */
+  .link-list {
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    overflow-y: auto;
+    max-height: 300px;
+    background: #fff3cc;
+    border-radius: 8px;
+    padding: 12px;
+    color: #994d00;
+  }
+
+</style>
+
+<script>
+  // All popup contents stored in an object
+  const popupContents = {
+    wifiInfo: `
+      <h2>School Wifi Information</h2>
+      <div class="wifi-boards">
+        <div class="wifi-board">
+          <h3>Middletown_Core</h3>
+          <div><label>Network Name:</label> Main</div>
+          <div><label>Wifi Level:</label> High</div>
+          <div><label>Wifi Security Type:</label> WPA3 Enterprise</div>
+          <div><label>Wifi Encryption Type:</label> High</div>
+          <div><label>Hidden?</label> No</div>
+          <div><label>Monitored?</label> Yes</div>
+          <div><label>Username:</label> Unknown</div>
+          <div><label>Password:</label> Unknown</div>
+        </div>
+        <div class="wifi-board">
+          <h3>Mtown_Core</h3>
+          <div><label>Network Name:</label> Main Backup</div>
+          <div><label>Wifi Level:</label> High</div>
+          <div><label>Wifi Security Type:</label> WPA3 Enterprise</div>
+          <div><label>Wifi Encryption Type:</label> High</div>
+          <div><label>Hidden?</label> Yes</div>
+          <div><label>Monitored?</label> Unknown</div>
+          <div><label>Username:</label> Unknown</div>
+          <div><label>Password:</label> Unknown</div>
+        </div>
+        <div class="wifi-board">
+          <h3>Mtown Guest</h3>
+          <div><label>Network Name:</label> Guest Main</div>
+          <div><label>Wifi Level:</label> Medium</div>
+          <div><label>Wifi Security Type:</label> WPA3 Enterprise</div>
+          <div><label>Wifi Encryption Type:</label> Medium</div>
+          <div><label>Hidden?</label> No</div>
+          <div><label>Monitored?</label> Rare</div>
+          <div><label>Username:</label> msguest</div>
+          <div><label>Password:</label> M@ms2021#</div>
+        </div>
+        <div class="wifi-board">
+          <h3>Radius Test</h3>
+          <div><label>Network Name:</label> Testing Main</div>
+          <div><label>Wifi Level:</label> Low</div>
+          <div><label>Wifi Security Type:</label> WPA3 Enterprise</div>
+          <div><label>Wifi Encryption Type:</label> Low</div>
+          <div><label>Hidden?</label> No</div>
+          <div><label>Monitored?</label> Rarely</div>
+          <div><label>Username:</label> msguest</div>
+          <div><label>Password:</label> M@ms2021#</div>
+        </div>
+      </div>
+    `,
+    ipadRestrictions: `
+      <h2>School iPad Restrictions</h2>
+      <div class="popup-button-group">
+        <button data-ipad="restrictions">Restrictions</button>
+        <button data-ipad="bypasses">Bypasses</button>
+      </div>
+      <textarea id="ipadTextArea" class="popup-textbox" readonly>Coming soon</textarea>
+    `,
+    studentHandbooks: `
+      <h2>Student Handbooks Information</h2>
+      <div class="popup-button-group" id="handbookButtons">
+        <button data-link="https://cdnsm5-ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Elementary%20Handbook.pdf">Elementary Handbook (Jan 2025)</button>
+        <button data-link="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Secondary%20Student%20Handbook.pdf">Secondary Student Handbook (Jan 2025)</button>
+        <button data-link="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/District%20Handbook%20copy.pdf">District Handbook</button>
+        <button data-link="https://middletown.ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025B%20RA%20Academy%20Handbook%20copy.pdf">RA Academy Handbook (Jan 2025)</button>
+        <button data-link="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/MASD%202024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf">Virtual Learning Plan (2024 - 2025)</button>
+        <button data-link="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Dress%20Code.docx.pdf">Dress Code (2024 - 2025)</button>
+      </div>
+    `,
+    buildingMap: `
+      <h2>School Building Map Information</h2>
+      <p style="font-weight:bold; text-align:center; margin-top: 40px;">Building Map Display</p>
+      <p style="text-align:center; font-style:italic; margin-top: 10px;">Building Map Coming Soon</p>
+    `,
+    studentWebsites: `
+      <h2>Student Website's Information</h2>
+      <textarea class="popup-textbox" readonly>
+https://www.raiderweb.org
+https://middletownsd.instructure.com/login
+https://caresolace.com/site/middletownarea
+https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379
+https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org
+https://myhealthyzone.fitnessgram.net
+https://www.raiderweb.org/student_services/hazing_reporting
+https://www.youtube.com/user/MAHSAnnouncements?app=desktop
+https://id.naviance.com
+https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F
+https://powerschool.raiderweb.org/public/
+https://idp-awsprod1.education.scholastic.com/idp/
+https://www.safe2saypa.org
+https://mail.google.com/mail/
+https://www.balfour.com/pennsylvania/middletown/middletown-area-high-school
+https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#
+      </textarea>
+    `,
+    teacherWebsites: `
+      <h2>Teacher Websites Information</h2>
+      <textarea class="popup-textbox" readonly>
+https://alo.acadiencelearning.org/login
+https://app.aimswebplus.com/#/login
+https://ep1.erplinq.com/MIDDLETOWN/
+https://sso.barracuda.com/u/login/identifier?state=hKFo2SBFYnNBRjVRYmczc2t0ZjlSNmwxel9GT25LZ2o3QzVDV6Fur3VuaXZlcnNhbC1sb2dpbqN0aWTZIDQ1U0hHOGVubzF0eE10WlhiSkRZRnNQSmJqY1dwcnFlo2NpZNkgQk1yY2JuRWdkS3BkSjZRWGVjN0hiRHdlTkpMUW1MSUk
+https://shop.buyguernsey.com/thmBootstrapHome.aspx
+https://middletownsd.instructure.com/login/ldap
+https://caresolace.com/site/middletownarea
+https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379
+https://www.discoveryeducation.com
+https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org
+https://raiderweb.gofmx.com/login
+https://myhealthyzone.fitnessgram.net
+https://login.frontlineeducation.com/login?signin=d0e98b785fd46dad06ce5509e61ef781&productId=ABSMGMT&clientId=ABSMGMT#/login
+https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#
+https://id.naviance.com
+https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F
+https://paetep.edulinksolutions.com/login
+https://powerschool.raiderweb.org/teachers/pw.html
+https://idp-awsprod1.education.scholastic.com/idp/
+https://go.schoolmessenger.com/#/home
+https://www.pdesas.org/standard/
+https://www.pbisapps.org
+https://masd.happyfox.com/home/
+https://middletownasd-pa.safeschools.com/login
+https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b"id_token"%3a%7b"xms_cc"%3a%7b"values"%3a%5b"CP1"%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8
+      </textarea>
+    `,
+    phoneDirectory: `
+      <h2>School Phone Directory Information</h2>
+      <textarea class="popup-textbox" readonly style="height: 150px;">
+Teachers name, Room Number, Call ID
+(Update Coming Soon!)
+      </textarea>
+    `,
+    cameraInfo: `
+      <h2>School Camera Information</h2>
+      <p style="font-weight:bold; text-align:center; margin-top: 40px;">Update Coming Soon</p>
+    `,
+    schoolInfo: `
+      <h2>School Information</h2>
+      <textarea class="popup-textbox" readonly>
+School Name: Middletown Area Middle School
+School Address: 215 Oberlin Road Middletown, PA 17057
+School Phone: 717-930-0739
+School Fax: 717-944-0591
+School Principal: Dr. Shannon L. Wevodau
+Principal's Phone: 717-930-0739
+Principal's Email: swevodau@raiderweb.org
+Assistant Principal: Mr. Michael DeFilippo
+Assistant Principal's Phone: 717-930-0739
+Assistant Principal's Email: mdefilippo@raiderweb.org
+      </textarea>
+    `,
+ <!-- Continue from exploitingTools content -->
+
+<script>
+  // Complete popupContents with full Exploiting Tools + Bypassing Tools etc.
+  popupContents.exploitingTools = `
+    <h2>Exploiting Tools</h2>
+    <div class="popup-button-group" id="exploitButtons">
+      <button data-link="https://sites.google.com/view/tools-2/blooket-exploit">Blooket Exploit</button>
+      <button data-link="https://sites.google.com/view/tools-2/blooket-exploit">Kahoot Exploit</button>
+      <button data-link="https://sites.google.com/view/tools-2/blooket-exploit">Gimkit Exploit</button>
+      <button data-link="https://sites.google.com/view/tools-2/blooket-exploit">Quizlet Exploit</button>
+      <button data-link="https://sites.google.com/view/tools-2/blooket-exploit">Quizzes Exploit</button>
+      <button data-link="https://sites.google.com/view/tools-2/blooket-exploit">Quills Exploit</button>
+      <button data-link="https://sites.google.com/view/tools-2/blooket-exploit">Edpuzzle Exploit</button>
+      <button data-link="https://sites.google.com/view/tools-2/blooket-exploit">Nearpod Exploit</button>
+    </div>
+  `;
+
+  popupContents.bypassingTools = `
+    <h2>Bypassing Tools</h2>
+    <div class="popup-button-group">
+      <button data-bypass="bathroom">Bathroom bypass</button>
+      <button data-bypass="wifi">Wifi Bypass</button>
+      <button data-bypass="teacher">Teacher Monitoring Bypass</button>
+      <button data-bypass="soon1">COMING SOON</button>
+      <button data-bypass="soon2">COMING SOON</button>
+      <button data-bypass="soon3">COMING SOON</button>
+    </div>
+    <textarea id="bypassTextArea" class="popup-textbox" readonly>Click a button above to see info.</textarea>
+  `;
+
+  popupContents.vpnWebsites = `
+    <h2>VPN Websites</h2>
+    <textarea class="popup-textbox" readonly>
+https://vpn1.example.com
+https://vpn2.example.com
+https://vpn3.example.com
+    </textarea>
+  `;
+
+  popupContents.gamingWebsites = `
+    <h2>Gaming Websites</h2>
+    <textarea class="popup-textbox" readonly>COMING SOON</textarea>
+  `;
+
+  popupContents.musicWebsites = `
+    <h2>Music Websites</h2>
+    <textarea class="popup-textbox" readonly>COMING SOON</textarea>
+  `;
+
+  // Event listener setup for main buttons
+  document.querySelectorAll('.infoBtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const popupKey = btn.getAttribute('data-popup');
+      if (popupContents[popupKey]) {
+        document.getElementById('popupInnerContent').innerHTML = popupContents[popupKey];
+        document.getElementById('popupOverlay').style.display = 'block';
+        setupPopupListeners(popupKey);
+      }
+    });
+  });
+
+  // Close button
+  document.getElementById('popupCloseBtn').addEventListener('click', () => {
+    document.getElementById('popupOverlay').style.display = 'none';
+    document.getElementById('popupInnerContent').innerHTML = '';
+  });
+
+  // Setup additional listeners inside popup based on popup type
+  function setupPopupListeners(popupKey) {
+    if (popupKey === 'ipadRestrictions') {
+      // iPad Restrictions buttons
+      const textarea = document.getElementById('ipadTextArea');
+      document.querySelectorAll('[data-ipad]').forEach(btn => {
+        btn.onclick = () => {
+          if (btn.getAttribute('data-ipad') === 'restrictions') {
+            textarea.value = "Coming soon";
+          } else if (btn.getAttribute('data-ipad') === 'bypasses') {
+            textarea.value = "Coming soon";
+          }
+        };
+      });
+    }
+
+    if (popupKey === 'studentHandbooks') {
+      // Student Handbook buttons open links in new tab
+      document.querySelectorAll('#handbookButtons button').forEach(btn => {
+        btn.onclick = () => {
+          window.open(btn.getAttribute('data-link'), '_blank');
+        };
+      });
+    }
+
+    if (popupKey === 'exploitingTools') {
+      // Exploiting Tools buttons open links in new tab
+      document.querySelectorAll('#exploitButtons button').forEach(btn => {
+        btn.onclick = () => {
+          window.open(btn.getAttribute('data-link'), '_blank');
+        };
+      });
+    }
+
+    if (popupKey === 'bypassingTools') {
+      // Bypassing Tools buttons update textarea
+      const textarea = document.getElementById('bypassTextArea');
+      document.querySelectorAll('[data-bypass]').forEach(btn => {
+        btn.onclick = () => {
+          const key = btn.getAttribute('data-bypass');
+          if (key === 'bathroom' || key === 'teacher' || key.startsWith('soon')) {
+            textarea.value = "COMING SOON";
+          } else if (key === 'wifi') {
+            textarea.value = "Go to School Wifi Information";
+          }
+        };
+      });
+    }
+  }
+</script>
 
 </body>
 </html>
