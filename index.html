@@ -259,6 +259,128 @@
       box-shadow: 0 0 12px rgba(255, 145, 77, 0.8);
     }
 
+    /* Info Panel styling */
+    #infoPanelsContainer {
+      background-color: #2a2a2a;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      box-shadow: 0 0 15px rgba(255, 145, 77, 0.3);
+      min-height: 150px;
+      color: #f9f2dc;
+      font-size: 14px;
+      max-width: 1000px;
+      margin-left: auto;
+      margin-right: auto;
+      transition: background-color 0.3s, color 0.3s;
+      position: relative;
+    }
+    body.light-theme #infoPanelsContainer {
+      background-color: #ffd966;
+      color: #1a1a1a;
+      box-shadow: 0 0 15px rgba(255, 145, 77, 0.6);
+    }
+
+    /* WiFi Board styling */
+    .wifi-board {
+      border: 1px solid #ff914d;
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 12px;
+      background-color: #3a3a3a;
+      color: #ffd966;
+    }
+    body.light-theme .wifi-board {
+      background-color: #fff3cc;
+      color: #994d00;
+      border-color: #994d00;
+    }
+
+    .wifi-board h3 {
+      margin-bottom: 8px;
+      color: #ffb366;
+    }
+
+    /* Overlay styling for sub-buttons */
+    #overlay {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      color: #f9f2dc;
+      overflow-y: auto;
+      padding: 30px;
+      box-sizing: border-box;
+    }
+    body.light-theme #overlay {
+      background: rgba(255, 255, 255, 0.95);
+      color: #1a1a1a;
+    }
+
+    #overlay .overlay-content {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    #overlay h2 {
+      margin-bottom: 20px;
+      color: #ff914d;
+    }
+
+    #overlay button {
+      background-color: #ff914d;
+      border: none;
+      padding: 12px 20px;
+      margin: 6px;
+      border-radius: 10px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-width: 180px;
+      white-space: normal;
+      font-size: 14px;
+    }
+    #overlay button:hover {
+      background-color: #ffb67a;
+    }
+
+    #overlay textarea {
+      width: 100%;
+      height: 160px;
+      margin-top: 15px;
+      background: #3a3a3a;
+      color: #ffd966;
+      border-radius: 10px;
+      border: none;
+      padding: 10px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      resize: none;
+    }
+    body.light-theme #overlay textarea {
+      background: #fff3cc;
+      color: #994d00;
+      border: 1px solid #994d00;
+    }
+
+    #overlay .close-btn {
+      position: fixed;
+      top: 20px;
+      right: 25px;
+      background: #ff4c4c;
+      color: white;
+      border: none;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 15px;
+      border-radius: 10px;
+      cursor: pointer;
+      z-index: 1100;
+    }
   </style>
   
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -308,38 +430,39 @@
   </div>
 
   <div id="updatesNotifications" style="display: flex; gap: 20px; justify-content: center; flex-wrap: nowrap; margin-top: 20px;">
-  <div class="box" style="flex: 1 1 300px; min-width: 300px;">
-    <h2>🔄 Updates</h2>
-    <div class="update-entry">Dashboard Interface Update!</div>
-    <div class="update-entry">New Exploits Added</div>
-    <div class="update-entry">UI Overhaul Deployed</div>
+    <div class="box" style="flex: 1 1 300px; min-width: 300px;">
+      <h2>🔄 Updates</h2>
+      <div class="update-entry">Dashboard Interface Update!</div>
+      <div class="update-entry">New Exploits Added</div>
+      <div class="update-entry">UI Overhaul Deployed</div>
+    </div>
+
+    <div class="box" style="flex: 1 1 300px; min-width: 300px;">
+      <h2>🔔 Notifications</h2>
+      <p>Nothing New Right Now</p>
+    </div>
   </div>
 
-  <div class="box" style="flex: 1 1 300px; min-width: 300px;">
-    <h2>🔔 Notifications</h2>
-    <p>Nothing New Right Now</p>
+  <div class="quick-bar" style="flex-wrap: wrap; margin-top: 30px;">
+    <button onclick="togglePanel('wifiPanel')">📡 School WiFi Information</button>
+    <button onclick="togglePanel('ipadPanel')">📱 School iPad Restrictions</button>
+    <button onclick="togglePanel('handbookPanel')">📘 Student Handbooks Information</button>
+    <button onclick="togglePanel('mapPanel')">🏫 School Building Map Information</button>
+    <button onclick="togglePanel('studentWebsitesPanel')">🌐 Student Website's Information</button>
+    <button onclick="togglePanel('teacherWebsitesPanel')">👩‍🏫 Teacher Websites Information</button>
+    <button onclick="togglePanel('phoneDirectoryPanel')">📞 School Phone Directory Information</button>
+    <button onclick="togglePanel('cameraPanel')">📷 School Camera Information</button>
+    <button onclick="togglePanel('schoolInfoPanel')">🏫 School Information</button>
+    <button onclick="togglePanel('exploitPanel')">🧨 Exploiting Tools</button>
+    <button onclick="togglePanel('bypassPanel')">🚪 Bypassing Tools</button>
+    <button onclick="togglePanel('vpnPanel')">🔐 VPN Websites</button>
+    <button onclick="togglePanel('gamingPanel')">🎮 Gaming Websites</button>
+    <button onclick="togglePanel('musicPanel')">🎵 Music Websites</button>
+    <button onclick="togglePanel('keyboardPanel')">🎹 Keyboard Tricks</button>
   </div>
-</div>
 
-<div class="quick-bar" style="flex-wrap: wrap; margin-top: 30px;">
-  <button onclick="togglePanel('wifiPanel')">📡 School WiFi Information</button>
-  <button onclick="togglePanel('ipadPanel')">📱 School iPad Restrictions</button>
-  <button onclick="togglePanel('handbookPanel')">📘 Student Handbooks Information</button>
-  <button onclick="togglePanel('mapPanel')">🏫 School Building Map Information</button>
-  <button onclick="togglePanel('studentWebsitesPanel')">🌐 Student Website's Information</button>
-  <button onclick="togglePanel('teacherWebsitesPanel')">👩‍🏫 Teacher Websites Information</button>
-  <button onclick="togglePanel('phoneDirectoryPanel')">📞 School Phone Directory Information</button>
-  <button onclick="togglePanel('cameraPanel')">📷 School Camera Information</button>
-  <button onclick="togglePanel('schoolInfoPanel')">🏫 School Information</button>
-  <button onclick="togglePanel('exploitPanel')">🧨 Exploiting Tools</button>
-  <button onclick="togglePanel('bypassPanel')">🚪 Bypassing Tools</button>
-  <button onclick="togglePanel('vpnPanel')">🔐 VPN Websites</button>
-  <button onclick="togglePanel('gamingPanel')">🎮 Gaming Websites</button>
-  <button onclick="togglePanel('musicPanel')">🎵 Music Websites</button>
-  <button onclick="togglePanel('keyboardPanel')">🎹 Keyboard Tricks</button>
-</div>
-
-<div id="infoPanelsContainer" style="margin-top: 20px;"></div>
+  <!-- Info Panel container - dynamic content appears here -->
+  <div id="infoPanelsContainer"></div>
 
   <div id="canvasContainer">
     <h2>🖌️ Notes Canvas</h2>
@@ -350,8 +473,14 @@
     </div>
   </div>
 
+  <!-- Overlay for sub-buttons with detailed info -->
+  <div id="overlay">
+    <button class="close-btn" onclick="closeOverlay()">✖ Close</button>
+    <div class="overlay-content" id="overlayContent"></div>
+  </div>
+
   <script>
-    
+    // --- Existing Dashboard Logic (session, clock, calendar, notes, theme, etc.) ---
     let sessionSeconds = 0;
     function formatTime(seconds) {
       const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
@@ -363,7 +492,6 @@
       sessionSeconds++;
       document.getElementById('sessionTime').innerText = `⏳ Session Time: ${formatTime(sessionSeconds)}`;
     }
-
     function updateClock() {
       const now = new Date();
       const options = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
@@ -373,7 +501,6 @@
       document.getElementById('realTimeClock').innerText = '🕒 ' + timeStr;
       document.getElementById('realDate').innerText = '📅 ' + dateStr;
     }
-
     function generateCalendar() {
       const calendar = document.getElementById('calendar');
       calendar.innerHTML = ''; 
@@ -404,7 +531,6 @@
         calendar.appendChild(cell);
       }
     }
-
     const themeBtn = document.getElementById('themeToggle');
     themeBtn.addEventListener('click', () => {
       document.body.classList.toggle('light-theme');
@@ -414,55 +540,42 @@
         themeBtn.innerText = '🌙 Dark Mode';
       }
     });
-    
     document.getElementById('panicBtn').addEventListener('click', () => {
       window.open('https://clever.com', '_blank');
     });
-
     function killPage(message) {
       document.body.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a1a; color:#f9f2dc; font-family:'Montserrat', sans-serif; font-size:24px;">${message}</div>`;
     }
-
     document.getElementById('restartBtn').addEventListener('click', () => {
       if(confirm('Are you sure you want to kill the page (restart)?')) {
         killPage('Page has been killed. Restart to continue.');
       }
     });
-
     document.getElementById('logoutBtn').addEventListener('click', () => {
       if(confirm('Are you sure you want to kill the page (log out)?')) {
         killPage('You have been logged out. Refresh to re-enter.');
       }
     });
-
     document.getElementById('fixIssuesBtn').addEventListener('click', () => {
       alert('Running diagnostics...\nNo issues found. Your dashboard is running smoothly!');
     });
-    
     const notesBtn = document.getElementById('notesBtn');
     const canvasContainer = document.getElementById('canvasContainer');
     const mainGrid = document.getElementById('mainGrid');
-
     notesBtn.addEventListener('click', () => {
       mainGrid.style.display = 'none';
       canvasContainer.style.display = 'block';
     });
-
     document.getElementById('closeCanvasBtn').addEventListener('click', () => {
       canvasContainer.style.display = 'none';
       mainGrid.style.display = 'flex';
     });
-
     const clearCanvasBtn = document.getElementById('clearCanvasBtn');
-
     const canvas = document.getElementById('notesCanvas');
     const ctx = canvas.getContext('2d');
-
     ctx.fillStyle = '#fff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
     let drawing = false;
-
     function getPos(evt) {
       const rect = canvas.getBoundingClientRect();
       return {
@@ -470,7 +583,6 @@
         y: (evt.clientY || evt.touches[0].clientY) - rect.top
       };
     }
-
     canvas.addEventListener('mousedown', (e) => {
       drawing = true;
       const pos = getPos(e);
@@ -478,7 +590,6 @@
       ctx.moveTo(pos.x, pos.y);
       e.preventDefault();
     });
-
     canvas.addEventListener('touchstart', (e) => {
       drawing = true;
       const pos = getPos(e);
@@ -486,7 +597,6 @@
       ctx.moveTo(pos.x, pos.y);
       e.preventDefault();
     });
-
     canvas.addEventListener('mousemove', (e) => {
       if (!drawing) return;
       const pos = getPos(e);
@@ -497,7 +607,6 @@
       ctx.stroke();
       e.preventDefault();
     });
-
     canvas.addEventListener('touchmove', (e) => {
       if (!drawing) return;
       const pos = getPos(e);
@@ -508,36 +617,31 @@
       ctx.stroke();
       e.preventDefault();
     });
-
     ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(evtName => {
       canvas.addEventListener(evtName, () => {
         drawing = false;
       });
     });
-
     clearCanvasBtn.addEventListener('click', () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.fillStyle = '#fff';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     });
-
     document.getElementById('screenshotBtn').addEventListener('click', () => {
       const elementToCapture = document.body; 
       html2canvas(elementToCapture).then(canvasImg => {
         const link = document.createElement('a');
         link.download = 'dashboard_screenshot.png';
-                link.href = canvasImg.toDataURL('image/png');
+        link.href = canvasImg.toDataURL('image/png');
         link.click();
       });
     });
-    
     document.getElementById('exportNotesBtn').addEventListener('click', () => {
       const link = document.createElement('a');
       link.download = 'notes_canvas.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
     });
-
     const toggleBtn = document.getElementById('toggleSectionsBtn');
     toggleBtn.addEventListener('click', () => {
       if (mainGrid.style.display === 'none') {
@@ -548,7 +652,6 @@
         toggleBtn.innerText = '⬇️ Toggle Sections';
       }
     });
-
     document.getElementById('fullScreenBtn').addEventListener('click', () => {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => {
@@ -558,35 +661,361 @@
         document.exitFullscreen();
       }
     });
-    
     let zoomLevel = 1;
     const zoomStep = 0.1;
     const minZoom = 0.5;
     const maxZoom = 2;
-
     document.getElementById('zoomInBtn').addEventListener('click', () => {
       if (zoomLevel < maxZoom) {
         zoomLevel += zoomStep;
         document.body.style.zoom = zoomLevel;
       }
     });
-
     document.getElementById('zoomOutBtn').addEventListener('click', () => {
       if (zoomLevel > minZoom) {
         zoomLevel -= zoomStep;
         document.body.style.zoom = zoomLevel;
       }
     });
-
     updateSessionTime();
     setInterval(updateSessionTime, 1000);
-
     updateClock();
     setInterval(updateClock, 1000);
-
     generateCalendar();
+
+    // --- New code to handle info panels ---
+
+    // Cache main info container and overlay elements
+    const infoContainer = document.getElementById('infoPanelsContainer');
+    const overlay = document.getElementById('overlay');
+    const overlayContent = document.getElementById('overlayContent');
+
+    // Close overlay function
+    function closeOverlay() {
+      overlay.style.display = 'none';
+      overlayContent.innerHTML = '';
+    }
+
+    // Show overlay with given HTML content
+    function showOverlay(html) {
+      overlayContent.innerHTML = html;
+      overlay.style.display = 'block';
+      window.scrollTo(0, 0);
+    }
+
+    // Clear the main info panel
+    function clearInfoPanel() {
+      infoContainer.innerHTML = '';
+    }
+
+    // Data for panels and subpanels
+
+    // School WiFi Information (simple static content)
+    const wifiContent = `
+      <div class="wifi-board">
+        <h3>WiFi Login Information</h3>
+        <ul>
+          <li><strong>SSID:</strong> SchoolWifi123</li>
+          <li><strong>Password:</strong> mypassword2024</li>
+          <li><strong>Security:</strong> WPA2</li>
+        </ul>
+      </div>
+      <div class="wifi-board">
+        <h3>Guest WiFi Info</h3>
+        <ul>
+          <li><strong>SSID:</strong> GuestNetwork</li>
+          <li><strong>Password:</strong> guestaccess</li>
+          <li><strong>Security:</strong> WPA2</li>
+        </ul>
+      </div>
+      <div class="wifi-board">
+        <h3>WiFi FAQ</h3>
+        <p><em>Contact IT support if you experience connection issues.</em></p>
+      </div>
+    `;
+
+    // iPad Restrictions sub-buttons & content
+    function showIpadRestrictions() {
+      const html = `
+        <h2>📱 School iPad Restrictions</h2>
+        <button onclick="showBypasses()">Bypasses</button>
+        <button onclick="showGlitches()">Glitches</button>
+        <button onclick="showRestrictions()">Restrictions</button>
+      `;
+      showOverlay(html);
+    }
+
+    function showBypasses() {
+      const html = `
+        <h2>📱 Bypasses</h2>
+        <ul>
+          <li>Network Traffic Restriction Bypass</li>
+          <li>Profile Install Bypass</li>
+          <li>WiFi Restriction Bypass</li>
+        </ul>
+      `;
+      showOverlay(html);
+    }
+
+    function showGlitches() {
+      const html = `
+        <h2>📱 Glitches</h2>
+        <ul>
+          <li>Screen Time Bypass</li>
+          <li>VPN Glitch</li>
+          <li>Temporary Profile Glitch</li>
+        </ul>
+      `;
+      showOverlay(html);
+    }
+
+    function showRestrictions() {
+      const html = `
+        <h2>📱 Restrictions</h2>
+        <ul>
+          <li>App Install Restrictions</li>
+          <li>Screen Time Limits</li>
+          <li>Web Filtering</li>
+        </ul>
+      `;
+      showOverlay(html);
+    }
+
+    // Student Handbooks - buttons open external links in new tabs
+    function showHandbooks() {
+      const html = `
+        <h2>📘 Student Handbooks</h2>
+        <button onclick="window.open('https://example.com/handbook1.pdf', '_blank')">Handbook 1</button>
+        <button onclick="window.open('https://example.com/handbook2.pdf', '_blank')">Handbook 2</button>
+        <button onclick="window.open('https://example.com/handbook3.pdf', '_blank')">Handbook 3</button>
+        <button onclick="window.open('https://example.com/handbook4.pdf', '_blank')">Handbook 4</button>
+      `;
+      showOverlay(html);
+    }
+
+    // School Building Map (empty panel with heading)
+    const mapContent = `<h2>🏫 School Building Map Information</h2><p>Building map will be available here soon.</p>`;
+
+    // Student Websites Information
+    const studentWebsitesContent = `
+      <h2>🌐 Student Website's Information</h2>
+      <ul>
+        <li><a href="https://studentportal.school.edu" target="_blank" rel="noopener noreferrer">Student Portal</a></li>
+        <li><a href="https://library.school.edu" target="_blank" rel="noopener noreferrer">School Library</a></li>
+        <li><a href="https://assignments.school.edu" target="_blank" rel="noopener noreferrer">Assignments</a></li>
+      </ul>
+    `;
+
+    // Teacher Websites Information
+    const teacherWebsitesContent = `
+      <h2>👩‍🏫 Teacher Websites Information</h2>
+      <ul>
+        <li><a href="https://teachersportal.school.edu" target="_blank" rel="noopener noreferrer">Teachers Portal</a></li>
+        <li><a href="https://gradebook.school.edu" target="_blank" rel="noopener noreferrer">Gradebook</a></li>
+        <li><a href="https://schedule.school.edu" target="_blank" rel="noopener noreferrer">Schedule</a></li>
+      </ul>
+    `;
+
+    // Phone Directory Information
+    const phoneDirectoryContent = `
+      <h2>📞 School Phone Directory Information</h2>
+      <ul>
+        <li>Main Office: 555-1234</li>
+        <li>Attendance: 555-5678</li>
+        <li>IT Support: 555-9012</li>
+      </ul>
+    `;
+
+    // Camera Information
+    const cameraContent = `
+      <h2>📷 School Camera Information</h2>
+      <p>All school cameras are monitored 24/7 for security purposes.</p>
+    `;
+
+    // School Information
+    const schoolInfoContent = `
+      <h2>🏫 School Information</h2>
+      <p>Welcome to our school! We strive to provide the best education and support.</p>
+      <p>Address: 123 Education Lane, Knowledge City</p>
+      <p>Phone: 555-0000</p>
+    `;
+
+    // Exploiting Tools
+    const exploitContent = `
+      <h2>🧨 Exploiting Tools</h2>
+      <button onclick="window.open('https://example.com/exploit1', '_blank')">Exploit 1</button>
+      <button onclick="window.open('https://example.com/exploit2', '_blank')">Exploit 2</button>
+      <button onclick="window.open('https://example.com/exploit3', '_blank')">Exploit 3</button>
+    `;
+
+    // Bypassing Tools
+    const bypassContent = `
+      <h2>🚪 Bypassing Tools</h2>
+      <button onclick="window.open('https://example.com/bypass1', '_blank')">Bypass 1</button>
+      <button onclick="window.open('https://example.com/bypass2', '_blank')">Bypass 2</button>
+      <button onclick="window.open('https://example.com/bypass3', '_blank')">Bypass 3</button>
+    `;
+
+    // VPN Websites
+    const vpnContent = `
+      <h2>🔐 VPN Websites</h2>
+      <button onclick="window.open('https://vpn1.example.com', '_blank')">VPN 1</button>
+      <button onclick="window.open('https://vpn2.example.com', '_blank')">VPN 2</button>
+      <button onclick="window.open('https://vpn3.example.com', '_blank')">VPN 3</button>
+    `;
+
+    // Gaming Websites
+    const gamingContent = `
+      <h2>🎮 Gaming Websites</h2>
+      <button onclick="window.open('https://gaming1.example.com', '_blank')">Gaming 1</button>
+      <button onclick="window.open('https://gaming2.example.com', '_blank')">Gaming 2</button>
+      <button onclick="window.open('https://gaming3.example.com', '_blank')">Gaming 3</button>
+    `;
+
+    // Music Websites
+    const musicContent = `
+      <h2>🎵 Music Websites</h2>
+      <button onclick="window.open('https://music1.example.com', '_blank')">Music 1</button>
+      <button onclick="window.open('https://music2.example.com', '_blank')">Music 2</button>
+      <button onclick="window.open('https://music3.example.com', '_blank')">Music 3</button>
+    `;
+
+    // Keyboard Tricks
+    const keyboardContent = `
+      <h2>🎹 Keyboard Tricks</h2>
+      <ul>
+        <li><strong>Ctrl + C:</strong> Copy</li>
+        <li><strong>Ctrl + V:</strong> Paste</li>
+        <li><strong>Ctrl + Z:</strong> Undo</li>
+        <li><strong>Alt + Tab:</strong> Switch Windows</li>
+        <li><strong>Windows + D:</strong> Show Desktop</li>
+      </ul>
+    `;
+
+    // Main togglePanel function
+    function togglePanel(panelName) {
+      clearInfoPanel();
+      switch(panelName) {
+        case 'wifiPanel':
+          infoContainer.innerHTML = wifiContent;
+          break;
+        case 'ipadPanel':
+          showIpadRestrictions();
+          break;
+        case 'handbookPanel':
+          showHandbooks();
+          break;
+        case 'mapPanel':
+          infoContainer.innerHTML = mapContent;
+          break;
+        case 'studentWebsitesPanel':
+          infoContainer.innerHTML = studentWebsitesContent;
+          break;
+        case 'teacherWebsitesPanel':
+          infoContainer.innerHTML = teacherWebsitesContent;
+          break;
+        case 'phoneDirectoryPanel':
+          infoContainer.innerHTML = phoneDirectoryContent;
+          break;
+        case 'cameraPanel':
+          infoContainer.innerHTML = cameraContent;
+          break;
+        case 'schoolInfoPanel':
+          infoContainer.innerHTML = schoolInfoContent;
+          break;
+        case 'exploitPanel':
+          infoContainer.innerHTML = exploitContent;
+          break;
+        case 'bypassPanel':
+          infoContainer.innerHTML = bypassContent;
+          break;
+        case 'vpnPanel':
+          infoContainer.innerHTML = vpnContent;
+          break;
+        case 'gamingPanel':
+          infoContainer.innerHTML = gamingContent;
+          break;
+        case 'musicPanel':
+          infoContainer.innerHTML = musicContent;
+          break;
+        case 'keyboardPanel':
+          infoContainer.innerHTML = keyboardContent;
+          break;
+        default:
+          infoContainer.innerHTML = '';
+      }
+      if(panelName !== 'ipadPanel' && panelName !== 'handbookPanel'){
+        window.scrollTo(0, infoContainer.offsetTop);
+      }
+    }
 
   </script>
 
+  <style>
+    /* Overlay styles */
+    #overlay {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 90%;
+      max-width: 600px;
+      background: #2a2a2a;
+      color: #f9f2dc;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(255, 145, 77, 0.9);
+      padding: 20px;
+    }
+
+    body.light-theme #overlay {
+      background: #ffd966;
+      color: #000;
+      box-shadow: 0 0 15px rgba(255, 145, 77, 1);
+    }
+
+    #overlay .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #ff914d;
+      border: none;
+      color: black;
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 16px;
+    }
+
+    #overlay .close-btn:hover {
+      background: #ffb67a;
+    }
+
+    #overlay .overlay-content {
+      margin-top: 40px;
+      max-height: 400px;
+      overflow-y: auto;
+      font-size: 14px;
+    }
+
+    #overlay button {
+      background-color: #ff914d;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      margin: 4px 6px 8px 0;
+      transition: background 0.2s;
+    }
+
+    #overlay button:hover {
+      background-color: #ffb67a;
+    }
+  </style>
 </body>
 </html>
