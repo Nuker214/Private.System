@@ -19,7 +19,6 @@
       color: #f9f2dc;
       padding: 20px;
       transition: background-color 0.3s, color 0.3s;
-      transform-origin: top left;
     }
 
     body.light-theme {
@@ -286,11 +285,8 @@
     <button id="restartBtn">🔄 Restart</button>
     <button id="panicBtn">🚨 Panic</button>
     <button id="themeToggle">🌙 Dark Mode</button>
+    <button id="fullscreenBtn">🖥️ Full Screen</button>
     <button id="logoutBtn">🔓 Log Out</button>
-    <!-- New buttons for fullscreen and zoom -->
-    <button id="fullscreenBtn">🖥️ Fullscreen</button>
-    <button id="zoomInBtn">🔍 Zoom In</button>
-    <button id="zoomOutBtn">🔎 Zoom Out</button>
   </div>
 
   <!-- Announcement Bar -->
@@ -519,7 +515,7 @@
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     });
 
-    // Screenshot button (captures entire body)
+    // Screenshot button (captures dashboardHeader + quickBar + mainGrid)
     document.getElementById('screenshotBtn').addEventListener('click', () => {
       const elementToCapture = document.body; // entire body for full dashboard
       html2canvas(elementToCapture).then(canvasImg => {
@@ -563,47 +559,31 @@
 
     generateCalendar();
 
-    // Moving announcement bar logic (simple version without changing text)
-    // (Your announcement bar animation is handled by CSS @keyframes scrollLeft)
-
     // Fullscreen button functionality
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     fullscreenBtn.addEventListener('click', () => {
       if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch((err) => {
-          alert(`Error attempting to enable fullscreen mode: ${err.message} (${err.name})`);
+        document.documentElement.requestFullscreen().catch(err => {
+          alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
         });
       } else {
         document.exitFullscreen();
       }
     });
 
-    // Zoom controls
-    let currentScale = 1;
-    const zoomStep = 0.1;
-    const minScale = 0.5;
-    const maxScale = 2;
-
-    const zoomInBtn = document.getElementById('zoomInBtn');
-    const zoomOutBtn = document.getElementById('zoomOutBtn');
-
-    function applyZoom() {
-      document.body.style.transform = `scale(${currentScale})`;
-    }
-
-    zoomInBtn.addEventListener('click', () => {
-      if (currentScale < maxScale) {
-        currentScale = +(currentScale + zoomStep).toFixed(2);
-        applyZoom();
+    // Optional: Change button text based on fullscreen state
+    document.addEventListener('fullscreenchange', () => {
+      if (document.fullscreenElement) {
+        fullscreenBtn.innerText = '🖥️ Exit Full Screen';
+      } else {
+        fullscreenBtn.innerText = '🖥️ Full Screen';
       }
     });
 
-    zoomOutBtn.addEventListener('click', () => {
-      if (currentScale > minScale) {
-        currentScale = +(currentScale - zoomStep).toFixed(2);
-        applyZoom();
-      }
-    });
+    // Moving announcement bar logic (if needed)
+    const announcementBar = document.getElementById('announcementBar');
+    // Since your announcement bar uses CSS animation already, no further JS needed here
+
   </script>
 
 </body>
