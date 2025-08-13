@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Gateway</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            overflow: hidden;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        #login-container, #dashboard-container {
+            width: 100vw;
+            height: 100vh;
+            border: none;
+        }
+        #dashboard-container {
+            display: none;
+        }
+        .transition-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #ff914d;
+            font-size: 24px;
+            font-weight: bold;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login System will load here first -->
+    <iframe id="login-container" src="https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Login.System"></iframe>
+    
+    <!-- Dashboard will load here after successful login -->
+    <iframe id="dashboard-container" src="about:blank"></iframe>
+    
+    <!-- Transition screen -->
+    <div class="transition-screen" id="transitionScreen">Loading Dashboard...</div>
+
+    <script>
+        // Listen for messages from the login system
+        window.addEventListener('message', function(event) {
+            // For security, verify the origin matches your GitHub raw content domain
+            if (event.origin !== "https://raw.githubusercontent.com") return;
+            
+            // Check for login success message
+            if (event.data === 'login_success') {
+                showTransition(() => {
+                    // Hide login, show dashboard after transition
+                    document.getElementById('login-container').style.display = 'none';
+                    const dashboardContainer = document.getElementById('dashboard-container');
+                    dashboardContainer.style.display = 'block';
+                    
+                    // Load the dashboard content
+                    dashboardContainer.src = "https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/index.html";
+                    
+                    // Additional security measure
+                    dashboardContainer.onload = function() {
+                        dashboardContainer.contentWindow.postMessage('dashboard_loaded', '*');
+                    };
+                });
+            }
+        });
+
+        function showTransition(callback) {
+            const transition = document.getElementById('transitionScreen');
+            transition.style.opacity = 1;
+            setTimeout(() => {
+                callback();
+                setTimeout(() => {
+                    transition.style.opacity = 0;
+                }, 500);
+            }, 1000);
+        }
+
+        // Security: Prevent iframe phishing
+        window.addEventListener('blur', function() {
+            if (document.activeElement && 
+                document.activeElement.tagName === 'IFRAME' &&
+                !document.activeElement.src.startsWith('https://raw.githubusercontent.com/Nuker214/Private.System')) {
+                window.location.reload();
+            }
+        });
+
+        // Error handling
+        document.getElementById('login-container').onerror = function() {
+            alert('Failed to load login system. Please try again later.');
+        };
+
+        document.getElementById('dashboard-container').onerror = function() {
+            alert('Failed to load dashboard. Please try again later.');
+        };
+    </script>
+</body>
+</html>
