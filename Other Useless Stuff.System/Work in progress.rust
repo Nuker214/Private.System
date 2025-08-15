@@ -1,0 +1,431 @@
+//! MASSIVE RUST DEMONSTRATION
+//! This program showcases Rust's core features and idiomatic patterns
+
+use std::{
+    collections::{HashMap, HashSet},
+    error::Error,
+    fmt::{Display, Formatter, Result as FmtResult},
+    fs::{self, File},
+    io::{self, BufRead, BufReader, Write},
+    num::ParseIntError,
+    ops::{Add, AddAssign},
+    path::Path,
+    sync::{Arc, Mutex},
+    thread,
+    time::{Duration, Instant},
+};
+
+// --------------------------
+// 1. CUSTOM TYPES AND TRAITS
+// --------------------------
+
+#[derive(Debug, Clone, PartialEq)]
+struct Point {
+    x: f64,
+    y: f64,
+}
+
+impl Point {
+    fn new(x: f64, y: f64) -> Self {
+        Self { x, y }
+    }
+
+    fn distance(&self, other: &Point) -> f64 {
+        ((self.x - other.x).powi(2) + (self.y - other.y).powi(2)).sqrt()
+    }
+
+    fn magnitude(&self) -> f64 {
+        (self.x.powi(2) + self.y.powi(2)).sqrt()
+    }
+}
+
+impl Display for Point {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        write!(f, "({:.2}, {:.2})", self.x, self.y)
+    }
+}
+
+impl Add for Point {
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        Self {
+            x: self.x + other.x,
+            y: self.y + other.y,
+        }
+    }
+}
+
+impl AddAssign for Point {
+    fn add_assign(&mut self, other: Self) {
+        self.x += other.x;
+        self.y += other.y;
+    }
+}
+
+// ----------------------
+// 2. ERROR HANDLING
+// ----------------------
+
+#[derive(Debug)]
+enum CustomError {
+    Io(io::Error),
+    Parse(ParseIntError),
+    InvalidPoint(String),
+}
+
+impl Display for CustomError {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        match self {
+            CustomError::Io(e) => write!(f, "IO error: {}", e),
+            CustomError::Parse(e) => write!(f, "Parse error: {}", e),
+            CustomError::InvalidPoint(msg) => write!(f, "Invalid point: {}", msg),
+        }
+    }
+}
+
+impl Error for CustomError {}
+
+impl From<io::Error> for CustomError {
+    fn from(err: io::Error) -> Self {
+        CustomError::Io(err)
+    }
+}
+
+impl From<ParseIntError> for CustomError {
+    fn from(err: ParseIntError) -> Self {
+        CustomError::Parse(err)
+    }
+}
+
+fn parse_point(s: &str) -> Result<Point, CustomError> {
+    let parts: Vec<&str> = s.split(',').collect();
+    if parts.len() != 2 {
+        return Err(CustomError::InvalidPoint(format!(
+            "Expected 'x,y' got '{}'",
+            s
+        )));
+    }
+
+    let x = parts[0].trim().parse::<f64>()?;
+    let y = parts[1].trim().parse::<f64>()?;
+
+    Ok(Point::new(x, y))
+}
+
+// ----------------------
+// 3. GENERICS AND TRAITS
+// ----------------------
+
+trait Area {
+    fn area(&self) -> f64;
+}
+
+struct Circle {
+    center: Point,
+    radius: f64,
+}
+
+impl Area for Circle {
+    fn area(&self) -> f64 {
+        std::f64::consts::PI * self.radius.powi(2)
+    }
+}
+
+struct Rectangle {
+    top_left: Point,
+    bottom_right: Point,
+}
+
+impl Area for Rectangle {
+    fn area(&self) -> f64 {
+        let width = (self.top_left.x - self.bottom_right.x).abs();
+        let height = (self.top_left.y - self.bottom_right.y).abs();
+        width * height
+    }
+}
+
+fn print_area<T: Area>(shape: &T) {
+    println!("Area: {:.2}", shape.area());
+}
+
+// ----------------------
+// 4. COLLECTIONS
+// ----------------------
+
+fn collection_examples() {
+    // Vector
+    let mut numbers = vec![1, 2, 3, 4, 5];
+    numbers.push(6);
+    println!("Vector: {:?}", numbers);
+
+    // HashMap
+    let mut scores = HashMap::new();
+    scores.insert("Alice", 100);
+    scores.insert("Bob", 85);
+    scores.insert("Charlie", 92);
+    println!("HashMap: {:?}", scores);
+
+    // HashSet
+    let mut unique_numbers = HashSet::new();
+    unique_numbers.insert(1);
+    unique_numbers.insert(2);
+    unique_numbers.insert(2); // Duplicate
+    println!("HashSet: {:?}", unique_numbers);
+
+    // Iterators
+    let sum: i32 = numbers.iter().map(|x| x * 2).sum();
+    println!("Doubled sum: {}", sum);
+}
+
+// ----------------------
+// 5. FILE I/O
+// ----------------------
+
+fn read_points_file(path: &Path) -> Result<Vec<Point>, CustomError> {
+    let file = File::open(path)?;
+    let reader = BufReader::new(file);
+
+    let mut points = Vec::new();
+    for line in reader.lines() {
+        let line = line?;
+        if !line.trim().is_empty() {
+            points.push(parse_point(&line)?);
+        }
+    }
+
+    Ok(points)
+}
+
+fn write_points_file(path: &Path, points: &[Point]) -> Result<(), CustomError> {
+    let mut file = File::create(path)?;
+    for point in points {
+        writeln!(file, "{},{}", point.x, point.y)?;
+    }
+    Ok(())
+}
+
+// ----------------------
+// 6. CONCURRENCY
+// ----------------------
+
+fn concurrent_counter() {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Arc::clone(&counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Final counter: {}", *counter.lock().unwrap());
+}
+
+fn parallel_processing(data: Vec<i32>) -> Vec<i32> {
+    let chunk_size = data.len() / 4;
+    let chunks: Vec<Vec<i32>> = data.chunks(chunk_size).map(|c| c.to_vec()).collect();
+
+    let mut handles = vec![];
+    for chunk in chunks {
+        handles.push(thread::spawn(move || {
+            chunk.iter().map(|x| x * 2).collect::<Vec<i32>>()
+        }));
+    }
+
+    let mut results = vec![];
+    for handle in handles {
+        results.extend(handle.join().unwrap());
+    }
+
+    results
+}
+
+// ----------------------
+// 7. BENCHMARKING
+// ----------------------
+
+fn benchmark() {
+    println!("\nBenchmarking:");
+
+    // Test vector allocation strategies
+    let start = Instant::now();
+    let mut vec = Vec::with_capacity(1_000_000);
+    for i in 0..1_000_000 {
+        vec.push(i);
+    }
+    println!("Pre-allocated vector: {:?}", start.elapsed());
+
+    let start = Instant::now();
+    let mut vec = vec![];
+    for i in 0..1_000_000 {
+        vec.push(i);
+    }
+    println!("Dynamic vector: {:?}", start.elapsed());
+
+    // Test string concatenation
+    let start = Instant::now();
+    let mut s = String::new();
+    for _ in 0..100_000 {
+        s.push_str("a");
+    }
+    println!("String push_str: {:?}", start.elapsed());
+
+    let start = Instant::now();
+    let s = "a".repeat(100_000);
+    println!("String repeat: {:?}", start.elapsed());
+}
+
+// ----------------------
+// 8. CLOSURES AND ITERATORS
+// ----------------------
+
+fn closure_examples() {
+    let add_one = |x| x + 1;
+    println!("Add one: {}", add_one(5));
+
+    let numbers = vec![1, 2, 3, 4, 5];
+    let evens: Vec<_> = numbers.iter().filter(|&x| x % 2 == 0).collect();
+    println!("Evens: {:?}", evens);
+
+    let sum: i32 = numbers.iter().fold(0, |acc, &x| acc + x);
+    println!("Sum: {}", sum);
+
+    let squares: Vec<_> = numbers.iter().map(|x| x * x).collect();
+    println!("Squares: {:?}", squares);
+}
+
+// ----------------------
+// 9. MACROS
+// ----------------------
+
+macro_rules! greet {
+    ($name:expr) => {
+        println!("Hello, {}!", $name);
+    };
+    ($name:expr, $greeting:expr) => {
+        println!("{}, {}!", $greeting, $name);
+    };
+}
+
+macro_rules! create_function {
+    ($func_name:ident) => {
+        fn $func_name() {
+            println!("You called {}", stringify!($func_name));
+        }
+    };
+}
+
+create_function!(say_hello);
+
+// ----------------------
+// 10. MAIN FUNCTION
+// ----------------------
+
+fn main() -> Result<(), Box<dyn Error>> {
+    println!("=== MASSIVE RUST DEMONSTRATION ===");
+
+    // 1. Custom types and traits
+    let mut p1 = Point::new(1.0, 2.0);
+    let p2 = Point::new(3.0, 4.0);
+    println!("Points: {} and {}", p1, p2);
+    println!("Distance: {:.2}", p1.distance(&p2));
+    p1 += p2.clone();
+    println!("After addition: {}", p1);
+
+    // 2. Error handling
+    match parse_point("3.5,4.2") {
+        Ok(p) => println!("Parsed point: {}", p),
+        Err(e) => println!("Error: {}", e),
+    }
+
+    // 3. Generics and traits
+    let circle = Circle {
+        center: Point::new(0.0, 0.0),
+        radius: 5.0,
+    };
+    print_area(&circle);
+
+    let rect = Rectangle {
+        top_left: Point::new(0.0, 4.0),
+        bottom_right: Point::new(3.0, 0.0),
+    };
+    print_area(&rect);
+
+    // 4. Collections
+    collection_examples();
+
+    // 5. File I/O
+    let filename = "points.txt";
+    let points = vec![
+        Point::new(1.0, 2.0),
+        Point::new(3.0, 4.0),
+        Point::new(5.0, 6.0),
+    ];
+
+    write_points_file(Path::new(filename), &points)?;
+    let read_points = read_points_file(Path::new(filename))?;
+    println!("Read points: {:?}", read_points);
+    fs::remove_file(filename)?;
+
+    // 6. Concurrency
+    concurrent_counter();
+
+    let data = (1..=100).collect();
+    let processed = parallel_processing(data);
+    println!("Parallel processed: {:?}", &processed[..10]);
+
+    // 7. Benchmarking
+    benchmark();
+
+    // 8. Closures and iterators
+    closure_examples();
+
+    // 9. Macros
+    greet!("World");
+    greet!("Rust", "Welcome to");
+    say_hello();
+
+    Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_point_addition() {
+        let p1 = Point::new(1.0, 2.0);
+        let p2 = Point::new(3.0, 4.0);
+        assert_eq!(p1 + p2, Point::new(4.0, 6.0));
+    }
+
+    #[test]
+    fn test_point_distance() {
+        let p1 = Point::new(0.0, 0.0);
+        let p2 = Point::new(3.0, 4.0);
+        assert_eq!(p1.distance(&p2), 5.0);
+    }
+
+    #[test]
+    fn test_parse_point() {
+        assert!(parse_point("1.0,2.0").is_ok());
+        assert!(parse_point("invalid").is_err());
+    }
+
+    #[test]
+    fn test_circle_area() {
+        let circle = Circle {
+            center: Point::new(0.0, 0.0),
+            radius: 2.0,
+        };
+        assert_eq!(circle.area(), std::f64::consts::PI * 4.0);
+    }
+}
