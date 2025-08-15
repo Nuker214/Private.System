@@ -596,6 +596,18 @@
     body.dashboard-body.light-theme .ipad-content {
       background: #ffd999;
     }
+    
+    .bypass-content {
+      display: none;
+      background: #40210f;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+    }
+    
+    body.dashboard-body.light-theme .bypass-content {
+      background: #ffd999;
+    }
   </style>
   
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -686,21 +698,21 @@
     </div>
 
     <div class="quick-bar" style="flex-wrap: wrap; margin-top: 30px;">
-      <button onclick="togglePanel('wifiPanel')">📡 School WiFi Information</button>
-      <button onclick="togglePanel('ipadPanel')">📱 School iPad Restrictions</button>
-      <button onclick="togglePanel('handbookPanel')">📘 Student Handbooks Information</button>
-      <button onclick="togglePanel('mapPanel')">🏫 School Building Map Information</button>
-      <button onclick="togglePanel('studentWebsitesPanel')">🌐 Student Website's Information</button>
-      <button onclick="togglePanel('teacherWebsitesPanel')">👩‍🏫 Teacher Websites Information</button>
-      <button onclick="togglePanel('phoneDirectoryPanel')">📞 School Phone Directory Information</button>
-      <button onclick="togglePanel('cameraPanel')">📷 School Camera Information</button>
-      <button onclick="togglePanel('schoolInfoPanel')">🏫 School Information</button>
-      <button onclick="togglePanel('exploitPanel')">🧨 Exploiting Tools</button>
-      <button onclick="togglePanel('bypassPanel')">🚪 Bypassing Tools</button>
-      <button onclick="togglePanel('vpnPanel')">🔐 VPN Websites</button>
-      <button onclick="togglePanel('gamingPanel')">🎮 Gaming Websites</button>
-      <button onclick="togglePanel('musicPanel')">🎵 Music Websites</button>
-      <button onclick="togglePanel('keyboardPanel')">🎹 Keyboard Tricks</button>
+      <button onclick="dashboard.togglePanel('wifiPanel')">📡 School WiFi Information</button>
+      <button onclick="dashboard.togglePanel('ipadPanel')">📱 School iPad Restrictions</button>
+      <button onclick="dashboard.togglePanel('handbookPanel')">📘 Student Handbooks Information</button>
+      <button onclick="dashboard.togglePanel('mapPanel')">🏫 School Building Map Information</button>
+      <button onclick="dashboard.togglePanel('studentWebsitesPanel')">🌐 Student Website's Information</button>
+      <button onclick="dashboard.togglePanel('teacherWebsitesPanel')">👩‍🏫 Teacher Websites Information</button>
+      <button onclick="dashboard.togglePanel('phoneDirectoryPanel')">📞 School Phone Directory Information</button>
+      <button onclick="dashboard.togglePanel('cameraPanel')">📷 School Camera Information</button>
+      <button onclick="dashboard.togglePanel('schoolInfoPanel')">🏫 School Information</button>
+      <button onclick="dashboard.togglePanel('exploitPanel')">🧨 Exploiting Tools</button>
+      <button onclick="dashboard.togglePanel('bypassPanel')">🚪 Bypassing Tools</button>
+      <button onclick="dashboard.togglePanel('vpnPanel')">🔐 VPN Websites</button>
+      <button onclick="dashboard.togglePanel('gamingPanel')">🎮 Gaming Websites</button>
+      <button onclick="dashboard.togglePanel('musicPanel')">🎵 Music Websites</button>
+      <button onclick="dashboard.togglePanel('keyboardPanel')">🎹 Keyboard Tricks</button>
     </div>
 
     <!-- Information Panels -->
@@ -768,8 +780,8 @@
       <div id="ipadPanel" class="info-panel">
         <h2>📱 School iPad Restrictions</h2>
         <div class="ipad-options">
-          <button onclick="showIpadContent('restrictions')">Restrictions</button>
-          <button onclick="showIpadContent('bypasses')">Bypasses</button>
+          <button onclick="dashboard.showIpadContent('restrictions')">Restrictions</button>
+          <button onclick="dashboard.showIpadContent('bypasses')">Bypasses</button>
         </div>
         
         <div id="ipadRestrictions" class="ipad-content">
@@ -940,12 +952,12 @@
       <div id="bypassPanel" class="info-panel">
         <h2>🚪 Bypassing Tools</h2>
         <div class="bypass-buttons">
-          <button onclick="showBypassContent('bathroom')">Bathroom Bypass</button>
-          <button onclick="showBypassContent('wifi')">Wifi Bypass</button>
-          <button onclick="showBypassContent('monitoring')">Teacher Monitoring Bypass</button>
-          <button onclick="showBypassContent('coming1')">Coming Soon</button>
-          <button onclick="showBypassContent('coming2')">Coming Soon</button>
-          <button onclick="showBypassContent('coming3')">Coming Soon</button>
+          <button onclick="dashboard.showBypassContent('bathroom')">Bathroom Bypass</button>
+          <button onclick="dashboard.showBypassContent('wifi')">Wifi Bypass</button>
+          <button onclick="dashboard.showBypassContent('monitoring')">Teacher Monitoring Bypass</button>
+          <button onclick="dashboard.showBypassContent('coming1')">Coming Soon</button>
+          <button onclick="dashboard.showBypassContent('coming2')">Coming Soon</button>
+          <button onclick="dashboard.showBypassContent('coming3')">Coming Soon</button>
         </div>
         
         <div id="bathroomBypass" class="bypass-content">
@@ -1065,6 +1077,298 @@ To view all available shortcuts for the specific app you are using, press and h
   </div>
 
   <script>
+    // Dashboard functionality object
+    const dashboard = {
+      // Initialize all dashboard functionality
+      init: function() {
+        this.initSessionTimer();
+        this.initClock();
+        this.generateCalendar();
+        this.initThemeToggle();
+        this.initButtons();
+        this.initCanvas();
+        this.initPanels();
+        this.initQuickBar();
+      },
+      
+      // Initialize session timer
+      initSessionTimer: function() {
+        let sessionSeconds = 0;
+        function formatTime(seconds) {
+          const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+          const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+          const secs = String(seconds % 60).padStart(2, '0');
+          return `${hrs}:${mins}:${secs}`;
+        }
+        
+        function updateSessionTime() {
+          sessionSeconds++;
+          document.getElementById('sessionTime').innerText = `⏳ Session Time: ${formatTime(sessionSeconds)}`;
+        }
+        
+        updateSessionTime();
+        setInterval(updateSessionTime, 1000);
+      },
+      
+      // Initialize real-time clock
+      initClock: function() {
+        function updateClock() {
+          const now = new Date();
+          const options = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
+          const timeStr = now.toLocaleTimeString(undefined, options);
+          const dateStr = now.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
+
+          document.getElementById('realTimeClock').innerText = '🕒 ' + timeStr;
+          document.getElementById('realDate').innerText = '📅 ' + dateStr;
+        }
+        
+        updateClock();
+        setInterval(updateClock, 1000);
+      },
+      
+      // Generate calendar
+      generateCalendar: function() {
+        const calendar = document.getElementById('calendar');
+        calendar.innerHTML = ''; 
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        days.forEach(day => {
+          const div = document.createElement('div');
+          div.innerText = day;
+          calendar.appendChild(div);
+        });
+
+        const date = new Date();
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const today = date.getDate();
+
+        const firstDay = new Date(year, month, 1).getDay();
+        const lastDate = new Date(year, month + 1, 0).getDate();
+
+        for (let i = 0; i < firstDay; i++) {
+          const empty = document.createElement('div');
+          calendar.appendChild(empty);
+        }
+
+        for (let i = 1; i <= lastDate; i++) {
+          const cell = document.createElement('div');
+          cell.innerText = i;
+          if (i === today) cell.classList.add('today');
+          calendar.appendChild(cell);
+        }
+      },
+      
+      // Initialize theme toggle
+      initThemeToggle: function() {
+        const themeBtn = document.getElementById('themeToggle');
+        themeBtn.addEventListener('click', () => {
+          document.body.classList.toggle('light-theme');
+          if(document.body.classList.contains('light-theme')){
+            themeBtn.innerText = '☀️ Light Mode';
+          } else {
+            themeBtn.innerText = '🌙 Dark Mode';
+          }
+        });
+      },
+      
+      // Initialize buttons
+      initButtons: function() {
+        document.getElementById('panicBtn').addEventListener('click', () => {
+          window.open('https://clever.com', '_blank');
+        });
+
+        document.getElementById('restartBtn').addEventListener('click', () => {
+          if(confirm('Are you sure you want to kill the page (restart)?')) {
+            document.body.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a1a; color:#f9f2dc; font-family:'Montserrat', sans-serif; font-size:24px;">Page has been killed. Restart to continue.</div>`;
+          }
+        });
+
+        document.getElementById('fixIssuesBtn').addEventListener('click', () => {
+          alert('Running diagnostics...\nNo issues found. Your dashboard is running smoothly!');
+        });
+        
+        document.getElementById('fullScreenBtn').addEventListener('click', () => {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+              alert(`Error attempting to enable full-screen mode: ${err.message}`);
+            });
+          } else {
+            document.exitFullscreen();
+          }
+        });
+        
+        let zoomLevel = 1;
+        const zoomStep = 0.1;
+        const minZoom = 0.5;
+        const maxZoom = 2;
+
+        document.getElementById('zoomInBtn').addEventListener('click', () => {
+          if (zoomLevel < maxZoom) {
+            zoomLevel += zoomStep;
+            document.body.style.zoom = zoomLevel;
+          }
+        });
+
+        document.getElementById('zoomOutBtn').addEventListener('click', () => {
+          if (zoomLevel > minZoom) {
+            zoomLevel -= zoomStep;
+            document.body.style.zoom = zoomLevel;
+          }
+        });
+      },
+      
+      // Initialize canvas
+      initCanvas: function() {
+        const notesBtn = document.getElementById('notesBtn');
+        const canvasContainer = document.getElementById('canvasContainer');
+        const mainGrid = document.getElementById('mainGrid');
+
+        notesBtn.addEventListener('click', () => {
+          mainGrid.style.display = 'none';
+          canvasContainer.style.display = 'block';
+        });
+
+        document.getElementById('closeCanvasBtn').addEventListener('click', () => {
+          canvasContainer.style.display = 'none';
+          mainGrid.style.display = 'flex';
+        });
+
+        const clearCanvasBtn = document.getElementById('clearCanvasBtn');
+
+        const canvas = document.getElementById('notesCanvas');
+        const ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        let drawing = false;
+
+        function getPos(evt) {
+          const rect = canvas.getBoundingClientRect();
+          return {
+            x: (evt.clientX || evt.touches[0].clientX) - rect.left,
+            y: (evt.clientY || evt.touches[0].clientY) - rect.top
+          };
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+          drawing = true;
+          const pos = getPos(e);
+          ctx.beginPath();
+          ctx.moveTo(pos.x, pos.y);
+          e.preventDefault();
+        });
+
+        canvas.addEventListener('touchstart', (e) => {
+          drawing = true;
+          const pos = getPos(e);
+          ctx.beginPath();
+          ctx.moveTo(pos.x, pos.y);
+          e.preventDefault();
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+          if (!drawing) return;
+          const pos = getPos(e);
+          ctx.lineTo(pos.x, pos.y);
+          ctx.strokeStyle = '#ff914d';
+          ctx.lineWidth = 2;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+          e.preventDefault();
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+          if (!drawing) return;
+          const pos = getPos(e);
+          ctx.lineTo(pos.x, pos.y);
+          ctx.strokeStyle = '#ff914d';
+          ctx.lineWidth = 2;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+          e.preventDefault();
+        });
+
+        ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(evtName => {
+          canvas.addEventListener(evtName, () => {
+            drawing = false;
+          });
+        });
+
+        clearCanvasBtn.addEventListener('click', () => {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+        });
+
+        document.getElementById('screenshotBtn').addEventListener('click', () => {
+          const elementToCapture = document.body; 
+          html2canvas(elementToCapture).then(canvasImg => {
+            const link = document.createElement('a');
+            link.download = 'dashboard_screenshot.png';
+            link.href = canvasImg.toDataURL('image/png');
+            link.click();
+          });
+        });
+        
+        document.getElementById('exportNotesBtn').addEventListener('click', () => {
+          const link = document.createElement('a');
+          link.download = 'notes_canvas.png';
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+
+        const toggleBtn = document.getElementById('toggleSectionsBtn');
+        toggleBtn.addEventListener('click', () => {
+          if (mainGrid.style.display === 'none') {
+            mainGrid.style.display = 'flex';
+            toggleBtn.innerText = '⬆️ Toggle Sections';
+          } else {
+            mainGrid.style.display = 'none';
+            toggleBtn.innerText = '⬇️ Toggle Sections';
+          }
+        });
+      },
+      
+      // Initialize panels
+      initPanels: function() {
+        document.querySelectorAll('.info-panel').forEach(panel => {
+          panel.style.display = 'none';
+        });
+        document.querySelectorAll('.ipad-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        document.querySelectorAll('.bypass-content').forEach(content => {
+          content.style.display = 'none';
+        });
+      },
+      
+      // Initialize quick bar
+      initQuickBar: function() {
+        // Already handled by the panel toggle functions
+      },
+      
+      // Panel toggle functions
+      togglePanel: function(panelId) {
+        const panel = document.getElementById(panelId);
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      },
+      
+      showIpadContent: function(contentId) {
+        document.querySelectorAll('.ipad-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        document.getElementById('ipad' + contentId.charAt(0).toUpperCase() + contentId.slice(1)).style.display = 'block';
+      },
+      
+      showBypassContent: function(contentId) {
+        document.querySelectorAll('.bypass-content').forEach(content => {
+          content.style.display = 'none';
+        });
+        document.getElementById(contentId + 'Bypass').style.display = 'block';
+      }
+    };
+
     // Login System JavaScript
     (() => {
       const USER_JSON_URL = 'https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json';
@@ -1520,7 +1824,7 @@ To view all available shortcuts for the specific app you are using, press and h
         document.getElementById('loggedInID').textContent = userID;
         
         // Initialize dashboard functionality
-        initDashboard();
+        dashboard.init();
       }
 
       // Failed attempt handler
@@ -1665,285 +1969,6 @@ To view all available shortcuts for the specific app you are using, press and h
       // Initialize attempts display
       updateAttemptsText();
     })();
-
-    // Dashboard JavaScript
-    function initDashboard() {
-      // Function to toggle panels
-      function togglePanel(panelId) {
-        const panel = document.getElementById(panelId);
-        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-      }
-
-      // Function to show iPad content
-      function showIpadContent(contentId) {
-        document.querySelectorAll('.ipad-content').forEach(content => {
-          content.style.display = 'none';
-        });
-        document.getElementById('ipad' + contentId.charAt(0).toUpperCase() + contentId.slice(1)).style.display = 'block';
-      }
-
-      // Function to show bypass content
-      function showBypassContent(contentId) {
-        document.querySelectorAll('.bypass-content').forEach(content => {
-          content.style.display = 'none';
-        });
-        document.getElementById(contentId + 'Bypass').style.display = 'block';
-      }
-
-      // Initialize panels to be hidden
-      document.querySelectorAll('.info-panel').forEach(panel => {
-        panel.style.display = 'none';
-      });
-      document.querySelectorAll('.ipad-content').forEach(content => {
-        content.style.display = 'none';
-      });
-      document.querySelectorAll('.bypass-content').forEach(content => {
-        content.style.display = 'none';
-      });
-
-      let sessionSeconds = 0;
-      function formatTime(seconds) {
-        const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
-        const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-        const secs = String(seconds % 60).padStart(2, '0');
-        return `${hrs}:${mins}:${secs}`;
-      }
-      function updateSessionTime() {
-        sessionSeconds++;
-        document.getElementById('sessionTime').innerText = `⏳ Session Time: ${formatTime(sessionSeconds)}`;
-      }
-
-      function updateClock() {
-        const now = new Date();
-        const options = { hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: true };
-        const timeStr = now.toLocaleTimeString(undefined, options);
-        const dateStr = now.toLocaleDateString(undefined, { month: 'long', day: 'numeric', year: 'numeric' });
-
-        document.getElementById('realTimeClock').innerText = '🕒 ' + timeStr;
-        document.getElementById('realDate').innerText = '📅 ' + dateStr;
-      }
-
-      function generateCalendar() {
-        const calendar = document.getElementById('calendar');
-        calendar.innerHTML = ''; 
-        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        days.forEach(day => {
-          const div = document.createElement('div');
-          div.innerText = day;
-          calendar.appendChild(div);
-        });
-
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = date.getMonth();
-        const today = date.getDate();
-
-        const firstDay = new Date(year, month, 1).getDay();
-        const lastDate = new Date(year, month + 1, 0).getDate();
-
-        for (let i = 0; i < firstDay; i++) {
-          const empty = document.createElement('div');
-          calendar.appendChild(empty);
-        }
-
-        for (let i = 1; i <= lastDate; i++) {
-          const cell = document.createElement('div');
-          cell.innerText = i;
-          if (i === today) cell.classList.add('today');
-          calendar.appendChild(cell);
-        }
-      }
-
-      const themeBtn = document.getElementById('themeToggle');
-      themeBtn.addEventListener('click', () => {
-        document.body.classList.toggle('light-theme');
-        if(document.body.classList.contains('light-theme')){
-          themeBtn.innerText = '☀️ Light Mode';
-        } else {
-          themeBtn.innerText = '🌙 Dark Mode';
-        }
-      });
-      
-      document.getElementById('panicBtn').addEventListener('click', () => {
-        window.open('https://clever.com', '_blank');
-      });
-
-      function killPage(message) {
-        document.body.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a1a; color:#f9f2dc; font-family:'Montserrat', sans-serif; font-size:24px;">${message}</div>`;
-      }
-
-      document.getElementById('restartBtn').addEventListener('click', () => {
-        if(confirm('Are you sure you want to kill the page (restart)?')) {
-          killPage('Page has been killed. Restart to continue.');
-        }
-      });
-
-      document.getElementById('logoutBtn').addEventListener('click', () => {
-        if(confirm('Are you sure you want to log out?')) {
-          // Show login and hide dashboard
-          document.getElementById('loginBox').style.display = 'block';
-          document.getElementById('dashboard').style.display = 'none';
-          document.body.className = 'login-body';
-          
-          // Reset login form
-          document.getElementById('username').value = '';
-          document.getElementById('password').value = '';
-          document.getElementById('userID').value = '';
-          document.getElementById('errorMsg').textContent = '';
-        }
-      });
-
-      document.getElementById('fixIssuesBtn').addEventListener('click', () => {
-        alert('Running diagnostics...\nNo issues found. Your dashboard is running smoothly!');
-      });
-      
-      const notesBtn = document.getElementById('notesBtn');
-      const canvasContainer = document.getElementById('canvasContainer');
-      const mainGrid = document.getElementById('mainGrid');
-
-      notesBtn.addEventListener('click', () => {
-        mainGrid.style.display = 'none';
-        canvasContainer.style.display = 'block';
-      });
-
-      document.getElementById('closeCanvasBtn').addEventListener('click', () => {
-        canvasContainer.style.display = 'none';
-        mainGrid.style.display = 'flex';
-      });
-
-      const clearCanvasBtn = document.getElementById('clearCanvasBtn');
-
-      const canvas = document.getElementById('notesCanvas');
-      const ctx = canvas.getContext('2d');
-
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      let drawing = false;
-
-      function getPos(evt) {
-        const rect = canvas.getBoundingClientRect();
-        return {
-          x: (evt.clientX || evt.touches[0].clientX) - rect.left,
-          y: (evt.clientY || evt.touches[0].clientY) - rect.top
-        };
-      }
-
-      canvas.addEventListener('mousedown', (e) => {
-        drawing = true;
-        const pos = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-        e.preventDefault();
-      });
-
-      canvas.addEventListener('touchstart', (e) => {
-        drawing = true;
-        const pos = getPos(e);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-        e.preventDefault();
-      });
-
-      canvas.addEventListener('mousemove', (e) => {
-        if (!drawing) return;
-        const pos = getPos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.strokeStyle = '#ff914d';
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-        e.preventDefault();
-      });
-
-      canvas.addEventListener('touchmove', (e) => {
-        if (!drawing) return;
-        const pos = getPos(e);
-        ctx.lineTo(pos.x, pos.y);
-        ctx.strokeStyle = '#ff914d';
-        ctx.lineWidth = 2;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-        e.preventDefault();
-      });
-
-      ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(evtName => {
-        canvas.addEventListener(evtName, () => {
-          drawing = false;
-        });
-      });
-
-      clearCanvasBtn.addEventListener('click', () => {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.fillStyle = '#fff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      });
-
-      document.getElementById('screenshotBtn').addEventListener('click', () => {
-        const elementToCapture = document.body; 
-        html2canvas(elementToCapture).then(canvasImg => {
-          const link = document.createElement('a');
-          link.download = 'dashboard_screenshot.png';
-          link.href = canvasImg.toDataURL('image/png');
-          link.click();
-        });
-      });
-      
-      document.getElementById('exportNotesBtn').addEventListener('click', () => {
-        const link = document.createElement('a');
-        link.download = 'notes_canvas.png';
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-      });
-
-      const toggleBtn = document.getElementById('toggleSectionsBtn');
-      toggleBtn.addEventListener('click', () => {
-        if (mainGrid.style.display === 'none') {
-          mainGrid.style.display = 'flex';
-          toggleBtn.innerText = '⬆️ Toggle Sections';
-        } else {
-          mainGrid.style.display = 'none';
-          toggleBtn.innerText = '⬇️ Toggle Sections';
-        }
-      });
-
-      document.getElementById('fullScreenBtn').addEventListener('click', () => {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen().catch(err => {
-            alert(`Error attempting to enable full-screen mode: ${err.message}`);
-          });
-        } else {
-          document.exitFullscreen();
-        }
-      });
-      
-      let zoomLevel = 1;
-      const zoomStep = 0.1;
-      const minZoom = 0.5;
-      const maxZoom = 2;
-
-      document.getElementById('zoomInBtn').addEventListener('click', () => {
-        if (zoomLevel < maxZoom) {
-          zoomLevel += zoomStep;
-          document.body.style.zoom = zoomLevel;
-        }
-      });
-
-      document.getElementById('zoomOutBtn').addEventListener('click', () => {
-        if (zoomLevel > minZoom) {
-          zoomLevel -= zoomStep;
-          document.body.style.zoom = zoomLevel;
-        }
-      });
-
-      updateSessionTime();
-      setInterval(updateSessionTime, 1000);
-
-      updateClock();
-      setInterval(updateClock, 1000);
-
-      generateCalendar();
-    }
   </script>
 </body>
-        </html>
+  </html>
