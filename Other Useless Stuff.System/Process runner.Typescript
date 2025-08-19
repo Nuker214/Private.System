@@ -1,0 +1,752 @@
+# ================================================
+# PYTHON TEXT ADVENTURE GAME: "THE LOST TEMPLE"
+# ================================================
+
+import random
+import time
+import sys
+
+# ---------- Game Configuration ----------
+PLAYER_START_HEALTH = 100
+PLAYER_START_ATTACK = 20
+ENEMY_ATTACK_RANGE = (10, 25)
+HEAL_POTION_AMOUNT = 30
+TREASURE_CHANCE = 0.4  # 40% chance to find treasure in a room
+
+# ---------- Data Structures ----------
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.health = PLAYER_START_HEALTH
+        self.attack_power = PLAYER_START_ATTACK
+        self.inventory = {
+            'gold': 0,
+            'healing potions': 1,
+            'key': False
+        }
+        self.current_room = "entrance"
+    
+    def is_alive(self):
+        return self.health > 0
+    
+    def use_potion(self):
+        if self.inventory['healing potions'] > 0:
+            self.health = min(100, self.health + HEAL_POTION_AMOUNT)
+            self.inventory['healing potions'] -= 1
+            return True
+        return False
+    
+    def display_status(self):
+        print(f"\n=== {self.name}'s Status ===")
+        print(f"Health: {self.health}/100")
+        print(f"Attack: {self.attack_power}")
+        print("Inventory:")
+        for item, quantity in self.inventory.items():
+            if quantity:
+                if isinstance(quantity, bool):
+                    print(f"  - {item.capitalize()}")
+                else:
+                    print(f"  - {item.capitalize()}: {quantity}")
+        print()
+
+class Enemy:
+    def __init__(self, name, health, attack):
+        self.name = name
+        self.health = health
+        self.attack_power = attack
+    
+    def is_alive(self):
+        return self.health > 0
+
+# ---------- Game World ----------
+room_descriptions = {
+    "entrance": "You stand at the entrance of an ancient temple. Moss covers the stone walls.",
+    "hallway": "A long hallway stretches before you. Torches flicker on the walls.",
+    "library": "Dusty scrolls and rotten books fill the shelves of this circular room.",
+    "treasury": "Empty chests lie scattered around this room. Someone got here first.",
+    "guardroom": "Weapon racks line the walls, but all the weapons have turned to rust.",
+    "throne room": "An ornate stone throne sits at the far end of this massive hall.",
+    "chamber": "This small chamber has strange symbols carved into the walls.",
+    "final chamber": "The air hums with ancient power. This must be the heart of the temple."
+}
+
+room_connections = {
+    "entrance": ["hallway"],
+    "hallway": ["entrance", "library", "guardroom", "chamber"],
+    "library": ["hallway", "treasury"],
+    "treasury": ["library"],
+    "guardroom": ["hallway", "throne room"],
+    "throne room": ["guardroom"],
+    "chamber": ["hallway", "final chamber"],
+    "final chamber": ["chamber"]
+}
+
+room_enemies = {
+    "guardroom": Enemy("Temple Guardian", 60, 15),
+    "throne room": Enemy("Stone Golem", 80, 20),
+    "final chamber": Enemy("Ancient Spirit", 100, 25)
+}
+
+room_treasures = {
+    "library": {"healing potions": 1},
+    "treasury": {"gold": 50, "key": True},
+    "chamber": {"healing potions": 2, "gold": 25}
+}
+
+# ---------- Game Functions ----------
+def type_text(text, delay=0.03):
+    """Print text with a typewriter effect"""
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()
+
+def combat(player, enemy):
+    """Handle combat between player and enemy"""
+    type_text(f"\nA {enemy.name} appears! Prepare for battle!")
+    
+    while player.is_alive() and enemy.is_alive():
+        type_text(f"\n--- Combat ---")
+        type_text(f"Your health: {player.health}")
+        type_text(f"{enemy.name}'s health: {enemy.health}")
+        
+        # Player's turn
+        action = input("\nChoose action: [A]ttack, [U]se potion, [R]un away: ").lower()
+        
+        if action == 'a':
+            damage = random.randint(player.attack_power - 5, player.attack_power + 5)
+            enemy.health -= damage
+            type_text(f"You attack the {enemy.name} for {damage} damage!")
+        elif action == 'u':
+            if player.use_potion():
+                type_text(f"You drink a healing potion and recover {HEAL_POTION_AMOUNT} health!")
+            else:
+                type_text("You have no healing potions left!")
+            continue  # Enemy doesn't attack if player uses potion
+        elif action == 'r':
+            if random.random() < 0.5:  # 50% chance to escape
+                type_text("You barely escape with your life!")
+                return True  # Survived
+            else:
+                type_text("You couldn't escape!")
+        else:
+            type_text("Invalid action! You hesitate and lose your turn.")
+        
+        # Check if enemy is defeated
+        if not enemy.is_alive():
+            type_text(f"\nYou defeated the {enemy.name}!")
+            reward_gold = random.randint(10, 30)
+            player.inventory['gold'] += reward_gold
+            type_text(f"You found {reward_gold} gold on the enemy!")
+            return True
+        
+        # Enemy's turn
+        enemy_damage = random.randint(ENEMY_ATTACK_RANGE[0], ENEMY_ATTACK_RANGE[1])
+        player.health -= enemy_damage
+        type_text(f"The {enemy.name} attacks you for {enemy_damage} damage!")
+        
+        # Check if player is defeated
+        if not player.is_alive():
+            type_text("\nYou have been defeated...")
+            return False
+    
+    return player.is_alive()
+
+def explore_room(player, room):
+    """Handle room exploration and interactions"""
+    type_text(f"\n{room_descriptions[room]}")
+    
+    # Check for enemies
+    if room in room_enemies and room_enemies[room].is_alive():
+        if not combat(player, room_enemies[room]):
+            return False  # Player died
+    
+    # Check for treasure
+    if room in room_treasures and room_treasures[room]:
+        type_text("\nYou search the room and find something!")
+        for item, quantity in room_treasures[room].items():
+            if isinstance(quantity, bool) and quantity:
+                player.inventory[item] = True
+                type_text(f"  - You found a {item}!")
+            elif quantity > 0:
+                player.inventory[item] += quantity
+                type_text(f"  - You found {quantity} {item}!")
+        room_treasures[room] = {}  # Remove treasure after finding it
+    elif random.random() < TREASURE_CHANCE:
+        found_gold = random.randint(5, 15)
+        player.inventory['gold'] += found_gold
+        type_text(f"\nYou find {found_gold} gold coins hidden in a crevice!")
+    
+    return True  # Player survived the room
+
+def get_available_directions(current_room):
+    """Return available directions from current room"""
+    return room_connections[current_room]
+
+def main():
+    """Main game function"""
+    # Game initialization
+    type_text("Welcome to THE LOST TEMPLE!")
+    type_text("An ancient temple holds secrets and treasures... but also dangers.")
+    type_text("Your goal is to explore the temple and find the legendary artifact!")
+    
+    player_name = input("\nWhat is your name, adventurer? ")
+    player = Player(player_name)
+    
+    type_text(f"\nGood luck, {player_name}. Your adventure begins now...")
+    
+    # Main game loop
+    game_active = True
+    while game_active and player.is_alive():
+        # Display current status and room
+        player.display_status()
+        type_text(f"\nYou are in the {player.current_room.replace('_', ' ')}.")
+        
+        # Explore current room
+        if not explore_room(player, player.current_room):
+            break  # Player died in combat
+        
+        # Check win condition
+        if player.current_room == "final chamber" and player.inventory['key']:
+            type_text("\nYou use the ancient key to unlock the inner sanctum!")
+            type_text("Before you lies the legendary Crystal of Eternity!")
+            type_text("You have successfully completed your quest!")
+            type_text(f"\nFinal Score: {player.inventory['gold']} gold collected")
+            type_text("Congratulations, brave adventurer!")
+            break
+        
+        # Get available moves
+        directions = get_available_directions(player.current_room)
+        type_text(f"\nAvailable paths: {', '.join(directions)}")
+        
+        # Get player action
+        action = input("\nWhat would you like to do? \n[M]ove, [U]se potion, [Q]uit: ").lower()
+        
+        if action == 'm':
+            destination = input(f"Where to? ({'/'.join(directions)}): ").lower()
+            if destination in directions:
+                player.current_room = destination
+            else:
+                type_text("You can't go that way!")
+        elif action == 'u':
+            if player.use_potion():
+                type_text(f"You drink a healing potion and recover {HEAL_POTION_AMOUNT} health!")
+            else:
+                type_text("You have no healing potions left!")
+        elif action == 'q':
+            type_text("Thanks for playing!")
+            game_active = False
+        else:
+            type_text("Invalid action!")
+    
+    if not player.is_alive():
+        type_text("\nGame Over! Your adventure has ended...")
+        type_text("Better luck next time!")
+
+# ---------- Run the Game ----------
+if __name__ == "__main__":
+    main()
+
+# ================================================
+# PYTHON TEXT ADVENTURE GAME: "THE LOST TEMPLE"
+# ================================================
+
+import random
+import time
+import sys
+
+# ---------- Game Configuration ----------
+PLAYER_START_HEALTH = 100
+PLAYER_START_ATTACK = 20
+ENEMY_ATTACK_RANGE = (10, 25)
+HEAL_POTION_AMOUNT = 30
+TREASURE_CHANCE = 0.4  # 40% chance to find treasure in a room
+
+# ---------- Data Structures ----------
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.health = PLAYER_START_HEALTH
+        self.attack_power = PLAYER_START_ATTACK
+        self.inventory = {
+            'gold': 0,
+            'healing potions': 1,
+            'key': False
+        }
+        self.current_room = "entrance"
+    
+    def is_alive(self):
+        return self.health > 0
+    
+    def use_potion(self):
+        if self.inventory['healing potions'] > 0:
+            self.health = min(100, self.health + HEAL_POTION_AMOUNT)
+            self.inventory['healing potions'] -= 1
+            return True
+        return False
+    
+    def display_status(self):
+        print(f"\n=== {self.name}'s Status ===")
+        print(f"Health: {self.health}/100")
+        print(f"Attack: {self.attack_power}")
+        print("Inventory:")
+        for item, quantity in self.inventory.items():
+            if quantity:
+                if isinstance(quantity, bool):
+                    print(f"  - {item.capitalize()}")
+                else:
+                    print(f"  - {item.capitalize()}: {quantity}")
+        print()
+
+class Enemy:
+    def __init__(self, name, health, attack):
+        self.name = name
+        self.health = health
+        self.attack_power = attack
+    
+    def is_alive(self):
+        return self.health > 0
+
+# ---------- Game World ----------
+room_descriptions = {
+    "entrance": "You stand at the entrance of an ancient temple. Moss covers the stone walls.",
+    "hallway": "A long hallway stretches before you. Torches flicker on the walls.",
+    "library": "Dusty scrolls and rotten books fill the shelves of this circular room.",
+    "treasury": "Empty chests lie scattered around this room. Someone got here first.",
+    "guardroom": "Weapon racks line the walls, but all the weapons have turned to rust.",
+    "throne room": "An ornate stone throne sits at the far end of this massive hall.",
+    "chamber": "This small chamber has strange symbols carved into the walls.",
+    "final chamber": "The air hums with ancient power. This must be the heart of the temple."
+}
+
+room_connections = {
+    "entrance": ["hallway"],
+    "hallway": ["entrance", "library", "guardroom", "chamber"],
+    "library": ["hallway", "treasury"],
+    "treasury": ["library"],
+    "guardroom": ["hallway", "throne room"],
+    "throne room": ["guardroom"],
+    "chamber": ["hallway", "final chamber"],
+    "final chamber": ["chamber"]
+}
+
+room_enemies = {
+    "guardroom": Enemy("Temple Guardian", 60, 15),
+    "throne room": Enemy("Stone Golem", 80, 20),
+    "final chamber": Enemy("Ancient Spirit", 100, 25)
+}
+
+room_treasures = {
+    "library": {"healing potions": 1},
+    "treasury": {"gold": 50, "key": True},
+    "chamber": {"healing potions": 2, "gold": 25}
+}
+
+# ---------- Game Functions ----------
+def type_text(text, delay=0.03):
+    """Print text with a typewriter effect"""
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()
+
+def combat(player, enemy):
+    """Handle combat between player and enemy"""
+    type_text(f"\nA {enemy.name} appears! Prepare for battle!")
+    
+    while player.is_alive() and enemy.is_alive():
+        type_text(f"\n--- Combat ---")
+        type_text(f"Your health: {player.health}")
+        type_text(f"{enemy.name}'s health: {enemy.health}")
+        
+        # Player's turn
+        action = input("\nChoose action: [A]ttack, [U]se potion, [R]un away: ").lower()
+        
+        if action == 'a':
+            damage = random.randint(player.attack_power - 5, player.attack_power + 5)
+            enemy.health -= damage
+            type_text(f"You attack the {enemy.name} for {damage} damage!")
+        elif action == 'u':
+            if player.use_potion():
+                type_text(f"You drink a healing potion and recover {HEAL_POTION_AMOUNT} health!")
+            else:
+                type_text("You have no healing potions left!")
+            continue  # Enemy doesn't attack if player uses potion
+        elif action == 'r':
+            if random.random() < 0.5:  # 50% chance to escape
+                type_text("You barely escape with your life!")
+                return True  # Survived
+            else:
+                type_text("You couldn't escape!")
+        else:
+            type_text("Invalid action! You hesitate and lose your turn.")
+        
+        # Check if enemy is defeated
+        if not enemy.is_alive():
+            type_text(f"\nYou defeated the {enemy.name}!")
+            reward_gold = random.randint(10, 30)
+            player.inventory['gold'] += reward_gold
+            type_text(f"You found {reward_gold} gold on the enemy!")
+            return True
+        
+        # Enemy's turn
+        enemy_damage = random.randint(ENEMY_ATTACK_RANGE[0], ENEMY_ATTACK_RANGE[1])
+        player.health -= enemy_damage
+        type_text(f"The {enemy.name} attacks you for {enemy_damage} damage!")
+        
+        # Check if player is defeated
+        if not player.is_alive():
+            type_text("\nYou have been defeated...")
+            return False
+    
+    return player.is_alive()
+
+def explore_room(player, room):
+    """Handle room exploration and interactions"""
+    type_text(f"\n{room_descriptions[room]}")
+    
+    # Check for enemies
+    if room in room_enemies and room_enemies[room].is_alive():
+        if not combat(player, room_enemies[room]):
+            return False  # Player died
+    
+    # Check for treasure
+    if room in room_treasures and room_treasures[room]:
+        type_text("\nYou search the room and find something!")
+        for item, quantity in room_treasures[room].items():
+            if isinstance(quantity, bool) and quantity:
+                player.inventory[item] = True
+                type_text(f"  - You found a {item}!")
+            elif quantity > 0:
+                player.inventory[item] += quantity
+                type_text(f"  - You found {quantity} {item}!")
+        room_treasures[room] = {}  # Remove treasure after finding it
+    elif random.random() < TREASURE_CHANCE:
+        found_gold = random.randint(5, 15)
+        player.inventory['gold'] += found_gold
+        type_text(f"\nYou find {found_gold} gold coins hidden in a crevice!")
+    
+    return True  # Player survived the room
+
+def get_available_directions(current_room):
+    """Return available directions from current room"""
+    return room_connections[current_room]
+
+def main():
+    """Main game function"""
+    # Game initialization
+    type_text("Welcome to THE LOST TEMPLE!")
+    type_text("An ancient temple holds secrets and treasures... but also dangers.")
+    type_text("Your goal is to explore the temple and find the legendary artifact!")
+    
+    player_name = input("\nWhat is your name, adventurer? ")
+    player = Player(player_name)
+    
+    type_text(f"\nGood luck, {player_name}. Your adventure begins now...")
+    
+    # Main game loop
+    game_active = True
+    while game_active and player.is_alive():
+        # Display current status and room
+        player.display_status()
+        type_text(f"\nYou are in the {player.current_room.replace('_', ' ')}.")
+        
+        # Explore current room
+        if not explore_room(player, player.current_room):
+            break  # Player died in combat
+        
+        # Check win condition
+        if player.current_room == "final chamber" and player.inventory['key']:
+            type_text("\nYou use the ancient key to unlock the inner sanctum!")
+            type_text("Before you lies the legendary Crystal of Eternity!")
+            type_text("You have successfully completed your quest!")
+            type_text(f"\nFinal Score: {player.inventory['gold']} gold collected")
+            type_text("Congratulations, brave adventurer!")
+            break
+        
+        # Get available moves
+        directions = get_available_directions(player.current_room)
+        type_text(f"\nAvailable paths: {', '.join(directions)}")
+        
+        # Get player action
+        action = input("\nWhat would you like to do? \n[M]ove, [U]se potion, [Q]uit: ").lower()
+        
+        if action == 'm':
+            destination = input(f"Where to? ({'/'.join(directions)}): ").lower()
+            if destination in directions:
+                player.current_room = destination
+            else:
+                type_text("You can't go that way!")
+        elif action == 'u':
+            if player.use_potion():
+                type_text(f"You drink a healing potion and recover {HEAL_POTION_AMOUNT} health!")
+            else:
+                type_text("You have no healing potions left!")
+        elif action == 'q':
+            type_text("Thanks for playing!")
+            game_active = False
+        else:
+            type_text("Invalid action!")
+    
+    if not player.is_alive():
+        type_text("\nGame Over! Your adventure has ended...")
+        type_text("Better luck next time!")
+
+# ---------- Run the Game ----------
+if __name__ == "__main__":
+    main()
+
+run.process(killer.xml),
+
+
+# ================================================
+# PYTHON TEXT ADVENTURE GAME: "THE LOST TEMPLE"
+# ================================================
+
+import random
+import time
+import sys
+
+# ---------- Game Configuration ----------
+PLAYER_START_HEALTH = 100
+PLAYER_START_ATTACK = 20
+ENEMY_ATTACK_RANGE = (10, 25)
+HEAL_POTION_AMOUNT = 30
+TREASURE_CHANCE = 0.4  # 40% chance to find treasure in a room
+
+# ---------- Data Structures ----------
+class Player:
+    def __init__(self, name):
+        self.name = name
+        self.health = PLAYER_START_HEALTH
+        self.attack_power = PLAYER_START_ATTACK
+        self.inventory = {
+            'gold': 0,
+            'healing potions': 1,
+            'key': False
+        }
+        self.current_room = "entrance"
+    
+    def is_alive(self):
+        return self.health > 0
+    
+    def use_potion(self):
+        if self.inventory['healing potions'] > 0:
+            self.health = min(100, self.health + HEAL_POTION_AMOUNT)
+            self.inventory['healing potions'] -= 1
+            return True
+        return False
+    
+    def display_status(self):
+        print(f"\n=== {self.name}'s Status ===")
+        print(f"Health: {self.health}/100")
+        print(f"Attack: {self.attack_power}")
+        print("Inventory:")
+        for item, quantity in self.inventory.items():
+            if quantity:
+                if isinstance(quantity, bool):
+                    print(f"  - {item.capitalize()}")
+                else:
+                    print(f"  - {item.capitalize()}: {quantity}")
+        print()
+
+class Enemy:
+    def __init__(self, name, health, attack):
+        self.name = name
+        self.health = health
+        self.attack_power = attack
+    
+    def is_alive(self):
+        return self.health > 0
+
+# ---------- Game World ----------
+room_descriptions = {
+    "entrance": "You stand at the entrance of an ancient temple. Moss covers the stone walls.",
+    "hallway": "A long hallway stretches before you. Torches flicker on the walls.",
+    "library": "Dusty scrolls and rotten books fill the shelves of this circular room.",
+    "treasury": "Empty chests lie scattered around this room. Someone got here first.",
+    "guardroom": "Weapon racks line the walls, but all the weapons have turned to rust.",
+    "throne room": "An ornate stone throne sits at the far end of this massive hall.",
+    "chamber": "This small chamber has strange symbols carved into the walls.",
+    "final chamber": "The air hums with ancient power. This must be the heart of the temple."
+}
+
+room_connections = {
+    "entrance": ["hallway"],
+    "hallway": ["entrance", "library", "guardroom", "chamber"],
+    "library": ["hallway", "treasury"],
+    "treasury": ["library"],
+    "guardroom": ["hallway", "throne room"],
+    "throne room": ["guardroom"],
+    "chamber": ["hallway", "final chamber"],
+    "final chamber": ["chamber"]
+}
+
+room_enemies = {
+    "guardroom": Enemy("Temple Guardian", 60, 15),
+    "throne room": Enemy("Stone Golem", 80, 20),
+    "final chamber": Enemy("Ancient Spirit", 100, 25)
+}
+
+room_treasures = {
+    "library": {"healing potions": 1},
+    "treasury": {"gold": 50, "key": True},
+    "chamber": {"healing potions": 2, "gold": 25}
+}
+
+# ---------- Game Functions ----------
+def type_text(text, delay=0.03):
+    """Print text with a typewriter effect"""
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        time.sleep(delay)
+    print()
+
+def combat(player, enemy):
+    """Handle combat between player and enemy"""
+    type_text(f"\nA {enemy.name} appears! Prepare for battle!")
+    
+    while player.is_alive() and enemy.is_alive():
+        type_text(f"\n--- Combat ---")
+        type_text(f"Your health: {player.health}")
+        type_text(f"{enemy.name}'s health: {enemy.health}")
+        
+        # Player's turn
+        action = input("\nChoose action: [A]ttack, [U]se potion, [R]un away: ").lower()
+        
+        if action == 'a':
+            damage = random.randint(player.attack_power - 5, player.attack_power + 5)
+            enemy.health -= damage
+            type_text(f"You attack the {enemy.name} for {damage} damage!")
+        elif action == 'u':
+            if player.use_potion():
+                type_text(f"You drink a healing potion and recover {HEAL_POTION_AMOUNT} health!")
+            else:
+                type_text("You have no healing potions left!")
+            continue  # Enemy doesn't attack if player uses potion
+        elif action == 'r':
+            if random.random() < 0.5:  # 50% chance to escape
+                type_text("You barely escape with your life!")
+                return True  # Survived
+            else:
+                type_text("You couldn't escape!")
+        else:
+            type_text("Invalid action! You hesitate and lose your turn.")
+        
+        # Check if enemy is defeated
+        if not enemy.is_alive():
+            type_text(f"\nYou defeated the {enemy.name}!")
+            reward_gold = random.randint(10, 30)
+            player.inventory['gold'] += reward_gold
+            type_text(f"You found {reward_gold} gold on the enemy!")
+            return True
+        
+        # Enemy's turn
+        enemy_damage = random.randint(ENEMY_ATTACK_RANGE[0], ENEMY_ATTACK_RANGE[1])
+        player.health -= enemy_damage
+        type_text(f"The {enemy.name} attacks you for {enemy_damage} damage!")
+        
+        # Check if player is defeated
+        if not player.is_alive():
+            type_text("\nYou have been defeated...")
+            return False
+    
+    return player.is_alive()
+
+def explore_room(player, room):
+    """Handle room exploration and interactions"""
+    type_text(f"\n{room_descriptions[room]}")
+    
+    # Check for enemies
+    if room in room_enemies and room_enemies[room].is_alive():
+        if not combat(player, room_enemies[room]):
+            return False  # Player died
+    
+    # Check for treasure
+    if room in room_treasures and room_treasures[room]:
+        type_text("\nYou search the room and find something!")
+        for item, quantity in room_treasures[room].items():
+            if isinstance(quantity, bool) and quantity:
+                player.inventory[item] = True
+                type_text(f"  - You found a {item}!")
+            elif quantity > 0:
+                player.inventory[item] += quantity
+                type_text(f"  - You found {quantity} {item}!")
+        room_treasures[room] = {}  # Remove treasure after finding it
+    elif random.random() < TREASURE_CHANCE:
+        found_gold = random.randint(5, 15)
+        player.inventory['gold'] += found_gold
+        type_text(f"\nYou find {found_gold} gold coins hidden in a crevice!")
+    
+    return True  # Player survived the room
+
+def get_available_directions(current_room):
+    """Return available directions from current room"""
+    return room_connections[current_room]
+
+def main():
+    """Main game function"""
+    # Game initialization
+    type_text("Welcome to THE LOST TEMPLE!")
+    type_text("An ancient temple holds secrets and treasures... but also dangers.")
+    type_text("Your goal is to explore the temple and find the legendary artifact!")
+    
+    player_name = input("\nWhat is your name, adventurer? ")
+    player = Player(player_name)
+    
+    type_text(f"\nGood luck, {player_name}. Your adventure begins now...")
+    
+    # Main game loop
+    game_active = True
+    while game_active and player.is_alive():
+        # Display current status and room
+        player.display_status()
+        type_text(f"\nYou are in the {player.current_room.replace('_', ' ')}.")
+        
+        # Explore current room
+        if not explore_room(player, player.current_room):
+            break  # Player died in combat
+        
+        # Check win condition
+        if player.current_room == "final chamber" and player.inventory['key']:
+            type_text("\nYou use the ancient key to unlock the inner sanctum!")
+            type_text("Before you lies the legendary Crystal of Eternity!")
+            type_text("You have successfully completed your quest!")
+            type_text(f"\nFinal Score: {player.inventory['gold']} gold collected")
+            type_text("Congratulations, brave adventurer!")
+            break
+        
+        # Get available moves
+        directions = get_available_directions(player.current_room)
+        type_text(f"\nAvailable paths: {', '.join(directions)}")
+        
+        # Get player action
+        action = input("\nWhat would you like to do? \n[M]ove, [U]se potion, [Q]uit: ").lower()
+        
+        if action == 'm':
+            destination = input(f"Where to? ({'/'.join(directions)}): ").lower()
+            if destination in directions:
+                player.current_room = destination
+            else:
+                type_text("You can't go that way!")
+        elif action == 'u':
+            if player.use_potion():
+                type_text(f"You drink a healing potion and recover {HEAL_POTION_AMOUNT} health!")
+            else:
+                type_text("You have no healing potions left!")
+        elif action == 'q':
+            type_text("Thanks for playing!")
+            game_active = False
+        else:
+            type_text("Invalid action!")
+    
+    if not player.is_alive():
+        type_text("\nGame Over! Your adventure has ended...")
+        type_text("Better luck next time!")
+
+# ---------- Run the Game ----------
+if __name__ == "__main__":
+    main()
