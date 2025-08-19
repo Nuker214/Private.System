@@ -1,4 +1,5 @@
 [
+  {"name":"Beta Tester","username":"Tester","password":"Tester","rank":1,"role":"Partical Access User","userID":1,"accountCreationDate":"11:25 AM, Tue Aug 19th","taken":"{Tester}"},
   {"name":"Curtis","username":"Zapperix","password":"yteus482","rank":12,"role":"Normal User","userID":3923,"accountCreationDate":"8:01 PM, Mon Aug 18th","taken":"{yes}"},
   {"name":"Not Set Up Yet","username":"Zillionix","password":"mbewq712","rank":20,"role":"Normal User","userID":1083,"accountCreationDate":"Not Set Up Yet","taken":"{}"},
   {"name":"Not Set Up Yet","username":"Zynthex","password":"opwus905","rank":8,"role":"Normal User","userID":8471,"accountCreationDate":"Not Set Up Yet","taken":"{}"},
