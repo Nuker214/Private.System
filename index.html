@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -167,6 +168,138 @@
       visibility: visible;
       transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
     }
+
+    #initialLoadingScreen.hidden, #loginLoadingScreen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .rotating-box-container {
+      perspective: 1000px;
+      margin-bottom: 20px;
+    }
+
+    .rotating-box {
+      width: 100px;
+      height: 100px;
+      position: relative;
+      transform-style: preserve-3d;
+      animation: rotateCube 10s infinite linear;
+      transform-origin: 50% 50%;
+      transition: all 0.8s ease-out; /* Smooth transitions for face changes */
+    }
+
+    .rotating-box .face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 3px solid white;
+      background: rgba(255, 145, 77, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 0.8em;
+      font-weight: bold;
+      color: white;
+      text-shadow: 0 0 5px black;
+      box-shadow: 0 0 10px white;
+      transition: background 0.5s ease-in-out, border-color 0.5s ease-in-out, box-shadow 0.5s ease-in-out, opacity 0.5s ease-out;
+    }
+    .rotating-box .face-hidden {
+        opacity: 0 !important;
+        pointer-events: none; /* Make it unclickable */
+    }
+
+
+    /* Specific face transforms for 3D effect */
+    .rotating-box .front { transform: translateZ(50px); }
+    .rotating-box .back { transform: rotateY(180deg) translateZ(50px); }
+    .rotating-box .right { transform: rotateY(90deg) translateZ(50px); }
+    .rotating-box .left { transform: rotateY(-90deg) translateZ(50px); }
+    .rotating-box .top { transform: rotateX(90deg) translateZ(50px); }
+    .rotating-box .bottom { transform: rotateX(-90deg) translateZ(50px); }
+
+    @keyframes rotateCube {
+      0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+      100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+    }
+
+    #loadingText, #loginLoadingScreenText {
+      font-family: 'Courier New', monospace;
+      font-size: 1.5em;
+      font-weight: bold;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      color: transparent;
+      transition: background-image 1s ease-in-out, opacity 0.5s ease-in-out;
+      opacity: 1;
+      min-height: 1.5em; /* Prevent layout shift if text is empty */
+    }
+
+    @keyframes typing {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+    @keyframes blinkCaret {
+        from, to { border-color: transparent }
+        50% { border-color: white; }
+    }
+    .typing-text-container {
+        display: inline-block;
+        overflow: hidden; /* Ensures text is hidden until typed */
+        border-right: .15em solid white; /* The caret */
+        white-space: nowrap; /* Keeps all text on one line */
+        margin: 0 auto;
+        animation: 
+            typing 1.5s steps(40, end) forwards,
+            blinkCaret .75s step-end infinite;
+        width: 0; /* Start hidden */
+    }
+
+    #codeAnimation {
+      display: none;
+      width: 80%;
+      max-width: 400px;
+      height: 20px;
+      background-color: #333;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: 10px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.2); /* Soft glow */
+    }
+
+    /* Enhanced code animation: glowing stripes moving */
+    #codeAnimation::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        45deg,
+        #4CAF50,
+        #4CAF50 5px,
+        #2196F3 5px,
+        #2196F3 10px
+      );
+      background-size: 200% 200%;
+      animation: codeBackgroundPan 3s linear infinite, codeFill 3s ease-out forwards;
+      clip-path: inset(0 100% 0 0); /* Start completely hidden */
+      filter: drop-shadow(0 0 5px #4CAF50); /* Subtle glow for animation */
+    }
+
+    @keyframes codeFill {
+      0% { clip-path: inset(0 100% 0 0); }
+      100% { clip-path: inset(0 0% 0 0); }
+    }
+    @keyframes codeBackgroundPan {
+        0% { background-position: 0% 0%; }
+        100% { background-position: 200% 0%; }
+    }
+
 
     /* Login Quick Bar Styles */
     .login-quick-bar {
@@ -4702,3 +4835,4 @@ To view all available shortcuts for the specific app you are using, press and h
   </script>
 </body>
 </html>
+```
