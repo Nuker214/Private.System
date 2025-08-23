@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Private System | Overload Edition</title>
+  <title>Private System | Revamped</title>
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   
   <style>
@@ -13,12 +13,10 @@
     ========================================
     */
     :root {
-      /* Typography */
       --font-primary: 'Segoe UI', 'Roboto', sans-serif;
       --font-monospace: 'Fira Code', 'Courier New', monospace;
       --font-display: 'Montserrat', sans-serif;
 
-      /* Layout */
       --spacing-xs: 4px;
       --spacing-sm: 8px;
       --spacing-md: 16px;
@@ -32,13 +30,9 @@
       --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     
-    /* 
-    ========================================
-    THEME DEFINITIONS
-    ========================================
-    */
+    /* --- Theme Definitions --- */
 
-    /* --- Dark Theme (Default) --- */
+    /* Dark Theme (Default) */
     [data-theme="dark"] {
       --c-primary: #ff914d;
       --c-primary-light: #ffb67a;
@@ -64,7 +58,7 @@
       --c-scrollbar-track: var(--c-bg-dark);
     }
 
-    /* --- Light Theme --- */
+    /* Light Theme */
     [data-theme="light"] {
       --c-primary: #e67e22;
       --c-primary-light: #f39c12;
@@ -90,58 +84,6 @@
       --c-scrollbar-track: var(--c-bg-dark);
     }
 
-    /* --- Matrix Theme --- */
-    [data-theme="matrix"] {
-      --c-primary: #00ff41;
-      --c-primary-light: #5bff89;
-      --c-primary-dark: #00c732;
-      --c-secondary: #008f2a;
-      --c-danger: #ff0000;
-      --c-success: #00ff41;
-      --c-info: #00a2ff;
-
-      --c-bg-deep: #000;
-      --c-bg-dark: #020a02;
-      --c-bg-light: #051405;
-      --c-bg-lighter: #0a1f0a;
-      --c-surface: #0f2a0f;
-      
-      --c-text-light: #00ff41;
-      --c-text-medium: #008f2a;
-      --c-text-dark: #000;
-      --c-border: #005218;
-
-      --c-glass-bg: rgba(0, 30, 0, 0.6);
-      --c-scrollbar-thumb: var(--c-primary);
-      --c-scrollbar-track: var(--c-bg-dark);
-    }
-
-    /* --- Synthwave Theme --- */
-    [data-theme="synthwave"] {
-      --c-primary: #ff00ff; /* Magenta */
-      --c-primary-light: #ff69b4;
-      --c-primary-dark: #c700c7;
-      --c-secondary: #00ffff; /* Cyan */
-      --c-danger: #ff3366;
-      --c-success: #00ff7f;
-      --c-info: #f7b733;
-
-      --c-bg-deep: #0d0221;
-      --c-bg-dark: #1a093a;
-      --c-bg-light: #240b36;
-      --c-bg-lighter: #3c145c;
-      --c-surface: #4a1d7a;
-      
-      --c-text-light: #f0f0f0;
-      --c-text-medium: #a0a0a0;
-      --c-text-dark: #121212;
-      --c-border: #6a2ca8;
-
-      --c-glass-bg: rgba(40, 10, 60, 0.6);
-      --c-scrollbar-thumb: var(--c-primary);
-      --c-scrollbar-track: var(--c-bg-dark);
-    }
-
     /* 
     ========================================
     GENERAL STYLES & RESETS
@@ -153,9 +95,7 @@
       padding: 0;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: var(--font-primary);
@@ -177,9 +117,7 @@
       transition: all var(--transition-speed-fast) ease;
     }
     
-    input {
-        font-family: inherit;
-    }
+    input { font-family: inherit; }
     
     /* Custom Scrollbar */
     ::-webkit-scrollbar { width: 10px; }
@@ -196,31 +134,21 @@
       --animation-fade-in: fadeIn 0.5s ease forwards;
       --animation-slide-up: slideInUp 0.6s ease forwards;
     }
-    body:not(.animation-enabled) * {
-      animation: none !important;
-      transition: none !important;
-    }
+    body:not(.animation-enabled) * { animation: none !important; transition: none !important; }
 
-    @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     @keyframes slideInUp {
         from { opacity: 0; transform: translateY(20px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes pulse {
-        0%, 100% { transform: scale(1); }
-        50% { transform: scale(1.05); }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    @keyframes flashRed {
+      0%, 100% { border-color: var(--c-danger); box-shadow: 0 0 15px var(--c-danger); }
+      50% { border-color: var(--c-border); box-shadow: 0 0 5px transparent; }
     }
-    @keyframes glitch {
-      2%,64%{ transform: translate(2px,0) skew(0deg); }
-      4%,60%{ transform: translate(-2px,0) skew(0deg); }
-      62%{ transform: translate(0,0) skew(5deg); }
-    }
-    @keyframes scanlines {
-        0% { background-position: 0 0; }
-        100% { background-position: 0 100%; }
+    @keyframes scrollLeft {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-100%); }
     }
 
     /* 
@@ -255,12 +183,9 @@
       background: var(--c-glass-bg);
       box-shadow: 0 0 15px var(--c-primary);
     }
-    .front  { transform: translateZ(25px); }
-    .back   { transform: rotateY(180deg) translateZ(25px); }
-    .right  { transform: rotateY(90deg) translateZ(25px); }
-    .left   { transform: rotateY(-90deg) translateZ(25px); }
-    .top    { transform: rotateX(90deg) translateZ(25px); }
-    .bottom { transform: rotateX(-90deg) translateZ(25px); }
+    .front { transform: translateZ(25px); } .back { transform: rotateY(180deg) translateZ(25px); }
+    .right { transform: rotateY(90deg) translateZ(25px); } .left { transform: rotateY(-90deg) translateZ(25px); }
+    .top { transform: rotateX(90deg) translateZ(25px); } .bottom { transform: rotateX(-90deg) translateZ(25px); }
     @keyframes rotate { from { transform: rotateX(-35deg) rotateY(-45deg) rotateY(0); } to { transform: rotateX(-35deg) rotateY(-45deg) rotateY(360deg); } }
     .preloader p { margin-top: 2rem; font-family: var(--font-monospace); color: var(--c-text-medium); }
     
@@ -270,13 +195,12 @@
     ========================================
     */
     .login-container {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       display: flex;
       justify-content: center;
       align-items: center;
-      width: 100%;
-      height: 100vh;
-      position: fixed;
-      top: 0; left: 0;
       opacity: 1;
       visibility: visible;
       transition: opacity var(--transition-speed-med) ease, visibility var(--transition-speed-med) ease;
@@ -290,19 +214,15 @@
       -webkit-backdrop-filter: blur(10px);
       border-radius: var(--border-radius-md);
       border: 1px solid var(--c-border);
-      box-shadow: 0 0 35px rgba(0,0,0, 0.4);
+      box-shadow: var(--shadow-md);
       width: 90%;
       max-width: 400px;
       padding: var(--spacing-xl);
       text-align: center;
       transition: border-color var(--transition-speed-med), box-shadow var(--transition-speed-med);
     }
-    .login-box.error-flash { animation: flashRed 0.5s ease-in-out; }
-    @keyframes flashRed {
-      0%, 100% { border-color: var(--c-danger); box-shadow: 0 0 15px var(--c-danger); }
-      50% { border-color: var(--c-border); box-shadow: 0 0 5px transparent; }
-    }
-
+    .login-box.flashing { animation: flashRed 0.5s ease-in-out; }
+    
     .login-box h2 {
       font-size: 2em;
       margin-bottom: var(--spacing-lg);
@@ -365,11 +285,10 @@
     
     .login-feedback {
       margin-top: var(--spacing-md);
-      font-size: 0.9em;
       min-height: 40px;
     }
-    .error-message { color: var(--c-danger); }
-    .attempt-counter { color: var(--c-text-medium); }
+    .error-message { color: var(--c-danger); font-size: 0.9em; }
+    .attempt-counter { color: var(--c-text-medium); font-size: 0.9em; }
 
     /* 
     ========================================
@@ -413,9 +332,7 @@
       animation: var(--animation-slide-up);
     }
 
-    .user-profile {
-      position: relative;
-    }
+    .user-profile { position: relative; }
     .user-profile-btn {
       display: flex;
       align-items: center;
@@ -447,11 +364,7 @@
       transform: translateY(-10px);
       transition: all var(--transition-speed-fast) ease;
     }
-    .user-dropdown.visible {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
+    .user-dropdown.visible { opacity: 1; visibility: visible; transform: translateY(0); }
     .user-dropdown li button {
       width: 100%;
       padding: 12px var(--spacing-md);
@@ -464,9 +377,7 @@
       background: var(--c-primary);
       color: var(--c-text-dark);
     }
-    .user-dropdown li:not(:last-child) {
-      border-bottom: 1px solid var(--c-border);
-    }
+    .user-dropdown li:not(:last-child) { border-bottom: 1px solid var(--c-border); }
 
     /* Sidebar */
     .dashboard-sidebar {
@@ -513,23 +424,14 @@
       transition: left var(--transition-speed-fast) ease-in-out;
       z-index: 1;
     }
-    .dashboard-sidebar nav li button span {
-      position: relative;
-      z-index: 2;
-    }
+    .dashboard-sidebar nav li button span { position: relative; z-index: 2; }
     .dashboard-sidebar nav li button:hover::before,
-    .dashboard-sidebar nav li button.active::before {
-      left: 0;
-    }
+    .dashboard-sidebar nav li button.active::before { left: 0; }
     .dashboard-sidebar nav li button:hover,
-    .dashboard-sidebar nav li button.active {
-      color: var(--c-text-dark);
-    }
+    .dashboard-sidebar nav li button.active { color: var(--c-text-dark); }
 
     /* Main Content */
-    .dashboard-main {
-      grid-area: main;
-    }
+    .dashboard-main { grid-area: main; }
     .info-panel {
         display: none;
         animation: var(--animation-fade-in);
@@ -609,53 +511,37 @@
     }
     .links-grid a:hover, .links-grid button:hover { background-color: var(--c-primary); color: var(--c-text-dark); transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.2); }
     
-    /* Terminal */
-    .terminal {
-      background: #000;
-      color: var(--c-primary);
-      font-family: var(--font-monospace);
-      height: 500px;
-      padding: var(--spacing-md);
-      border-radius: var(--border-radius-sm);
-      overflow-y: auto;
-      border: 1px solid var(--c-border);
-      position: relative;
+    /* Stats Table */
+    .stats-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: var(--spacing-md);
     }
-    .terminal::after { /* Scanlines effect */
-        content: "";
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.05) 50%, rgba(255,255,255,0));
-        background-size: 100% 4px;
-        animation: scanlines 0.2s linear infinite;
-        pointer-events: none;
+    .stats-table th, .stats-table td {
+        padding: var(--spacing-sm);
+        text-align: left;
+        border-bottom: 1px solid var(--c-border);
     }
-    .terminal-output { white-space: pre-wrap; }
-    .terminal-line { display: flex; }
-    .terminal-prompt { color: var(--c-secondary); }
-    .terminal-input {
-      flex-grow: 1;
-      background: none;
-      border: none;
-      color: inherit;
-      font-family: inherit;
-      outline: none;
+    .stats-table th { background-color: var(--c-bg-lighter); font-weight: bold; }
+    .stats-table td:first-child { font-weight: bold; }
+
+    /* Notes Canvas */
+    #canvasContainer {
+      display: none;
+      margin-top: 20px;
+      text-align: center;
     }
-    .terminal-cursor {
-      background: var(--c-primary);
-      display: inline-block;
-      width: 10px;
-      animation: blink 1s step-end infinite;
+    #notesCanvas {
+      border: 2px solid #ff914d;
+      border-radius: 12px;
+      background: #fff;
+      cursor: crosshair;
+      touch-action: none;
+      max-width: 100%;
     }
-    @keyframes blink { 50% { opacity: 0; } }
-    .neofetch-ascii { color: var(--c-info); }
-    #matrix-canvas {
-        position: absolute;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        display: none;
-    }
+    #canvasControls { margin-top: 10px; }
+    #canvasControls button { background-color: #ff914d; border: none; padding: 8px 16px; border-radius: 8px; color: black; font-weight: bold; cursor: pointer; transition: background 0.2s; margin: 0 5px; }
+    #canvasControls button:hover { background-color: #ffb67a; }
 
     /* Footer */
     .dashboard-footer {
@@ -672,9 +558,7 @@
     ========================================
     */
     /* Tooltips */
-    [data-tooltip] {
-      position: relative;
-    }
+    [data-tooltip] { position: relative; }
     [data-tooltip]::after {
       content: attr(data-tooltip);
       position: absolute;
@@ -692,10 +576,7 @@
       transition: opacity var(--transition-speed-fast), visibility var(--transition-speed-fast);
       z-index: 100;
     }
-    [data-tooltip]:hover::after {
-      opacity: 1;
-      visibility: visible;
-    }
+    [data-tooltip]:hover::after { opacity: 1; visibility: visible; }
     
     /* Custom Modal */
     .modal-overlay {
@@ -741,11 +622,9 @@
       padding: var(--spacing-md);
       cursor: pointer;
       border-bottom: 3px solid transparent;
+      transition: border-color var(--transition-speed-fast);
     }
-    .settings-tab.active {
-      color: var(--c-primary);
-      border-bottom-color: var(--c-primary);
-    }
+    .settings-tab.active { color: var(--c-primary); border-bottom-color: var(--c-primary); }
     .settings-content { display: none; }
     .settings-content.active { display: block; }
     .setting { display: flex; justify-content: space-between; align-items: center; padding: var(--spacing-md) 0; border-bottom: 1px solid var(--c-surface); }
@@ -756,7 +635,6 @@
     .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
     input:checked + .slider { background-color: var(--c-success); }
     input:checked + .slider:before { transform: translateX(24px); }
-
 
     /* Notifier (Toast) */
     .notifier-container {
@@ -801,23 +679,12 @@
         top: unset;
       }
     }
-
     @media (max-width: 576px) {
-      body {
-        padding: var(--spacing-sm);
-      }
-      .dashboard-header {
-        flex-direction: column;
-        gap: var(--spacing-md);
-      }
-      .quick-bar {
-        justify-content: center;
-      }
-      .modal {
-          padding: var(--spacing-lg);
-      }
+      body { padding: var(--spacing-sm); }
+      .dashboard-header { flex-direction: column; gap: var(--spacing-md); }
+      .quick-bar { justify-content: center; }
+      .modal { padding: var(--spacing-lg); }
     }
-
   </style>
 </head>
 <body>
@@ -864,11 +731,11 @@
     <div class="dashboard-grid">
         <header class="dashboard-header">
             <div>
-                <h1>Dashboard GUI</h1>
+                <h1>Private Dashboard GUI</h1>
                 <div class="user-info">ID: <span id="loggedInID"></span></div>
             </div>
             <div class="user-profile">
-              <button class="user-profile-btn" id="userProfileBtn">
+              <button class="user-profile-btn" id="userProfileBtn" data-tooltip="Open User Menu">
                 <img src="https://i.pravatar.cc/40" alt="User Avatar">
                 <span id="loggedInUser"></span>
               </button>
@@ -892,9 +759,11 @@
             <div class="quick-bar">
                 <button id="sessionTime" data-tooltip="Session Time">⏳ 00:00:00</button>
                 <button id="realTimeClock" data-tooltip="Current Time">🕒 --:--:--</button>
+                <button id="themeToggle" data-tooltip="Toggle Theme">🌙</button>
                 <button id="fullscreenBtn" data-tooltip="Toggle Fullscreen">🖥️</button>
-                <button id="screenshotBtn" data-tooltip="Take Screenshot">📸</button>
-                <button id="panicBtn" data-tooltip="Panic Button">🚨</button>
+                <button id="screenshotBtn" data-tooltip="Take Dashboard Screenshot">📸</button>
+                <button id="statsBtn" data-tooltip="View System & Browser Stats">📊</button>
+                <button id="panicBtn" data-tooltip="Emergency Redirect (Clever)">🚨</button>
             </div>
             
             <div id="infoPanelsContainer">
@@ -903,7 +772,7 @@
         </main>
 
         <footer class="dashboard-footer">
-            <p>&copy; 2025 Private System. All rights reserved. | Overload Edition v3.0.0</p>
+            <p>&copy; 2025 Private System. All rights reserved. | Revamped Edition v2.5.0</p>
         </footer>
     </div>
   </div>
@@ -913,800 +782,708 @@
   <div class="notifier-container" id="notifierContainer"></div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-
-      /*******************************************************
-       *                  SECURITY WARNING
-       *******************************************************
-       * This remains a CLIENT-SIDE ONLY application. It is
-       * fundamentally INSECURE and intended for demonstration
-       * purposes only. Real-world applications require a
-       * secure backend for authentication and data handling.
-       *******************************************************/
-
-      // --- UTILITY CLASSES ---
-
-      class Notifier {
-        constructor(containerId) {
-          this.container = document.getElementById(containerId);
-        }
-        show(message, type = 'info', duration = 3000) {
-          const toast = document.createElement('div');
-          toast.className = `toast ${type}`;
-          toast.textContent = message;
-          this.container.appendChild(toast);
-          setTimeout(() => {
-            toast.remove();
-          }, duration);
-        }
+    // --- UTILITY CLASSES ---
+    class Notifier {
+      constructor(containerId) {
+        this.container = document.getElementById(containerId);
       }
-
-      class Modal {
-        constructor(overlayId) {
-          this.overlay = document.getElementById(overlayId);
-        }
-        
-        _render(content) {
-          this.overlay.innerHTML = `<div class="modal">${content}</div>`;
-          this.overlay.classList.add('visible');
-          this.overlay.querySelector('.modal').addEventListener('click', e => e.stopPropagation());
-          this.overlay.addEventListener('click', () => this.hide(), { once: true });
-        }
-
-        hide() {
-          this.overlay.classList.remove('visible');
-          this.overlay.innerHTML = '';
-        }
-
-        confirm({ title, message, confirmText = 'Confirm', cancelText = 'Cancel' }) {
-          return new Promise(resolve => {
-            const content = `
-                <h2>${title}</h2>
-                <p>${message}</p>
-                <div class="modal-buttons">
-                  <button class="cancel-btn">${cancelText}</button>
-                  <button class="confirm-btn">${confirmText}</button>
-                </div>
-            `;
-            this._render(content);
-            this.overlay.querySelector('.confirm-btn').onclick = () => { this.hide(); resolve(true); };
-            this.overlay.querySelector('.cancel-btn').onclick = () => { this.hide(); resolve(false); };
-          });
-        }
-        
-        prompt({ title, message, inputPlaceholder = 'Enter value...' }) {
-            return new Promise(resolve => {
-                const content = `
-                    <h2>${title}</h2>
-                    <p>${message}</p>
-                    <input type="password" placeholder="${inputPlaceholder}" id="modalInput" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--c-border); background: var(--c-bg-dark); color: var(--c-text-light);">
-                    <div class="modal-buttons">
-                        <button class="cancel-btn">Cancel</button>
-                        <button class="confirm-btn">Submit</button>
-                    </div>
-                `;
-                this._render(content);
-                const input = this.overlay.querySelector('#modalInput');
-                input.focus();
-                const submit = () => { this.hide(); resolve(input.value); };
-                this.overlay.querySelector('.confirm-btn').onclick = submit;
-                this.overlay.querySelector('.cancel-btn').onclick = () => { this.hide(); resolve(null); };
-                input.onkeydown = (e) => { if (e.key === 'Enter') submit(); };
-            });
-        }
-        
-        showCustom(content) {
-            this._render(content);
-        }
+      show(message, type = 'info', duration = 3000) {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        this.container.appendChild(toast);
+        setTimeout(() => {
+          toast.remove();
+        }, duration);
       }
-      
-      class API {
-        // Fake API to simulate network requests
-        static async fetchUsers() {
-          try {
-            const response = await fetch('https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json');
-            if (!response.ok) throw new Error('Network response error');
-            return await response.json();
-          } catch (error) {
-            console.error("Failed to fetch user data:", error);
-            return null;
-          }
-        }
-      }
-
-      // --- MANAGER CLASSES ---
-      
-      class SettingsManager {
-        constructor() {
-          this.defaults = {
-            theme: 'dark',
-            animations: true
-          };
-          this.settings = this.load();
-        }
-
-        load() {
-          const stored = localStorage.getItem('appSettings');
-          return stored ? { ...this.defaults, ...JSON.parse(stored) } : this.defaults;
-        }
-        
-        save() {
-          localStorage.setItem('appSettings', JSON.stringify(this.settings));
-        }
-
-        get(key) {
-          return this.settings[key];
-        }
-
-        set(key, value) {
-          this.settings[key] = value;
-          this.save();
-        }
-      }
-
-      class UIManager {
-        constructor(app) {
-          this.app = app;
-          this.preloader = document.getElementById('preloader');
-          this.userDropdown = document.getElementById('userDropdown');
-        }
-
-        init() {
-          this.applySettings();
-          this.setupEventListeners();
-          setTimeout(() => this.hidePreloader(), 1500);
-        }
-
-        hidePreloader() {
-          this.preloader.classList.add('hidden');
-        }
-
-        applySettings() {
-          // Theme
-          const theme = this.app.settingsManager.get('theme');
-          document.documentElement.dataset.theme = theme;
-          // Animations
-          const animations = this.app.settingsManager.get('animations');
-          document.body.classList.toggle('animation-enabled', animations);
-        }
-        
-        setupEventListeners() {
-            // Dropdown
-            document.getElementById('userProfileBtn').addEventListener('click', () => {
-                this.userDropdown.classList.toggle('visible');
-            });
-            document.addEventListener('click', (e) => {
-                if (!e.target.closest('.user-profile')) {
-                    this.userDropdown.classList.remove('visible');
-                }
-            });
-            // Settings Modal
-            document.getElementById('settingsBtn').addEventListener('click', () => this.showSettingsModal());
-        }
-
-        showSettingsModal() {
-            const currentTheme = this.app.settingsManager.get('theme');
-            const animationsEnabled = this.app.settingsManager.get('animations');
-
-            const content = `
-                <h2>⚙️ Settings</h2>
-                <div class="settings-tabs">
-                    <div class="settings-tab active" data-tab="general">General</div>
-                    <div class="settings-tab" data-tab="appearance">Appearance</div>
-                </div>
-                <div id="generalContent" class="settings-content active">
-                    <div class="setting">
-                        <label for="animationsToggle">Enable Animations</label>
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="animationsToggle" ${animationsEnabled ? 'checked' : ''}>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                </div>
-                <div id="appearanceContent" class="settings-content">
-                    <div class="setting">
-                        <label for="themeSelector">Theme</label>
-                        <select id="themeSelector">
-                            <option value="dark" ${currentTheme === 'dark' ? 'selected' : ''}>Dark</option>
-                            <option value="light" ${currentTheme === 'light' ? 'selected' : ''}>Light</option>
-                            <option value="matrix" ${currentTheme === 'matrix' ? 'selected' : ''}>Matrix</option>
-                            <option value="synthwave" ${currentTheme === 'synthwave' ? 'selected' : ''}>Synthwave</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="modal-buttons">
-                    <button class="cancel-btn">Close</button>
-                    <button class="confirm-btn">Save</button>
-                </div>
-            `;
-            this.app.modal.showCustom(content);
-
-            // Modal logic
-            const modal = document.querySelector('.modal');
-            const tabs = modal.querySelectorAll('.settings-tab');
-            const contents = modal.querySelectorAll('.settings-content');
-
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    contents.forEach(c => c.classList.remove('active'));
-                    tab.classList.add('active');
-                    document.getElementById(tab.dataset.tab + 'Content').classList.add('active');
-                });
-            });
-
-            modal.querySelector('.cancel-btn').addEventListener('click', () => this.app.modal.hide());
-            modal.querySelector('.confirm-btn').addEventListener('click', () => {
-                const newTheme = modal.querySelector('#themeSelector').value;
-                const newAnimations = modal.querySelector('#animationsToggle').checked;
-                
-                this.app.settingsManager.set('theme', newTheme);
-                this.app.settingsManager.set('animations', newAnimations);
-                this.applySettings();
-                this.app.notifier.show('Settings saved!', 'success');
-                this.app.modal.hide();
-            });
-        }
-      }
-
-      // --- WIDGET & FEATURE CLASSES ---
-      
-      class WidgetManager {
-        constructor(app) {
-          this.app = app;
-          this.sessionTime = 0;
-          this.sessionTimer = null;
-        }
-
-        init() {
-          this.startTimers();
-          this.setupEventListeners();
-        }
-        
-        startTimers() {
-          setInterval(() => {
-            document.getElementById('realTimeClock').textContent = `🕒 ${new Date().toLocaleTimeString()}`;
-          }, 1000);
-
-          this.sessionTimer = setInterval(() => {
-            this.sessionTime++;
-            const hrs = String(Math.floor(this.sessionTime / 3600)).padStart(2, '0');
-            const mins = String(Math.floor((this.sessionTime % 3600) / 60)).padStart(2, '0');
-            const secs = String(this.sessionTime % 60).padStart(2, '0');
-            document.getElementById('sessionTime').textContent = `⏳ ${hrs}:${mins}:${secs}`;
-          }, 1000);
-        }
-
-        setupEventListeners() {
-            document.getElementById('fullscreenBtn').addEventListener('click', () => this.toggleFullscreen());
-            document.getElementById('screenshotBtn').addEventListener('click', () => this.takeScreenshot());
-            document.getElementById('panicBtn').addEventListener('click', () => window.open('https://clever.com', '_blank'));
-            document.getElementById('logoutBtn').addEventListener('click', () => this.app.logout());
-        }
-
-        toggleFullscreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => console.error(err));
-            } else {
-                document.exitFullscreen();
-            }
-        }
-
-        takeScreenshot() {
-            html2canvas(document.body).then(canvas => {
-                const link = document.createElement('a');
-                link.download = `screenshot-${Date.now()}.png`;
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                this.app.notifier.show('Screenshot saved!', 'success');
-            });
-        }
-      }
-
-      class Terminal {
-        constructor(containerId, app) {
-            this.container = document.getElementById(containerId);
-            this.app = app;
-            this.output = null;
-            this.inputLine = null;
-            this.input = null;
-            this.history = [];
-            this.historyIndex = -1;
-
-            this.commands = {
-                help: "Displays this help message.",
-                clear: "Clears the terminal screen.",
-                echo: "Prints text to the screen. Usage: echo [text]",
-                date: "Shows the current date and time.",
-                userinfo: "Displays information about the logged-in user.",
-                theme: "Changes the UI theme. Usage: theme [dark|light|matrix|synthwave]",
-                neofetch: "Displays system information (mock).",
-                scan: "Scans for nearby devices (mock animation).",
-                matrix: "Initiates the matrix effect.",
-                exit: "Closes the terminal panel.",
-            };
-        }
-
-        init() {
-            this.container.innerHTML = `
-                <canvas id="matrix-canvas"></canvas>
-                <div class="terminal-output"></div>
-                <div class="terminal-line">
-                    <span class="terminal-prompt">user@private-system:~$ </span>
-                    <input type="text" class="terminal-input" spellcheck="false" autocomplete="off">
-                    <span class="terminal-cursor">&nbsp;</span>
-                </div>
-            `;
-            this.output = this.container.querySelector('.terminal-output');
-            this.inputLine = this.container.querySelector('.terminal-line');
-            this.input = this.container.querySelector('.terminal-input');
-
-            this.container.addEventListener('click', () => this.input.focus());
-            this.input.addEventListener('keydown', (e) => this.handleInput(e));
-            this.print("Welcome to the Private System Terminal. Type 'help' for a list of commands.");
-        }
-
-        handleInput(e) {
-            if (e.key === 'Enter') {
-                const command = this.input.value.trim();
-                this.print(`user@private-system:~$ ${command}`);
-                if (command) {
-                    this.history.unshift(command);
-                    this.historyIndex = -1;
-                    this.execute(command);
-                }
-                this.input.value = '';
-                this.container.scrollTop = this.container.scrollHeight;
-            } else if (e.key === 'ArrowUp') {
-                e.preventDefault();
-                if (this.historyIndex < this.history.length - 1) {
-                    this.historyIndex++;
-                    this.input.value = this.history[this.historyIndex];
-                }
-            } else if (e.key === 'ArrowDown') {
-                e.preventDefault();
-                if (this.historyIndex > 0) {
-                    this.historyIndex--;
-                    this.input.value = this.history[this.historyIndex];
-                } else {
-                    this.historyIndex = -1;
-                    this.input.value = '';
-                }
-            }
-        }
-        
-        print(message, isHTML = false) {
-            const p = document.createElement('p');
-            if (isHTML) {
-                p.innerHTML = message;
-            } else {
-                p.textContent = message;
-            }
-            this.output.appendChild(p);
-            this.container.scrollTop = this.container.scrollHeight;
-        }
-
-        execute(commandStr) {
-            const [command, ...args] = commandStr.split(' ');
-            if (this.commands[command]) {
-                this[`cmd_${command}`](args);
-            } else {
-                this.print(`Command not found: ${command}`);
-            }
-        }
-
-        // --- COMMAND IMPLEMENTATIONS ---
-        cmd_help() { this.print(Object.entries(this.commands).map(([cmd, desc]) => `${cmd.padEnd(10)} - ${desc}`).join('\n')); }
-        cmd_clear() { this.output.innerHTML = ''; }
-        cmd_echo(args) { this.print(args.join(' ')); }
-        cmd_date() { this.print(new Date().toString()); }
-        cmd_userinfo() {
-            const user = this.app.currentUser;
-            this.print(`Name: ${user.name}\nUsername: ${user.username}\nUserID: ${user.userID}`);
-        }
-        cmd_theme(args) {
-            const theme = args[0];
-            if (['dark', 'light', 'matrix', 'synthwave'].includes(theme)) {
-                this.app.settingsManager.set('theme', theme);
-                this.app.uiManager.applySettings();
-                this.print(`Theme changed to ${theme}.`);
-            } else {
-                this.print("Invalid theme. Available: dark, light, matrix, synthwave");
-            }
-        }
-        cmd_neofetch() {
-            const user = this.app.currentUser;
-            const ascii = `
-<span class="neofetch-ascii">  _______  _        _______  _______  _______ 
- (  ____ \\( \\      (  ___  )(  ____ )(  ____ \\
- | (    \\/| (      | (   ) || (    )|| (    \\/
- | |      | |      | |   | || (____)|| |      
- | |      | |      | |   | ||  _____)| |      
- | |      | (      | |   | || (      | |      
- | (____/\\| (____/\\| (___) || )      | (____/\\
- (_______/(_______/(_______)|/       (_______/</span>
-            `;
-            const info = `
-${user.name}@private-system
------------------------
-OS:       Browser Runtime Environment
-Host:     User Device
-Kernel:   DOM v4.20
-Uptime:   ${Math.floor(this.app.widgetManager.sessionTime / 60)} minutes
-Shell:    PSTerm
-Theme:    ${this.app.settingsManager.get('theme')}
-CPU:      JavaScript Core
-GPU:      WebGL Renderer
-Memory:   Heap Allocation
-            `;
-            this.print(ascii + '\n' + info, true);
-        }
-        cmd_scan(args) {
-            this.print("Scanning network for devices...");
-            let i = 0;
-            const interval = setInterval(() => {
-                const mac = Array(6).fill(0).map(() => Math.floor(Math.random() * 256).toString(16).padStart(2, '0')).join(':');
-                const ip = Array(4).fill(0).map(() => Math.floor(Math.random() * 255) + 1).join('.');
-                this.print(`[+] Device Found: ${ip.padEnd(15)} | ${mac}`);
-                i++;
-                if (i > 10) {
-                    clearInterval(interval);
-                    this.print("Scan complete.");
-                }
-            }, 300);
-        }
-        cmd_matrix() {
-            this.print("Initializing matrix effect...");
-            const canvas = this.container.querySelector('#matrix-canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.style.display = 'block';
-
-            let w = canvas.width = this.container.clientWidth;
-            let h = canvas.height = this.container.clientHeight;
-            let cols = Math.floor(w / 20) + 1;
-            let ypos = Array(cols).fill(0);
-
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, w, h);
-
-            const matrixInterval = setInterval(() => {
-                ctx.fillStyle = '#0001';
-                ctx.fillRect(0, 0, w, h);
-                ctx.fillStyle = '#0f0';
-                ctx.font = '15pt monospace';
-                ypos.forEach((y, ind) => {
-                    const text = String.fromCharCode(Math.random() * 128);
-                    const x = ind * 20;
-                    ctx.fillText(text, x, y);
-                    if (y > 100 + Math.random() * 10000) ypos[ind] = 0;
-                    else ypos[ind] = y + 20;
-                });
-            }, 50);
-
-            // Stop after 10 seconds
-            setTimeout(() => {
-                clearInterval(matrixInterval);
-                canvas.style.display = 'none';
-                this.print("Matrix effect terminated.");
-            }, 10000);
-        }
-        cmd_exit() {
-            this.app.dashboard.showPanel('home');
-        }
     }
 
-      // --- CORE APP CLASSES ---
+    class Modal {
+      constructor(overlayId) {
+        this.overlay = document.getElementById(overlayId);
+      }
+      _render(content) {
+        this.overlay.innerHTML = `<div class="modal">${content}</div>`;
+        this.overlay.classList.add('visible');
+        this.overlay.querySelector('.modal').addEventListener('click', e => e.stopPropagation());
+        this.overlay.addEventListener('click', () => this.hide(), { once: true });
+      }
+      hide() {
+        this.overlay.classList.remove('visible');
+        this.overlay.innerHTML = '';
+      }
+      confirm({ title, message, confirmText = 'Confirm', cancelText = 'Cancel' }) {
+        return new Promise(resolve => {
+          const content = `
+              <h2>${title}</h2><p>${message}</p>
+              <div class="modal-buttons">
+                <button class="cancel-btn">${cancelText}</button>
+                <button class="confirm-btn">${confirmText}</button>
+              </div>`;
+          this._render(content);
+          this.overlay.querySelector('.confirm-btn').onclick = () => { this.hide(); resolve(true); };
+          this.overlay.querySelector('.cancel-btn').onclick = () => { this.hide(); resolve(false); };
+        });
+      }
+      prompt({ title, message, inputPlaceholder = 'Enter value...' }) {
+        return new Promise(resolve => {
+          const content = `
+              <h2>${title}</h2><p>${message}</p>
+              <input type="password" placeholder="${inputPlaceholder}" id="modalInput" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--c-border); background: var(--c-bg-dark); color: var(--c-text-light);">
+              <div class="modal-buttons">
+                <button class="cancel-btn">Cancel</button>
+                <button class="confirm-btn">Submit</button>
+              </div>`;
+          this._render(content);
+          const input = this.overlay.querySelector('#modalInput');
+          input.focus();
+          const submit = () => { this.hide(); resolve(input.value); };
+          this.overlay.querySelector('.confirm-btn').onclick = submit;
+          this.overlay.querySelector('.cancel-btn').onclick = () => { this.hide(); resolve(null); };
+          input.onkeydown = (e) => { if (e.key === 'Enter') submit(); };
+        });
+      }
+      showCustom(content) { this._render(content); }
+    }
+    
+    class API {
+      static async fetchUsers() {
+        try {
+          const response = await fetch('https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json');
+          if (!response.ok) throw new Error('Network response error');
+          return await response.json();
+        } catch (error) {
+          console.error("Failed to fetch user data:", error);
+          return null;
+        }
+      }
+    }
+
+    // --- MANAGER CLASSES ---
+    class SettingsManager {
+      constructor() {
+        this.defaults = { theme: 'dark', animations: true };
+        this.settings = this.load();
+      }
+      load() {
+        const stored = localStorage.getItem('appSettings');
+        return stored ? { ...this.defaults, ...JSON.parse(stored) } : this.defaults;
+      }
+      save() { localStorage.setItem('appSettings', JSON.stringify(this.settings)); }
+      get(key) { return this.settings[key]; }
+      set(key, value) { this.settings[key] = value; this.save(); }
+    }
+
+    class UIManager {
+      constructor(app) {
+        this.app = app;
+        this.preloader = document.getElementById('preloader');
+        this.userDropdown = document.getElementById('userDropdown');
+      }
+      init() {
+        this.applySettings();
+        this.setupEventListeners();
+        setTimeout(() => this.hidePreloader(), 1500);
+      }
+      hidePreloader() { this.preloader.classList.add('hidden'); }
+      applySettings() {
+        const theme = this.app.settingsManager.get('theme');
+        document.documentElement.dataset.theme = theme;
+        const animations = this.app.settingsManager.get('animations');
+        document.body.classList.toggle('animation-enabled', animations);
+      }
+      setupEventListeners() {
+        document.getElementById('userProfileBtn').addEventListener('click', () => this.userDropdown.classList.toggle('visible'));
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.user-profile')) this.userDropdown.classList.remove('visible');
+        });
+        document.getElementById('settingsBtn').addEventListener('click', () => this.showSettingsModal());
+      }
+      showSettingsModal() {
+        const { theme, animations } = this.app.settingsManager.settings;
+        const content = `
+            <h2>⚙️ Settings</h2>
+            <div class="settings-tabs">
+                <div class="settings-tab active" data-tab="general">General</div>
+                <div class="settings-tab" data-tab="appearance">Appearance</div>
+            </div>
+            <div id="generalContent" class="settings-content active">
+                <div class="setting"><label for="animationsToggle">Enable Animations</label><label class="toggle-switch"><input type="checkbox" id="animationsToggle" ${animations ? 'checked' : ''}><span class="slider"></span></label></div>
+            </div>
+            <div id="appearanceContent" class="settings-content">
+                <div class="setting"><label for="themeSelector">Theme</label><select id="themeSelector"><option value="dark" ${theme === 'dark' ? 'selected' : ''}>Dark</option><option value="light" ${theme === 'light' ? 'selected' : ''}>Light</option></select></div>
+            </div>
+            <div class="modal-buttons">
+                <button class="cancel-btn">Close</button>
+                <button class="confirm-btn">Save</button>
+            </div>`;
+        this.app.modal.showCustom(content);
+        const modal = document.querySelector('.modal');
+        modal.querySelectorAll('.settings-tab').forEach(tab => {
+          tab.addEventListener('click', () => {
+            modal.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+            modal.querySelectorAll('.settings-content').forEach(c => c.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab + 'Content').classList.add('active');
+          });
+        });
+        modal.querySelector('.cancel-btn').addEventListener('click', () => this.app.modal.hide());
+        modal.querySelector('.confirm-btn').addEventListener('click', () => {
+          this.app.settingsManager.set('theme', modal.querySelector('#themeSelector').value);
+          this.app.settingsManager.set('animations', modal.querySelector('#animationsToggle').checked);
+          this.applySettings();
+          this.app.notifier.show('Settings saved!', 'success');
+          this.app.modal.hide();
+        });
+      }
+    }
+
+    // --- WIDGET & FEATURE CLASSES ---
+    class WidgetManager {
+      constructor(app) {
+        this.app = app;
+        this.sessionTime = 0;
+        this.sessionTimer = null;
+      }
+      init() {
+        this.startTimers();
+        this.setupEventListeners();
+      }
+      startTimers() {
+        setInterval(() => { document.getElementById('realTimeClock').textContent = `🕒 ${new Date().toLocaleTimeString()}`; }, 1000);
+        this.sessionTimer = setInterval(() => {
+          this.sessionTime++;
+          const hrs = String(Math.floor(this.sessionTime / 3600)).padStart(2, '0');
+          const mins = String(Math.floor((this.sessionTime % 3600) / 60)).padStart(2, '0');
+          const secs = String(this.sessionTime % 60).padStart(2, '0');
+          document.getElementById('sessionTime').textContent = `⏳ ${hrs}:${mins}:${secs}`;
+        }, 1000);
+      }
+      setupEventListeners() {
+        document.getElementById('fullscreenBtn').addEventListener('click', () => this.toggleFullscreen());
+        document.getElementById('screenshotBtn').addEventListener('click', () => this.takeScreenshot());
+        document.getElementById('panicBtn').addEventListener('click', () => window.open('https://clever.com', '_blank'));
+        document.getElementById('logoutBtn').addEventListener('click', () => this.app.logout());
+        document.getElementById('statsBtn').addEventListener('click', () => this.app.showStatsModal());
+      }
+      toggleFullscreen() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(err => console.error(err));
+        else document.exitFullscreen();
+      }
+      takeScreenshot() {
+        html2canvas(document.body).then(canvas => {
+          const link = document.createElement('a');
+          link.download = `screenshot-${Date.now()}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          this.app.notifier.show('Screenshot saved!', 'success');
+        });
+      }
+    }
+
+    class Dashboard {
+      constructor(app) {
+        this.app = app;
+        this.container = document.getElementById('dashboardContainer');
+        this.navContainer = document.getElementById('panelNav');
+        this.panelsContainer = document.getElementById('infoPanelsContainer');
+        
+        this.panels = [
+            { id: 'home', title: '🏠 Home' },
+            { id: 'wifi', title: '📡 WiFi Info' },
+            { id: 'handbooks', title: '📘 Handbooks' },
+            { id: 'links', title: '🌐 Quick Links' },
+            { id: 'schoolInfo', title: '🏫 School Info' },
+            { id: 'exploitPanel', title: '🧨 Exploits' },
+            { id: 'bypassPanel', title: '🚪 Bypass Tools' },
+            { id: 'vpnPanel', title: '🔐 VPN Websites' },
+            { id: 'gamingPanel', title: '🎮 Gaming Websites' },
+            { id: 'musicPanel', title: '🎵 Music Websites' },
+            { id: 'keyboardPanel', title: '🎹 Keyboard Tricks' },
+        ];
+      }
+
+      init(user) {
+        this.app.currentUser = user;
+        this.container.style.display = 'block';
+        document.getElementById('loggedInUser').textContent = user.name || user.username;
+        document.getElementById('loggedInID').textContent = user.userID;
+        
+        this.renderNav();
+        this.renderPanels();
+        this.showPanel('home');
+      }
+
+      renderNav() {
+        const ul = this.navContainer.querySelector('ul');
+        ul.innerHTML = this.panels.map(p => `<li><button data-panel-id="${p.id}" data-tooltip="${p.title.substring(2)}"><span>${p.title}</span></button></li>`).join('');
+        ul.addEventListener('click', e => {
+          const button = e.target.closest('button');
+          if (button) this.showPanel(button.dataset.panelId);
+        });
+      }
+
+      renderPanels() {
+        this.panelsContainer.innerHTML = this.panels.map(p => `<div id="${p.id}Panel" class="info-panel">${this.getPanelContent(p.id)}</div>`).join('');
+        document.getElementById('calendar').addEventListener('click', e => {
+          if(e.target.classList.contains('calendar-day') && !e.target.classList.contains('day-name')) {
+            this.showCalendarEvent(e.target.textContent);
+          }
+        });
+      }
       
-      class Dashboard {
-        constructor(app) {
-          this.app = app;
-          this.container = document.getElementById('dashboardContainer');
-          this.navContainer = document.getElementById('panelNav');
-          this.panelsContainer = document.getElementById('infoPanelsContainer');
-          this.terminal = new Terminal('terminalContainer', this.app);
-
-          this.panels = [
-              { id: 'home', title: '🏠 Home' },
-              { id: 'wifi', title: '📡 WiFi Info' },
-              { id: 'handbooks', title: '📘 Handbooks' },
-              { id: 'links', title: '🌐 Quick Links' },
-              { id: 'schoolInfo', title: '🏫 School Info' },
-              { id: 'exploits', title: '🧨 Exploits' },
-              { id: 'terminal', title: '⌨️ Terminal' },
-          ];
-        }
-
-        init(user) {
-          this.app.currentUser = user;
-          this.container.style.display = 'block';
-          document.getElementById('loggedInUser').textContent = user.name || user.username;
-          document.getElementById('loggedInID').textContent = user.userID;
-          
-          this.renderNav();
-          this.renderPanels();
-          this.showPanel('home');
-          this.terminal.init();
-        }
-
-        renderNav() {
-            const ul = this.navContainer.querySelector('ul');
-            ul.innerHTML = this.panels.map(p => `<li><button data-panel-id="${p.id}" data-tooltip="${p.title.substring(2)}"><span>${p.title}</span></button></li>`).join('');
-            ul.addEventListener('click', e => {
-                const button = e.target.closest('button');
-                if (button) this.showPanel(button.dataset.panelId);
-            });
-        }
-
-        renderPanels() {
-            this.panelsContainer.innerHTML = this.panels.map(p => `<div id="${p.id}Panel" class="info-panel">${this.getPanelContent(p.id)}</div>`).join('');
-            document.getElementById('calendar').addEventListener('click', e => {
-                if(e.target.classList.contains('calendar-day') && !e.target.classList.contains('day-name')) {
-                    this.showCalendarEvent(e.target.textContent);
-                }
-            });
-        }
+      showPanel(panelId) {
+        document.querySelectorAll('.info-panel').forEach(p => p.classList.remove('active'));
+        document.querySelector(`#${panelId}Panel`).classList.add('active');
         
-        showPanel(panelId) {
-            document.querySelectorAll('.info-panel').forEach(p => p.classList.remove('active'));
-            document.querySelector(`#${panelId}Panel`).classList.add('active');
-            
-            document.querySelectorAll('#panelNav button').forEach(b => b.classList.remove('active'));
-            document.querySelector(`#panelNav button[data-panel-id="${panelId}"]`).classList.add('active');
-        }
+        document.querySelectorAll('#panelNav button').forEach(b => b.classList.remove('active'));
+        document.querySelector(`#panelNav button[data-panel-id="${panelId}"]`).classList.add('active');
+      }
 
-        showCalendarEvent(day) {
-            this.app.modal.showCustom(`<h2>Events for the ${day}th</h2><p>No events scheduled. It's a great day to relax!</p><div class="modal-buttons"><button class="confirm-btn">OK</button></div>`);
-            document.querySelector('.modal .confirm-btn').onclick = () => this.app.modal.hide();
+      showCalendarEvent(day) {
+        this.app.modal.showCustom(`<h2>Events for the ${day}th</h2><p>No events scheduled. It's a great day to relax!</p><div class="modal-buttons"><button class="confirm-btn">OK</button></div>`);
+        document.querySelector('.modal .confirm-btn').onclick = () => this.app.modal.hide();
+      }
+      
+      // --- CONTENT GENERATION METHODS ---
+      getPanelContent(panelId) {
+        switch(panelId) {
+          case 'home': return this.getHomeContent();
+          case 'wifi': return this.getWifiContent();
+          case 'handbooks': return this.getHandbookContent();
+          case 'links': return this.getLinksContent();
+          case 'schoolInfo': return this.getSchoolInfoContent();
+          case 'exploitPanel': return this.getExploitsContent();
+          case 'bypassPanel': return this.getBypassContent();
+          case 'vpnPanel': return this.getVpnContent();
+          case 'gamingPanel': return this.getGamingContent();
+          case 'musicPanel': return this.getMusicContent();
+          case 'keyboardPanel': return this.getKeyboardContent();
+          default: return `<div class="box"><h2>Coming Soon</h2><p>This section is under construction.</p></div>`;
         }
-        
-        // --- CONTENT GENERATION METHODS ---
-        getPanelContent(panelId) {
-            switch(panelId) {
-                case 'home': return this.getHomeContent();
-                case 'wifi': return this.getWifiContent();
-                case 'handbooks': return this.getHandbookContent();
-                case 'links': return this.getLinksContent();
-                case 'schoolInfo': return this.getSchoolInfoContent();
-                case 'exploits': return this.getExploitsContent();
-                case 'terminal': return `<div id="terminalContainer" class="terminal"></div>`;
-                default: return `<div class="box"><h2>Coming Soon</h2><p>This section is under construction.</p></div>`;
-            }
-        }
-        
-        getHomeContent() {
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = today.getMonth();
-            const date = today.getDate();
-            const firstDay = new Date(year, month, 1).getDay();
-            const lastDate = new Date(year, month + 1, 0).getDate();
+      }
+      
+      getHomeContent() {
+        const today = new Date();
+        const year = today.getFullYear();
+        const month = today.getMonth();
+        const date = today.getDate();
+        const firstDay = new Date(year, month, 1).getDay();
+        const lastDate = new Date(year, month + 1, 0).getDate();
 
-            let calendarHtml = `<div class="calendar">`;
-            const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-            calendarHtml += days.map(d => `<div class="day-name calendar-day">${d}</div>`).join('');
-            
-            for (let i = 0; i < firstDay; i++) calendarHtml += `<div class="calendar-day empty"></div>`;
-            for (let i = 1; i <= lastDate; i++) {
-                calendarHtml += `<div class="calendar-day ${i === date ? 'today' : ''}">${i}</div>`;
-            }
-            calendarHtml += `</div>`;
-            
-            return `
-                <div class="grid-container">
-                    <div class="box">
-                        <h2>📅 Calendar - ${today.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
-                        <div id="calendar">${calendarHtml}</div>
-                    </div>
-                    <div class="box">
-                        <h2>🔔 Notifications & Updates</h2>
-                        <p><strong>Overload Edition v3.0.0 is LIVE!</strong></p>
-                        <p>Welcome to the massively upgraded Private Dashboard. Explore new features like the integrated terminal, multiple themes in settings, and a fully responsive, animated UI.</p>
-                    </div>
+        let calendarHtml = `<div class="calendar">`;
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        calendarHtml += days.map(d => `<div class="day-name calendar-day">${d}</div>`).join('');
+        
+        for (let i = 0; i < firstDay; i++) calendarHtml += `<div class="calendar-day empty"></div>`;
+        for (let i = 1; i <= lastDate; i++) {
+          calendarHtml += `<div class="calendar-day ${i === date ? 'today' : ''}">${i}</div>`;
+        }
+        calendarHtml += `</div>`;
+        
+        return `
+            <div class="grid-container">
+                <div class="box">
+                    <h2>📅 Calendar - ${today.toLocaleString('default', { month: 'long', year: 'numeric' })}</h2>
+                    <div id="calendar">${calendarHtml}</div>
                 </div>
-            `;
-        }
-        
-        getWifiContent() {
-            return `<div class="box">
-                    <h2>📡 School WiFi Information</h2>
-                    <p>This list contains known network configurations. Use this information responsibly.</p>
-                    <div class="links-grid">
-                      <div><h4>Middletown_Core</h4><p>Security: WPA3 Ent.</p></div>
-                      <div><h4>Mtown Guest</h4><p>User: msguest, Pass: M@ms2021#</p></div>
-                      <div><h4>Radius Test</h4><p>User: msguest, Pass: M@ms2021#</p></div>
-                    </div>
-                </div>`;
-        }
-
-        getHandbookContent() {
-             return `<div class="box">
-                        <h2>📘 Student Handbooks</h2>
-                        <div class="links-grid">
-                          <a href="#" target="_blank">Elementary</a>
-                          <a href="#" target="_blank">Secondary</a>
-                          <a href="#" target="_blank">District</a>
-                          <a href="#" target="_blank">RA Academy</a>
-                        </div>
-                    </div>`;
-        }
-
-        getLinksContent() {
-             return `<div class="box">
-                        <h2>🌐 Student & Teacher Websites</h2>
-                        <h3>Student</h3>
-                        <div class="links-grid">
-                            <a href="#" target="_blank">RaiderWeb</a>
-                            <a href="#" target="_blank">Canvas</a>
-                            <a href="#" target="_blank">Clever</a>
-                            <a href="#" target="_blank">PowerSchool</a>
-                        </div>
-                        <h3 style="margin-top: 2rem;">Teacher</h3>
-                        <div class="links-grid">
-                            <a href="#" target="_blank">Canvas (Teacher)</a>
-                            <a href="#" target="_blank">PowerSchool (Teacher)</a>
-                        </div>
-                    </div>`;
-        }
-        
-        getSchoolInfoContent() {
-            return `<div class="box">
-                        <h2>🏫 School Information</h2>
-                        <p><strong>Principal:</strong> Dr. Shannon L. Wevodau (swevodau@raiderweb.org)</p>
-                        <p><strong>Address:</strong> 215 Oberlin Road Middletown, PA 17057</p>
-                    </div>`;
-        }
-
-        getExploitsContent() {
-             return `<div class="box">
-                        <h2>🧨 Exploits & Tools</h2>
-                        <p>Disclaimer: These tools are for educational purposes only.</p>
-                        <div class="links-grid">
-                            <a href="#" target="_blank">Blooket</a>
-                            <a href="#" target="_blank">Kahoot</a>
-                            <a href="#" target="_blank">Gimkit</a>
-                        </div>
-                    </div>`;
-        }
+                <div class="box motivation-box">
+                  "The future belongs to those who believe in the beauty of their dreams." – Eleanor Roosevelt
+                </div>
+            </div>
+            <div class="box">
+                <h2>🔔 Updates & News</h2>
+                <div class="update-entry">System Security Patch Released.</div>
+                <div class="update-entry">New interactive features added!</div>
+                <div class="update-entry">Performance optimizations deployed.</div>
+            </div>
+        `;
+      }
+      
+      getWifiContent() {
+        return `<div class="box">
+                  <h2>📡 School WiFi Information</h2>
+                  <p>This list contains known network configurations. Use this information responsibly.</p>
+                  <div class="links-grid">
+                    <div><h4>Middletown_Core</h4><p>Security: WPA3 Ent.</p></div>
+                    <div><h4>Mtown Guest</h4><p>User: msguest, Pass: M@ms2021#</p></div>
+                    <div><h4>Radius Test</h4><p>User: msguest, Pass: M@ms2021#</p></div>
+                  </div>
+              </div>`;
       }
 
-      class LoginSystem {
-        constructor(app) {
-          this.app = app;
-          this.container = document.getElementById('loginContainer');
-          this.loginBox = document.getElementById('loginBox');
-          this.usernameInput = document.getElementById('username');
-          this.passwordInput = document.getElementById('password');
-          this.userIDInput = document.getElementById('userID');
-          this.submitBtn = document.getElementById('submitBtn');
-          this.errorMsg = document.getElementById('errorMsg');
-          this.attemptsText = document.getElementById('attemptsText');
-          this.showPasswordCheckbox = document.getElementById('showPassword');
-          
-          this.maxAttempts = 5;
-          this.attempts = this.maxAttempts;
-          this.users = [];
-          this.isLocked = false;
-        }
+      getHandbookContent() {
+           return `<div class="box">
+                      <h2>📘 Student Handbooks</h2>
+                      <div class="links-grid">
+                        <a href="#" target="_blank">Elementary</a>
+                        <a href="#" target="_blank">Secondary</a>
+                        <a href="#" target="_blank">District</a>
+                        <a href="#" target="_blank">RA Academy</a>
+                      </div>
+                  </div>`;
+      }
 
-        async init() {
-          this.updateAttemptsText();
-          this.addEventListeners();
-          this.users = await API.fetchUsers();
-          if (!this.users) {
-            this.showError('Failed to load user data. Please try again later.');
-            this.setInputsDisabled(true);
-          }
-        }
+      getLinksContent() {
+           return `<div class="box">
+                      <h2>🌐 Student & Teacher Websites</h2>
+                      <h3>Student</h3>
+                      <div class="links-grid">
+                          <a href="#" target="_blank">RaiderWeb</a>
+                          <a href="#" target="_blank">Canvas</a>
+                          <a href="#" target="_blank">Clever</a>
+                          <a href="#" target="_blank">PowerSchool</a>
+                      </div>
+                      <h3 style="margin-top: 2rem;">Teacher</h3>
+                      <div class="links-grid">
+                          <a href="#" target="_blank">Canvas (Teacher)</a>
+                          <a href="#" target="_blank">PowerSchool (Teacher)</a>
+                      </div>
+                  </div>`;
+      }
+      
+      getSchoolInfoContent() {
+          return `<div class="box">
+                      <h2>🏫 School Information</h2>
+                      <div class="school-info-grid">
+                          <div class="school-info-item"><div class="school-info-label">School Name:</div><div>Middletown Area Middle School</div></div>
+                          <div class="school-info-item"><div class="school-info-label">Address:</div><div>215 Oberlin Road Middletown, PA 17057</div></div>
+                          <div class="school-info-item"><div class="school-info-label">Phone:</div><div>717-930-0739</div></div>
+                          <div class="school-info-item"><div class="school-info-label">Principal:</div><div>Dr. Shannon L. Wevodau</div></div>
+                      </div>
+                  </div>`;
+      }
+
+      getExploitsContent() {
+           return `<div class="box">
+                      <h2>🧨 Exploits & Tools</h2>
+                      <p>Disclaimer: These tools are for educational purposes only.</p>
+                      <div class="links-grid">
+                          <a href="#" target="_blank">Blooket</a>
+                          <a href="#" target="_blank">Kahoot</a>
+                          <a href="#" target="_blank">Gimkit</a>
+                      </div>
+                  </div>`;
+      }
+      
+      getBypassContent() {
+        return `<div class="box">
+                  <h2>🚪 Bypassing Tools</h2>
+                  <div class="bypass-buttons">
+                    <button onclick="dashboard.showBypassContent('bathroom')">Bathroom Bypass</button>
+                    <button onclick="dashboard.showBypassContent('wifi')">Wifi Bypass</button>
+                    <button onclick="dashboard.showBypassContent('monitoring')">Teacher Monitoring Bypass</button>
+                  </div>
+                  <div id="bathroomBypass" class="bypass-content"><p>COMING SOON</p></div>
+                  <div id="wifiBypass" class="bypass-content"><p>Refer to WiFi Info panel.</p></div>
+                  <div id="monitoringBypass" class="bypass-content"><p>COMING SOON</p></div>
+                </div>`;
+      }
+      
+      getVpnContent() {
+        return `<div class="box">
+                  <h2>🔐 VPN Websites</h2>
+                  <div class="links-list">
+                    <a href="#" target="_blank">VPN Service 1</a>
+                    <a href="#" target="_blank">VPN Service 2</a>
+                    <a href="#" target="_blank">VPN Service 3</a>
+                  </div>
+                </div>`;
+      }
+      
+      getGamingContent() {
+        return `<div class="box"><h2>🎮 Gaming Websites</h2><div class="coming-soon">COMING SOON</div></div>`;
+      }
+      
+      getMusicContent() {
+        return `<div class="box"><h2>🎵 Music Websites</h2><div class="coming-soon">COMING SOON</div></div>`;
+      }
+      
+      getKeyboardContent() {
+        return `<div class="box">
+                  <h2>🎹 Keyboard Tricks (macOS/iPadOS)</h2>
+                  <ul>
+                    <li><strong>Cmd + Space:</strong> Spotlight Search</li>
+                    <li><strong>Cmd + H:</strong> Go to Home Screen</li>
+                    <li><strong>Cmd + Tab:</strong> Switch Apps</li>
+                  </ul>
+                </div>`;
+      }
+    }
+
+    // --- LOGIN SYSTEM CLASS ---
+    class LoginSystem {
+      constructor(app) {
+        this.app = app;
+        this.container = document.getElementById('loginContainer');
+        this.loginBox = document.getElementById('loginBox');
+        this.usernameInput = document.getElementById('username');
+        this.passwordInput = document.getElementById('password');
+        this.userIDInput = document.getElementById('userID');
+        this.submitBtn = document.getElementById('submitBtn');
+        this.errorMsg = document.getElementById('errorMsg');
+        this.attemptsText = document.getElementById('attemptsText');
+        this.showPasswordCheckbox = document.getElementById('showPassword');
         
-        addEventListeners() {
-            this.submitBtn.addEventListener('click', () => this.handleLogin());
-            document.addEventListener('keydown', e => {
-                if (e.key === 'Enter' && !this.isLocked && this.container.style.display !== 'none') {
-                    this.handleLogin();
-                }
-            });
-            this.showPasswordCheckbox.addEventListener('change', () => {
-                this.passwordInput.type = this.showPasswordCheckbox.checked ? 'text' : 'password';
-            });
-        }
+        this.maxAttempts = 5;
+        this.attempts = this.maxAttempts;
+        this.users = [];
+        this.isLocked = false;
+      }
 
-        async handleLogin() {
-          if (this.isLocked) return;
-          const [username, password, userID] = [this.usernameInput.value, this.passwordInput.value, this.userIDInput.value];
-          if (!username || !password || !userID) {
-            this.showError('Please fill in all fields.');
-            return;
-          }
-          const user = this.users.find(u => u.username?.toLowerCase() === username.toLowerCase() && u.userID?.toString() === userID);
-          if (user && user.password === password) this.loginSuccess(user);
-          else this.loginFail();
-        }
-        
-        loginSuccess(user) {
-            this.app.notifier.show(`Authentication successful. Welcome, ${user.name || user.username}!`, 'success');
-            this.container.classList.add('hidden');
-            setTimeout(() => {
-                this.container.style.display = 'none';
-                this.app.showDashboard(user);
-            }, 500);
-        }
-        
-        async loginFail() {
-            this.attempts--;
-            this.updateAttemptsText();
-            this.loginBox.classList.add('error-flash');
-            setTimeout(() => this.loginBox.classList.remove('error-flash'), 500);
-
-            if (this.attempts > 0) {
-                this.showError(`Invalid credentials. ${this.attempts} attempts remaining.`);
-            } else {
-                this.isLocked = true;
-                this.showError('Maximum attempts exceeded. System locked.');
-                this.setInputsDisabled(true);
-                const resetCode = await this.app.modal.prompt({
-                    title: 'System Locked',
-                    message: 'Enter administrative override code to unlock.',
-                    inputPlaceholder: 'Override Code'
-                });
-                if (resetCode === 'Reset.Counter.2579') {
-                    this.reset();
-                    this.app.notifier.show('System unlocked.', 'success');
-                } else if(resetCode !== null) {
-                    this.app.notifier.show('Incorrect override code.', 'error');
-                }
-            }
-        }
-
-        reset() {
-            this.attempts = this.maxAttempts;
-            this.isLocked = false;
-            this.updateAttemptsText();
-            this.showError('');
-            this.setInputsDisabled(false);
-            this.usernameInput.focus();
-        }
-
-        updateAttemptsText() { this.attemptsText.textContent = `Attempts left: ${this.attempts}`; }
-        showError(message) { this.errorMsg.textContent = message; }
-        setInputsDisabled(disabled) {
-            [this.usernameInput, this.passwordInput, this.userIDInput, this.submitBtn].forEach(el => el.disabled = disabled);
+      async init() {
+        this.updateAttemptsText();
+        this.addEventListeners();
+        this.users = await API.fetchUsers();
+        if (!this.users) {
+          this.showError('Failed to load user data. Please try again later.');
+          this.setInputsDisabled(true);
         }
       }
       
-      class App {
-        constructor() {
-          this.settingsManager = new SettingsManager();
-          this.notifier = new Notifier('notifierContainer');
-          this.modal = new Modal('modalOverlay');
-          this.uiManager = new UIManager(this);
-          this.widgetManager = new WidgetManager(this);
-          this.loginSystem = new LoginSystem(this);
-          this.dashboard = new Dashboard(this);
-          this.currentUser = null;
-        }
+      addEventListeners() {
+        this.submitBtn.addEventListener('click', () => this.handleLogin());
+        document.addEventListener('keydown', e => {
+          if (e.key === 'Enter' && !this.isLocked && this.container.style.display !== 'none') {
+            this.handleLogin();
+          }
+        });
+        this.showPasswordCheckbox.addEventListener('change', () => {
+          this.passwordInput.type = this.showPasswordCheckbox.checked ? 'text' : 'password';
+        });
+      }
 
-        init() {
-          this.uiManager.init();
-          this.loginSystem.init();
+      async handleLogin() {
+        if (this.isLocked) return;
+        const [username, password, userID] = [this.usernameInput.value, this.passwordInput.value, this.userIDInput.value];
+        if (!username || !password || !userID) {
+          this.showError('Please fill in all fields.');
+          return;
         }
+        const user = this.users.find(u => u.username?.toLowerCase() === username.toLowerCase() && u.userID?.toString() === userID);
+        if (user && user.password === password) this.loginSuccess(user);
+        else this.loginFail();
+      }
+      
+      loginSuccess(user) {
+        this.app.notifier.show(`Authentication successful. Welcome, ${user.name || user.username}!`, 'success');
+        this.container.classList.add('hidden');
+        setTimeout(() => {
+          this.container.style.display = 'none';
+          this.app.showDashboard(user);
+        }, 500);
+      }
+      
+      async loginFail() {
+        this.attempts--;
+        this.updateAttemptsText();
+        this.loginBox.classList.add('flashing');
+        setTimeout(() => this.loginBox.classList.remove('flashing'), 500);
 
-        showDashboard(user) {
-          this.currentUser = user;
-          this.dashboard.init(user);
-          this.widgetManager.init();
-        }
-        
-        async logout() {
-            const confirmed = await this.modal.confirm({
-                title: 'Confirm Logout',
-                message: 'Are you sure you want to log out?',
-                confirmText: 'Log Out',
-            });
-            if (confirmed) window.location.reload();
+        if (this.attempts > 0) {
+          this.showError(`Invalid credentials. ${this.attempts} attempts remaining.`);
+        } else {
+          this.isLocked = true;
+          this.showError('Maximum attempts exceeded. System locked.');
+          this.setInputsDisabled(true);
+          const resetCode = await this.app.modal.prompt({
+            title: 'System Locked',
+            message: 'Enter administrative override code to unlock.',
+            inputPlaceholder: 'Override Code'
+          });
+          if (resetCode === 'Reset.Counter.2579') {
+            this.reset();
+            this.app.notifier.show('System unlocked.', 'success');
+          } else if(resetCode !== null) {
+            this.app.notifier.show('Incorrect override code.', 'error');
+          }
         }
       }
 
-      // --- INITIALIZE APP ---
+      reset() {
+        this.attempts = this.maxAttempts;
+        this.isLocked = false;
+        this.updateAttemptsText();
+        this.showError('');
+        this.setInputsDisabled(false);
+        this.usernameInput.focus();
+      }
+
+      updateAttemptsText() { this.attemptsText.textContent = `Attempts Left: ${this.attempts}`; }
+      showError(message) { this.errorMsg.textContent = message; }
+      setInputsDisabled(disabled) {
+        [this.usernameInput, this.passwordInput, this.userIDInput, this.submitBtn].forEach(el => el.disabled = disabled);
+      }
+    }
+    
+    // --- STATS MODAL CLASS ---
+    class StatsModal {
+      constructor(app) {
+        this.app = app;
+        this.modalOverlay = document.getElementById('modalOverlay');
+      }
+
+      async show() {
+        const deviceStats = this.getDeviceStats();
+        const browserStats = this.getBrowserStats();
+        
+        const statsHtml = `
+          <h2><span style="color: var(--c-primary);">📊 System & Browser Statistics</span></h2>
+          <div class="settings-tabs">
+              <div class="settings-tab active" data-tab="device">Device Stats</div>
+              <div class="settings-tab" data-tab="browser">Browser Stats</div>
+          </div>
+          <div id="deviceStatsContent" class="settings-content active">
+              <table class="stats-table">
+                  <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+                  <tbody>${this.renderStatsTable(deviceStats)}</tbody>
+              </table>
+          </div>
+          <div id="browserStatsContent" class="settings-content">
+              <table class="stats-table">
+                  <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+                  <tbody>${this.renderStatsTable(browserStats)}</tbody>
+              </table>
+          </div>
+          <div class="modal-buttons">
+              <button class="confirm-btn">Close</button>
+          </div>
+        `;
+        this.app.modal.showCustom(statsHtml);
+
+        const modal = document.querySelector('.modal');
+        modal.querySelectorAll('.settings-tab').forEach(tab => {
+          tab.addEventListener('click', () => {
+            modal.querySelectorAll('.settings-tab').forEach(t => t.classList.remove('active'));
+            modal.querySelectorAll('.settings-content').forEach(c => c.classList.remove('active'));
+            tab.classList.add('active');
+            document.getElementById(tab.dataset.tab + 'StatsContent').classList.add('active');
+          });
+        });
+        modal.querySelector('.confirm-btn').addEventListener('click', () => this.app.modal.hide());
+      }
+
+      getDeviceStats() {
+        const nav = navigator;
+        const screen = window.screen;
+        const battery = nav.getBattery ? (() => {
+            try { return nav.getBattery(); } catch { return null; }
+        })() : null;
+
+        return [
+          { metric: 'Platform', value: nav.platform || 'N/A' },
+          { metric: 'User Agent', value: nav.userAgent || 'N/A' },
+          { metric: 'Vendor', value: nav.vendor || 'N/A' },
+          { metric: 'Language', value: nav.language || 'N/A' },
+          { metric: 'Languages', value: nav.languages ? nav.languages.join(', ') : 'N/A' },
+          { metric: 'On Line', value: nav.onLine ? 'Yes' : 'No' },
+          { metric: 'Max Touch Points', value: nav.maxTouchPoints || '0' },
+          { metric: 'Hardware Concurrency', value: nav.hardwareConcurrency || 'N/A' },
+          { metric: 'Device Memory (GB)', value: nav.deviceMemory || 'N/A' },
+          { metric: 'Screen Width', value: screen.width || 'N/A' },
+          { metric: 'Screen Height', value: screen.height || 'N/A' },
+          { metric: 'Color Depth', value: screen.colorDepth || 'N/A' },
+          { metric: 'Pixel Depth', value: screen.pixelDepth || 'N/A' },
+          { metric: 'Screen Resolution', value: `${screen.width}x${screen.height}` },
+          { metric: 'Device Pixel Ratio', value: window.devicePixelRatio || 'N/A' },
+          { metric: 'Screen Orientation', value: screen.orientation?.type || 'N/A' },
+          { metric: 'Battery Level', value: battery ? `${Math.round(battery.level * 100)}%` : 'N/A' },
+          { metric: 'Battery Charging', value: battery ? (battery.charging ? 'Yes' : 'No') : 'N/A' },
+          { metric: 'Cookies Enabled', value: nav.cookieEnabled ? 'Yes' : 'No' },
+          { metric: 'Do Not Track', value: nav.doNotTrack || 'N/A' },
+          { metric: 'Clipboard API', value: nav.clipboard ? 'Supported' : 'Not Supported' },
+          { metric: 'Keyboard Support', value: ('getGamepads' in nav) ? 'Supported' : 'Not Supported' },
+          { metric: 'Permissions API', value: ('permissions' in nav) ? 'Supported' : 'Not Supported' },
+          { metric: 'WebRTC Support', value: (window.RTCPeerConnection) ? 'Supported' : 'Not Supported' },
+          { metric: 'Notification API', value: ('Notification' in window) ? 'Supported' : 'Not Supported' },
+          { metric: 'Fullscreen API', value: (document.fullscreenEnabled) ? 'Supported' : 'Not Supported' },
+        ];
+      }
+
+      getBrowserStats() {
+        const nav = navigator;
+        const connection = nav.connection || {};
+        const stats = [
+          { metric: 'Vendor', value: nav.vendor || 'N/A' },
+          { metric: 'User Agent', value: nav.userAgent || 'N/A' },
+          { metric: 'Product', value: nav.product || 'N/A' },
+          { metric: 'Product Sub', value: nav.productSub || 'N/A' },
+          { metric: 'App Code Name', value: nav.appCodeName || 'N/A' },
+          { metric: 'App Name', value: nav.appName || 'N/A' },
+          { metric: 'App Version', value: nav.appVersion || 'N/A' },
+          { metric: 'Platform', value: nav.platform || 'N/A' },
+          { metric: 'Language', value: nav.language || 'N/A' },
+          { metric: 'Languages', value: nav.languages ? nav.languages.join(', ') : 'N/A' },
+          { metric: 'On Line', value: nav.onLine ? 'Yes' : 'No' },
+          { metric: 'Connection Type', value: connection.type || 'N/A' },
+          { metric: 'Effective Type', value: connection.effectiveType || 'N/A' },
+          { metric: 'Downlink (Mbps)', value: connection.downlink ? `${connection.downlink} Mbps` : 'N/A' },
+          { metric: 'Downlink Max (Mbps)', value: connection.downlinkMax ? `${connection.downlinkMax} Mbps` : 'N/A' },
+          { metric: 'RTT (ms)', value: connection.rtt ? `${connection.rtt} ms` : 'N/A' },
+          { metric: 'Save Data Mode', value: connection.saveData ? 'Enabled' : 'Disabled' },
+          { metric: 'Connection Metered', value: connection.metered ? 'Yes' : 'No' },
+          { metric: 'Cookies Enabled', value: nav.cookieEnabled ? 'Yes' : 'No' },
+          { metric: 'Do Not Track', value: nav.doNotTrack || 'N/A' },
+          { metric: 'Page Visibility', value: document.visibilityState || 'N/A' },
+          { metric: 'Browser Window Size', value: `${window.innerWidth}x${window.innerHeight}` },
+          { metric: 'Device Pixel Ratio', value: window.devicePixelRatio || 'N/A' },
+          { metric: 'Installed Plugins', value: nav.plugins?.length ? `${nav.plugins.length} plugin(s)` : 'None' },
+          { metric: 'Clipboard Access', value: nav.clipboard ? 'Supported' : 'Not Supported' },
+          { metric: 'WebRTC Support', value: (window.RTCPeerConnection) ? 'Supported' : 'Not Supported' },
+          { metric: 'Notification API', value: ('Notification' in window) ? 'Supported' : 'Not Supported' },
+          { metric: 'Fullscreen API', value: (document.fullscreenEnabled) ? 'Supported' : 'Not Supported' },
+          { metric: 'OffscreenCanvas', value: (window.OffscreenCanvas) ? 'Supported' : 'Not Supported' },
+          { metric: 'Web Workers', value: (window.Worker) ? 'Supported' : 'Not Supported' },
+          { metric: 'IndexedDB', value: (window.indexedDB) ? 'Supported' : 'Not Supported' },
+        ];
+        return stats;
+      }
+
+      renderStatsTable(stats) {
+        return stats.map(stat => `<tr><td>${stat.metric}</td><td>${stat.value === null || stat.value === undefined ? 'N/A' : stat.value}</td></tr>`).join('');
+      }
+    }
+
+    // --- CORE APP CLASS ---
+    class App {
+      constructor() {
+        this.settingsManager = new SettingsManager();
+        this.notifier = new Notifier('notifierContainer');
+        this.modal = new Modal('modalOverlay');
+        this.uiManager = new UIManager(this);
+        this.widgetManager = new WidgetManager(this);
+        this.loginSystem = new LoginSystem(this);
+        this.dashboard = new Dashboard(this);
+        this.statsModal = new StatsModal(this);
+        this.currentUser = null;
+      }
+
+      init() {
+        this.uiManager.init();
+        this.loginSystem.init();
+      }
+
+      showDashboard(user) {
+        this.dashboard.init(user);
+        this.widgetManager.init();
+      }
+      
+      async logout() {
+        const confirmed = await this.modal.confirm({
+          title: 'Confirm Logout',
+          message: 'Are you sure you want to log out?',
+          confirmText: 'Log Out',
+        });
+        if (confirmed) window.location.reload();
+      }
+
+      showStatsModal() {
+        this.statsModal.show();
+      }
+    }
+
+    // --- INITIALIZE APP ---
+    document.addEventListener('DOMContentLoaded', () => {
       const app = new App();
       app.init();
     });
