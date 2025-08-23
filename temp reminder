@@ -1,6 +1,6 @@
 Okay i have alot of request to do..
 
-1. add in a roatating box in the middle of the screen. which below it i want it to say Initializing System.. then make the text change like a grandait mode from orange to red and after it says its complete. i want the same thing but this time i want it to say Initializing Login Page... with a cool animation added to it which loads the login page from the 3D square.
+1. add in a roatating box in the middle of the screen. (no text on it) which below it i want it to say Initializing System.. then make the text change like a grandait mode from orange to red and after it says its complete. i want the same thing but this time i want it to say Initializing Login Page... with a cool animation added to it which loads the login page from the 3D square.
 
 2 .change the login page alot with the same stuff but make it more square with rounded corners. and add in below the whole thing another box which is rectangler which states the current time from 00:00:00 and the date. and then lastly i want too change the show password button to a toggle so it will be off by defualt. but when you toggle it on it will turn green with a little sliding animation. and back to the other box i want to add in a toggle to change the time to 24 hour format.. then above the whole page i want to add in a quick bar and what i want on that quickbar is the panic button (which takes you to clever.), and a zoom in and zoom out option. and make the Attempt counter from 5 to 3
 
