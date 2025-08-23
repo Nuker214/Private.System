@@ -1,394 +1,568 @@
-"use client"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined React Components</title>
+    <!-- Tailwind CSS CDN - For development only, not production. -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style type="text/tailwindcss">
+        /* Basic custom styles for theme variables.
+           These are simplified versions of your 'base' and 'dark' layers. */
+        @layer base {
+            :root {
+                --background: 0 0% 100%; /* HSL values for light mode background */
+                --foreground: 222.2 84% 4.9%; /* HSL values for light mode foreground */
+                --muted: 210 40% 96.1%;
+                --muted-foreground: 215.4 16.3% 46.9%;
+                --border: 214.3 31.8% 91.4%;
+            }
+            .dark {
+                --background: 222.2 84% 4.9%; /* HSL values for dark mode background */
+                --foreground: 210 40% 98%; /* HSL values for dark mode foreground */
+                --muted: 217.2 32.6% 17.5%;
+                --muted-foreground: 217.2 13.9% 50.6%;
+                --border: 217.2 32.6% 17.5%;
+            }
+        }
+        body {
+            @apply bg-background text-foreground min-h-screen flex items-center justify-center p-4;
+            /* Ensure smooth transition for theme changes */
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
 
-import type * as React from "react"
-import { useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
-import { Home, Bell, User, Settings, Search, Heart, MessageCircle, Bookmark, X } from "lucide-react"
-import { useTheme } from "next-themes"
+        /* Gradient for the menu bar background on dark mode */
+        .bg-gradient-radial {
+            background-image: radial-gradient(var(--tw-gradient-stops));
+        }
+    </style>
+    <!-- CDNs for React, ReactDOM, and Babel Standalone -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Framer Motion CDN (UMD build). This is crucial for animations.
+         Using this specific version for compatibility: https://unpkg.com/framer-motion@11.0.8/dist/framer-motion.umd.js -->
+    <script crossorigin src="https://unpkg.com/framer-motion@11.0.8/dist/framer-motion.umd.js"></script>
 
-interface MenuItem {
-  icon: React.ReactNode
-  label: string
-  href: string
-  gradient: string
-  iconColor: string
-  panelContent: React.ReactNode
-}
+</head>
+<body>
+    <div id="root"></div>
 
-const menuItems: MenuItem[] = [
-  {
-    icon: <Home className="h-5 w-5" />,
-    label: "Home",
-    href: "#",
-    gradient: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(37,99,235,0.06) 50%, rgba(29,78,216,0) 100%)",
-    iconColor: "text-blue-500",
-    panelContent: (
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-3 text-blue-500">Home Dashboard</h3>
-        <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">Welcome back! Here's your overview:</p>
-          <div className="grid grid-cols-2 gap-2 mt-3">
-            <div className="p-2 bg-blue-500/10 rounded-lg">
-              <p className="text-xs font-medium">Recent Activity</p>
-              <p className="text-lg font-bold text-blue-500">12</p>
-            </div>
-            <div className="p-2 bg-blue-500/10 rounded-lg">
-              <p className="text-xs font-medium">New Items</p>
-              <p className="text-lg font-bold text-blue-500">5</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    icon: <Bell className="h-5 w-5" />,
-    label: "Updates",
-    href: "#",
-    gradient: "radial-gradient(circle, rgba(249,115,22,0.15) 0%, rgba(234,88,12,0.06) 50%, rgba(194,65,12,0) 100%)",
-    iconColor: "text-orange-500",
-    panelContent: (
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-3 text-orange-500">Recent Updates</h3>
-        <div className="space-y-3">
-          <div className="flex items-start gap-2">
-            <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
-            <div>
-              <p className="text-sm font-medium">System Update Available</p>
-              <p className="text-xs text-muted-foreground">Version 2.1.0 is ready to install</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-2">
-            <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
-            <div>
-              <p className="text-sm font-medium">New Features Added</p>
-              <p className="text-xs text-muted-foreground">Check out the latest improvements</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    icon: <Search className="h-5 w-5" />,
-    label: "Search",
-    href: "#",
-    gradient: "radial-gradient(circle, rgba(168,85,247,0.15) 0%, rgba(147,51,234,0.06) 50%, rgba(126,34,206,0) 100%)",
-    iconColor: "text-purple-500",
-    panelContent: (
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-3 text-purple-500">Quick Search</h3>
-        <div className="space-y-3">
-          <input
-            type="text"
-            placeholder="Search anything..."
-            className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50"
-          />
-          <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground">Recent Searches:</p>
-            <div className="flex flex-wrap gap-1">
-              <span className="px-2 py-1 bg-purple-500/10 text-purple-500 text-xs rounded">React</span>
-              <span className="px-2 py-1 bg-purple-500/10 text-purple-500 text-xs rounded">Components</span>
-              <span className="px-2 py-1 bg-purple-500/10 text-purple-500 text-xs rounded">Design</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    icon: <Heart className="h-5 w-5" />,
-    label: "Favorites",
-    href: "#",
-    gradient: "radial-gradient(circle, rgba(236,72,153,0.15) 0%, rgba(219,39,119,0.06) 50%, rgba(190,24,93,0) 100%)",
-    iconColor: "text-pink-500",
-    panelContent: (
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-3 text-pink-500">Your Favorites</h3>
-        <div className="space-y-2">
-          <div className="flex items-center justify-between p-2 bg-pink-500/10 rounded-lg">
-            <span className="text-sm">Favorite Project #1</span>
-            <Heart className="h-4 w-4 text-pink-500 fill-current" />
-          </div>
-          <div className="flex items-center justify-between p-2 bg-pink-500/10 rounded-lg">
-            <span className="text-sm">Favorite Project #2</span>
-            <Heart className="h-4 w-4 text-pink-500 fill-current" />
-          </div>
-          <div className="flex items-center justify-between p-2 bg-pink-500/10 rounded-lg">
-            <span className="text-sm">Favorite Project #3</span>
-            <Heart className="h-4 w-4 text-pink-500 fill-current" />
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    icon: <MessageCircle className="h-5 w-5" />,
-    label: "Messages",
-    href: "#",
-    gradient: "radial-gradient(circle, rgba(6,182,212,0.15) 0%, rgba(8,145,178,0.06) 50%, rgba(14,116,144,0) 100%)",
-    iconColor: "text-cyan-500",
-    panelContent: (
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-3 text-cyan-500">Messages</h3>
-        <div className="space-y-3">
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-              JD
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">John Doe</p>
-              <p className="text-xs text-muted-foreground">Hey, how's the project going?</p>
-            </div>
-          </div>
-          <div className="flex items-start gap-3">
-            <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
-              SM
-            </div>
-            <div className="flex-1">
-              <p className="text-sm font-medium">Sarah Miller</p>
-              <p className="text-xs text-muted-foreground">Can we schedule a meeting?</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    icon: <Bookmark className="h-5 w-5" />,
-    label: "Bookmarks",
-    href: "#",
-    gradient: "radial-gradient(circle, rgba(245,158,11,0.15) 0%, rgba(217,119,6,0.06) 50%, rgba(180,83,9,0) 100%)",
-    iconColor: "text-amber-500",
-    panelContent: (
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-3 text-amber-500">Bookmarks</h3>
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 p-2 bg-amber-500/10 rounded-lg">
-            <Bookmark className="h-4 w-4 text-amber-500" />
-            <span className="text-sm">Important Documentation</span>
-          </div>
-          <div className="flex items-center gap-2 p-2 bg-amber-500/10 rounded-lg">
-            <Bookmark className="h-4 w-4 text-amber-500" />
-            <span className="text-sm">Design Resources</span>
-          </div>
-          <div className="flex items-center gap-2 p-2 bg-amber-500/10 rounded-lg">
-            <Bookmark className="h-4 w-4 text-amber-500" />
-            <span className="text-sm">Code Examples</span>
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    icon: <Settings className="h-5 w-5" />,
-    label: "Settings",
-    href: "#",
-    gradient: "radial-gradient(circle, rgba(34,197,94,0.15) 0%, rgba(22,163,74,0.06) 50%, rgba(21,128,61,0) 100%)",
-    iconColor: "text-green-500",
-    panelContent: (
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-3 text-green-500">Settings</h3>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Dark Mode</span>
-            <div className="w-10 h-6 bg-green-500 rounded-full relative">
-              <div className="w-4 h-4 bg-white rounded-full absolute top-1 right-1"></div>
-            </div>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Notifications</span>
-            <div className="w-10 h-6 bg-gray-300 rounded-full relative">
-              <div className="w-4 h-4 bg-white rounded-full absolute top-1 left-1"></div>
-            </div>
-          </div>
-          <div className="flex items-center justify-between">
-            <span className="text-sm">Auto-save</span>
-            <div className="w-10 h-6 bg-green-500 rounded-full relative">
-              <div className="w-4 h-4 bg-white rounded-full absolute top-1 right-1"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    ),
-  },
-  {
-    icon: <User className="h-5 w-5" />,
-    label: "Profile",
-    href: "#",
-    gradient: "radial-gradient(circle, rgba(239,68,68,0.15) 0%, rgba(220,38,38,0.06) 50%, rgba(185,28,28,0) 100%)",
-    iconColor: "text-red-500",
-    panelContent: (
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-3 text-red-500">Profile</h3>
-        <div className="space-y-3">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">
-              U
-            </div>
-            <div>
-              <p className="font-medium">User Name</p>
-              <p className="text-sm text-muted-foreground">user@example.com</p>
-            </div>
-          </div>
-          <div className="space-y-2">
-            <button className="w-full text-left p-2 hover:bg-red-500/10 rounded-lg text-sm">Edit Profile</button>
-            <button className="w-full text-left p-2 hover:bg-red-500/10 rounded-lg text-sm">Account Settings</button>
-            <button className="w-full text-left p-2 hover:bg-red-500/10 rounded-lg text-sm text-red-500">
-              Sign Out
-            </button>
-          </div>
-        </div>
-      </div>
-    ),
-  },
-]
+    <script type="text/babel">
+        // IMPORTANT NOTES:
+        // 1. This setup uses Babel in the browser for JSX/TSX compilation, which is slow and NOT suitable for production.
+        //    For a production application, you should use a build tool like Next.js, Webpack, or Vite.
+        // 2. The 'use client' directives are removed as they are specific to Next.js App Router.
+        // 3. 'next-themes' is replaced by a simplified custom theme context as it relies on Next.js.
+        // 4. The custom '@/components/ui/switch' is replaced by a basic HTML/Tailwind-styled Switch component defined below.
+        // 5. Lucide React icons are replaced by inline SVG components for direct browser compatibility.
 
-const itemVariants = {
-  initial: { rotateX: 0, opacity: 1 },
-  hover: { rotateX: -90, opacity: 0 },
-}
+        const { useState, useEffect, createContext, useContext } = React;
+        const { motion, AnimatePresence } = window.FramerMotion; // Access Framer Motion from global scope
 
-const backVariants = {
-  initial: { rotateX: 90, opacity: 0 },
-  hover: { rotateX: 0, opacity: 1 },
-}
+        // --- Mocking 'next-themes' and 'useTheme' ---
+        // This is a simplified theme context that persists the theme in localStorage
+        // and applies the 'dark' class to the <html> element.
+        const ThemeContext = createContext(null);
 
-const glowVariants = {
-  initial: { opacity: 0, scale: 0.8 },
-  hover: {
-    opacity: 1,
-    scale: 2,
-    transition: {
-      opacity: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
-      scale: { duration: 0.5, type: "spring", stiffness: 300, damping: 25 },
-    },
-  },
-}
+        function MyThemeProvider({ children }) {
+            const [theme, setThemeState] = useState(() => {
+                if (typeof window !== 'undefined') {
+                    return localStorage.getItem('theme') || 'light';
+                }
+                return 'light';
+            });
 
-const navGlowVariants = {
-  initial: { opacity: 0 },
-  hover: {
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      ease: [0.4, 0, 0.2, 1],
-    },
-  },
-}
+            useEffect(() => {
+                if (typeof window !== 'undefined') {
+                    const root = window.document.documentElement;
+                    root.classList.remove('light', 'dark');
+                    root.classList.add(theme);
+                    localStorage.setItem('theme', theme);
+                }
+            }, [theme]);
 
-const sharedTransition = {
-  type: "spring",
-  stiffness: 100,
-  damping: 20,
-  duration: 0.5,
-}
+            const setTheme = (newTheme) => {
+                setThemeState(newTheme);
+            };
 
-export function MenuBar() {
-  const { theme } = useTheme()
-  const [activePanel, setActivePanel] = useState<string | null>(null)
+            return (
+                <ThemeContext.Provider value={{ theme, setTheme }}>
+                    {children}
+                </ThemeContext.Provider>
+            );
+        }
 
-  const isDarkTheme = theme === "dark"
+        function useTheme() {
+            const context = useContext(ThemeContext);
+            if (!context) {
+                // Fallback for cases where useTheme might be called outside the provider
+                return { theme: 'light', setTheme: () => console.warn("setTheme called outside ThemeProvider") };
+            }
+            return context;
+        }
 
-  const handleItemClick = (label: string, e: React.MouseEvent) => {
-    e.preventDefault()
-    setActivePanel(activePanel === label ? null : label)
-  }
+        // --- Mocking '@/components/ui/switch' ---
+        // This is a basic HTML checkbox styled with Tailwind CSS to mimic a toggle switch.
+        const Switch = ({ checked, onCheckedChange, 'aria-label': ariaLabel, className }) => {
+            return (
+                <label className={`relative inline-flex items-center cursor-pointer ${className}`}>
+                    <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(e) => onCheckedChange(e.target.checked)}
+                        className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                    <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300 sr-only">{ariaLabel}</span>
+                </label>
+            );
+        };
 
-  return (
-    <div className="relative">
-      <motion.nav
-        className="p-2 rounded-2xl bg-gradient-to-b from-background/80 to-background/40 backdrop-blur-lg border border-border/40 shadow-lg relative overflow-hidden"
-        initial="initial"
-        whileHover="hover"
-      >
-        <motion.div
-          className={`absolute -inset-2 bg-gradient-radial from-transparent ${
-            isDarkTheme
-              ? "via-blue-400/30 via-30% via-purple-400/30 via-60% via-red-400/30 via-90%"
-              : "via-blue-400/20 via-30% via-purple-400/20 via-60% via-red-400/20 via-90%"
-          } to-transparent rounded-3xl z-0 pointer-events-none`}
-          variants={navGlowVariants}
-        />
-        <ul className="flex items-center gap-2 relative z-10">
-          {menuItems.map((item, index) => (
-            <motion.li key={item.label} className="relative">
-              <motion.div
-                className="block rounded-xl overflow-visible group relative"
-                style={{ perspective: "600px" }}
-                whileHover="hover"
+        // --- Inline Lucide Icons as React Components ---
+        // Replaced imports from 'lucide-react' with direct SVG code wrapped in React components.
+        const Home = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>;
+        const Bell = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>;
+        const User = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>;
+        const Settings = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.78 1.35a2 2 0 0 0 .73 2.73l.15.08a2 2 0 0 1 1 1.74v.44a2 2 0 0 1-1 1.73l-.15.08a2 2 0 0 0-.73 2.73l.78 1.35a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.78-1.35a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.44a2 2 0 0 1 1-1.73l.15-.08a2 2 0 0 0 .73-2.73l-.78-1.35a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path><circle cx="12" cy="12" r="3"></circle></svg>;
+        const Search = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>;
+        const Heart = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>;
+        const MessageCircle = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M7.9 20A9.3 9.3 0 0 1 4 16c0-4.5 3.5-8 8-8s8 3.5 8 8c0 2.1-.8 4-2.1 5.4l-3.3 3.4c-.6.6-1.5.9-2.4.9s-1.8-.3-2.4-.9L7.9 20Z"></path></svg>;
+        const Bookmark = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"></path></svg>;
+        const X = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>;
+        const Sun = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg>;
+        const Moon = ({ className }) => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>;
+
+        // Type definitions are for TypeScript, Babel will ignore them.
+        // Interface for MenuItem structure
+        // interface MenuItem {
+        //   icon: React.ReactNode
+        //   label: string
+        //   href: string
+        //   gradient: string
+        //   iconColor: string
+        //   panelContent: React.ReactNode
+        // }
+
+        const menuItems = [
+          {
+            icon: <Home className="h-5 w-5" />,
+            label: "Home",
+            href: "#",
+            gradient: "radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(37,99,235,0.06) 50%, rgba(29,78,216,0) 100%)",
+            iconColor: "text-blue-500",
+            panelContent: (
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-3 text-blue-500">Home Dashboard</h3>
+                <div className="space-y-2">
+                  <p className="text-sm text-muted-foreground">Welcome back! Here's your overview:</p>
+                  <div className="grid grid-cols-2 gap-2 mt-3">
+                    <div className="p-2 bg-blue-500/10 rounded-lg">
+                      <p className="text-xs font-medium">Recent Activity</p>
+                      <p className="text-lg font-bold text-blue-500">12</p>
+                    </div>
+                    <div className="p-2 bg-blue-500/10 rounded-lg">
+                      <p className="text-xs font-medium">New Items</p>
+                      <p className="text-lg font-bold text-blue-500">5</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ),
+          },
+          {
+            icon: <Bell className="h-5 w-5" />,
+            label: "Updates",
+            href: "#",
+            gradient: "radial-gradient(circle, rgba(249,115,22,0.15) 0%, rgba(234,88,12,0.06) 50%, rgba(194,65,12,0) 100%)",
+            iconColor: "text-orange-500",
+            panelContent: (
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-3 text-orange-500">Recent Updates</h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
+                    <div>
+                      <p className="text-sm font-medium">System Update Available</p>
+                      <p className="text-xs text-muted-foreground">Version 2.1.0 is ready to install</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
+                    <div>
+                      <p className="text-sm font-medium">New Features Added</p>
+                      <p className="text-xs text-muted-foreground">Check out the latest improvements</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ),
+          },
+          {
+            icon: <Search className="h-5 w-5" />,
+            label: "Search",
+            href: "#",
+            gradient: "radial-gradient(circle, rgba(168,85,247,0.15) 0%, rgba(147,51,234,0.06) 50%, rgba(126,34,206,0) 100%)",
+            iconColor: "text-purple-500",
+            panelContent: (
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-3 text-purple-500">Quick Search</h3>
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    placeholder="Search anything..."
+                    className="w-full px-3 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50"
+                  />
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-muted-foreground">Recent Searches:</p>
+                    <div className="flex flex-wrap gap-1">
+                      <span className="px-2 py-1 bg-purple-500/10 text-purple-500 text-xs rounded">React</span>
+                      <span className="px-2 py-1 bg-purple-500/10 text-purple-500 text-xs rounded">Components</span>
+                      <span className="px-2 py-1 bg-purple-500/10 text-purple-500 text-xs rounded">Design</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ),
+          },
+          {
+            icon: <Heart className="h-5 w-5" />,
+            label: "Favorites",
+            href: "#",
+            gradient: "radial-gradient(circle, rgba(236,72,153,0.15) 0%, rgba(219,39,119,0.06) 50%, rgba(190,24,93,0) 100%)",
+            iconColor: "text-pink-500",
+            panelContent: (
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-3 text-pink-500">Your Favorites</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between p-2 bg-pink-500/10 rounded-lg">
+                    <span className="text-sm">Favorite Project #1</span>
+                    <Heart className="h-4 w-4 text-pink-500 fill-current" />
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-pink-500/10 rounded-lg">
+                    <span className="text-sm">Favorite Project #2</span>
+                    <Heart className="h-4 w-4 text-pink-500 fill-current" />
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-pink-500/10 rounded-lg">
+                    <span className="text-sm">Favorite Project #3</span>
+                    <Heart className="h-4 w-4 text-pink-500 fill-current" />
+                  </div>
+                </div>
+              </div>
+            ),
+          },
+          {
+            icon: <MessageCircle className="h-5 w-5" />,
+            label: "Messages",
+            href: "#",
+            gradient: "radial-gradient(circle, rgba(6,182,212,0.15) 0%, rgba(8,145,178,0.06) 50%, rgba(14,116,144,0) 100%)",
+            iconColor: "text-cyan-500",
+            panelContent: (
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-3 text-cyan-500">Messages</h3>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      JD
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">John Doe</p>
+                      <p className="text-xs text-muted-foreground">Hey, how's the project going?</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-cyan-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                      SM
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium">Sarah Miller</p>
+                      <p className="text-xs text-muted-foreground">Can we schedule a meeting?</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ),
+          },
+          {
+            icon: <Bookmark className="h-5 w-5" />,
+            label: "Bookmarks",
+            href: "#",
+            gradient: "radial-gradient(circle, rgba(245,158,11,0.15) 0%, rgba(217,119,6,0.06) 50%, rgba(180,83,9,0) 100%)",
+            iconColor: "text-amber-500",
+            panelContent: (
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-3 text-amber-500">Bookmarks</h3>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 p-2 bg-amber-500/10 rounded-lg">
+                    <Bookmark className="h-4 w-4 text-amber-500" />
+                    <span className="text-sm">Important Documentation</span>
+                  </div>
+                  <div className="flex items-center gap-2 p-2 bg-amber-500/10 rounded-lg">
+                    <Bookmark className="h-4 w-4 text-amber-500" />
+                    <span className="text-sm">Design Resources</span>
+                  </div>
+                  <div className="flex items-center gap-2 p-2 bg-amber-500/10 rounded-lg">
+                    <Bookmark className="h-4 w-4 text-amber-500" />
+                    <span className="text-sm">Code Examples</span>
+                  </div>
+                </div>
+              </div>
+            ),
+          },
+          {
+            icon: <Settings className="h-5 w-5" />,
+            label: "Settings",
+            href: "#",
+            gradient: "radial-gradient(circle, rgba(34,197,94,0.15) 0%, rgba(22,163,74,0.06) 50%, rgba(21,128,61,0) 100%)",
+            iconColor: "text-green-500",
+            panelContent: (
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-3 text-green-500">Settings</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Dark Mode</span>
+                    <div className="w-10 h-6 bg-green-500 rounded-full relative">
+                      {/* Simplified toggle visual, actual state managed by ThemeToggle */}
+                      <div className="w-4 h-4 bg-white rounded-full absolute top-1 right-1"></div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Notifications</span>
+                    <div className="w-10 h-6 bg-gray-300 rounded-full relative">
+                      <div className="w-4 h-4 bg-white rounded-full absolute top-1 left-1"></div>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm">Auto-save</span>
+                    <div className="w-10 h-6 bg-green-500 rounded-full relative">
+                      <div className="w-4 h-4 bg-white rounded-full absolute top-1 right-1"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ),
+          },
+          {
+            icon: <User className="h-5 w-5" />,
+            label: "Profile",
+            href: "#",
+            gradient: "radial-gradient(circle, rgba(239,68,68,0.15) 0%, rgba(220,38,38,0.06) 50%, rgba(185,28,28,0) 100%)",
+            iconColor: "text-red-500",
+            panelContent: (
+              <div className="p-4">
+                <h3 className="text-lg font-semibold mb-3 text-red-500">Profile</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 bg-red-500 rounded-full flex items-center justify-center text-white font-bold">
+                      U
+                    </div>
+                    <div>
+                      <p className="font-medium">User Name</p>
+                      <p className="text-sm text-muted-foreground">user@example.com</p>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <button className="w-full text-left p-2 hover:bg-red-500/10 rounded-lg text-sm">Edit Profile</button>
+                    <button className="w-full text-left p-2 hover:bg-red-500/10 rounded-lg text-sm">Account Settings</button>
+                    <button className="w-full text-left p-2 hover:bg-red-500/10 rounded-lg text-sm text-red-500">
+                      Sign Out
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ),
+          },
+        ];
+
+        const itemVariants = {
+          initial: { rotateX: 0, opacity: 1 },
+          hover: { rotateX: -90, opacity: 0 },
+        };
+
+        const backVariants = {
+          initial: { rotateX: 90, opacity: 0 },
+          hover: { rotateX: 0, opacity: 1 },
+        };
+
+        const glowVariants = {
+          initial: { opacity: 0, scale: 0.8 },
+          hover: {
+            opacity: 1,
+            scale: 2,
+            transition: {
+              opacity: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
+              scale: { duration: 0.5, type: "spring", stiffness: 300, damping: 25 },
+            },
+          },
+        };
+
+        const navGlowVariants = {
+          initial: { opacity: 0 },
+          hover: {
+            opacity: 1,
+            transition: {
+              duration: 0.5,
+              ease: [0.4, 0, 0.2, 1],
+            },
+          },
+        };
+
+        const sharedTransition = {
+          type: "spring",
+          stiffness: 100,
+          damping: 20,
+          duration: 0.5,
+        };
+
+        export function ThemeToggle() {
+          const { theme, setTheme } = useTheme();
+
+          const toggleTheme = () => {
+            setTheme(theme === "light" ? "dark" : "light");
+          };
+
+          return (
+            <div className="flex items-center space-x-2 transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
+              <Sun
+                className={`h-[1.2rem] w-[1.2rem] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+                  theme === "dark" ? "text-[#A1A1AA] scale-75 rotate-12" : "text-foreground scale-100 rotate-0"
+                }`}
+              />
+              <Switch
+                checked={theme === "dark"}
+                onCheckedChange={toggleTheme}
+                aria-label="Toggle theme"
+                className="transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:scale-110"
+              />
+              <Moon
+                className={`h-[1.2rem] w-[1.2rem] transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+                  theme === "light" ? "text-[#A1A1AA] scale-75 rotate-12" : "text-foreground scale-100 rotate-0"
+                }`}
+              />
+            </div>
+          );
+        }
+
+        export function MenuBar() {
+          const { theme } = useTheme();
+          const [activePanel, setActivePanel] = useState(null); // Type 'string | null' removed for Babel
+
+          const isDarkTheme = theme === "dark";
+
+          const handleItemClick = (label, e) => { // Type 'React.MouseEvent' removed for Babel
+            e.preventDefault();
+            setActivePanel(activePanel === label ? null : label);
+          };
+
+          return (
+            <div className="relative">
+              <motion.nav
+                className="p-2 rounded-2xl bg-gradient-to-b from-background/80 to-background/40 backdrop-blur-lg border border-border/40 shadow-lg relative overflow-hidden"
                 initial="initial"
+                whileHover="hover"
               >
                 <motion.div
-                  className="absolute inset-0 z-0 pointer-events-none"
-                  variants={glowVariants}
-                  style={{
-                    background: item.gradient,
-                    opacity: 0,
-                    borderRadius: "16px",
-                  }}
+                  className={`absolute -inset-2 bg-gradient-radial from-transparent ${
+                    isDarkTheme
+                      ? "via-blue-400/30 via-30% via-purple-400/30 via-60% via-red-400/30 via-90%"
+                      : "via-blue-400/20 via-30% via-purple-400/20 via-60% via-red-400/20 via-90%"
+                  } to-transparent rounded-3xl z-0 pointer-events-none`}
+                  variants={navGlowVariants}
                 />
-                <motion.button
-                  onClick={(e) => handleItemClick(item.label, e)}
-                  className={`flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-muted-foreground group-hover:text-foreground transition-colors rounded-xl ${
-                    activePanel === item.label ? "text-foreground" : ""
-                  }`}
-                  variants={itemVariants}
-                  transition={sharedTransition}
-                  style={{ transformStyle: "preserve-3d", transformOrigin: "center bottom" }}
-                >
-                  <span
-                    className={`transition-colors duration-300 group-hover:${item.iconColor} ${
-                      activePanel === item.label ? item.iconColor : "text-foreground"
-                    }`}
-                  >
-                    {item.icon}
-                  </span>
-                  <span>{item.label}</span>
-                </motion.button>
-                <motion.button
-                  onClick={(e) => handleItemClick(item.label, e)}
-                  className={`flex items-center gap-2 px-4 py-2 absolute inset-0 z-10 bg-transparent text-muted-foreground group-hover:text-foreground transition-colors rounded-xl ${
-                    activePanel === item.label ? "text-foreground" : ""
-                  }`}
-                  variants={backVariants}
-                  transition={sharedTransition}
-                  style={{ transformStyle: "preserve-3d", transformOrigin: "center top", rotateX: 90 }}
-                >
-                  <span
-                    className={`transition-colors duration-300 group-hover:${item.iconColor} ${
-                      activePanel === item.label ? item.iconColor : "text-foreground"
-                    }`}
-                  >
-                    {item.icon}
-                  </span>
-                  <span>{item.label}</span>
-                </motion.button>
-              </motion.div>
-            </motion.li>
-          ))}
-        </ul>
-      </motion.nav>
+                <ul className="flex items-center gap-2 relative z-10">
+                  {menuItems.map((item, index) => (
+                    <motion.li key={item.label} className="relative">
+                      <motion.div
+                        className="block rounded-xl overflow-visible group relative"
+                        style={{ perspective: "600px" }}
+                        whileHover="hover"
+                        initial="initial"
+                      >
+                        <motion.div
+                          className="absolute inset-0 z-0 pointer-events-none"
+                          variants={glowVariants}
+                          style={{
+                            background: item.gradient,
+                            opacity: 0,
+                            borderRadius: "16px",
+                          }}
+                        />
+                        <motion.button
+                          onClick={(e) => handleItemClick(item.label, e)}
+                          className={`flex items-center gap-2 px-4 py-2 relative z-10 bg-transparent text-muted-foreground group-hover:text-foreground transition-colors rounded-xl ${
+                            activePanel === item.label ? "text-foreground" : ""
+                          }`}
+                          variants={itemVariants}
+                          transition={sharedTransition}
+                          style={{ transformStyle: "preserve-3d", transformOrigin: "center bottom" }}
+                        >
+                          <span
+                            className={`transition-colors duration-300 group-hover:${item.iconColor} ${
+                              activePanel === item.label ? item.iconColor : "text-foreground"
+                            }`}
+                          >
+                            {item.icon}
+                          </span>
+                          <span>{item.label}</span>
+                        </motion.button>
+                        <motion.button
+                          onClick={(e) => handleItemClick(item.label, e)}
+                          className={`flex items-center gap-2 px-4 py-2 absolute inset-0 z-10 bg-transparent text-muted-foreground group-hover:text-foreground transition-colors rounded-xl ${
+                            activePanel === item.label ? "text-foreground" : ""
+                          }`}
+                          variants={backVariants}
+                          transition={sharedTransition}
+                          style={{ transformStyle: "preserve-3d", transformOrigin: "center top", rotateX: 90 }}
+                        >
+                          <span
+                            className={`transition-colors duration-300 group-hover:${item.iconColor} ${
+                              activePanel === item.label ? item.iconColor : "text-foreground"
+                            }`}
+                          >
+                            {item.icon}
+                          </span>
+                          <span>{item.label}</span>
+                        </motion.button>
+                      </motion.div>
+                    </motion.li>
+                  ))}
+                   <li className="ml-4"> {/* Added ThemeToggle to the menu bar */}
+                     <ThemeToggle />
+                   </li>
+                </ul>
+              </motion.nav>
 
-      <AnimatePresence>
-        {activePanel && (
-          <motion.div
-            initial={{ opacity: 0, y: -10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute top-full left-0 right-0 mt-2 bg-gradient-to-b from-background/95 to-background/80 backdrop-blur-lg border border-border/40 rounded-2xl shadow-lg z-50 min-w-80"
-          >
-            <div className="flex items-center justify-between p-3 border-b border-border/40">
-              <h2 className="font-semibold">{activePanel}</h2>
-              <button onClick={() => setActivePanel(null)} className="p-1 hover:bg-muted rounded-lg transition-colors">
-                <X className="h-4 w-4" />
-              </button>
+              <AnimatePresence>
+                {activePanel && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
+                    className="absolute top-full left-0 right-0 mt-2 bg-gradient-to-b from-background/95 to-background/80 backdrop-blur-lg border border-border/40 rounded-2xl shadow-lg z-50 min-w-80"
+                  >
+                    <div className="flex items-center justify-between p-3 border-b border-border/40">
+                      <h2 className="font-semibold">{activePanel}</h2>
+                      <button onClick={() => setActivePanel(null)} className="p-1 hover:bg-muted rounded-lg transition-colors">
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                    {menuItems.find((item) => item.label === activePanel)?.panelContent}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
-            {menuItems.find((item) => item.label === activePanel)?.panelContent}
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
-  )
-}
+          );
+        }
+
+        // Render the main application into the 'root' div
+        ReactDOM.render(
+            <MyThemeProvider>
+                <MenuBar />
+            </MyThemeProvider>,
+            document.getElementById('root')
+        );
+
+    </script>
+</body>
+</html>
