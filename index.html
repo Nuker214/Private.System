@@ -1272,6 +1272,7 @@
       <div class="panel-header">
         <div class="panel-title"><i class="fas fa-list"></i> Activity Logs</div>
         <div class="panel-controls">
+          <button class="panel-btn" onclick="downloadActivityLogs()"><i class="fas fa-download"></i></button>
           <button class="panel-btn" onclick="clearActivityLogs()"><i class="fas fa-trash"></i></button>
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
@@ -1289,7 +1290,7 @@
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
       </div>
-      <div id="loginHistoryList" class="space-y-2">
+      <div id="loginHistoryList" class="space-y-2 max-h-40 overflow-y-auto">
         <!-- Login history will be populated here -->
       </div>
     </div>
@@ -1728,7 +1729,7 @@ let loginAttempts = 3;
 let is24HourFormat = false;
 let currentZoom = 1;
 let activityLogs = [];
-let loginHistory = [];
+let loginHistory = []; // Now used for login history
 let stats = {
   buttonPresses: 0,
   toggleSwitches: 0,
@@ -1879,6 +1880,7 @@ function successfulLogin(username, userID) {
     success: true,
     username: username
   });
+  updateLoginHistoryDisplay(); // Update display after successful login
   
   // Show loading screen
   document.getElementById('loginScreen').classList.add('hidden');
@@ -1912,8 +1914,9 @@ function failedLogin() {
   loginHistory.unshift({
     time: new Date().toISOString(),
     success: false,
-    username: document.getElementById('username').value
+    username: document.getElementById('username').value // Log the entered username
   });
+  updateLoginHistoryDisplay(); // Update display after failed login
 }
 
 function showError(message) {
@@ -1939,11 +1942,11 @@ function initializeDashboard() {
   // Initialize components
   generateCalendar();
   initializeCanvas();
-  // Removed setupPanelDragging() as per instruction
   startSessionTimer(); // Now also updates quickbar session time
   updateClock(); // To initialize quickbar real-time clock
   setInterval(updateClock, 1000); // Keep real-time clock updated
   updateStats();
+  updateLoginHistoryDisplay(); // Display any accumulated login history
   
   logActivity('Dashboard initialized');
 }
@@ -2031,9 +2034,6 @@ function stopDrawing() {
   isDrawing = false;
   ctx.beginPath();
 }
-
-// setupPanelDragging function removed as per instructions
-
 
 function startSessionTimer() {
   setInterval(() => {
@@ -2161,6 +2161,7 @@ function logActivity(activity) {
 
 function updateActivityLogDisplay() {
   const container = document.getElementById('activityLogsList');
+  if (!container) return; // Safely exit if element not found
   container.innerHTML = '';
   
   activityLogs.slice(0, 10).forEach(log => {
@@ -2174,6 +2175,23 @@ function updateActivityLogDisplay() {
   });
 }
 
+function updateLoginHistoryDisplay() {
+  const container = document.getElementById('loginHistoryList');
+  if (!container) return; // Safely exit if element not found
+  container.innerHTML = ''; // Clear previous entries
+
+  // Display most recent login attempts first (max 10 for readability)
+  loginHistory.slice(0, 10).forEach(entry => { 
+    const logElement = document.createElement('div');
+    logElement.className = `p-2 rounded text-xs ${entry.success ? 'bg-green-900' : 'bg-red-900'}`;
+    logElement.innerHTML = `
+      <span>${new Date(entry.time).toLocaleString()}: </span>
+      <span>User "${entry.username}" - ${entry.success ? 'Successful Login' : 'Failed Login Attempt'}</span>
+    `;
+    container.appendChild(logElement);
+  });
+}
+
 function updateStats() {
   document.getElementById('buttonPresses').textContent = stats.buttonPresses;
   document.getElementById('toggleSwitches').textContent = stats.toggleSwitches;
@@ -2182,7 +2200,28 @@ function updateStats() {
   document.getElementById('searchQueries').textContent = stats.searchQueries;
 }
 
-// Download Logs function removed as per instruction
+function downloadActivityLogs() {
+  const data = {
+    activityLogs,
+    loginHistory, // Include login history in the download
+    stats,
+    timestamp: new Date().toISOString()
+  };
+  
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `activity_logs_${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  
+  stats.buttonPresses++;
+  logActivity('Activity logs downloaded');
+  updateStats();
+}
 
 function showStats() {
   togglePanel('statsPanel');
@@ -2566,8 +2605,6 @@ function refreshQuote() {
   document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * facts.length)];
   logActivity('Daily quote refreshed');
 }
-
-// refreshWifi function removed as per instructions
 
 function clearNotifications() {
   document.getElementById('notificationsList').innerHTML = '';
