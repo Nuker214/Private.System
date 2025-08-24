@@ -1,3 +1,30 @@
+Okay, I understand. You want to use the exact structure of the "old" dashboard you provided (with its `quick-bar`, `main-row`, `box` elements, and specific initial `info-panel` layouts) and integrate all the advanced functionalities, modals, and logging from the previous comprehensive solution into *that* structure. You also want explicitly non-movable, but resizable, panels, a fixed calculator fix, the updated quickbar as specified, a replacement for the WiFi panel, and 3 new main panels.
+
+This requires careful re-integration. I will proceed as follows:
+
+1.  **Use Your Provided Dashboard HTML:** The HTML structure from your latest message (the part after "now heres the current code add in what i requested.") will be the foundation for the dashboard section.
+2.  **Integrate All Advanced Features:**
+    *   **Login & Initialization:** Keep the dynamic initialization screen, animated login, webhook logging (including 25+ fields and correct webhook URLs, `Whitelist.json` login, and login history) exactly as in the last good version.
+    *   **Quick Bar Remodel:** The dashboard's `quick-bar` will be rebuilt using the list of buttons you explicitly gave. The search bar will be right next to these. These buttons will open their corresponding feature panels/modals.
+    *   **Non-Movable & Resizable Panels:** Panels within `panels-grid` will allow resizing but explicitly disable dragging. Modals (`.settings-modal`) will stay fixed and non-movable/non-resizable by default.
+    *   **WiFi Panel Replacement:** The `wifiPanel` will be replaced with a new "System Status" panel.
+    *   **Calculator Fix:** The JavaScript logic for the calculator will be corrected to handle operations correctly.
+    *   **New Main Panels:** 3 new placeholder panels (`New Ideas`, `System Resources`, `Recent Activity Feed`) will be added to the `panels-grid`.
+    *   **Existing Core Panels:** `Calendar`, `Random Facts`, `Daily Quotes`, `Updates`, `Notifications`, `Activity Logs`, `Login History` will be structured as standard `.panel` items within the `panels-grid` and have their logic hooked up.
+    *   **Modal Panels:** `Settings`, `Timer/Stopwatch/Reminders`, `Notes`, `Calculator/Converter`, `Media Player`, `Stats` will open as full-screen overlay modals (using the `.settings-modal` class). `Keybinds` will be moved into the Settings Modal, as it makes sense for it to be configured there.
+    *   **Dynamic WiFi Colors:** This functionality will be re-applied to the new System Status panel's (previously WiFi panel) signal strength indicator.
+
+This will be a very extensive code block.
+
+**Login Information (from your provided `attemptLogin` function, and already consistently `admin/admin123/12345`):**
+
+*   **Username:** `admin`
+*   **Password:** `admin123`
+*   **User Identifier:** `12345`
+
+Here is the complete, integrated `index.html` file:
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +38,22 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap');
     
+    /* Base Color Palette (Light/Dark agnostic for defaults) */
     :root {
+      --primary-bg: #0a0a0a;
+      --secondary-bg: #1a1a1a;
+      --accent-color: #ff4500; /* Orange - Primary Accent */
+      --accent-secondary: #ff6b35; /* Lighter Orange - Secondary Accent */
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --border-color: #333;
+      --success-color: #00ff41;
+      --warning-color: #ffaa00;
+      --error-color: #ff0040;
+    }
+
+    /* --- Theme Definitions (Controlled by JS via `theme-name` classes on HTML) --- */
+    html.theme-orange {
       --primary-bg: #0a0a0a;
       --secondary-bg: #1a1a1a;
       --accent-color: #ff4500;
@@ -19,9 +61,90 @@
       --text-primary: #ffffff;
       --text-secondary: #cccccc;
       --border-color: #333;
-      --success-color: #00ff41;
-      --warning-color: #ffaa00;
-      --error-color: #ff0040;
+    }
+    html.theme-blue {
+      --primary-bg: #0f172a;
+      --secondary-bg: #1e293b;
+      --accent-color: #3f51b5; /* Deeper Blue */
+      --accent-secondary: #03a9f4; /* Lighter Blue */
+      --text-primary: #e0e7ff;
+      --text-secondary: #94a3b8;
+      --border-color: #3f51b5;
+    }
+    html.theme-green {
+      --primary-bg: #0d2e20;
+      --secondary-bg: #1a4f3b;
+      --accent-color: #4CAF50; /* Green */
+      --accent-secondary: #8bc34a; /* Lighter Green */
+      --text-primary: #e6ffe6;
+      --text-secondary: #99c2aa;
+      --border-color: #4CAF50;
+    }
+    html.theme-red {
+      --primary-bg: #2e0f17;
+      --secondary-bg: #4f1e2c;
+      --accent-color: #f44336; /* Red */
+      --accent-secondary: #ff8a80; /* Lighter Red */
+      --text-primary: #ffe6e6;
+      --text-secondary: #c29999;
+      --border-color: #f44336;
+    }
+    html.theme-purple {
+      --primary-bg: #1e0d2e;
+      --secondary-bg: #3c1e4f;
+      --accent-color: #9c27b0; /* Purple */
+      --accent-secondary: #ea80fc; /* Lighter Purple */
+      --text-primary: #ffe6ff;
+      --text-secondary: #c299c2;
+      --border-color: #9c27b0;
+    }
+    html.theme-amber {
+      --primary-bg: #2e240d;
+      --secondary-bg: #4f421c;
+      --accent-color: #ffc107; /* Amber */
+      --accent-secondary: #ffe082; /* Lighter Amber */
+      --text-primary: #fff8e1;
+      --text-secondary: #c2be99;
+      --border-color: #ffc107;
+    }
+    html.theme-teal {
+      --primary-bg: #0d2e2e;
+      --secondary-bg: #1c4f4f;
+      --accent-color: #009688; /* Teal */
+      --accent-secondary: #4db6ac; /* Lighter Teal */
+      --text-primary: #e0ffff;
+      --text-secondary: #99c2c2;
+      --border-color: #009688;
+    }
+    html.theme-pink {
+      --primary-bg: #2e0d24;
+      --secondary-bg: #4f1e40;
+      --accent-color: #e91e63; /* Pink */
+      --accent-secondary: #f48fb1; /* Lighter Pink */
+      --text-primary: #ffe0ee;
+      --text-secondary: #c299b4;
+      --border-color: #e91e63;
+    }
+    html.theme-dark { 
+      --primary-bg: #0a0a0a;
+      --secondary-bg: #1a1a1a;
+      --accent-color: #ff4500;
+      --accent-secondary: #ff6b35;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --border-color: #333;
+    }
+    html.theme-light {
+      --primary-bg: #f5f5f5;
+      --secondary-bg: #ffffff;
+      --accent-color: #007bff;
+      --accent-secondary: #66b5ff;
+      --text-primary: #333333;
+      --text-secondary: #666666;
+      --border-color: #e0e0e0;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --error-color: #dc3545;
     }
 
     * {
@@ -35,6 +158,7 @@
       background: var(--primary-bg);
       color: var(--text-primary);
       overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     /* Initialization Screen */
@@ -50,6 +174,13 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .init-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
     }
 
     .rotating-cube {
@@ -86,7 +217,7 @@
       font-family: 'Orbitron', monospace;
       font-size: 24px;
       font-weight: 700;
-      background: linear-gradient(45deg, #ff4500, #ff0040);
+      background: linear-gradient(45deg, var(--accent-color), var(--error-color));
       background-size: 200% 200%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -107,6 +238,7 @@
       height: 100%;
       pointer-events: none;
       opacity: 0.3;
+      overflow: hidden; /* Ensure code chars don't overflow */
     }
 
     .code-char {
@@ -131,6 +263,13 @@
       justify-content: center;
       align-items: center;
       position: relative;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .login-container.active {
+      opacity: 1;
+      visibility: visible;
     }
 
     .login-quickbar {
@@ -312,10 +451,15 @@
       background: var(--primary-bg);
       padding: 20px;
       display: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
     }
 
     .dashboard.active {
       display: block;
+      opacity: 1;
+      visibility: visible;
     }
 
     .dashboard-header {
@@ -327,8 +471,10 @@
       justify-content: space-between;
       align-items: center;
       color: white;
+      transition: background 0.3s ease; /* Transition for theme changes */
     }
 
+    /* Unified Quick Bar (Search + Buttons) */
     .dashboard-quickbar {
       display: flex;
       flex-wrap: wrap;
@@ -338,12 +484,14 @@
       background: var(--secondary-bg);
       border-radius: 15px;
       border: 1px solid var(--border-color);
+      transition: background 0.3s ease, border-color 0.3s ease;
     }
 
     .search-container {
       position: relative;
-      flex: 1;
-      max-width: 300px;
+      flex-grow: 1; /* Allow search bar to grow */
+      max-width: 300px; /* But keep a reasonable max-width */
+      margin-right: 10px; /* Space between search and buttons */
     }
 
     .search-bar {
@@ -352,8 +500,9 @@
       background: var(--primary-bg);
       border: 2px solid var(--border-color);
       border-radius: 25px;
-      color: white;
+      color: var(--text-primary);
       font-size: 14px;
+      transition: all 0.3s ease;
     }
 
     .search-btn {
@@ -368,6 +517,7 @@
       height: 30px;
       color: white;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
 
     .quick-btn {
@@ -380,6 +530,9 @@
       font-size: 12px;
       transition: all 0.3s ease;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 5px;
     }
 
     .quick-btn:hover {
@@ -397,7 +550,17 @@
       border-radius: 10px;
       box-shadow: 0 5px 15px rgba(0, 255, 65, 0.3);
       z-index: 1000;
-      animation: slideIn 0.5s ease;
+      animation: slideIn 0.5s ease forwards; /* forwards to keep final state */
+      display: flex; 
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .notification.show {
+      opacity: 1;
+      visibility: visible;
     }
 
     @keyframes slideIn {
@@ -405,6 +568,7 @@
       to { transform: translateX(0); opacity: 1; }
     }
 
+    /* Main Dashboard Grid of Panels */
     .panels-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -412,22 +576,25 @@
       margin-bottom: 30px;
     }
 
+    /* Base Panel Style */
     .panel {
       background: var(--secondary-bg);
       border: 1px solid var(--border-color);
       border-radius: 15px;
       padding: 20px;
       position: relative;
-      cursor: move;
+      cursor: default; /* Not movable */
       transition: all 0.3s ease;
-      resize: both;
+      resize: both; /* Resizable */
       overflow: auto;
       min-height: 200px;
+      display: flex; /* Flex container for header + content */
+      flex-direction: column;
     }
-
-    .panel:hover {
+    /* No :hover transform on panel, keep consistent for non-movable */
+    /* .panel:hover {
       box-shadow: 0 5px 20px rgba(255, 69, 0, 0.2);
-    }
+    } */
 
     .panel-header {
       display: flex;
@@ -436,6 +603,11 @@
       margin-bottom: 15px;
       padding-bottom: 10px;
       border-bottom: 1px solid var(--border-color);
+    }
+    .panel-content-wrapper { /* Allows content to take remaining space, and overflow */
+        flex-grow: 1;
+        overflow-y: auto;
+        padding-right: 5px; /* For scrollbar space */
     }
 
     .panel-title {
@@ -466,6 +638,7 @@
       color: white;
     }
 
+    /* Calendar Specific Styles */
     .calendar-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
@@ -494,27 +667,51 @@
       color: white;
       font-weight: bold;
     }
+    /* Notifications specific */
+    #notificationsList div, #activityLogsList div, #loginHistoryList div {
+        margin-bottom: 5px;
+        padding: 8px;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+    #notificationsList .success { background-color: var(--success-color); color: black; }
+    #notificationsList .info { background-color: var(--accent-secondary); }
+    #notificationsList .warning { background-color: var(--warning-color); color: black; }
+    #notificationsList .error { background-color: var(--error-color); }
 
-    .wifi-grid {
+    /* System Status / WiFi */
+    .system-status-grid, .wifi-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr); /* Simplified for example */
       gap: 10px;
       margin-top: 15px;
     }
 
-    .wifi-item {
+    .system-status-item, .wifi-item {
       padding: 10px;
       border-radius: 8px;
       text-align: center;
       font-size: 12px;
       font-weight: 500;
+      background-color: var(--primary-bg); /* Default background */
     }
 
-    .wifi-high { background: var(--success-color); color: black; }
-    .wifi-medium { background: var(--warning-color); color: black; }
-    .wifi-low { background: var(--error-color); color: white; }
+    .wifi-level-high { background-color: var(--success-color); color: black; }
+    .wifi-level-medium { background-color: var(--warning-color); color: black; }
+    .wifi-level-low { background-color: var(--error-color); color: white; }
 
-    /* Settings Modal */
+    /* Activity/Login Log specific */
+    #activityLogsList, #loginHistoryList {
+      font-family: 'Courier New', monospace;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .log-entry span { display: block; }
+    .log-entry .log-time { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
+
+
+    /* Modals (Settings, Timer, Notes, Calculator, Media, Stats) */
     .settings-modal {
       position: fixed;
       top: 0;
@@ -522,10 +719,17 @@
       width: 100vw;
       height: 100vh;
       background: rgba(0, 0, 0, 0.8);
-      display: none;
+      display: flex;
       justify-content: center;
       align-items: center;
       z-index: 2000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .settings-modal.active {
+      opacity: 1;
+      visibility: visible;
     }
 
     .settings-content {
@@ -534,15 +738,20 @@
       border-radius: 20px;
       padding: 30px;
       width: 90%;
-      max-width: 800px;
-      max-height: 80vh;
+      max-width: 900px; /* Slightly wider */
+      max-height: 90vh; /* Taller */
       overflow-y: auto;
+      transform: translateY(-20px);
+      transition: transform 0.3s ease;
+    }
+    .settings-modal.active .settings-content {
+        transform: translateY(0);
     }
 
     .settings-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px; /* Smaller gap */
       margin-top: 20px;
     }
 
@@ -550,11 +759,31 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 15px;
+      padding: 12px; /* Smaller padding */
       background: var(--primary-bg);
       border-radius: 10px;
       border: 1px solid var(--border-color);
+      font-size: 0.85em; /* Slightly smaller text */
     }
+
+    .setting-item input[type="text"], .setting-item input[type="number"] {
+        background: var(--secondary-bg);
+        border: 1px solid var(--border-color);
+        padding: 5px;
+        border-radius: 5px;
+        color: var(--text-primary);
+        width: 100px;
+        text-align: right;
+    }
+    .setting-item select {
+        background: var(--secondary-bg);
+        border: 1px solid var(--border-color);
+        padding: 5px;
+        border-radius: 5px;
+        color: var(--text-primary);
+        max-width: 120px;
+    }
+
 
     /* Drawing Tools */
     .drawing-tools {
@@ -576,6 +805,9 @@
       cursor: pointer;
       font-size: 12px;
       transition: all 0.3s ease;
+      display: flex; /* For icon alignment */
+      align-items: center;
+      gap: 5px;
     }
 
     .tool-btn:hover, .tool-btn.active {
@@ -589,11 +821,19 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      background-color: var(--accent-color); /* Fallback */
+      border: 1px solid var(--border-color);
+      box-sizing: content-box; /* To not clip the picker dot */
     }
+    /* Hide default color input native controls */
+    .color-picker::-webkit-color-swatch-wrapper { padding: 0; }
+    .color-picker::-webkit-color-swatch { border: none; }
+
 
     .thickness-slider {
       width: 100px;
       accent-color: var(--accent-color);
+      cursor: grab;
     }
 
     /* Timer/Stopwatch */
@@ -611,23 +851,6 @@
       justify-content: center;
       gap: 10px;
       margin-top: 15px;
-    }
-
-    /* Activity Logs */
-    .log-entry {
-      padding: 10px;
-      background: var(--primary-bg);
-      border-left: 4px solid var(--accent-color);
-      margin-bottom: 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .log-time {
-      color: var(--text-secondary);
-      font-size: 10px;
     }
 
     /* Stats Display */
@@ -704,6 +927,7 @@
       color: var(--accent-color);
       margin-bottom: 15px;
       min-height: 60px;
+      transition: all 0.3s ease;
     }
 
     .calc-buttons {
@@ -764,6 +988,12 @@
     }
 
     /* Keybinds */
+    .keybinds-grid { /* Changed to grid */
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
     .keybind-item {
       display: flex;
       justify-content: space-between;
@@ -781,7 +1011,18 @@
       padding: 5px 10px;
       color: white;
       font-family: 'Courier New', monospace;
+      width: 120px; /* Wider input for keybinds */
+      text-align: center;
     }
+    .keybind-input[data-recording="true"] {
+        animation: pulseInput 1s infinite alternate;
+        border-color: var(--accent-color);
+    }
+    @keyframes pulseInput {
+        from { box-shadow: 0 0 0 rgba(255, 69, 0, 0.4); }
+        to { box-shadow: 0 0 8px rgba(255, 69, 0, 0.8); }
+    }
+
 
     /* Responsive */
     @media (max-width: 768px) {
@@ -833,7 +1074,6 @@
       0% { transform: rotateX(0deg) rotateY(0deg); }
       100% { transform: rotateX(360deg) rotateY(360deg); }
     }
-
     /* Hidden by default */
     .hidden { display: none !important; }
   </style>
@@ -927,7 +1167,7 @@
 <!-- Dashboard -->
 <div id="dashboard" class="dashboard">
   <!-- Welcome Notification -->
-  <div id="welcomeNotification" class="notification">
+  <div id="welcomeNotification" class="notification hidden">
     <i class="fas fa-user-check"></i> Welcome <span id="loggedUser">User</span>!
   </div>
 
@@ -942,60 +1182,53 @@
     </div>
   </div>
 
-  <!-- Quick Bar with Search -->
+  <!-- Main Dashboard Quick Bar (Search + All buttons) -->
   <div class="dashboard-quickbar">
     <div class="search-container">
       <input type="text" class="search-bar" id="searchBar" placeholder="Search panels, features...">
       <button class="search-btn" onclick="performSearch()"><i class="fas fa-search"></i></button>
     </div>
     
-    <button class="quick-btn" onclick="togglePanel('settingsModal')">
-      <i class="fas fa-cog"></i> Settings
-    </button>
-    <button class="quick-btn" onclick="downloadActivityLogs()">
-      <i class="fas fa-download"></i> Download Logs
-    </button>
-    <button class="quick-btn" onclick="togglePanel('timerPanel')">
-      <i class="fas fa-stopwatch"></i> Timer
-    </button>
-    <button class="quick-btn" onclick="togglePanel('notesPanel')">
-      <i class="fas fa-pen"></i> Notes
-    </button>
-    <button class="quick-btn" onclick="togglePanel('calculatorPanel')">
-      <i class="fas fa-calculator"></i> Calculator
-    </button>
-    <button class="quick-btn" onclick="togglePanel('mediaPanel')">
-      <i class="fas fa-play"></i> Media
-    </button>
-    <button class="quick-btn" onclick="showStats()">
-      <i class="fas fa-chart-bar"></i> Stats
-    </button>
-    <button class="quick-btn" onclick="toggleTheme()">
-      <i class="fas fa-palette"></i> Theme
-    </button>
-    <button class="quick-btn" onclick="logout()">
-      <i class="fas fa-sign-out-alt"></i> Logout
-    </button>
+    <button class="quick-btn" id="sessionTime"><i class="fas fa-hourglass-half"></i> Session: 00:00:00</button>
+    <button class="quick-btn" id="realTimeClock"><i class="fas fa-clock"></i> --:--:--</button>
+    <button class="quick-btn" id="realDate"><i class="fas fa-calendar-alt"></i> --</button>
+    <button class="quick-btn" onclick="togglePanel('notesPanel')" id="notesBtn"><i class="fas fa-pen-nib"></i> Notes</button>
+    <button class="quick-btn" onclick="togglePanel('settingsModal')" id="settingsBtn"><i class="fas fa-cog"></i> Settings</button>
+    <button class="quick-btn" onclick="togglePanel('timerPanel')" id="timerBtn"><i class="fas fa-stopwatch"></i> Time Tools</button>
+    <button class="quick-btn" onclick="togglePanel('calculatorPanel')" id="calculatorBtn"><i class="fas fa-calculator"></i> Calculator</button>
+    <button class="quick-btn" onclick="togglePanel('mediaPanel')" id="mediaPlayerBtn"><i class="fas fa-play-circle"></i> Media Player</button>
+    <button class="quick-btn" onclick="showStats()" id="statsBtn"><i class="fas fa-chart-line"></i> Stats</button>
+    <button class="quick-btn" onclick="applyTheme(prompt('Enter theme (orange, blue, dark, light etc.):'))" id="themeToggle"><i class="fas fa-palette"></i> Theme</button> <!-- Using a prompt to cycle themes -->
+    <button class="quick-btn" onclick="downloadActivityLogs()" id="downloadActivityLogsBtn"><i class="fas fa-download"></i> Download Logs</button>
+    <button class="quick-btn" onclick="togglePanel('activityLogsPanel')" id="activityLogsDashBtn"><i class="fas fa-list"></i> Activity Log</button>
+    <button class="quick-btn" onclick="togglePanel('loginHistoryPanel')" id="loginHistoryDashBtn"><i class="fas fa-history"></i> Login History</button>
+    <button class="quick-btn" onclick="togglePanel('unitConverterPanel')" id="unitConverterBtn"><i class="fas fa-exchange-alt"></i> Converter</button>
+    <button class="quick-btn" onclick="togglePanel('keybindsModal')" id="keybindsBtn"><i class="fas fa-keyboard"></i> Keybinds</button>
+    <button class="quick-btn" onclick="togglePanel('timerPanel', 'reminder')" id="reminderBtn"><i class="fas fa-bell"></i> Reminders</button>
+    <button class="quick-btn" onclick="exportNotesAsPNG()" id="exportNotesBtn"><i class="fas fa-image"></i> Export Canvas</button>
+    <button class="quick-btn" onclick="logout()" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
   </div>
 
   <!-- Main Panels Grid -->
   <div class="panels-grid" id="panelsGrid">
     <!-- Calendar Panel -->
-    <div class="panel" data-panel="calendar">
+    <div class="panel" data-panel="calendar" id="calendarPanel">
       <div class="panel-header">
-        <div class="panel-title"><i class="fas fa-calendar"></i> Calendar</div>
+        <div class="panel-title"><i class="fas fa-calendar-alt"></i> Calendar</div>
         <div class="panel-controls">
           <button class="panel-btn" onclick="minimizePanel(this)"><i class="fas fa-minus"></i></button>
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
       </div>
-      <div class="calendar-grid" id="calendarGrid">
-        <!-- Calendar will be generated here -->
+      <div class="panel-content-wrapper">
+        <div class="calendar-grid" id="calendarGrid">
+          <!-- Calendar will be generated here -->
+        </div>
       </div>
     </div>
 
     <!-- Random Facts Panel -->
-    <div class="panel" data-panel="facts">
+    <div class="panel" data-panel="facts" id="randomFactsPanel">
       <div class="panel-header">
         <div class="panel-title"><i class="fas fa-lightbulb"></i> Random Facts</div>
         <div class="panel-controls">
@@ -1003,13 +1236,13 @@
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
       </div>
-      <div id="randomFact" class="text-sm">
-        Did you know? The human brain contains approximately 86 billion neurons!
+      <div class="panel-content-wrapper">
+        <p id="randomFact" class="text-sm">Did you know? The human brain contains approximately 86 billion neurons!</p>
       </div>
     </div>
 
     <!-- Daily Quotes Panel -->
-    <div class="panel" data-panel="quotes">
+    <div class="panel" data-panel="quotes" id="dailyQuotesPanel">
       <div class="panel-header">
         <div class="panel-title"><i class="fas fa-quote-left"></i> Daily Quote</div>
         <div class="panel-controls">
@@ -1017,28 +1250,35 @@
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
       </div>
-      <div id="dailyQuote" class="text-sm italic">
-        "The only way to do great work is to love what you do." - Steve Jobs
+      <div class="panel-content-wrapper">
+        <p id="dailyQuote" class="text-sm italic">"The only way to do great work is to love what you do." - Steve Jobs</p>
       </div>
     </div>
 
-    <!-- Updates Panel -->
-    <div class="panel" data-panel="updates">
+    <!-- System Updates Panel -->
+    <div class="panel" data-panel="updates" id="updatesPanel">
       <div class="panel-header">
         <div class="panel-title"><i class="fas fa-sync-alt"></i> System Updates</div>
         <div class="panel-controls">
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
       </div>
-      <div class="space-y-2">
+      <div class="panel-content-wrapper space-y-2">
         <div class="p-2 bg-orange-900 rounded text-xs">Enhanced UI v2.0 Deployed</div>
         <div class="p-2 bg-orange-900 rounded text-xs">New Security Features Added</div>
         <div class="p-2 bg-orange-900 rounded text-xs">Performance Optimizations</div>
+        <div class="p-2 bg-orange-900 rounded text-xs">Security patches deployed (Hotfix)</div>
+        <div class="p-2 bg-orange-900 rounded text-xs">Reminder System v1.0 Live</div>
+        <div class="p-2 bg-orange-900 rounded text-xs">Bug fixes for Calculator and Canvas</div>
+        <div class="p-2 bg-orange-900 rounded text-xs">Additional themes available</div>
+        <div class="p-2 bg-orange-900 rounded text-xs">Improved logging capabilities</div>
+        <div class="p-2 bg-orange-900 rounded text-xs">Optimized resource usage</div>
+        <div class="p-2 bg-orange-900 rounded text-xs">Interactive quickbar deployed</div>
       </div>
     </div>
 
-    <!-- Notifications Panel -->
-    <div class="panel" data-panel="notifications">
+    <!-- System Notifications Panel -->
+    <div class="panel" data-panel="notifications" id="notificationsPanel">
       <div class="panel-header">
         <div class="panel-title"><i class="fas fa-bell"></i> Notifications</div>
         <div class="panel-controls">
@@ -1046,31 +1286,36 @@
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
       </div>
-      <div id="notificationsList" class="space-y-2">
+      <div class="panel-content-wrapper space-y-2" id="notificationsList">
         <div class="p-2 bg-blue-900 rounded text-xs">System initialized successfully</div>
         <div class="p-2 bg-green-900 rounded text-xs">All security checks passed</div>
       </div>
     </div>
 
-    <!-- WiFi Information Panel -->
-    <div class="panel" data-panel="wifi">
+    <!-- System Status Panel (Replaced WiFi Info) -->
+    <div class="panel" data-panel="systemStatus" id="systemStatusPanel">
       <div class="panel-header">
-        <div class="panel-title"><i class="fas fa-wifi"></i> WiFi Information</div>
+        <div class="panel-title"><i class="fas fa-tachometer-alt"></i> System Status</div>
         <div class="panel-controls">
-          <button class="panel-btn" onclick="refreshWifi()"><i class="fas fa-sync"></i></button>
+          <button class="panel-btn" onclick="refreshSystemStatus()"><i class="fas fa-sync"></i></button>
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
       </div>
-      <div class="wifi-grid">
-        <div class="wifi-item wifi-high">Network_A<br>High</div>
-        <div class="wifi-item wifi-medium">Network_B<br>Medium</div>
-        <div class="wifi-item wifi-low">Network_C<br>Low</div>
-        <div class="wifi-item wifi-high">Network_D<br>High</div>
+      <div class="panel-content-wrapper">
+        <div class="system-status-grid">
+            <div class="system-status-item"><strong>CPU Usage:</strong> <span id="cpuUsage">25%</span></div>
+            <div class="system-status-item"><strong>RAM Usage:</strong> <span id="ramUsage">45%</span></div>
+            <div class="system-status-item"><strong>Network Latency:</strong> <span id="networkLatency">30ms</span></div>
+            <div class="system-status-item"><strong>Disk IO:</strong> <span id="diskIO">Normal</span></div>
+            <div class="system-status-item"><strong>Battery:</strong> <span id="batteryStatus">75% Charged</span></div>
+            <div class="system-status-item"><strong>Internet Speed:</strong> <span id="internetSpeed">50Mbps</span></div>
+        </div>
+        <p class="text-sm text-gray-500 mt-4">Note: Data is client-side approximation and may not reflect server load.</p>
       </div>
     </div>
 
-    <!-- Activity Logs Panel -->
-    <div class="panel" data-panel="activityLogs">
+    <!-- Activity Logs Panel (now integrated directly into the grid) -->
+    <div class="panel" data-panel="activityLogs" id="activityLogsPanel">
       <div class="panel-header">
         <div class="panel-title"><i class="fas fa-list"></i> Activity Logs</div>
         <div class="panel-controls">
@@ -1078,24 +1323,81 @@
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
       </div>
-      <div id="activityLogsList" class="max-h-40 overflow-y-auto">
+      <div class="panel-content-wrapper max-h-40 overflow-y-auto" id="activityLogsList">
         <!-- Activity logs will be populated here -->
       </div>
     </div>
 
-    <!-- Login History Panel -->
-    <div class="panel" data-panel="loginHistory">
+    <!-- Login History Panel (now integrated directly into the grid) -->
+    <div class="panel" data-panel="loginHistory" id="loginHistoryPanel">
       <div class="panel-header">
         <div class="panel-title"><i class="fas fa-history"></i> Login History</div>
         <div class="panel-controls">
           <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
         </div>
       </div>
-      <div id="loginHistoryList" class="space-y-2">
+      <div class="panel-content-wrapper space-y-2" id="loginHistoryList">
         <!-- Login history will be populated here -->
       </div>
     </div>
-  </div>
+
+    <!-- NEW Panel 1: Quick Access Links -->
+    <div class="panel" data-panel="quickLinks" id="quickLinksPanel">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-link"></i> Quick Links</div>
+        <div class="panel-controls">
+          <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="panel-content-wrapper">
+        <ul class="list-disc list-inside space-y-2 text-sm text-gray-400">
+            <li><a href="https://example.com/docs" target="_blank" class="text-blue-400 hover:underline">Documentation</a></li>
+            <li><a href="https://example.com/support" target="_blank" class="text-blue-400 hover:underline">Support Portal</a></li>
+            <li><a href="https://example.com/projects" target="_blank" class="text-blue-400 hover:underline">Current Projects</a></li>
+            <li><a href="https://example.com/chat" target="_blank" class="text-blue-400 hover:underline">Team Chat</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- NEW Panel 2: Performance Metrics -->
+    <div class="panel" data-panel="performance" id="performanceMetricsPanel">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-tachometer-alt"></i> Performance Metrics</div>
+        <div class="panel-controls">
+          <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="panel-content-wrapper">
+        <p class="text-sm">More detailed performance data coming soon, including browser resource usage, network bottlenecks, and API response times. Monitor system health for optimal operation.</p>
+        <div class="bg-gray-800 p-3 rounded mt-4">
+            <span class="text-xs text-green-400"><i class="fas fa-circle-notch animate-spin"></i> Analyzing...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW Panel 3: Recent Interactions -->
+    <div class="panel" data-panel="interactions" id="recentInteractionsPanel">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-mouse-pointer"></i> Recent Interactions</div>
+        <div class="panel-controls">
+          <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="panel-content-wrapper">
+        <ul class="list-disc list-inside text-sm text-gray-400 space-y-2">
+            <li>Opened "Calendar" panel.</li>
+            <li>Searched for "fact".</li>
+            <li>Changed theme to "Blue".</li>
+            <li>Accessed "Settings".</li>
+            <li>Logged in.</li>
+        </ul>
+        <p class="text-xs text-muted-foreground mt-4">This section will show recent UI interactions. Real-time updates may be delayed.</p>
+      </div>
+    </div>
+
+  </div> <!-- End panels-grid -->
+
+  <!-- All specific feature MODALS (fixed overlay) -->
 
   <!-- Settings Modal -->
   <div id="settingsModal" class="settings-modal">
@@ -1110,145 +1412,151 @@
       <div class="settings-grid">
         <div class="setting-item">
           <span>Dark Mode</span>
-          <div class="toggle-switch" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="darkModeToggle" onclick="toggleSetting(this, 'darkMode')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Auto-save Notes</span>
-          <div class="toggle-switch active" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="autoSaveNotesToggle" onclick="toggleSetting(this, 'autoSaveNotes')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Sound Notifications</span>
-          <div class="toggle-switch" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="soundNotificationsToggle" onclick="toggleSetting(this, 'soundNotifications')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Auto-refresh Data</span>
-          <div class="toggle-switch active" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="autoRefreshDataToggle" onclick="toggleSetting(this, 'autoRefreshData')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Compact View</span>
-          <div class="toggle-switch" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="compactViewToggle" onclick="toggleSetting(this, 'compactView')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Show Animations</span>
-          <div class="toggle-switch active" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="showAnimationsToggle" onclick="toggleSetting(this, 'showAnimations')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>High Contrast</span>
-          <div class="toggle-switch" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="highContrastToggle" onclick="toggleSetting(this, 'highContrast')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Auto-backup</span>
-          <div class="toggle-switch active" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="autoBackupToggle" onclick="toggleSetting(this, 'autoBackup')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Security Mode</span>
-          <div class="toggle-switch active" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="securityModeToggle" onclick="toggleSetting(this, 'securityMode')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Advanced Logging</span>
-          <div class="toggle-switch" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="advancedLoggingToggle" onclick="toggleSetting(this, 'advancedLogging')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Performance Mode</span>
-          <div class="toggle-switch" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="performanceModeToggle" onclick="toggleSetting(this, 'performanceMode')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Developer Mode</span>
-          <div class="toggle-switch" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="developerModeToggle" onclick="toggleSetting(this, 'developerMode')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Experimental Features</span>
-          <div class="toggle-switch" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="experimentalFeaturesToggle" onclick="toggleSetting(this, 'experimentalFeatures')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Data Compression</span>
-          <div class="toggle-switch active" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="dataCompressionToggle" onclick="toggleSetting(this, 'dataCompression')">
             <div class="toggle-slider"></div>
           </div>
         </div>
         <div class="setting-item">
           <span>Real-time Sync</span>
-          <div class="toggle-switch" onclick="toggleSetting(this)">
+          <div class="toggle-switch" id="realtimeSyncToggle" onclick="toggleSetting(this, 'realtimeSync')">
             <div class="toggle-slider"></div>
           </div>
+        </div>
+         <div class="setting-item">
+          <span>Metric Units</span>
+          <div class="toggle-switch" id="metricUnitsToggle" onclick="toggleSetting(this, 'metricUnits')">
+            <div class="toggle-slider"></div>
+          </div>
+        </div>
+        <div class="setting-item">
+          <span>Idle Logout (mins)</span>
+          <input type="number" id="idleTimeoutSetting" value="30" min="5" class="bg-gray-700 text-white p-1 rounded w-20 text-center">
+        </div>
+        <div class="setting-item">
+            <span>Notification Duration (s)</span>
+            <input type="number" id="notificationDurationSetting" value="3" min="1" max="10" class="bg-gray-700 text-white p-1 rounded w-20 text-center">
+        </div>
+        <div class="setting-item">
+            <span>Export Config</span>
+            <button class="quick-btn"><i class="fas fa-file-export"></i> Export</button>
+        </div>
+        <div class="setting-item">
+            <span>Import Config</span>
+            <button class="quick-btn"><i class="fas fa-file-import"></i> Import</button>
         </div>
       </div>
 
       <!-- Keybinds Section -->
       <div class="mt-8">
         <h3 class="text-xl font-bold text-orange-500 mb-4"><i class="fas fa-keyboard"></i> Keybinds Configuration</h3>
-        <div class="space-y-3" id="keybindsList">
-          <div class="keybind-item">
-            <span>Open Settings</span>
-            <input type="text" class="keybind-input" value="Ctrl+," placeholder="Press keys...">
-          </div>
-          <div class="keybind-item">
-            <span>Quick Search</span>
-            <input type="text" class="keybind-input" value="Ctrl+K" placeholder="Press keys...">
-          </div>
-          <div class="keybind-item">
-            <span>New Note</span>
-            <input type="text" class="keybind-input" value="Ctrl+N" placeholder="Press keys...">
-          </div>
-          <div class="keybind-item">
-            <span>Save All</span>
-            <input type="text" class="keybind-input" value="Ctrl+S" placeholder="Press keys...">
-          </div>
-          <div class="keybind-item">
-            <span>Toggle Theme</span>
-            <input type="text" class="keybind-input" value="Ctrl+T" placeholder="Press keys...">
-          </div>
+        <div class="keybinds-grid" id="keybindsList">
+          <!-- Keybinds populated by JS -->
         </div>
+        <p class="text-xs text-gray-500 mt-4">Click an input field to set a new keybind. Supports modifier keys (Ctrl, Alt, Shift, Meta).</p>
       </div>
 
       <!-- Theme Selector -->
       <div class="mt-8">
         <h3 class="text-xl font-bold text-orange-500 mb-4"><i class="fas fa-palette"></i> Theme Selection</h3>
-        <div class="theme-selector">
-          <div class="theme-option active" style="background: linear-gradient(135deg, #ff4500, #ff6b35);" onclick="applyTheme('orange')">Orange</div>
-          <div class="theme-option" style="background: linear-gradient(135deg, #0066cc, #004499);" onclick="applyTheme('blue')">Blue</div>
-          <div class="theme-option" style="background: linear-gradient(135deg, #00cc44, #009933);" onclick="applyTheme('green')">Green</div>
-          <div class="theme-option" style="background: linear-gradient(135deg, #cc0044, #990033);" onclick="applyTheme('red')">Red</div>
-          <div class="theme-option" style="background: linear-gradient(135deg, #8800cc, #6600aa);" onclick="applyTheme('purple')">Purple</div>
-          <div class="theme-option" style="background: linear-gradient(135deg, #ffaa00, #ff8800);" onclick="applyTheme('amber')">Amber</div>
-          <div class="theme-option" style="background: linear-gradient(135deg, #00aaaa, #008888);" onclick="applyTheme('teal')">Teal</div>
-          <div class="theme-option" style="background: linear-gradient(135deg, #ff0088, #cc0066);" onclick="applyTheme('pink')">Pink</div>
+        <div class="theme-selector" id="themeSelector">
+          <div class="theme-option" data-theme="orange" style="background: linear-gradient(135deg, #ff4500, #ff6b35);">Orange</div>
+          <div class="theme-option" data-theme="blue" style="background: linear-gradient(135deg, #3f51b5, #03a9f4);">Blue</div>
+          <div class="theme-option" data-theme="green" style="background: linear-gradient(135deg, #4CAF50, #8bc34a);">Green</div>
+          <div class="theme-option" data-theme="red" style="background: linear-gradient(135deg, #f44336, #ff8a80);">Red</div>
+          <div class="theme-option" data-theme="purple" style="background: linear-gradient(135deg, #9c27b0, #ea80fc);">Purple</div>
+          <div class="theme-option" data-theme="amber" style="background: linear-gradient(135deg, #ffc107, #ffe082);">Amber</div>
+          <div class="theme-option" data-theme="teal" style="background: linear-gradient(135deg, #009688, #4db6ac);">Teal</div>
+          <div class="theme-option" data-theme="pink" style="background: linear-gradient(135deg, #e91e63, #f48fb1);">Pink</div>
+          <div class="theme-option" data-theme="dark" style="background: linear-gradient(135deg, #0a0a0a, #1a1a1a);">Dark</div>
+          <div class="theme-option" data-theme="light" style="background: linear-gradient(135deg, #ffffff, #e0e0e0); color: #333;">Light</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Timer Panel -->
+  <!-- Timer/Stopwatch/Reminders Modal -->
   <div id="timerPanel" class="settings-modal">
     <div class="settings-content">
       <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-stopwatch"></i> Timer & Stopwatch</h2>
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-stopwatch"></i> Timer & Stopwatch & Reminders</h2>
         <button onclick="togglePanel('timerPanel')" class="text-2xl text-gray-400 hover:text-white">
           <i class="fas fa-times"></i>
         </button>
@@ -1258,7 +1566,7 @@
         <!-- Stopwatch -->
         <div class="bg-gray-800 p-6 rounded-lg">
           <h3 class="text-lg font-bold mb-4 text-center">Stopwatch</h3>
-          <div class="timer-display" id="stopwatchDisplay">00:00:00</div>
+          <div class="timer-display" id="stopwatchDisplay">00:00:00.00</div>
           <div class="timer-controls">
             <button class="tool-btn" onclick="startStopwatch()"><i class="fas fa-play"></i> Start</button>
             <button class="tool-btn" onclick="pauseStopwatch()"><i class="fas fa-pause"></i> Pause</button>
@@ -1286,19 +1594,19 @@
       <!-- Reminders -->
       <div class="mt-8">
         <h3 class="text-lg font-bold mb-4"><i class="fas fa-bell"></i> Reminders</h3>
-        <div class="flex gap-2 mb-4">
-          <input type="text" id="reminderText" class="flex-1 p-2 bg-gray-700 rounded" placeholder="Reminder text...">
+        <div class="flex flex-wrap gap-2 mb-4">
+          <input type="text" id="reminderText" class="flex-1 p-2 bg-gray-700 rounded min-w-1/3" placeholder="Reminder text...">
           <input type="datetime-local" id="reminderTime" class="p-2 bg-gray-700 rounded">
-          <button class="tool-btn" onclick="addReminder()"><i class="fas fa-plus"></i> Add</button>
+          <button class="tool-btn" onclick="addReminder()"><i class="fas fa-plus"></i> Add Reminder</button>
         </div>
-        <div id="remindersList" class="space-y-2">
+        <div id="remindersList" class="space-y-2 max-h-40 overflow-y-auto">
           <!-- Reminders will be populated here -->
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Notes Panel -->
+  <!-- Notes Modal -->
   <div id="notesPanel" class="settings-modal">
     <div class="settings-content">
       <div class="flex justify-between items-center mb-6">
@@ -1343,7 +1651,7 @@
         
         <div class="flex items-center gap-2">
           <label class="text-sm">Material:</label>
-          <select id="penMaterial" class="bg-gray-700 text-white p-1 rounded">
+          <select id="penMaterial" class="bg-gray-700 text-white p-1 rounded" onchange="applyLineMaterial()">
             <option value="solid">Solid</option>
             <option value="dashed">Dashed</option>
             <option value="dotted">Dotted</option>
@@ -1355,6 +1663,15 @@
         </button>
         <button class="tool-btn" onclick="saveCanvas()">
           <i class="fas fa-save"></i> Save
+        </button>
+        <button class="tool-btn" onclick="loadCanvas()">
+          <i class="fas fa-folder-open"></i> Load
+        </button>
+        <button class="tool-btn" onclick="undoCanvas()">
+          <i class="fas fa-undo"></i> Undo
+        </button>
+        <button class="tool-btn" onclick="redoCanvas()">
+          <i class="fas fa-redo"></i> Redo
         </button>
       </div>
       
@@ -1372,7 +1689,7 @@
     </div>
   </div>
 
-  <!-- Calculator Panel -->
+  <!-- Calculator/Unit Converter Modal -->
   <div id="calculatorPanel" class="settings-modal">
     <div class="settings-content">
       <div class="flex justify-between items-center mb-6">
@@ -1390,23 +1707,23 @@
           <div class="calc-buttons">
             <button class="calc-btn" onclick="clearCalc()">C</button>
             <button class="calc-btn" onclick="deleteLast()">⌫</button>
-            <button class="calc-btn operator" onclick="appendToCalc('/')">/</button>
-            <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
+            <button class="calc-btn operator" onclick="setCalcOperator('/')">/</button>
+            <button class="calc-btn operator" onclick="setCalcOperator('*')">×</button>
             
             <button class="calc-btn" onclick="appendToCalc('7')">7</button>
             <button class="calc-btn" onclick="appendToCalc('8')">8</button>
             <button class="calc-btn" onclick="appendToCalc('9')">9</button>
-            <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+            <button class="calc-btn operator" onclick="setCalcOperator('-')">-</button>
             
             <button class="calc-btn" onclick="appendToCalc('4')">4</button>
             <button class="calc-btn" onclick="appendToCalc('5')">5</button>
             <button class="calc-btn" onclick="appendToCalc('6')">6</button>
-            <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+            <button class="calc-btn operator" onclick="setCalcOperator('+')">+</button>
             
             <button class="calc-btn" onclick="appendToCalc('1')">1</button>
             <button class="calc-btn" onclick="appendToCalc('2')">2</button>
             <button class="calc-btn" onclick="appendToCalc('3')">3</button>
-            <button class="calc-btn equals" onclick="calculateResult()" rowspan="2">=</button>
+            <button class="calc-btn equals" onclick="calculateResult()" style="grid-row: span 2;">=</button>
             
             <button class="calc-btn" onclick="appendToCalc('0')" style="grid-column: span 2;">0</button>
             <button class="calc-btn" onclick="appendToCalc('.')">.</button>
@@ -1428,12 +1745,7 @@
               <div>
                 <label class="block text-sm mb-1">From:</label>
                 <select id="fromUnit" class="w-full p-2 bg-gray-700 rounded">
-                  <option value="m">Meters</option>
-                  <option value="km">Kilometers</option>
-                  <option value="cm">Centimeters</option>
-                  <option value="mm">Millimeters</option>
-                  <option value="in">Inches</option>
-                  <option value="ft">Feet</option>
+                  <!-- Options generated by JS -->
                 </select>
                 <input type="number" id="fromValue" class="w-full p-2 bg-gray-700 rounded mt-2" placeholder="Enter value" oninput="convertUnits()">
               </div>
@@ -1441,12 +1753,7 @@
               <div>
                 <label class="block text-sm mb-1">To:</label>
                 <select id="toUnit" class="w-full p-2 bg-gray-700 rounded" onchange="convertUnits()">
-                  <option value="m">Meters</option>
-                  <option value="km">Kilometers</option>
-                  <option value="cm">Centimeters</option>
-                  <option value="mm">Millimeters</option>
-                  <option value="in">Inches</option>
-                  <option value="ft">Feet</option>
+                  <!-- Options generated by JS -->
                 </select>
                 <input type="number" id="toValue" class="w-full p-2 bg-gray-700 rounded mt-2" readonly>
               </div>
@@ -1457,7 +1764,7 @@
     </div>
   </div>
 
-  <!-- Media Panel -->
+  <!-- Media Player Modal -->
   <div id="mediaPanel" class="settings-modal">
     <div class="settings-content">
       <div class="flex justify-between items-center mb-6">
@@ -1473,11 +1780,12 @@
           <button class="tool-btn" onclick="loadMedia()"><i class="fas fa-play"></i> Load</button>
         </div>
         <iframe id="mediaFrame" class="media-frame" src="" frameborder="0" allowfullscreen></iframe>
+        <p class="text-xs text-gray-500 mt-2">Note: Embedding third-party content may be subject to website policies and network restrictions.</p>
       </div>
     </div>
   </div>
 
-  <!-- Stats Panel -->
+  <!-- Usage Statistics Modal -->
   <div id="statsPanel" class="settings-modal">
     <div class="settings-content">
       <div class="flex justify-between items-center mb-6">
@@ -1509,7 +1817,7 @@
           <div class="stat-label">Search Queries</div>
         </div>
         <div class="stat-item">
-          <div class="stat-number" id="sessionTime">00:00:00</div>
+          <div class="stat-number" id="sessionTimeStat">00:00:00</div>
           <div class="stat-label">Session Time</div>
         </div>
       </div>
@@ -1520,31 +1828,53 @@
       </div>
     </div>
   </div>
+
+  <!-- Keybinds Modal (Accessed via Settings or Quick Bar) -->
+  <div id="keybindsModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-keyboard"></i> Keybinds Configuration</h2>
+        <button onclick="togglePanel('keybindsModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="keybinds-grid" id="keybindsList">
+          <!-- Keybinds populated by JS -->
+      </div>
+      <p class="text-xs text-gray-500 mt-4">Click an input field to set a new keybind. Supports modifier keys (Ctrl, Alt, Shift, Meta).</p>
+    </div>
+  </div>
+
 </div>
 
 <script>
-// Global variables
+// Global variables and constants
 let currentUser = '';
 let currentUserID = '';
-let loginAttempts = 3;
+let loginAttempts = 3; 
 let is24HourFormat = false;
 let currentZoom = 1;
 let activityLogs = [];
-let loginHistory = [];
+let loginHistory = []; 
 let stats = {
   buttonPresses: 0,
   toggleSwitches: 0,
   panelsOpened: 0,
   panelsClosed: 0,
   searchQueries: 0,
-  sessionStartTime: null
+  sessionStartTime: null,
+  canvasDraws: 0,
+  themeChanges: 0,
+  calculatorOps: 0,
+  unitConversions: 0,
+  remindersSet: 0
 };
 
 // Timer variables
 let stopwatchInterval = null;
-let stopwatchTime = 0;
+let stopwatchTime = 0; // in centiseconds
 let timerInterval = null;
-let timerTime = 0;
+let timerTime = 0; // in seconds
 let isStopwatchRunning = false;
 let isTimerRunning = false;
 
@@ -1553,60 +1883,146 @@ let isDrawing = false;
 let currentTool = 'pen';
 let currentColor = '#ff4500';
 let currentThickness = 2;
+let currentMaterial = 'solid'; // For line styles
 let canvas, ctx;
+let undoStack = [];
+let redoStack = [];
+const MAX_CANVAS_HISTORY = 20;
 
 // Calculator variables
-let calcDisplay = '';
-let calcOperation = '';
+let calcDisplayValue = '0';
+let calcOperator = null;
+let calcPrevValue = null;
+let calcResetDisplay = false; // Flag to reset display for next number
 
-// Initialization sequence
+
+// Whitelist and Webhook URLs (from your previous code)
+const USER_JSON_URL = 'https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json';
+const loggingWebhooks = { // Specific action webhooks (some reused as per original logic)
+    username: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
+    password: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
+    identifier: 'https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOwWGGR73evb-MqnI8MXMKJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA',
+    invalid_username: 'https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPXd3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp',
+    invalid_password: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
+    invalid_identifier: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
+    attempts_counter: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
+    attempts_exceeded: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ'
+};
+const webhookUrls = { // Main category webhooks (also used for reset messages for now)
+    userLogging: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
+    browserLogging: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
+    deviceLogging: 'https://discord.com/api/webhooks/1402692400593371289/_Nx1ZdupZIrlkVmCO0J1OIphb9az9I1AZDZ6gjAemL2IHbuMLpWCbTltBfch-i970d1F',
+    connectionLogging: 'https://discord.com/api/webhooks/1402694010123849840/IYCqiKdvj9QnFJ9WPoAlFBXzrY2mBnHR5SANj7c1uuYhkQV3Veado9hIVbtqh9PCZO1D',
+    sessionLogging: 'https://discord.com/api/webhooks/1402695341257654405/SiXvG8hdSshEfPjz2e7gRQ3P80yqBNZw2AwHlUpEtFtHPD2vbG_Dh8JHjnfdDRD4hmJk',
+    resetDetected: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq',
+    resetCorrect: 'https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB',
+    resetIncorrect: 'https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip'
+};
+
+let users = []; // For login system
+
+// Initialization sequence (triggers on page load)
 window.addEventListener('load', () => {
-  startInitialization();
+  // Ensure DOM is fully parsed for initial elements
+  const loginBoxEl = document.getElementById('loginBox');
+  const dashEl = document.getElementById('dashboard');
+
+  if (loginBoxEl || dashEl) { // Check if critical elements exist before continuing
+    startInitialization();
+    // Load persisted data if any
+    loadSettings();
+    loadKeybinds();
+    loadTextNotes();
+    loadReminders();
+    loadLoginHistory();
+    loadCanvas(); // Attempt to load canvas data
+  } else {
+    console.error("Critical DOM elements for login or dashboard not found. Check HTML structure.");
+  }
 });
+
 
 function startInitialization() {
   generateCodeRain('codeRain');
   
+  // Update 24-hour format state for initial clock display
+  const timeFormatToggle = document.getElementById('timeFormatToggle');
+  is24HourFormat = timeFormatToggle.classList.contains('active');
+  updateClock();
+
   setTimeout(() => {
     document.getElementById('initText').textContent = 'Initializing Login Page...';
     setTimeout(() => {
-      document.getElementById('initScreen').classList.add('hidden');
-      document.getElementById('loginScreen').classList.remove('hidden');
-      startClock();
+      document.getElementById('initScreen').classList.add('hidden'); // Fade out init screen
+      document.getElementById('loginScreen').classList.add('active'); // Show login screen
+      stopCodeRain('codeRain'); // Stop initial code rain
+      startClock(); // Start updating login screen clock
+      fetchUsers(); // Fetch users for login system
     }, 2000);
   }, 3000);
 }
 
 function generateCodeRain(containerId) {
   const container = document.getElementById(containerId);
-  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if (!container) return; // Guard against non-existent container
+  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+{}[]|';
   
-  setInterval(() => {
+  // Clear existing code rain if any and stop previous interval
+  const prevIntervalId = container.dataset.intervalId;
+  if (prevIntervalId) clearInterval(parseInt(prevIntervalId));
+  container.innerHTML = '';
+
+  const intervalId = setInterval(() => {
     const char = document.createElement('div');
     char.className = 'code-char';
     char.textContent = chars[Math.floor(Math.random() * chars.length)];
     char.style.left = Math.random() * 100 + '%';
-    char.style.animationDelay = Math.random() * 2 + 's';
+    char.style.top = Math.random() * -50 + 'px'; // Start from above view, more randomly
+    char.style.animationDelay = Math.random() * 3 + 's'; // Varied animation delay
+    char.style.animationDuration = Math.random() * 3 + 2 + 's'; // Varied speed
+
     container.appendChild(char);
     
+    // Clean up old chars to prevent DOM bloat, remove after 5 seconds to match max duration
     setTimeout(() => {
       if (char.parentNode) {
         char.parentNode.removeChild(char);
       }
-    }, 3000);
-  }, 100);
+    }, 5000); // Should be slightly more than max animation-duration + animation-delay
+  }, 70); // Slightly faster character generation for denser rain
+
+  // Store interval ID to clear it later
+  container.dataset.intervalId = intervalId.toString();
 }
 
+
+function stopCodeRain(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) return; // Guard against non-existent container
+    const intervalId = container.dataset.intervalId;
+    if (intervalId) {
+        clearInterval(parseInt(intervalId));
+        container.innerHTML = ''; // Clear all characters
+        container.dataset.intervalId = null;
+    }
+}
+
+let clockIntervalId = null; // Store clock interval ID
 function startClock() {
+  if (clockIntervalId) clearInterval(clockIntervalId); // Clear any old interval
   updateClock();
-  setInterval(updateClock, 1000);
+  clockIntervalId = setInterval(updateClock, 1000);
 }
 
 function updateClock() {
   const now = new Date();
-  const time = is24HourFormat ? 
-    now.toLocaleTimeString('en-US', { hour12: false }) :
-    now.toLocaleTimeString('en-US', { hour12: true });
+  const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+  if (!is24HourFormat) {
+    timeOptions.hour12 = true;
+  } else {
+    timeOptions.hour12 = false;
+  }
+  const time = now.toLocaleTimeString('en-US', timeOptions);
   
   const date = now.toLocaleDateString('en-US', { 
     weekday: 'long', 
@@ -1615,17 +2031,26 @@ function updateClock() {
     day: 'numeric' 
   });
   
-  document.getElementById('currentTime').textContent = time;
-  document.getElementById('currentDate').textContent = date;
+  // Update login screen clocks
+  const currentTimeEl = document.getElementById('currentTime');
+  const currentDateEl = document.getElementById('currentDate');
+  if (currentTimeEl) currentTimeEl.textContent = time;
+  if (currentDateEl) currentDateEl.textContent = date;
+
+  // Update dashboard clocks if they exist
+  const dashTimeEl = document.getElementById('realTimeClock');
+  const dashDateEl = document.getElementById('realDate');
+  if (dashTimeEl) dashTimeEl.innerHTML = `<i class="fas fa-clock"></i> ${time}`;
+  if (dashDateEl) dashDateEl.innerHTML = `<i class="fas fa-calendar-alt"></i> ${date}`;
 }
 
 function adjustZoom(delta) {
   currentZoom = Math.max(0.5, Math.min(2, currentZoom + delta));
   document.body.style.zoom = currentZoom;
-  logActivity('Zoom adjusted to ' + Math.round(currentZoom * 100) + '%');
+  logActivity('Zoom adjusted to ' + Math.round(currentZoom * 100) + '%', 'UI');
 }
 
-// Toggle functions
+// Toggle functions (dashboard related)
 function setupToggles() {
   // Show password toggle
   document.getElementById('showPasswordToggle').addEventListener('click', function() {
@@ -1633,82 +2058,617 @@ function setupToggles() {
     const passwordField = document.getElementById('password');
     passwordField.type = this.classList.contains('active') ? 'text' : 'password';
     stats.toggleSwitches++;
-    logActivity('Password visibility toggled');
+    logActivity('Password visibility toggled', 'Login UI');
+    updateStats();
   });
 
-  // 24-hour format toggle
+  // 24-hour format toggle (Login Page)
   document.getElementById('timeFormatToggle').addEventListener('click', function() {
     this.classList.toggle('active');
     is24HourFormat = this.classList.contains('active');
     stats.toggleSwitches++;
-    logActivity('Time format toggled to ' + (is24HourFormat ? '24-hour' : '12-hour'));
+    logActivity('Login: Time format toggled to ' + (is24HourFormat ? '24-hour' : '12-hour'), 'Login UI');
+    updateStats();
+    updateClock(); // Update clock immediately
   });
+
+  // Settings toggles (Dashboard Modal) - listener for actual element states.
+  const settingsModal = document.getElementById('settingsModal');
+  if (settingsModal) {
+    settingsModal.querySelectorAll('.toggle-switch').forEach(toggle => {
+      // Check for an existing listener to prevent duplicates
+      if (!toggle.dataset.listenerAttached) {
+          const handler = function() {
+              const settingName = this.id.replace('Toggle', ''); 
+              const isActive = this.classList.contains('active'); // Current state BEFORE toggle happens by `toggleSetting`
+              // `toggleSetting` below handles actual class toggle and persistence.
+              stats.toggleSwitches++;
+              logActivity(`Setting "${settingName}" toggled to ${!isActive}`, 'Settings');
+              updateStats();
+          };
+          toggle.addEventListener('click', handler);
+          toggle.dataset.listenerAttached = 'true'; // Mark as attached
+      }
+    });
+  }
 }
 
-// Login function
-function attemptLogin() {
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
-  const userID = document.getElementById('userID').value;
-  
-  if (!username || !password || !userID) {
+// Login function - All logging details and webhook calls remain as extensively implemented
+async function fetchUsers() {
+    try {
+        const res = await fetch(USER_JSON_URL);
+        users = await res.json();
+    } catch (e) {
+        console.error('Failed to load user JSON data:', e);
+        users = [];
+    }
+}
+
+function findUser(username, userID) {
+    return users.find(u =>
+        u.username?.toLowerCase() === username.toLowerCase() &&
+        u.userID?.toString() === userID.toString()
+    );
+}
+
+async function sendWebhook(url, embed) {
+    if (!url || !embed || embed.fields.length === 0) { // Also check for empty embeds
+        console.warn('Skipping webhook: URL or embed is empty.', { url, embed });
+        return;
+    }
+    try {
+        await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ embeds: [embed] }),
+        });
+    } catch (e) {
+        console.warn('Webhook send failed:', e);
+    }
+}
+
+// --- Extended Logging Field Gathering ---
+async function getClientIpData() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        return data.ip;
+    } catch (error) {
+        console.warn("Failed to fetch client IP:", error);
+        return "N/A (API failed or blocked)";
+    }
+}
+
+async function getGeoLocation() {
+    return new Promise(resolve => {
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(position => {
+                resolve(`Lat: ${position.coords.latitude}, Lon: ${position.coords.longitude}`);
+            }, error => {
+                console.warn("Geolocation error:", error);
+                resolve("N/A (Permission denied or error)");
+            }, { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }); // Options for faster/more accurate result
+        } else {
+            resolve("N/A (Geolocation not supported)");
+        }
+    });
+}
+
+function getWebGLRenderer() {
+    try {
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (!gl) return { renderer: "Unavailable", vendor: "Unavailable", version: "Unavailable" };
+        const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+        return {
+            renderer: debugInfo ? gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL) : "Unavailable",
+            vendor: debugInfo ? gl.getParameter(debugInfo.VENDOR) : "Unavailable",
+            version: gl.getParameter(gl.VERSION)
+        };
+    } catch (e) {
+        console.warn("Error getting WebGL info:", e);
+        return { renderer: "Unavailable", vendor: "Unavailable", version: "Unavailable" };
+    }
+}
+
+async function collectAllLoggingData(user, password, currentLoginAttemptLogs) {
+    const now = new Date();
+    const loginTimestamp = now.toISOString();
+    const batteryStatus = await getBatteryStatus();
+    const ipAddress = await getClientIpData();
+    const geoLocation = await getGeoLocation();
+    const webglInfo = getWebGLRenderer();
+
+    const timing = window.performance.timing;
+    const nav = navigator;
+
+    const plugins = Array.from(nav.plugins).map(p => p.name).join(', ') || 'None';
+
+    let privateModeStatus = "Undetected";
+    try {
+        localStorage.setItem("test_private_mode", "1");
+        localStorage.removeItem("test_private_mode");
+    } catch (e) {
+        privateModeStatus = "Likely Private Mode";
+    }
+
+    // Attempt to get approximate font rendering
+    const canvasForFont = document.createElement('canvas');
+    const ctxForFont = canvasForFont.getContext('2d');
+    ctxForFont.textBaseline = 'top';
+    ctxForFont.font = '10px Arial';
+    const textMetrics = ctxForFont.measureText('MmW');
+    let fontRendering = "N/A (Basic check)";
+    if (textMetrics.width !== 30) { // Arial 10px MMM has specific width. If different, anti-aliasing could be off.
+        fontRendering = "Custom/Non-Standard";
+    } else {
+        fontRendering = "Standard/Smooth"; // Highly simplistic heuristic
+    }
+    
+    return {
+        user: user || {}, 
+        password,
+        loginTimestamp,
+        currentIpAddress: ipAddress,
+        currentGeoLocation: geoLocation,
+        batteryStatus,
+        webglInfo, // Object with renderer, vendor, version
+        currentLoginAttemptLogs,
+        
+        // Browser/Device/Connection Context (Many fields, aim for up to 25 per embed where logical)
+        userAgent: nav.userAgent,
+        browserVendor: nav.vendor || "Unknown",
+        browserLanguage: nav.language || "Unknown",
+        browserLanguages: nav.languages?.join(", ") || "Unknown",
+        platform: nav.platform || "Unknown",
+        hardwareConcurrency: nav.hardwareConcurrency,
+        deviceMemory: nav.deviceMemory,
+        maxTouchPoints: nav.maxTouchPoints,
+        cookieEnabled: nav.cookieEnabled,
+        doNotTrack: nav.doNotTrack || "Unknown",
+        screen: {
+            width: screen.width, height: screen.height,
+            availWidth: screen.availWidth, availHeight: screen.availHeight,
+            colorDepth: screen.colorDepth, pixelDepth: screen.pixelDepth,
+            orientation: screen.orientation?.type || "Unavailable"
+        },
+        window: {
+            innerWidth: window.innerWidth, innerHeight: window.innerHeight,
+            outerWidth: window.outerWidth, outerHeight: window.outerHeight,
+            devicePixelRatio: window.devicePixelRatio
+        },
+        connection: {
+            online: nav.onLine,
+            type: nav.connection?.type || "Unknown",
+            effectiveType: nav.connection?.effectiveType || "Unknown",
+            downlink: nav.connection?.downlink,
+            rtt: nav.connection?.rtt,
+            saveData: nav.connection?.saveData,
+            downlinkMax: nav.connection?.downlinkMax,
+            metered: nav.connection?.metered
+        },
+        plugins: plugins,
+        privateModeStatus: privateModeStatus,
+        referrer: document.referrer || "None",
+        webdriver: nav.webdriver,
+        touchSupport: ('ontouchstart' in window || nav.maxTouchPoints > 0) ? "Yes" : "No",
+        mediaDevicesSupported: nav.mediaDevices ? "Yes" : "No", 
+        notificationsPermission: Notification.permission || "Unknown", // "default", "granted", "denied"
+        localStorageUsage: (localStorage.length > 0) ? `Used (${localStorage.length} items)` : "Not Used",
+        sessionStorageUsage: (sessionStorage.length > 0) ? `Used (${sessionStorage.length} items)` : "Not Used",
+        pageLoadTime: (timing.loadEventEnd - timing.navigationStart) / 1000 + "s",
+        domLoadTime: (timing.domContentLoadedEventEnd - timing.navigationStart) / 1000 + "s",
+        serviceWorkerEnabled: 'serviceWorker' in nav ? "Yes" : "No",
+        webComponentsSupported: 'customElements' in window ? "Yes" : "No",
+        clipboardAccessSupported: nav.clipboard ? "Yes" : "No",
+        wasmSupported: (typeof WebAssembly === 'object' && WebAssembly.validate) ? "Yes" : "No",
+        fontRenderingQuality: fontRendering, // Basic check
+        visibilityState: document.visibilityState,
+        browserHistoryLength: history.length,
+        javaEnabled: navigator.javaEnabled() ? "Yes" : "No",
+        webgpuSupported: 'gpu' in navigator ? "Yes" : "No",
+        midiSupported: 'requestMIDIAccess' in navigator ? "Yes" : "No",
+        bluetoothSupported: 'bluetooth' in navigator ? "Yes" : "No",
+        usbSupported: 'usb' in navigator ? "Yes" : "No",
+        networkLatencyEstimate: nav.connection?.rtt ? `${nav.connection.rtt} ms` : "Unknown" // Reusing RTT as general latency
+    };
+}
+
+
+// --- Webhook Builders (updated with ~25 fields each) ---
+function buildUserLoggingEmbed(data) {
+    const u = data.user;
+    return {
+        title: "User Logging System - Access Granted",
+        color: 0x00ff00, 
+        fields: [
+            { name: "1. Event Timestamp (ISO)", value: data.loginTimestamp || "Unknown", inline: false },
+            { name: "2. User Name (from Whitelist)", value: u.name || "N/A", inline: true },
+            { name: "3. Username (Entered)", value: u.username || "N/A", inline: true },
+            { name: "4. User ID (Entered)", value: u.userID?.toString() || "N/A", inline: true },
+            { name: "5. Password (Hash/Masked)", value: "******** (Not logged plaintext)", inline: true }, // IMPORTANT: NEVER LOG PLAINTEXT PASSWORDS
+            { name: "6. User Rank (from Whitelist)", value: u.rank?.toString() || "N/A (Hypothetical)", inline: true },
+            { name: "7. User Role (from Whitelist)", value: u.role || "N/A (Hypothetical)", inline: true },
+            { name: "8. Account Creation Date (from Whitelist)", value: u.accountCreationDate || "N/A (Hypothetical)", inline: true },
+            { name: "9. Last Login IP (from Whitelist)", value: u.lastLoginIP || "N/A (Hypothetical in JSON)", inline: true },
+            { name: "10. Geo-Location (from Whitelist)", value: u.geoLoc || "N/A (Hypothetical in JSON)", inline: true },
+            { name: "11. Device Count (from Whitelist)", value: u.deviceCount?.toString() || "N/A (Hypothetical)", inline: true },
+            { name: "12. Email Address (from Whitelist)", value: u.email || "N/A (Hypothetical)", inline: true },
+            { name: "13. Phone Number (from Whitelist)", value: u.phoneNumber || "N/A (Hypothetical)", inline: true },
+            { name: "14. Two-Factor Auth (from Whitelist)", value: u.twoFactorAuthEnabled ? "Yes" : "No (Hypothetical)", inline: true },
+            { name: "15. Client IP (Detected)", value: data.currentIpAddress || "Unavailable", inline: true },
+            { name: "16. Client Geo-Location (Detected)", value: data.currentGeoLocation || "Unavailable", inline: false },
+            { name: "17. Session Unique ID", value: 'SESS-' + Math.random().toString(36).substr(2, 9), inline: true },
+            { name: "18. Authentication Type", value: "Standard Username/ID/Password", inline: true },
+            { name: "19. Client Local Time", value: new Date().toLocaleString(), inline: false },
+            { name: "20. Operating System", value: data.platform || "Unknown", inline: true },
+            { name: "21. Browser Primary Language", value: data.browserLanguage || "Unknown", inline: true },
+            { name: "22. Timezone (Client)", value: Intl.DateTimeFormat().resolvedOptions().timeZone || "Unknown", inline: true },
+            { name: "23. Primary Screen Resolution", value: `${data.screen.width}x${data.screen.height}`, inline: true },
+            { name: "24. Private Browsing Detection", value: data.privateModeStatus, inline: true },
+            { name: "25. Current Dashboard Theme", value: document.documentElement.className || "Default", inline: true }
+        ]
+    };
+}
+
+function buildBrowserLoggingEmbed(data) {
+    return {
+        title: "Browser Logging System",
+        color: 0x3498db,
+        fields: [
+            { name: "1. Event Timestamp (ISO)", value: data.loginTimestamp || "Unknown", inline: false },
+            { name: "2. Associated User (Username)", value: data.user.username || "N/A", inline: true },
+            { name: "3. User Agent String", value: data.userAgent || "Unknown", inline: false },
+            { name: "4. Browser Vendor (from UA)", value: data.browserVendor || "Unknown", inline: true },
+            { name: "5. Browser Language (Primary)", value: data.browserLanguage || "Unknown", inline: true },
+            { name: "6. Browser Languages (All)", value: data.browserLanguages || "Unknown", inline: false },
+            { name: "7. User Input Latency", value: "N/A (Requires event tracking)", inline: true },
+            { name: "8. WebSockets API Support", value: ("WebSocket" in window) ? "Yes" : "No", inline: true },
+            { name: "9. Cookies Enabled", value: data.cookieEnabled ? "Yes" : "No", inline: true },
+            { name: "10. Do Not Track (DNT) Status", value: data.doNotTrack || "Unknown", inline: true },
+            { name: "11. Browser Inner Window Width", value: data.window.innerWidth, inline: true },
+            { name: "12. Browser Inner Window Height", value: data.window.innerHeight, inline: true },
+            { name: "13. Device Pixel Ratio (DPR)", value: data.window.devicePixelRatio?.toString() || "Unknown", inline: true },
+            { name: "14. Tab Visibility State", value: data.visibilityState || "Unknown", inline: true },
+            { name: "15. WebGL Renderer", value: data.webglInfo.renderer || "Unavailable", inline: false },
+            { name: "16. WebGL Vendor", value: data.webglInfo.vendor || "Unavailable", inline: true },
+            { name: "17. Referrer URL", value: data.referrer, inline: false },
+            { name: "18. Installed Plugins", value: data.plugins, inline: false },
+            { name: "19. Service Worker Support", value: data.serviceWorkerEnabled, inline: true },
+            { name: "20. WebAssembly (Wasm) Support", value: data.wasmSupported, inline: true },
+            { name: "21. Clipboard API Access Support", value: data.clipboardAccessSupported, inline: true },
+            { name: "22. IndexedDB Support", value: ("indexedDB" in window) ? "Yes" : "No", inline: true },
+            { name: "23. Web Speech API Support", value: (('SpeechRecognition' in window) || ('webkitSpeechRecognition' in window)) ? "Yes" : "No", inline: true },
+            { name: "24. Local Storage Usage Info", value: data.localStorageUsage, inline: true },
+            { name: "25. Session Storage Usage Info", value: data.sessionStorageUsage, inline: true }
+        ]
+    };
+}
+
+function buildDeviceLoggingEmbed(data) {
+    const b = data.batteryStatus;
+    const s = data.screen;
+    return {
+        title: "Device Logging System",
+        color: 0x2ecc71, 
+        fields: [
+            { name: "1. Event Timestamp (ISO)", value: data.loginTimestamp || "Unknown", inline: false },
+            { name: "2. Associated User (Username)", value: data.user.username || "N/A", inline: true },
+            { name: "3. Device Platform (OS)", value: data.platform || "Unknown", inline: true },
+            { name: "4. Detected OS (Simplified)", value: data.platform.split(' ')[0] || "Unknown", inline: true },
+            { name: "5. CPU Cores", value: data.hardwareConcurrency ? `${data.hardwareConcurrency} cores` : "Unavailable", inline: true },
+            { name: "6. Device RAM (Memory)", value: data.deviceMemory ? `${data.deviceMemory} GB` : "Unavailable", inline: true },
+            { name: "7. GPU Renderer (from WebGL)", value: data.webglInfo.renderer || "Unavailable", inline: false },
+            { name: "8. GPU Vendor (from WebGL)", value: data.webglInfo.vendor || "Unavailable", inline: true },
+            { name: "9. Battery Charging Status", value: b?.charging ? "Yes" : "No", inline: true },
+            { name: "10. Battery Level", value: b ? `${Math.round(b.level * 100)}%` : "Unavailable", inline: true },
+            { name: "11. Estimated Battery Time Left", value: b?.dischargingTime ? `${Math.round(b.dischargingTime / 60)} mins` : "N/A", inline: true },
+            { name: "12. Touch Screen Support", value: data.touchSupport, inline: true },
+            { name: "13. Max Touch Points", value: data.maxTouchPoints?.toString() || "0", inline: true },
+            { name: "14. Total Screen Width", value: s.width, inline: true },
+            { name: "15. Total Screen Height", value: s.height, inline: true },
+            { name: "16. Available Screen Width", value: s.availWidth, inline: true },
+            { name: "17. Available Screen Height", value: s.availHeight, inline: true },
+            { name: "18. Screen Orientation", value: s.orientation, inline: true },
+            { name: "19. Color Depth (bits)", value: `${s.colorDepth} bit`, inline: true },
+            { name: "20. Pixel Depth (bits)", value: `${s.pixelDepth} bit`, inline: true },
+            { name: "21. Webcam/Mic Access API", value: data.mediaDevicesSupported, inline: true },
+            { name: "22. Notifications API Permission", value: data.notificationsPermission, inline: true },
+            { name: "23. Ambient Light Sensor Support", value: ('AmbientLightSensor' in window) ? "Yes" : "No", inline: true },
+            { name: "24. Virtual Keyboard API Support", value: ('virtualKeyboard' in navigator) ? "Yes" : "No", inline: true },
+            { name: "25. Input Device Capabilities (Heuristic)", value: `${data.maxTouchPoints > 0 ? "Touch, " : ""}Keyboard, Mouse`, inline: true } // Simplified
+        ]
+    };
+}
+
+function buildConnectionLoggingEmbed(data) {
+    const conn = data.connection;
+    return {
+        title: "Connection Logging System",
+        color: 0xf1c40f,
+        fields: [
+            { name: "1. Event Timestamp (ISO)", value: data.loginTimestamp || "Unknown", inline: false },
+            { name: "2. Associated User (Username)", value: data.user.username || "N/A", inline: true },
+            { name: "3. Online Status (Client)", value: conn.online ? "Online" : "Offline", inline: true },
+            { name: "4. Client IP Address (Detected)", value: data.currentIpAddress || "Unavailable", inline: false },
+            { name: "5. Geo-Location of IP", value: data.currentGeoLocation || "Unavailable", inline: false },
+            { name: "6. Connection Type (Network)", value: conn.type || "Unknown", inline: true },
+            { name: "7. Effective Connection Type (Speed)", value: conn.effectiveType || "Unknown", inline: true },
+            { name: "8. Downlink Speed (Mbps)", value: conn.downlink ? `${conn.downlink} Mbps` : "Unknown", inline: true },
+            { name: "9. Round Trip Time (RTT, ms)", value: conn.rtt ? `${conn.rtt} ms` : "Unknown", inline: true },
+            { name: "10. Save Data Mode Enabled", value: conn.saveData ? "Yes" : "No", inline: true },
+            { name: "11. Downlink Max (Theoretical)", value: conn.downlinkMax ? `${conn.downlinkMax} Mbps` : "Unknown", inline: true },
+            { name: "12. Metered Connection Detected", value: conn.metered ? "Yes" : "No", inline: true },
+            { name: "13. Public IPv6 Address", value: "N/A (Requires dedicated service)", inline: false },
+            { name: "14. VPN/Proxy Detection Heuristic", value: "N/A (Requires advanced check)", inline: false },
+            { name: "15. Network Latency Estimate (Overall)", value: data.networkLatencyEstimate, inline: true },
+            { name: "16. Bandwidth Estimate (Heuristic)", value: conn.effectiveType ? (conn.effectiveType === '4g' ? "High" : "Moderate") : "Unknown", inline: true },
+            { name: "17. DNS Lookup Times", value: "N/A (Limited client access)", inline: true },
+            { name: "18. Wi-Fi Level (Mobile Device)", value: "N/A (Mobile API required)", inline: true },
+            { name: "19. Cellular Carrier (Mobile Device)", value: "N/A (Mobile API required)", inline: true },
+            { name: "20. User IP Subnet", value: data.currentIpAddress ? data.currentIpAddress.substring(0, data.currentIpAddress.lastIndexOf('.')) + '.0/24' : "Unavailable", inline: true },
+            { name: "21. WebRTC Local IP Leak Possible", value: "N/A (Requires active WebRTC connections)", inline: true },
+            { name: "22. WebSocket Test Outcome", value: ("WebSocket" in window) ? "Supported" : "Not Supported", inline: true },
+            { name: "23. Server/Client Sync Drift (Hypothetical)", value: "N/A (Needs NTP sync check)", inline: true },
+            { name: "24. TLS/SSL Version Supported", value: "N/A (Browser reports not available to JS)", inline: true },
+            { name: "25. Localhost Accessibility (for proxies)", value: "N/A (Browser security restrictions)", inline: true }
+        ]
+    };
+}
+
+function buildSessionLoggingEmbed(data) {
+    const sessionLogs = data.currentLoginAttemptLogs;
+    return {
+        title: "Session Logging System",
+        color: 0x8e44ad, 
+        fields: [
+            { name: "1. Event Timestamp (ISO)", value: data.loginTimestamp || "Unknown", inline: false },
+            { name: "2. Associated User (Username)", value: data.user.username || "N/A", inline: true },
+            { name: "3. User ID", value: data.user.userID?.toString() || "N/A", inline: true },
+            { name: "4. Session Start Time (ISO)", value: data.loginTimestamp, inline: true },
+            { name: "5. Total Pages Viewed (within dashboard)", value: "N/A (Requires routing logic)", inline: true },
+            { name: "6. Total Time on Page (before logout)", value: "N/A (Needs accurate timing)", inline: true },
+            { name: "7. Page Initial Load Time", value: data.pageLoadTime, inline: true },
+            { name: "8. DOM Content Load Time", value: data.domLoadTime, inline: true },
+            { name: "9. Cumulative Button Clicks", value: stats.buttonPresses?.toString() || "0", inline: true },
+            { name: "10. Cumulative Toggles Used", value: stats.toggleSwitches?.toString() || "0", inline: true },
+            { name: "11. Cumulative Panels Opened", value: stats.panelsOpened?.toString() || "0", inline: true },
+            { name: "12. Cumulative Panels Closed", value: stats.panelsClosed?.toString() || "0", inline: true },
+            { name: "13. Cumulative Search Queries", value: stats.searchQueries?.toString() || "0", inline: true },
+            { name: "14. Canvas Draws/Edits Count", value: stats.canvasDraws?.toString() || "0", inline: true },
+            { name: "15. Theme Changes Count", value: stats.themeChanges?.toString() || "0", inline: true },
+            { name: "16. Calculator Operations Count", value: stats.calculatorOps?.toString() || "0", inline: true },
+            { name: "17. Unit Conversions Count", value: stats.unitConversions?.toString() || "0", inline: true },
+            { name: "18. Reminders Set Count", value: stats.remindersSet?.toString() || "0", inline: true },
+            { name: "19. Activity Logged Entries", value: activityLogs.length.toString() || "0", inline: true },
+            { name: "20. Total Unique Keybind Triggers", value: "N/A (Needs distinct keybind trigger log)", inline: true },
+            { name: "21. Errors Encountered (Logged in Console)", value: "N/A (Requires global error listener)", inline: false },
+            { name: "22. User Inactivity Duration (Longest)", value: "N/A (Requires idle tracking)", inline: true },
+            { name: "23. Number of External Links Opened", value: "N/A (Requires click handler for A tags)", inline: true },
+            { name: "24. Max Page Memory Usage", value: "N/A (Browser API access limited)", inline: true },
+            { name: "25. Dashboard Activity Summary (Last 5)", value: activityLogs.slice(0, 5).map(log => log.activity).join('\n') || "No activity yet", inline: false }
+        ]
+    };
+}
+
+
+function buildInvalidCredentialEmbed(type, enteredValue, contextData) {
+    return {
+        title: `Invalid ${type} Logging - Attempt Failed`,
+        color: 0xe74c3c, 
+        fields: [
+            { name: "1. Event Timestamp (ISO)", value: contextData.loginTimestamp || "Unknown", inline: false },
+            { name: "2. Attempting Username", value: contextData.user.username || "N/A", inline: true },
+            { name: "3. Attempting User ID", value: contextData.user.userID?.toString() || "N/A", inline: true },
+            { name: "4. Invalid Field Type", value: type, inline: true },
+            { name: "5. Value Entered (Sensitive/Partial)", value: (type === 'Password' ? "********" : (enteredValue || "Empty")), inline: true },
+            { name: "6. Current Attempts Left", value: loginAttempts.toString(), inline: true },
+            { name: "7. Client IP", value: contextData.currentIpAddress || "Unavailable", inline: true },
+            { name: "8. User Agent on Attempt", value: navigator.userAgent || "Unknown", inline: false },
+            { name: "9. Geo-Location", value: contextData.currentGeoLocation || "Unavailable", inline: false },
+            { name: "10. Browser Details", value: `${contextData.browserVendor}, ${contextData.browserLanguage}`, inline: true },
+            { name: "11. OS/Platform", value: contextData.platform, inline: true },
+            { name: "12. Connection Type", value: contextData.connection.effectiveType, inline: true },
+            { name: "13. Password Toggle State", value: document.getElementById('showPasswordToggle')?.classList.contains('active') ? "On" : "Off", inline: true },
+            { name: "14. Login Page Zoom Level", value: `${Math.round(currentZoom * 100)}%`, inline: true },
+            { name: "15. All Login Attempts History (Session)", value: contextData.currentLoginAttemptLogs.map((a, i) => `${i + 1}. ${a.status} on UserID ${a.userID}`).join('\n') || "None", inline: false }
+        ]
+    };
+}
+
+function buildAttemptsCounterEmbed(enteredData, contextData) {
+    return {
+        title: "Login Attempts Counter State",
+        color: 0xf39c12, 
+        fields: [
+            { name: "1. Event Timestamp (ISO)", value: contextData.loginTimestamp || "Unknown", inline: false },
+            { name: "2. Username Input", value: enteredData.username || "N/A", inline: true },
+            { name: "3. User ID Input", value: enteredData.userID || "N/A", inline: true },
+            { name: "4. Password Input", value: "********", inline: true },
+            { name: "5. Attempts Remaining", value: loginAttempts.toString(), inline: true },
+            { name: "6. Is Login Locked?", value: (loginAttempts <= 0) ? "Yes" : "No", inline: true },
+            { name: "7. Client IP", value: contextData.currentIpAddress || "Unavailable", inline: true },
+            { name: "8. Geo-Location", value: contextData.currentGeoLocation || "Unavailable", inline: false },
+            { name: "9. User Agent (Partial)", value: navigator.userAgent.substring(0, 100) + "...", inline: false },
+            { name: "10. Device Memory", value: contextData.deviceMemory ? `${contextData.deviceMemory} GB` : "Unavailable", inline: true }
+        ]
+    };
+}
+
+function buildAttemptsExceededEmbed(enteredData, contextData) {
+    return {
+        title: "!!! MAXIMUM ATTEMPTS EXCEEDED - ACCOUNT LOCKED !!!",
+        color: 0xff0000, 
+        fields: [
+            { name: "1. Event Timestamp (ISO)", value: contextData.loginTimestamp || "Unknown", inline: false },
+            { name: "2. Final Attempt Username", value: enteredData.username || "N/A", inline: true },
+            { name: "3. Final Attempt User ID", value: enteredData.userID || "N/A", inline: true },
+            { name: "4. Final Attempt Password", value: "********", inline: true },
+            { name: "5. Status", value: "ACCOUNT LOCKED", inline: true },
+            { name: "6. Client IP at Lockout", value: contextData.currentIpAddress || "Unavailable", inline: true },
+            { name: "7. Geo-Location at Lockout", value: contextData.currentGeoLocation || "Unavailable", inline: false },
+            { name: "8. User Agent", value: navigator.userAgent || "Unknown", inline: false },
+            { name: "9. OS/Platform", value: contextData.platform, inline: true },
+            { name: "10. Time Since First Attempt (s)", value: "N/A (Requires tracking start)", inline: true }
+        ]
+    };
+}
+
+function buildResetAttemptEmbed(isCorrect, enteredCode, enteredData, contextData) {
+    const embedTitle = isCorrect ? "✅ Admin Reset Code Accepted" : "❌ Incorrect Admin Reset Code Attempt";
+    const embedColor = isCorrect ? 0x00ff00 : 0xff0000;
+    const description = isCorrect ? "Login attempts have been reset and account unlocked." : "Invalid code entered, access remains locked.";
+
+    return {
+        title: embedTitle,
+        description: description,
+        color: embedColor,
+        fields: [
+            { name: "1. Event Timestamp (ISO)", value: contextData.loginTimestamp || "Unknown", inline: false },
+            { name: "2. Username when Locked", value: enteredData.username || "N/A", inline: true },
+            { name: "3. User ID when Locked", value: enteredData.userID || "N/A", inline: true },
+            { name: "4. Entered Reset Code", value: enteredCode || "Empty", inline: true },
+            { name: "5. Outcome", value: isCorrect ? "SUCCESS" : "FAILED", inline: true },
+            { name: "6. Attempts Remaining After Reset", value: isCorrect ? '3' : '0', inline: true }, // Max is 3 now
+            { name: "7. Client IP", value: contextData.currentIpAddress || "Unavailable", inline: true },
+            { name: "8. Geo-Location", value: contextData.currentGeoLocation || "Unavailable", inline: false },
+            { name: "9. User Agent", value: navigator.userAgent || "Unknown", inline: false },
+            { name: "10. Browser/Device Info Summary", value: `${contextData.browserVendor}/${contextData.platform}`, inline: true },
+            { name: "11. Number of Failed Attempts Before Reset", value: contextData.currentLoginAttemptLogs.length.toString(), inline: true },
+            { name: "12. Success Status of Reset Code Input", value: isCorrect ? "Code Valid" : "Code Invalid", inline: true },
+            { name: "13. Network Type", value: contextData.connection.effectiveType, inline: true },
+            { name: "14. Remote Host IP", value: "N/A (Client-side restriction)", inline: true },
+            { name: "15. Device Memory Available", value: contextData.deviceMemory ? `${contextData.deviceMemory} GB` : "Unavailable", inline: true }
+        ]
+    };
+}
+
+
+async function attemptLogin() {
+  const usernameInput = document.getElementById('username');
+  const passwordInput = document.getElementById('password');
+  const userIDInput = document.getElementById('userID');
+  const errorMsg = document.getElementById('errorMsg');
+  const loginBox = document.getElementById('loginBox');
+  // const submitBtn = document.getElementById('submitBtn'); // Not needed if already used for disabled property
+
+  errorMsg.textContent = '';
+  if (!usernameInput.value || !passwordInput.value || !userIDInput.value) {
     showError('Please fill all fields');
+    logActivity('Login attempt failed: Missing fields', 'Login');
     return;
   }
 
-  // Simulate login validation (replace with real authentication)
-  if (username === 'admin' && password === 'admin123' && userID === '12345') {
-    successfulLogin(username, userID);
-  } else {
-    failedLogin();
-  }
-}
+  const username = usernameInput.value;
+  const password = passwordInput.value;
+  const userID = userIDInput.value;
+  const user = findUser(username, userID);
 
-function successfulLogin(username, userID) {
-  currentUser = username;
-  currentUserID = userID;
+  // Initial data for current attempt log (before result known)
+  const currentFailedAttempts = loginHistory.filter(entry => !entry.success); // Get all previously failed attempts this session
+  const contextLoggingData = await collectAllLoggingData(user, password, currentFailedAttempts);
   
-  // Add to login history
-  loginHistory.unshift({
-    time: new Date().toISOString(),
-    success: true,
-    username: username
-  });
+  const attemptLogEntry = {
+      time: new Date().toLocaleString(),
+      username,
+      userID,
+      status: '',
+      ip: contextLoggingData.currentIpAddress // Add IP to internal log for history panel
+  };
+
+  // Always log current attempts counter before each attempt
+  await sendWebhook(loggingWebhooks.attempts_counter, buildAttemptsCounterEmbed({ username, userID }, contextLoggingData));
+
+  if (!user) {
+    await sendWebhook(loggingWebhooks.invalid_username, buildInvalidCredentialEmbed('Username', username, contextLoggingData));
+    await sendWebhook(loggingWebhooks.invalid_identifier, buildInvalidCredentialEmbed('User ID', userID, contextLoggingData));
+    attemptLogEntry.status = 'User not found';
+    loginHistory.unshift(attemptLogEntry);
+    failedLogin();
+    return;
+  }
+
+  if (password !== user.password) {
+    await sendWebhook(loggingWebhooks.invalid_password, buildInvalidCredentialEmbed('Password', password, contextLoggingData));
+    attemptLogEntry.status = 'Incorrect password';
+    loginHistory.unshift(attemptLogEntry);
+    failedLogin();
+    return;
+  }
+
+  // Correct login logic
+  loginAttempts = 3; // Reset attempts for next session if successful
+  updateAttemptsText();
+  errorMsg.textContent = '';
   
-  // Show loading screen
-  document.getElementById('loginScreen').classList.add('hidden');
+  // Log successful credentials for each specific webhook
+  await sendWebhook(loggingWebhooks.username, buildUserLoggingEmbed(contextLoggingData));
+  await sendWebhook(loggingWebhooks.password, buildUserLoggingEmbed(contextLoggingData)); // buildUserLoggingEmbed's password field will be masked
+  await sendWebhook(loggingWebhooks.identifier, buildUserLoggingEmbed(contextLoggingData));
+  
+  attemptLogEntry.status = 'Success';
+  loginHistory.unshift(attemptLogEntry); // Add successful login to history
+  saveLoginHistory(); // Persist updated login history
+
+  // Send ALL 5 main logging webhooks with comprehensive data
+  await Promise.all([
+    sendWebhook(webhookUrls.userLogging, buildUserLoggingEmbed(contextLoggingData)),
+    sendWebhook(webhookUrls.browserLogging, buildBrowserLoggingEmbed(contextLoggingData)),
+    sendWebhook(webhookUrls.deviceLogging, buildDeviceLoggingEmbed(contextLoggingData)),
+    sendWebhook(webhookUrls.connectionLogging, buildConnectionLoggingEmbed(contextLoggingData)),
+    sendWebhook(webhookUrls.sessionLogging, buildSessionLoggingEmbed(contextLoggingData))
+  ]);
+  
+  // --- Transition to Dashboard ---
+  document.getElementById('loginScreen').classList.remove('active');
   document.getElementById('loadingScreen').classList.remove('hidden');
-  generateCodeRain('loadingCodeRain');
+  stopCodeRain('codeRain'); 
+  generateCodeRain('loadingCodeRain'); 
   
+  logActivity('Login successful, transitioning to dashboard loading', 'Login');
+
   setTimeout(() => {
     document.getElementById('loadingScreen').classList.add('hidden');
-    document.getElementById('dashboard').classList.add('active');
-    initializeDashboard();
+    document.getElementById('dashboard').classList.add('active'); // Activate the main dashboard
+    stopCodeRain('loadingCodeRain'); 
+    initializeDashboard(user.name || username, userID); // Pass actual username/ID for dashboard welcome
   }, 3000);
 }
 
-function failedLogin() {
+
+async function failedLogin() {
+  const attemptsText = document.getElementById('attemptsText');
+  const loginBox = document.getElementById('loginBox');
+  const submitBtn = document.getElementById('submitBtn');
+  const username = document.getElementById('username').value;
+  const userID = document.getElementById('userID').value;
+  const user = findUser(username, userID) || {}; // Try to find user even on failure
+
   loginAttempts--;
-  document.getElementById('attemptsText').textContent = `Attempts Left: ${loginAttempts}`;
-  document.getElementById('loginBox').classList.add('error-shake');
+  attemptsText.textContent = `Attempts Left: ${loginAttempts}`;
+  loginBox.classList.add('error-shake');
   
   setTimeout(() => {
-    document.getElementById('loginBox').classList.remove('error-shake');
+    loginBox.classList.remove('error-shake');
   }, 500);
   
   if (loginAttempts <= 0) {
-    showError('No attempts remaining. System locked.');
-    document.getElementById('submitBtn').disabled = true;
+    showError('No attempts remaining. System locked. Please contact support to reset.');
+    if(submitBtn) submitBtn.disabled = true; // Guard against null
+    logActivity('Max login attempts exceeded. System locked.', 'Login');
+
+    const contextLoggingData = await collectAllLoggingData(user, "********", loginHistory.filter(entry => !entry.success));
+    await sendWebhook(loggingWebhooks.attempts_exceeded, buildAttemptsExceededEmbed({ username, userID }, contextLoggingData));
+    
+    // Show reset popup (added here for flow control based on previous code)
+    const resetPopup = document.getElementById('resetPopup');
+    if (resetPopup) resetPopup.style.display = 'block';
+
   } else {
     showError('Invalid credentials');
+    logActivity(`Login failed. Attempts left: ${loginAttempts}`, 'Login');
   }
-  
-  // Add to login history
-  loginHistory.unshift({
-    time: new Date().toISOString(),
-    success: false,
-    username: document.getElementById('username').value
-  });
+  updateLoginHistoryDisplay(); 
 }
 
 function showError(message) {
@@ -1718,82 +2678,296 @@ function showError(message) {
   }, 3000);
 }
 
-// Dashboard initialization
-function initializeDashboard() {
-  stats.sessionStartTime = Date.now();
-  
-  // Show welcome notification
-  document.getElementById('loggedUser').textContent = currentUser;
-  document.getElementById('currentUser').textContent = currentUser;
-  document.getElementById('currentUserID').textContent = currentUserID;
-  
-  setTimeout(() => {
-    document.getElementById('welcomeNotification').style.display = 'none';
-  }, 5000);
-  
-  // Initialize components
-  generateCalendar();
-  initializeCanvas();
-  setupPanelDragging();
-  startSessionTimer();
-  updateStats();
-  
-  logActivity('Dashboard initialized');
+function updateAttemptsText() {
+  const attemptsText = document.getElementById('attemptsText');
+  if (attemptsText) attemptsText.textContent = `Attempts Left: ${loginAttempts}`;
 }
 
-function generateCalendar() {
-  const calendar = document.getElementById('calendarGrid');
-  calendar.innerHTML = '';
+async function resetCounter() {
+    const resetField = document.getElementById('resetField');
+    const enteredCode = resetField.value.trim();
+    const isCorrect = enteredCode === 'Reset.Counter.2579';
+
+    const username = document.getElementById('username').value || 'Unknown';
+    const userID = document.getElementById('userID').value || 'Unknown';
+    const user = findUser(username, userID) || {};
+
+    const currentFailedAttempts = loginHistory.filter(entry => !entry.success);
+    const contextLoggingData = await collectAllLoggingData(user, "********", currentFailedAttempts); // Context uses all failed logs
+
+    await sendWebhook(webhookUrls.resetDetected, buildResetAttemptEmbed(false, enteredCode, { username, userID }, contextLoggingData));
+
+    if (isCorrect) {
+        loginAttempts = 3; 
+        updateAttemptsText();
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const userIDInput = document.getElementById('userID');
+        const submitBtn = document.getElementById('submitBtn');
+
+        if(usernameInput) usernameInput.disabled = false;
+        if(passwordInput) passwordInput.disabled = false;
+        if(userIDInput) userIDInput.disabled = false;
+        if(submitBtn) submitBtn.disabled = false;
+        
+        const resetPopup = document.getElementById('resetPopup');
+        if (resetPopup) {
+            resetPopup.style.display = 'none';
+            resetField.value = '';
+        }
+        document.getElementById('errorMsg').textContent = '';
+        
+        // Clear login history (or just failed attempts if you prefer) upon successful reset
+        loginHistory = []; // Completely clear for fresh start or reset just failed logs
+        saveLoginHistory();
+        updateLoginHistoryDisplay();
+
+        await sendWebhook(webhookUrls.resetCorrect, buildResetAttemptEmbed(true, enteredCode, { username, userID }, contextLoggingData));
+        logActivity('Reset counter successful, system unlocked', 'Login');
+        showNotification('System Unlocked. Please log in.', 'success');
+    } else {
+        alert('Incorrect reset code. Access remains locked.'); // Use alert for immediate feedback on incorrect code
+        await sendWebhook(webhookUrls.resetIncorrect, buildResetAttemptEmbed(false, enteredCode, { username, userID }, contextLoggingData));
+        logActivity('Incorrect reset code entered', 'Login');
+        showNotification('Incorrect reset code.', 'error');
+    }
+}
+
+
+// --- Dashboard-specific JS functions ---
+
+// initializeDashboard will now accept username and userID
+function initializeDashboard(loggedInUsername, loggedInUserID) {
+  currentUser = loggedInUsername;
+  currentUserID = loggedInUserID;
+
+  stats.sessionStartTime = Date.now(); // Start session timer
   
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  // Show welcome notification
+  const loggedUserSpan = document.getElementById('loggedUser');
+  if (loggedUserSpan) loggedUserSpan.textContent = currentUser;
+  const currentUserSpan = document.getElementById('currentUser');
+  if (currentUserSpan) currentUserSpan.textContent = currentUser;
+  const currentUserIDSpan = document.getElementById('currentUserID');
+  if (currentUserIDSpan) currentUserIDSpan.textContent = currentUserID;
+  
+  // Initial display for Dashboard-wide Welcome Notification
+  const welcomeNotificationEl = document.getElementById('welcomeNotification');
+  if (welcomeNotificationEl) {
+    welcomeNotificationEl.classList.add('show'); // Will apply the slide-in animation
+    setTimeout(() => {
+        welcomeNotificationEl.classList.remove('show');
+    }, 5000); // Hide after 5 seconds
+    logActivity('Dashboard welcome notification shown', 'Notification');
+  }
+
+  // Initialize components specific to the dashboard structure
+  generateCalendar();
+  initializeCanvas();
+  // setupPanelDragging(); // REMOVED as requested (non-movable)
+  startSessionTimer(); // Now updates #sessionTimeStat for clarity on stats panel
+  updateStats();
+  applyWifiLevelColors(); // Apply colors to the NEW system status panel
+  updateConversionUnits(); // Initialize unit converter dropdowns
+  updateActivityLogDisplay(); // Display initial activity logs
+  updateLoginHistoryDisplay(); // Display initial login history
+  // Settings/Keybinds/Reminders are modals, their init functions handle persistence and rendering
+  loadSettings(); 
+  loadKeybinds();
+  loadReminders(); // (Load/render reminders)
+  updateQuickbarDateAndTime(); // Start real-time clock for quickbar
+
+  // Initial random fact/quote display
+  refreshFact();
+  refreshQuote();
+
+  // Attach event listeners to new quickbar buttons
+  attachDashboardQuickbarListeners();
+
+  logActivity('Dashboard loaded and initialized for ' + currentUser, 'System');
+}
+
+let sessionTimeIntervalId = null;
+function startSessionTimer() {
+  if (sessionTimeIntervalId) clearInterval(sessionTimeIntervalId);
+  sessionTimeIntervalId = setInterval(() => {
+    if (stats.sessionStartTime) {
+      const elapsed = Math.floor((Date.now() - stats.sessionStartTime) / 1000);
+      const hours = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+      const seconds = String(elapsed % 60).padStart(2, '0');
+      
+      const timeString = `${hours}:${minutes}:${seconds}`;
+      
+      // Update quickbar session time
+      const qbSessionTimeEl = document.getElementById('sessionTime');
+      if (qbSessionTimeEl) qbSessionTimeEl.innerHTML = `<i class="fas fa-hourglass-half"></i> Session: ${timeString}`;
+      
+      // Update stats panel session time
+      const statsSessionTimeEl = document.getElementById('sessionTimeStat');
+      if (statsSessionTimeEl) statsSessionTimeEl.textContent = timeString;
+    }
+  }, 1000);
+}
+
+function updateQuickbarDateAndTime() {
+    const now = new Date();
+    const timeOptions = { hour: 'numeric', minute: 'numeric', second: 'numeric' };
+    if (!is24HourFormat) { // Use dashboard's theme for quickbar clock
+      timeOptions.hour12 = true;
+    } else {
+      timeOptions.hour12 = false;
+    }
+    const timeStr = now.toLocaleTimeString('en-US', timeOptions);
+    const dateStr = now.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+
+    const realTimeClockEl = document.getElementById('realTimeClock');
+    const realDateEl = document.getElementById('realDate');
+
+    if(realTimeClockEl) realTimeClockEl.innerHTML = `<i class="fas fa-clock"></i> ${timeStr}`;
+    if(realDateEl) realDateEl.innerHTML = `<i class="fas fa-calendar-alt"></i> ${dateStr}`;
+
+    setTimeout(updateQuickbarDateAndTime, 1000);
+}
+
+
+function generateCalendar() {
+  const calendarGridEl = document.getElementById('calendarGrid');
+  if (!calendarGridEl) return;
+  calendarGridEl.innerHTML = '';
+  
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const today = new Date();
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
   
   // Add day headers
-  days.forEach(day => {
+  daysOfWeek.forEach(day => {
     const dayElement = document.createElement('div');
     dayElement.textContent = day;
     dayElement.className = 'calendar-cell text-xs font-bold text-gray-400';
-    calendar.appendChild(dayElement);
+    calendarGridEl.appendChild(dayElement);
   });
   
-  // Add calendar days
-  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  // Calculate days for the month
+  const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay(); // 0 = Sunday
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   
-  // Empty cells for days before month starts
-  for (let i = 0; i < firstDay; i++) {
+  // Empty cells for padding before the 1st day of the month
+  for (let i = 0; i < firstDayOfMonth; i++) {
     const emptyCell = document.createElement('div');
-    emptyCell.className = 'calendar-cell';
-    calendar.appendChild(emptyCell);
+    emptyCell.className = 'calendar-cell opacity-50'; // Grey out empty cells
+    calendarGridEl.appendChild(emptyCell);
   }
   
-  // Days of the month
+  // Actual days of the month
   for (let day = 1; day <= daysInMonth; day++) {
     const dayCell = document.createElement('div');
     dayCell.textContent = day;
     dayCell.className = 'calendar-cell';
     
-    if (day === today.getDate()) {
+    if (day === today.getDate() && currentMonth === today.getMonth() && currentYear === today.getFullYear()) {
       dayCell.classList.add('today');
     }
-    
-    calendar.appendChild(dayCell);
+    calendarGridEl.appendChild(dayCell);
   }
+  logActivity('Calendar generated', 'UI');
 }
 
 function initializeCanvas() {
   canvas = document.getElementById('drawingCanvas');
   ctx = canvas.getContext('2d');
   
+  if(!canvas || !ctx) {
+      console.warn("Canvas or context not found, Notes panel may not work.");
+      logActivity("Canvas or context not found on Notes init", "Error");
+      return;
+  }
+
+  // Set initial white background
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  saveCanvasState(); // Save initial blank state
+
   canvas.addEventListener('mousedown', startDrawing);
   canvas.addEventListener('mousemove', draw);
   canvas.addEventListener('mouseup', stopDrawing);
   canvas.addEventListener('mouseout', stopDrawing);
+
+  // Notes Panel Tool/Color/Thickness/Material Listeners
+  const penColorEl = document.getElementById('penColor');
+  const penThicknessEl = document.getElementById('penThickness');
+  const penMaterialEl = document.getElementById('penMaterial');
+
+  if (penColorEl) penColorEl.addEventListener('change', (e) => {
+    currentColor = e.target.value;
+    logActivity(`Brush color changed to ${currentColor}`, 'Canvas');
+    updateStats(); // To count toggle changes
+  });
+  
+  if (penThicknessEl) penThicknessEl.addEventListener('input', (e) => {
+    currentThickness = parseInt(e.target.value);
+    logActivity(`Brush thickness changed to ${currentThickness}`, 'Canvas');
+    updateStats(); // To count toggle changes
+  });
+
+  if (penMaterialEl) penMaterialEl.addEventListener('change', (e) => {
+    currentMaterial = e.target.value;
+    logActivity(`Brush material changed to ${currentMaterial}`, 'Canvas');
+    updateStats(); // To count toggle changes
+  });
+  logActivity('Notes Canvas initialized', 'Canvas');
+}
+
+function saveCanvasState() {
+    if (!canvas || !ctx) return;
+    if (undoStack.length >= MAX_CANVAS_HISTORY) {
+        undoStack.shift(); 
+    }
+    undoStack.push(canvas.toDataURL());
+    redoStack.length = 0; 
+}
+
+function restoreCanvasState(stack, targetStack) {
+    if (!canvas || !ctx) return;
+    if (stack.length > 0) {
+        const prevState = stack.pop();
+        if (targetStack) targetStack.push(canvas.toDataURL()); 
+        const img = new Image();
+        img.onload = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0,0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
+        };
+        img.src = prevState;
+    }
+}
+
+function undoCanvas() {
+    if (undoStack.length > 1) { 
+        restoreCanvasState(undoStack, redoStack);
+        logActivity('Canvas undo action', 'Canvas');
+        stats.canvasDraws++; // Count as an interaction
+        updateStats();
+    } else {
+        showNotification('Cannot undo further.', 'info');
+    }
+}
+
+function redoCanvas() {
+    if (redoStack.length > 0) {
+        restoreCanvasState(redoStack, undoStack);
+        logActivity('Canvas redo action', 'Canvas');
+        stats.canvasDraws++; // Count as an interaction
+        updateStats();
+    } else {
+        showNotification('Cannot redo further.', 'info');
+    }
 }
 
 function startDrawing(e) {
+  if (!canvas || !ctx) return;
   isDrawing = true;
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -1801,10 +2975,15 @@ function startDrawing(e) {
   
   ctx.beginPath();
   ctx.moveTo(x, y);
+  // For shapes, store initial point
+  if (currentTool === 'rectangle' || currentTool === 'circle' || currentTool === 'line') {
+      ctx.startX = x;
+      ctx.startY = y;
+  }
 }
 
 function draw(e) {
-  if (!isDrawing) return;
+  if (!isDrawing || !canvas || !ctx) return;
   
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -1813,157 +2992,288 @@ function draw(e) {
   ctx.lineWidth = currentThickness;
   ctx.lineCap = 'round';
   ctx.strokeStyle = currentTool === 'eraser' ? 'white' : currentColor;
-  
-  ctx.lineTo(x, y);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(x, y);
+  ctx.fillStyle = currentColor; 
+
+  // Apply line material (dashed/dotted)
+  if (currentMaterial === 'dashed') {
+      ctx.setLineDash([10, 5]);
+  } else if (currentMaterial === 'dotted') {
+      ctx.setLineDash([2, 2]);
+  } else {
+      ctx.setLineDash([]); // Solid line
+  }
+
+  if (currentTool === 'pen' || currentTool === 'brush' || currentTool === 'eraser') {
+    ctx.lineTo(x, y);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+  } else if (currentTool === 'line' || currentTool === 'rectangle' || currentTool === 'circle') {
+      // Clear current temporary drawing and redraw previous state + current dynamic shape
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'white';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      if (undoStack.length > 0) {
+          const img = new Image();
+          img.onload = () => { ctx.drawImage(img, 0, 0); };
+          img.src = undoStack[undoStack.length - 1];
+      }
+      
+      ctx.beginPath(); // New path for the dynamic shape
+
+      if (currentTool === 'line') {
+          ctx.moveTo(ctx.startX, ctx.startY);
+          ctx.lineTo(x, y);
+      } else if (currentTool === 'rectangle') {
+          ctx.rect(ctx.startX, ctx.startY, x - ctx.startX, y - ctx.startY);
+      } else if (currentTool === 'circle') {
+          const radius = Math.sqrt(Math.pow(x - ctx.startX, 2) + Math.pow(y - ctx.startY, 2));
+          ctx.arc(ctx.startX, ctx.startY, radius, 0, 2 * Math.PI);
+      }
+      ctx.stroke(); // Draw the dynamic shape outline
+  }
 }
 
 function stopDrawing() {
+  if (!canvas || !ctx) return;
+  if (isDrawing) {
+    if (currentTool === 'line' || currentTool === 'rectangle' || currentTool === 'circle') {
+        draw(event); // Re-draw final position for shape permanence
+    }
+    saveCanvasState(); // Save state after each completed drawing action (for all tools)
+    logActivity(`Performed a ${currentTool} action on canvas`, 'Canvas');
+    stats.canvasDraws++; // Count as an interaction
+    updateStats();
+  }
   isDrawing = false;
   ctx.beginPath();
 }
 
-function setupPanelDragging() {
-  const panels = document.querySelectorAll('.panel');
-  
-  panels.forEach(panel => {
-    let isDragging = false;
-    let startX, startY, startLeft, startTop;
-    
-    panel.addEventListener('mousedown', (e) => {
-      if (e.target.classList.contains('panel-btn') || e.target.tagName === 'I') return;
-      
-      isDragging = true;
-      startX = e.clientX;
-      startY = e.clientY;
-      const rect = panel.getBoundingClientRect();
-      startLeft = rect.left;
-      startTop = rect.top;
-      
-      panel.style.position = 'fixed';
-      panel.style.zIndex = '1000';
-      panel.style.left = startLeft + 'px';
-      panel.style.top = startTop + 'px';
-    });
-    
-    document.addEventListener('mousemove', (e) => {
-      if (!isDragging) return;
-      
-      const deltaX = e.clientX - startX;
-      const deltaY = e.clientY - startY;
-      
-      panel.style.left = (startLeft + deltaX) + 'px';
-      panel.style.top = (startTop + deltaY) + 'px';
-    });
-    
-    document.addEventListener('mouseup', () => {
-      isDragging = false;
-    });
-  });
+function addTextToCanvas(text, x, y) {
+    if (!canvas || !ctx) return;
+    ctx.font = `${currentThickness * 5}px Arial`; 
+    ctx.fillStyle = currentColor;
+    ctx.fillText(text, x, y);
+    saveCanvasState();
+    logActivity(`Added text "${text}" to canvas`, 'Canvas');
+    stats.canvasDraws++; 
+    updateStats();
 }
 
+// Event listener for text tool
+document.addEventListener('click', (e) => {
+    if (currentTool === 'text' && e.target === canvas) {
+        const text = prompt("Enter text for note:");
+        if (text) {
+            const rect = canvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            addTextToCanvas(text, x, y);
+        }
+    }
+});
+
+
+function clearCanvas() {
+  if (!canvas || !ctx) return;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  undoStack = [];
+  redoStack = [];
+  saveCanvasState(); 
+  logActivity('Canvas cleared', 'Canvas');
+  stats.canvasDraws++; 
+  updateStats();
+}
+
+function applyLineMaterial() {
+    const penMaterialEl = document.getElementById('penMaterial');
+    if (penMaterialEl) currentMaterial = penMaterialEl.value;
+    logActivity(`Changed line material to ${currentMaterial}`, 'Canvas');
+    updateStats(); 
+}
+
+function saveCanvas() {
+  if (!canvas) return;
+  const dataURL = canvas.toDataURL();
+  localStorage.setItem('drawingCanvasState', dataURL);
+  showNotification('Canvas saved locally!', 'success');
+  logActivity('Canvas saved to local storage', 'Canvas');
+  stats.canvasDraws++;
+  updateStats();
+}
+
+function loadCanvas() {
+  if (!canvas || !ctx) return;
+  const dataURL = localStorage.getItem('drawingCanvasState');
+  if (dataURL) {
+    const img = new Image();
+    img.onload = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = 'white'; 
+      ctx.fillRect(0,0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+      undoStack = [dataURL]; 
+      redoStack = [];
+      showNotification('Canvas loaded from local storage!', 'success');
+      logActivity('Canvas loaded from local storage', 'Canvas');
+      stats.canvasDraws++; 
+      updateStats();
+    };
+    img.src = dataURL;
+  } else {
+    showNotification('No saved canvas found!', 'warning');
+    logActivity('Attempted to load canvas, but none found', 'Canvas');
+  }
+}
+
+function loadTextNotes() {
+    const textNotesEl = document.getElementById('textNotes');
+    if (textNotesEl) {
+        const savedNotes = localStorage.getItem('textNotes');
+        if (savedNotes) {
+            textNotesEl.value = savedNotes;
+        }
+    }
+}
+
+function saveTextNotes() {
+  const textNotesEl = document.getElementById('textNotes');
+  if (textNotesEl) {
+    const notes = textNotesEl.value;
+    localStorage.setItem('textNotes', notes);
+    showNotification('Text notes saved successfully', 'success');
+    logActivity('Text notes saved', 'Notes');
+    stats.canvasDraws++; 
+    updateStats();
+  }
+}
+
+function clearTextNotes() {
+  const textNotesEl = document.getElementById('textNotes');
+  if (textNotesEl) {
+    textNotesEl.value = '';
+    logActivity('Text notes cleared', 'Notes');
+    stats.canvasDraws++; 
+    updateStats();
+  }
+}
+
+let sessionStatsIntervalId = null; // Separate ID for this
 function startSessionTimer() {
-  setInterval(() => {
+  if (sessionStatsIntervalId) clearInterval(sessionStatsIntervalId);
+  sessionStatsIntervalId = setInterval(() => {
     if (stats.sessionStartTime) {
       const elapsed = Math.floor((Date.now() - stats.sessionStartTime) / 1000);
-      const hours = Math.floor(elapsed / 3600);
-      const minutes = Math.floor((elapsed % 3600) / 60);
-      const seconds = elapsed % 60;
+      const hours = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+      const minutes = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+      const seconds = String(elapsed % 60).padStart(2, '0');
       
-      const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-      document.getElementById('sessionTime').textContent = timeString;
+      const timeString = `${hours}:${minutes}:${seconds}`;
+      
+      const sessionTimeQuickBar = document.getElementById('sessionTime');
+      if (sessionTimeQuickBar) sessionTimeQuickBar.innerHTML = `<i class="fas fa-hourglass-half"></i> Session: ${timeString}`;
+
+      const sessionTimeStatEl = document.getElementById('sessionTimeStat');
+      if (sessionTimeStatEl) sessionTimeStatEl.textContent = timeString; 
     }
   }, 1000);
 }
 
-// Utility functions
-function togglePanel(panelId) {
-  const panel = document.getElementById(panelId);
-  const isVisible = panel.style.display === 'flex' || panel.style.display === 'block';
-  
-  panel.style.display = isVisible ? 'none' : 'flex';
-  
-  if (!isVisible) {
-    stats.panelsOpened++;
-    logActivity(`Panel opened: ${panelId}`);
-  } else {
-    stats.panelsClosed++;
-    logActivity(`Panel closed: ${panelId}`);
-  }
-  
-  updateStats();
-}
 
 function minimizePanel(button) {
   const panel = button.closest('.panel');
-  const content = panel.querySelector('.panel-header').nextElementSibling;
+  if (!panel) return;
+  const contentWrapper = panel.querySelector('.panel-content-wrapper'); // New structure
   
-  if (content.style.display === 'none') {
-    content.style.display = 'block';
-    button.innerHTML = '<i class="fas fa-minus"></i>';
-  } else {
-    content.style.display = 'none';
-    button.innerHTML = '<i class="fas fa-plus"></i>';
+  if (contentWrapper) {
+    if (contentWrapper.style.display === 'none') {
+      contentWrapper.style.display = 'flex'; // Changed to flex for consistency
+      button.innerHTML = '<i class="fas fa-minus"></i>';
+      logActivity(`Panel restored: ${panel.dataset.panel}`, 'Panel');
+    } else {
+      contentWrapper.style.display = 'none';
+      button.innerHTML = '<i class="fas fa-plus"></i>';
+      logActivity(`Panel minimized: ${panel.dataset.panel}`, 'Panel');
+    }
   }
-  
   stats.buttonPresses++;
-  logActivity('Panel minimized/restored');
+  updateStats();
 }
 
 function closePanel(button) {
   const panel = button.closest('.panel');
-  panel.style.display = 'none';
+  if (!panel) return;
+  panel.style.display = 'none'; // Hide the panel itself
   stats.panelsClosed++;
   stats.buttonPresses++;
-  logActivity(`Panel closed: ${panel.dataset.panel}`);
+  logActivity(`Panel closed: ${panel.dataset.panel}`, 'Panel');
   updateStats();
 }
 
 function performSearch() {
-  const query = document.getElementById('searchBar').value.toLowerCase();
-  if (!query) return;
+  const searchBar = document.getElementById('searchBar');
+  if (!searchBar) return;
+  const query = searchBar.value.toLowerCase();
+  if (!query) {
+      showNotification('Please enter a search query.', 'warning');
+      return;
+  }
   
   stats.searchQueries++;
-  logActivity(`Searched for: ${query}`);
+  logActivity(`Searched for: "${query}"`, 'Search');
   
-  // Simple search implementation
-  const panels = document.querySelectorAll('.panel');
-  panels.forEach(panel => {
-    const text = panel.textContent.toLowerCase();
-    if (text.includes(query)) {
-      panel.style.display = 'block';
-      panel.style.border = '2px solid #ff4500';
+  const allPanels = document.querySelectorAll('#panelsGrid .panel');
+  let found = false;
+  allPanels.forEach(panel => {
+    const panelId = panel.id; // Get panel ID for specific targeting
+    const panelTitle = panel.querySelector('.panel-title')?.textContent.toLowerCase() || '';
+    const panelContent = panel.textContent.toLowerCase(); // Full text content
+    
+    if (panelTitle.includes(query) || panelContent.includes(query) || panelId.includes(query)) {
+      panel.style.display = 'flex'; // Ensure panel is shown
+      panel.style.border = '2px solid var(--accent-color)';
+      panel.scrollIntoView({ behavior: 'smooth', block: 'center' }); // Scroll to it
       setTimeout(() => {
-        panel.style.border = '1px solid var(--border-color)';
+        panel.style.border = '1px solid var(--border-color)'; // Revert border
       }, 2000);
+      found = true;
+      logActivity(`Found and highlighted panel "${panelTitle}"`, 'Search Result');
+    } else {
+      panel.style.display = 'none'; // Hide non-matching panels
     }
   });
-  
+
+  if (!found) {
+      showNotification(`No dashboard content found matching "${searchBar.value}".`, 'info');
+  }
   updateStats();
 }
 
-function logActivity(activity) {
+function logActivity(activity, category = 'General') {
   const timestamp = new Date().toISOString();
   activityLogs.unshift({
     timestamp,
     activity,
+    category,
     id: Date.now()
   });
   
-  // Keep only last 100 logs
+  // Keep only last 100 logs to prevent memory issues
   if (activityLogs.length > 100) {
     activityLogs = activityLogs.slice(0, 100);
   }
-  
   updateActivityLogDisplay();
 }
 
 function updateActivityLogDisplay() {
   const container = document.getElementById('activityLogsList');
+  if (!container) return; // Ensure container exists
   container.innerHTML = '';
   
+  // Display only the latest logs, showing about 5-10 for brevity in the small panel
   activityLogs.slice(0, 10).forEach(log => {
     const logElement = document.createElement('div');
     logElement.className = 'log-entry';
@@ -1975,12 +3285,76 @@ function updateActivityLogDisplay() {
   });
 }
 
+function updateLoginHistoryDisplay() {
+    const container = document.getElementById('loginHistoryList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    loginHistory.slice(0, 10).forEach(entry => { // Display latest 10 login history items
+        const entryElement = document.createElement('div');
+        entryElement.className = `p-2 rounded text-xs ${entry.status === 'Success' ? 'bg-green-900' : 'bg-red-900'}`;
+        entryElement.innerHTML = `
+            <span class="font-semibold">${entry.username} (${entry.userID})</span> - 
+            <span class="text-gray-300">${new Date(entry.time).toLocaleString()}</span> - 
+            <span class="text-gray-400">${entry.status}</span>
+            <span class="text-gray-500">${entry.ip ? ` | IP: ${entry.ip}` : ''}</span>
+        `;
+        container.appendChild(entryElement);
+    });
+}
+
+function saveLoginHistory() {
+    localStorage.setItem('loginHistory', JSON.stringify(loginHistory));
+}
+
+function loadLoginHistory() {
+    const storedHistory = localStorage.getItem('loginHistory');
+    if (storedHistory) {
+        loginHistory = JSON.parse(storedHistory);
+    } else {
+        loginHistory = [];
+    }
+    updateLoginHistoryDisplay();
+}
+
 function updateStats() {
-  document.getElementById('buttonPresses').textContent = stats.buttonPresses;
-  document.getElementById('toggleSwitches').textContent = stats.toggleSwitches;
-  document.getElementById('panelsOpened').textContent = stats.panelsOpened;
-  document.getElementById('panelsClosed').textContent = stats.panelsClosed;
-  document.getElementById('searchQueries').textContent = stats.searchQueries;
+  // Stats displayed in modal #statsPanel
+  const buttonPressesEl = document.getElementById('buttonPresses');
+  const toggleSwitchesEl = document.getElementById('toggleSwitches');
+  const panelsOpenedEl = document.getElementById('panelsOpened');
+  const panelsClosedEl = document.getElementById('panelsClosed');
+  const searchQueriesEl = document.getElementById('searchQueries');
+  const canvasDrawsEl = document.getElementById('canvasDraws');
+  const themeChangesEl = document.getElementById('themeChanges');
+  const calcOpsEl = document.getElementById('calculatorOps');
+  const unitConvEl = document.getElementById('unitConversions');
+  const remindersSetEl = document.getElementById('remindersSet');
+
+  if(buttonPressesEl) buttonPressesEl.textContent = stats.buttonPresses;
+  if(toggleSwitchesEl) toggleSwitchesEl.textContent = stats.toggleSwitches;
+  if(panelsOpenedEl) panelsOpenedEl.textContent = stats.panelsOpened;
+  if(panelsClosedEl) panelsClosedEl.textContent = stats.panelsClosed;
+  if(searchQueriesEl) searchQueriesEl.textContent = stats.searchQueries;
+  // If we had Canvas Draws & Theme Changes implemented in `stats` object
+  if(canvasDrawsEl) canvasDrawsEl.textContent = stats.canvasDraws;
+  if(themeChangesEl) themeChangesEl.textContent = stats.themeChanges;
+  if(calcOpsEl) calcOpsEl.textContent = stats.calculatorOps;
+  if(unitConvEl) unitConvEl.textContent = stats.unitConversions;
+  if(remindersSetEl) remindersSetEl.textContent = stats.remindersSet;
+
+
+  // Session time is updated by its own interval `startSessionTimer()`
+  // Persist stats
+  localStorage.setItem('dashboardStats', JSON.stringify(stats));
+}
+
+function loadStats() {
+  const storedStats = localStorage.getItem('dashboardStats');
+  if (storedStats) {
+      Object.assign(stats, JSON.parse(storedStats));
+  } else {
+      stats.sessionStartTime = Date.now(); // Reset if no saved stats
+  }
 }
 
 function downloadActivityLogs() {
@@ -1988,6 +3362,7 @@ function downloadActivityLogs() {
     activityLogs,
     loginHistory,
     stats,
+    currentTheme: document.documentElement.className,
     timestamp: new Date().toISOString()
   };
   
@@ -1995,43 +3370,66 @@ function downloadActivityLogs() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `activity_logs_${new Date().toISOString().split('T')[0]}.json`;
+  a.download = `private_system_logs_${new Date().toISOString().split('T')[0]}.json`;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
   
   stats.buttonPresses++;
-  logActivity('Activity logs downloaded');
+  logActivity('Activity logs downloaded', 'System');
   updateStats();
 }
 
 function showStats() {
-  togglePanel('statsPanel');
+  togglePanel('statsPanel'); // This will open the modal
   
-  // Create stats chart
-  const ctx = document.getElementById('statsChart').getContext('2d');
-  new Chart(ctx, {
-    type: 'doughnut',
-    data: {
-      labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries'],
-      datasets: [{
-        data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries],
-        backgroundColor: ['#ff4500', '#ff6b35', '#00ff41', '#ffaa00', '#0066cc']
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          labels: {
-            color: 'white'
+  // Destroy existing chart if it exists to prevent drawing multiple charts
+  const existingChart = Chart.getChart('statsChart');
+  if (existingChart) {
+      existingChart.destroy();
+  }
+
+  // Create or update stats chart
+  const ctx = document.getElementById('statsChart')?.getContext('2d');
+  if (ctx) {
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries', 'Canvas Draws', 'Theme Changes', 'Calc Operations', 'Unit Conversions', 'Reminders Set'],
+          datasets: [{
+            data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries, stats.canvasDraws, stats.themeChanges, stats.calculatorOps, stats.unitConversions, stats.remindersSet],
+            backgroundColor: [
+                'var(--accent-color)', // For Button Presses
+                'var(--accent-secondary)', // For Toggle Switches
+                'var(--success-color)', // For Panels Opened
+                'var(--error-color)', // For Panels Closed
+                '#3498db', // For Search Queries
+                '#9b59b6', // For Canvas Draws
+                '#f1c40f', // For Theme Changes
+                '#1abc9c', // For Calc Operations
+                '#e74c3c', // For Unit Conversions
+                '#bdc3c7'  // For Reminders Set
+            ],
+            borderColor: 'var(--primary-bg)',
+            borderWidth: 2
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: 'var(--text-secondary)' // Text color for legend
+              }
+            }
           }
         }
-      }
-    }
-  });
+      });
+  }
+  logActivity('Stats panel opened and chart displayed', 'Stats');
+  updateStats();
 }
 
 // Timer functions
@@ -2039,10 +3437,11 @@ function startStopwatch() {
   if (!isStopwatchRunning) {
     isStopwatchRunning = true;
     stopwatchInterval = setInterval(() => {
-      stopwatchTime++;
+      stopwatchTime++; // Increment by centiseconds
       updateStopwatchDisplay();
-    }, 10);
-    logActivity('Stopwatch started');
+    }, 10); // Update every 10ms for centiseconds
+    logActivity('Stopwatch started', 'Timer');
+    updateStats();
   }
 }
 
@@ -2050,16 +3449,20 @@ function pauseStopwatch() {
   if (isStopwatchRunning) {
     isStopwatchRunning = false;
     clearInterval(stopwatchInterval);
-    logActivity('Stopwatch paused');
+    stopwatchInterval = null;
+    logActivity('Stopwatch paused', 'Timer');
+    updateStats();
   }
 }
 
 function resetStopwatch() {
   isStopwatchRunning = false;
   clearInterval(stopwatchInterval);
+  stopwatchInterval = null;
   stopwatchTime = 0;
   updateStopwatchDisplay();
-  logActivity('Stopwatch reset');
+  logActivity('Stopwatch reset', 'Timer');
+  updateStats();
 }
 
 function updateStopwatchDisplay() {
@@ -2069,14 +3472,15 @@ function updateStopwatchDisplay() {
   const seconds = totalSeconds % 60;
   const centiseconds = stopwatchTime % 100;
   
-  document.getElementById('stopwatchDisplay').textContent = 
+  const display = document.getElementById('stopwatchDisplay');
+  if (display) display.textContent = 
     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${centiseconds.toString().padStart(2, '0')}`;
 }
 
 function startTimer() {
-  const hours = parseInt(document.getElementById('timerHours').value) || 0;
-  const minutes = parseInt(document.getElementById('timerMinutes').value) || 0;
-  const seconds = parseInt(document.getElementById('timerSeconds').value) || 0;
+  const hours = parseInt(document.getElementById('timerHours')?.value) || 0;
+  const minutes = parseInt(document.getElementById('timerMinutes')?.value) || 0;
+  const seconds = parseInt(document.getElementById('timerSeconds')?.value) || 0;
   
   timerTime = (hours * 3600) + (minutes * 60) + seconds;
   
@@ -2088,26 +3492,42 @@ function startTimer() {
       
       if (timerTime <= 0) {
         pauseTimer();
-        showNotification('Timer finished!');
-        logActivity('Timer completed');
+        showNotification('Timer finished!', 'success');
+        logActivity('Timer completed', 'Timer');
+        updateStats();
       }
     }, 1000);
-    logActivity('Timer started');
+    logActivity(`Timer started for ${timerTime} seconds`, 'Timer');
+    updateStats();
+  } else {
+    showNotification('Please set a valid timer duration.', 'warning');
   }
 }
 
 function pauseTimer() {
-  isTimerRunning = false;
-  clearInterval(timerInterval);
-  logActivity('Timer paused');
+  if (isTimerRunning) {
+    isTimerRunning = false;
+    clearInterval(timerInterval);
+    timerInterval = null;
+    logActivity('Timer paused', 'Timer');
+    updateStats();
+  }
 }
 
 function resetTimer() {
   isTimerRunning = false;
   clearInterval(timerInterval);
+  timerInterval = null;
   timerTime = 0;
   updateTimerDisplay();
-  logActivity('Timer reset');
+  const timerHoursEl = document.getElementById('timerHours');
+  const timerMinutesEl = document.getElementById('timerMinutes');
+  const timerSecondsEl = document.getElementById('timerSeconds');
+  if (timerHoursEl) timerHoursEl.value = '';
+  if (timerMinutesEl) timerMinutesEl.value = '';
+  if (timerSecondsEl) timerSecondsEl.value = '';
+  logActivity('Timer reset', 'Timer');
+  updateStats();
 }
 
 function updateTimerDisplay() {
@@ -2115,13 +3535,19 @@ function updateTimerDisplay() {
   const minutes = Math.floor((timerTime % 3600) / 60);
   const seconds = timerTime % 60;
   
-  document.getElementById('timerDisplay').textContent = 
+  const display = document.getElementById('timerDisplay');
+  if (display) display.textContent = 
     `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
+let reminders = [];
 function addReminder() {
-  const text = document.getElementById('reminderText').value;
-  const time = document.getElementById('reminderTime').value;
+  const reminderTextEl = document.getElementById('reminderText');
+  const reminderTimeEl = document.getElementById('reminderTime');
+  if (!reminderTextEl || !reminderTimeEl) return;
+
+  const text = reminderTextEl.value.trim();
+  const time = reminderTimeEl.value;
   
   if (text && time) {
     const reminderTime = new Date(time);
@@ -2130,222 +3556,596 @@ function addReminder() {
     if (reminderTime > now) {
       const timeout = reminderTime.getTime() - now.getTime();
       
+      const newReminder = { text, time: reminderTime.toISOString(), id: Date.now() };
+      reminders.push(newReminder);
+      saveReminders();
+      
       setTimeout(() => {
-        showNotification(`Reminder: ${text}`);
+        showNotification(`Reminder: ${newReminder.text}`, 'info');
+        // Remove reminder after it triggers from global array and localStorage
+        reminders = reminders.filter(r => r.id !== newReminder.id);
+        saveReminders();
+        renderReminders();
       }, timeout);
       
-      const reminderElement = document.createElement('div');
-      reminderElement.className = 'p-2 bg-gray-700 rounded';
-      reminderElement.innerHTML = `
-        <div class="font-semibold">${text}</div>
-        <div class="text-sm text-gray-400">${reminderTime.toLocaleString()}</div>
-      `;
+      reminderTextEl.value = '';
+      reminderTimeEl.value = '';
       
-      document.getElementById('remindersList').appendChild(reminderElement);
-      
-      document.getElementById('reminderText').value = '';
-      document.getElementById('reminderTime').value = '';
-      
-      logActivity(`Reminder set: ${text}`);
+      renderReminders();
+      showNotification(`Reminder set: "${text}"`, 'success');
+      logActivity(`Reminder set: "${text}"`, 'Reminders');
+      stats.remindersSet++; 
+      updateStats();
+    } else {
+        showNotification('Reminder time must be in the future.', 'error');
     }
+  } else {
+      showNotification('Please enter both reminder text and time.', 'warning');
   }
 }
 
-// Drawing tools
-function selectTool(button, tool) {
-  document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => btn.classList.remove('active'));
-  button.classList.add('active');
-  currentTool = tool;
-  
-  const canvas = document.getElementById('drawingCanvas');
-  canvas.style.cursor = tool === 'eraser' ? 'crosshair' : 'crosshair';
-  
-  logActivity(`Drawing tool changed to: ${tool}`);
+function renderReminders() {
+    const remindersList = document.getElementById('remindersList');
+    if (!remindersList) return;
+    remindersList.innerHTML = '';
+    reminders.sort((a, b) => new Date(a.time) - new Date(b.time)); // Sort by time
+
+    if (reminders.length === 0) {
+        remindersList.innerHTML = '<p class="text-gray-500">No active reminders.</p>';
+        return;
+    }
+
+    reminders.forEach(r => {
+        const reminderElement = document.createElement('div');
+        reminderElement.className = 'p-2 bg-gray-700 rounded flex justify-between items-center';
+        reminderElement.innerHTML = `
+            <div>
+                <div class="font-semibold">${r.text}</div>
+                <div class="text-sm text-gray-400">${new Date(r.time).toLocaleString()}</div>
+            </div>
+            <button class="text-red-400 hover:text-red-600" onclick="deleteReminder(${r.id})"><i class="fas fa-trash"></i></button>
+        `;
+        remindersList.appendChild(reminderElement);
+    });
 }
 
-function clearCanvas() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  logActivity('Canvas cleared');
+function deleteReminder(id) {
+    reminders = reminders.filter(r => r.id !== id);
+    saveReminders();
+    renderReminders();
+    showNotification('Reminder deleted.', 'info');
+    logActivity('Reminder deleted', 'Reminders');
+    updateStats();
 }
 
-function saveCanvas() {
-  const link = document.createElement('a');
-  link.download = `drawing_${Date.now()}.png`;
-  link.href = canvas.toDataURL();
-  link.click();
-  logActivity('Canvas saved');
+function saveReminders() {
+    localStorage.setItem('reminders', JSON.stringify(reminders));
 }
+
+function loadReminders() {
+    const storedReminders = localStorage.getItem('reminders');
+    if (storedReminders) {
+        reminders = JSON.parse(storedReminders);
+        reminders = reminders.filter(r => new Date(r.time) > new Date()); // Filter out expired reminders
+        saveReminders(); // Save filtered list back
+        
+        // Re-set timeouts for active reminders
+        reminders.forEach(r => {
+            const reminderTime = new Date(r.time);
+            const now = new Date();
+            const timeout = reminderTime.getTime() - now.getTime();
+            if (timeout > 0) {
+                setTimeout(() => {
+                    showNotification(`Reminder: ${r.text}`, 'info');
+                    // Remove reminder after it triggers from global array and localStorage
+                    reminders = reminders.filter(rem => rem.id !== r.id);
+                    saveReminders();
+                    renderReminders();
+                }, timeout);
+            }
+        });
+        renderReminders(); // Render the filtered list
+    }
+}
+
 
 // Calculator functions
+function setCalcOperator(operator) {
+    const display = document.getElementById('calcDisplay');
+    if (calcPrevValue === null) {
+        calcPrevValue = parseFloat(calcDisplayValue);
+    } else if (!calcResetDisplay) {
+        // If not a new number and operator is pressed, evaluate previous
+        calculateResult();
+        calcPrevValue = parseFloat(calcDisplayValue);
+    }
+    calcOperator = operator;
+    calcResetDisplay = true; // Next digit typed should replace current display
+    // Update display to reflect current state clearly (e.g. "12 + ")
+    // This is optional for a simple calculator but good UX.
+    if(display) display.textContent = calcPrevValue + " " + calcOperator + " "; 
+
+    stats.calculatorOps++; // Count calculator operations
+    logActivity(`Calculator operator selected: ${operator}`, 'Calculator');
+    updateStats();
+}
+
 function appendToCalc(value) {
   const display = document.getElementById('calcDisplay');
-  if (display.textContent === '0') {
-    display.textContent = value;
+  if (!display) return;
+
+  if (calcResetDisplay) { // If true, reset current number being typed
+      calcDisplayValue = value;
+      calcResetDisplay = false;
+  } else if (calcDisplayValue === '0' && value !== '.') {
+      calcDisplayValue = value;
+  } else if (value === '.' && calcDisplayValue.includes('.')) {
+      // Do nothing if decimal already present
+      return; 
   } else {
-    display.textContent += value;
+      calcDisplayValue += value;
   }
+  display.textContent = calcDisplayValue;
+  logActivity(`Calculator input: ${value}`, 'Calculator');
 }
 
 function clearCalc() {
-  document.getElementById('calcDisplay').textContent = '0';
+  const display = document.getElementById('calcDisplay');
+  if (!display) return;
+  display.textContent = '0';
+  calcDisplayValue = '0';
+  calcOperator = null;
+  calcPrevValue = null;
+  calcResetDisplay = false;
+  logActivity('Calculator cleared', 'Calculator');
 }
 
 function deleteLast() {
   const display = document.getElementById('calcDisplay');
-  if (display.textContent.length > 1) {
-    display.textContent = display.textContent.slice(0, -1);
-  } else {
-    display.textContent = '0';
+  if (!display) return;
+
+  if (calcDisplayValue.length > 1 && !calcResetDisplay) { 
+    calcDisplayValue = calcDisplayValue.slice(0, -1);
+  } else if (calcDisplayValue.length <= 1 || calcResetDisplay) {
+    calcDisplayValue = '0';
   }
+  display.textContent = calcDisplayValue;
+  logActivity('Calculator backspace', 'Calculator');
 }
 
 function calculateResult() {
   const display = document.getElementById('calcDisplay');
-  try {
-    const result = eval(display.textContent.replace('×', '*'));
-    display.textContent = result;
-    logActivity(`Calculation performed: ${display.textContent} = ${result}`);
-  } catch (error) {
-    display.textContent = 'Error';
+  if (!display || calcPrevValue === null || calcOperator === null) {
+      return; 
   }
-}
 
-// Unit converter
-function updateConversionUnits() {
-  const type = document.getElementById('conversionType').value;
-  const fromUnit = document.getElementById('fromUnit');
-  const toUnit = document.getElementById('toUnit');
-  
-  const units = {
-    length: [
-      { value: 'm', text: 'Meters' },
-      { value: 'km', text: 'Kilometers' },
-      { value: 'cm', text: 'Centimeters' },
-      { value: 'mm', text: 'Millimeters' },
-      { value: 'in', text: 'Inches' },
-      { value: 'ft', text: 'Feet' }
-    ],
-    weight: [
-      { value: 'kg', text: 'Kilograms' },
-      { value: 'g', text: 'Grams' },
-      { value: 'lb', text: 'Pounds' },
-      { value: 'oz', text: 'Ounces' }
-    ],
-    temperature: [
-      { value: 'c', text: 'Celsius' },
-      { value: 'f', text: 'Fahrenheit' },
-      { value: 'k', text: 'Kelvin' }
-    ],
-    volume: [
-      { value: 'l', text: 'Liters' },
-      { value: 'ml', text: 'Milliliters' },
-      { value: 'gal', text: 'Gallons' },
-      { value: 'qt', text: 'Quarts' }
-    ]
-  };
-  
-  fromUnit.innerHTML = '';
-  toUnit.innerHTML = '';
-  
-  units[type].forEach(unit => {
-    fromUnit.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
-    toUnit.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
-  });
-}
-
-function convertUnits() {
-  const fromValue = parseFloat(document.getElementById('fromValue').value);
-  const fromUnit = document.getElementById('fromUnit').value;
-  const toUnit = document.getElementById('toUnit').value;
-  const type = document.getElementById('conversionType').value;
-  
-  if (isNaN(fromValue)) return;
-  
-  let result = fromValue;
-  
-  // Length conversions (to meters first, then to target)
-  const lengthToMeters = {
-    'm': 1, 'km': 1000, 'cm': 0.01, 'mm': 0.001, 'in': 0.0254, 'ft': 0.3048
-  };
-  
-  if (type === 'length') {
-    result = fromValue * lengthToMeters[fromUnit] / lengthToMeters[toUnit];
+  let result;
+  const prev = parseFloat(calcPrevValue);
+  const current = parseFloat(calcDisplayValue);
+  if (isNaN(prev) || isNaN(current)) {
+      display.textContent = 'Error';
+      calcDisplayValue = '0';
+      calcPrevValue = null;
+      calcOperator = null;
+      logActivity('Calculator error: Invalid numbers', 'Calculator');
+      return;
   }
-  
-  document.getElementById('toValue').value = result.toFixed(6);
-}
 
-// Media functions
-function loadMedia() {
-  const url = document.getElementById('mediaUrl').value;
-  const iframe = document.getElementById('mediaFrame');
-  
-  if (url.includes('youtube.com') || url.includes('youtu.be')) {
-    let videoId = '';
-    if (url.includes('youtube.com')) {
-      videoId = url.split('v=')[1]?.split('&')[0];
-    } else {
-      videoId = url.split('/').pop();
-    }
-    
-    if (videoId) {
-      iframe.src = `https://www.youtube.com/embed/${videoId}`;
-      logActivity(`Media loaded: YouTube video ${videoId}`);
-    }
+  switch (calcOperator) {
+      case '+': result = prev + current; break;
+      case '-': result = prev - current; break;
+      case '*': result = prev * current; break;
+      case '/': 
+          if (current === 0) {
+              display.textContent = 'Error: Div by 0';
+              calcDisplayValue = '0'; calcPrevValue = null; calcOperator = null;
+              logActivity('Calculator error: Division by zero', 'Calculator');
+              return;
+          }
+          result = prev / current; break;
+      default: return;
   }
-}
-
-// Theme functions
-function toggleTheme() {
-  // Simple theme toggle - can be expanded
-  document.body.classList.toggle('light-theme');
-  logActivity('Theme toggled');
-}
-
-function applyTheme(theme) {
-  const root = document.documentElement;
-  
-  const themes = {
-    orange: { primary: '#ff4500', secondary: '#ff6b35' },
-    blue: { primary: '#0066cc', secondary: '#004499' },
-    green: { primary: '#00cc44', secondary: '#009933' },
-    red: { primary: '#cc0044', secondary: '#990033' },
-    purple: { primary: '#8800cc', secondary: '#6600aa' },
-    amber: { primary: '#ffaa00', secondary: '#ff8800' },
-    teal: { primary: '#00aaaa', secondary: '#008888' },
-    pink: { primary: '#ff0088', secondary: '#cc0066' }
-  };
-  
-  if (themes[theme]) {
-    root.style.setProperty('--accent-color', themes[theme].primary);
-    root.style.setProperty('--accent-secondary', themes[theme].secondary);
-    
-    document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
-    event.target.classList.add('active');
-    
-    logActivity(`Theme changed to: ${theme}`);
-  }
-}
-
-function toggleSetting(toggle) {
-  toggle.classList.toggle('active');
-  stats.toggleSwitches++;
-  logActivity(`Setting toggled: ${toggle.previousElementSibling.textContent}`);
+  calcDisplayValue = result.toString();
+  display.textContent = calcDisplayValue;
+  calcPrevValue = result; // Keep result for chaining
+  calcOperator = null; 
+  calcResetDisplay = true; // Next number will start fresh
+  logActivity(`Calculation performed: ${prev} ${calcOperator} ${current} = ${result}`, 'Calculator');
+  stats.calculatorOps++;
   updateStats();
 }
 
-// Refresh functions
+
+// Unit converter data and functions
+const conversionRates = {
+    length: {
+        m: { km: 0.001, cm: 100, mm: 1000, 'in': 39.3701, ft: 3.28084, mi: 0.000621371, yd: 1.09361, m: 1 },
+        km: { m: 1000, cm: 100000, mm: 1000000, 'in': 39370.1, ft: 3280.84, mi: 0.621371, yd: 1093.61, km: 1 },
+        cm: { m: 0.01, km: 0.00001, mm: 10, 'in': 0.393701, ft: 0.0328084, mi: 0.0000062137, yd: 0.0109361, cm: 1 },
+        mm: { m: 0.001, km: 0.000001, cm: 0.1, 'in': 0.0393701, ft: 0.00328084, mi: 0.00000062137, yd: 0.00109361, mm: 1 },
+        'in': { m: 0.0254, km: 0.0000254, cm: 2.54, mm: 25.4, ft: 0.0833333, mi: 0.0000157828, yd: 0.0277778, 'in': 1 },
+        ft: { m: 0.3048, km: 0.0003048, cm: 30.48, mm: 304.8, 'in': 12, mi: 0.000189394, yd: 0.333333, ft: 1 },
+        mi: { m: 1609.34, km: 1.60934, cm: 160934, mm: 1609340, 'in': 63360, ft: 5280, yd: 1760, mi: 1 },
+        yd: { m: 0.9144, km: 0.0009144, cm: 91.44, mm: 914.4, 'in': 36, ft: 3, mi: 0.000568182, yd: 1 }
+    },
+    weight: {
+        kg: { g: 1000, lb: 2.20462, oz: 35.274, mg: 1000000, kg: 1 },
+        g: { kg: 0.001, lb: 0.00220462, oz: 0.035274, mg: 1000, g: 1 },
+        lb: { kg: 0.453592, g: 453.592, oz: 16, mg: 453592, lb: 1 },
+        oz: { kg: 0.0283495, g: 28.3495, lb: 0.0625, mg: 28349.5, oz: 1 },
+        mg: { kg: 0.000001, g: 0.001, lb: 0.0000022046, oz: 0.000035274, mg: 1 }
+    },
+    temperature: {
+        c: { f: (val) => (val * 9/5) + 32, k: (val) => val + 273.15, c: (val) => val },
+        f: { c: (val) => (val - 32) * 5/9, k: (val) => (val - 32) * 5/9 + 273.15, f: (val) => val },
+        k: { c: (val) => val - 273.15, f: (val) => (val - 273.15) * 9/5 + 32, k: (val) => val }
+    },
+    volume: {
+        l: { ml: 1000, gal: 0.264172, qt: 1.05669, cup: 4.16667, l: 1 },
+        ml: { l: 0.001, gal: 0.000264172, qt: 0.00105669, cup: 0.00416667, ml: 1 },
+        gal: { l: 3.78541, ml: 3785.41, qt: 4, cup: 16, gal: 1 },
+        qt: { l: 0.946353, ml: 946.353, gal: 0.25, cup: 4, qt: 1 },
+        cup: { l: 0.24, ml: 240, gal: 0.0625, qt: 0.25, cup: 1 }
+    }
+};
+
+function updateConversionUnits() {
+  const type = document.getElementById('conversionType');
+  const fromUnitSelect = document.getElementById('fromUnit');
+  const toUnitSelect = document.getElementById('toUnit');
+  
+  if (!type || !fromUnitSelect || !toUnitSelect) return;
+
+  const currentType = type.value;
+  fromUnitSelect.innerHTML = '';
+  toUnitSelect.innerHTML = '';
+  
+  // Dynamically add options for the selected type
+  for (const unitCode in conversionRates[currentType]) {
+    const unitText = {
+      m: 'Meters', km: 'Kilometers', cm: 'Centimeters', mm: 'Millimeters', 'in': 'Inches', ft: 'Feet', mi: 'Miles', yd: 'Yards',
+      kg: 'Kilograms', g: 'Grams', lb: 'Pounds', oz: 'Ounces', mg: 'Milligrams',
+      c: 'Celsius', f: 'Fahrenheit', k: 'Kelvin',
+      l: 'Liters', ml: 'Milliliters', gal: 'Gallons', qt: 'Quarts', cup: 'Cups'
+    }[unitCode] || unitCode.toUpperCase(); 
+
+    const optionFrom = document.createElement('option');
+    optionFrom.value = unitCode;
+    optionFrom.textContent = unitText;
+    fromUnitSelect.appendChild(optionFrom);
+
+    const optionTo = document.createElement('option');
+    optionTo.value = unitCode;
+    optionTo.textContent = unitText;
+    toUnitSelect.appendChild(optionTo);
+  }
+  convertUnits(); 
+  logActivity(`Unit converter type changed to ${currentType}`, 'Unit Converter');
+}
+
+function convertUnits() {
+  const fromValueInput = document.getElementById('fromValue');
+  const fromUnitSelect = document.getElementById('fromUnit');
+  const toUnitSelect = document.getElementById('toUnit');
+  const typeSelect = document.getElementById('conversionType');
+  const toValueInput = document.getElementById('toValue');
+
+  if (!fromValueInput || !fromUnitSelect || !toUnitSelect || !typeSelect || !toValueInput) return;
+  
+  const fromValue = parseFloat(fromValueInput.value);
+  const fromUnit = fromUnitSelect.value;
+  const toUnit = toUnitSelect.value;
+  const type = typeSelect.value;
+  
+  if (isNaN(fromValue)) {
+    toValueInput.value = '';
+    return;
+  }
+  
+  let result;
+  if (type === 'temperature') {
+      const convertFunc = conversionRates[type][fromUnit][toUnit];
+      if (typeof convertFunc === 'function') {
+          result = convertFunc(fromValue);
+      } else {
+          result = fromValue; 
+      }
+  } else {
+      if (!conversionRates[type][fromUnit] || !conversionRates[type][fromUnit][toUnit]) {
+          result = 'N/A'; // Conversion not directly available
+      } else {
+          result = fromValue * conversionRates[type][fromUnit][toUnit];
+      }
+  }
+  
+  toValueInput.value = typeof result === 'number' ? result.toFixed(4) : result; 
+  logActivity(`Converted ${fromValue} ${fromUnit} to ${toValueInput.value} ${toUnit}`, 'Unit Converter');
+  stats.unitConversions++; 
+  updateStats();
+}
+
+
+// Media functions
+function loadMedia() {
+  const urlInput = document.getElementById('mediaUrl');
+  const iframe = document.getElementById('mediaFrame');
+  if (!urlInput || !iframe) return;
+
+  const url = urlInput.value.trim();
+  let videoId = '';
+
+  if (url.includes('youtube.com/watch?v=')) {
+    videoId = url.split('v=')[1]?.split('&')[0];
+  } else if (url.includes('youtu.be/')) {
+    videoId = url.split('youtu.be/')[1]?.split('?')[0];
+  } else if (url) {
+      videoId = url; // Assume it's a direct ID if not a URL, as per last response.
+  }
+    
+  if (videoId) {
+    iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&rel=0`; // Added rel=0 for less related videos
+    showNotification(`Loading YouTube video: ${videoId}`, 'info');
+    logActivity(`Media loaded: YouTube video ${videoId}`, 'Media');
+  } else {
+    showNotification('Please enter a valid YouTube URL or ID.', 'error');
+    logActivity('Failed to load YouTube video: Invalid URL/ID', 'Media');
+  }
+}
+
+// Theme functions (dashboard context)
+function toggleTheme() { // Simplified toggle for quickbar access, for two main modes
+  const root = document.documentElement;
+  const currentTheme = settings.theme || 'orange'; // Get current theme from settings
+  let newThemeName = 'dark'; // Default toggle target
+
+  if (currentTheme === 'dark') {
+    newThemeName = 'light';
+  } else {
+    newThemeName = 'dark';
+  }
+  // This function would only cycle dark/light or a preset if used on a button, for multi-theme
+  // a settings modal with selector is better, which is already present.
+  
+  // This will call applyTheme (which updates CSS and saves setting)
+  applyTheme(newThemeName); 
+  stats.themeChanges++; // Increment theme change count
+  updateStats();
+}
+
+function applyTheme(themeName) {
+  const root = document.documentElement;
+  
+  root.className = ''; 
+  root.classList.add(`theme-${themeName}`);
+  
+  document.querySelectorAll('.theme-option').forEach(opt => {
+    if (opt.dataset.theme === themeName) {
+      opt.classList.add('active');
+    } else {
+      opt.classList.remove('active');
+    }
+  });
+  
+  saveSetting('theme', themeName); // Save selected theme in settings
+  logActivity(`Theme changed to: ${themeName}`, 'Theme');
+}
+
+// Settings functions
+let settings = {};
+function loadSettings() {
+    const storedSettings = localStorage.getItem('dashboardSettings');
+    if (storedSettings) {
+        settings = JSON.parse(storedSettings);
+    } else {
+        settings = { // Default settings on first load
+            darkMode: true, autoSaveNotes: true, soundNotifications: false,
+            autoRefreshData: true, compactView: false, showAnimations: true,
+            highContrast: false, autoBackup: true, securityMode: true,
+            advancedLogging: false, performanceMode: false, developerMode: false,
+            experimentalFeatures: false, dataCompression: true, realtimeSync: false,
+            metricUnits: false, idleTimeout: 30, notificationDuration: 3,
+            theme: 'orange' 
+        };
+    }
+    applySettings();
+}
+
+function applySettings() {
+    const root = document.documentElement;
+    root.className = ''; // Clear existing theme class
+    root.classList.add(`theme-${settings.theme}`);
+    
+    // Apply toggles to UI elements in settings modal
+    const toggleSettings = ['darkMode', 'autoSaveNotes', 'soundNotifications', 'autoRefreshData', 'compactView',
+                            'showAnimations', 'highContrast', 'autoBackup', 'securityMode', 'advancedLogging',
+                            'performanceMode', 'developerMode', 'experimentalFeatures', 'dataCompression', 'realtimeSync', 'metricUnits'];
+    
+    toggleSettings.forEach(id => {
+        const toggleElement = document.getElementById(`${id}Toggle`);
+        if (toggleElement) {
+            toggleElement.classList.toggle('active', settings[id]);
+        }
+    });
+
+    // Apply numerical/text settings
+    const idleTimeoutSetting = document.getElementById('idleTimeoutSetting');
+    if(idleTimeoutSetting) idleTimeoutSetting.value = settings.idleTimeout || 30;
+
+    const notificationDurationSetting = document.getElementById('notificationDurationSetting');
+    if(notificationDurationSetting) notificationDurationSetting.value = settings.notificationDuration || 3;
+
+    // Additional side effects based on settings (e.g., animations, layout, font-size if added)
+    document.body.style.setProperty('--primary-bg', `var(--primary-bg)`); // Re-trigger CSS variables
+}
+
+function saveSetting(name, value) {
+    settings[name] = value;
+    localStorage.setItem('dashboardSettings', JSON.stringify(settings));
+    applySettings(); 
+}
+
+function toggleSetting(element, settingName) {
+    element.classList.toggle('active');
+    const newState = element.classList.contains('active');
+    saveSetting(settingName, newState); // This will call applySettings() inside
+}
+
+// --- Keybinds ---
+let keybinds = {};
+const defaultKeybinds = {
+    openSettings: 'Control+,', quickSearch: 'Control+K', newNote: 'Control+N',
+    saveAll: 'Control+S', toggleTheme: 'Control+T', openCalculator: 'Control+C',
+    openMedia: 'Control+M', openTimer: 'Control+W', openStats: 'Control+B',
+    downloadLogs: 'Control+L', refreshFact: 'Alt+F', refreshQuote: 'Alt+Q',
+    clearCanvas: 'Shift+Delete', undoCanvas: 'Control+Z', redoCanvas: 'Control+Y'
+};
+
+function loadKeybinds() {
+    const storedKeybinds = localStorage.getItem('dashboardKeybinds');
+    if (storedKeybinds) {
+        keybinds = JSON.parse(storedKeybinds);
+    } else {
+        keybinds = defaultKeybinds;
+    }
+    renderKeybinds();
+}
+
+function renderKeybinds() {
+    const keybindsList = document.getElementById('keybindsList');
+    if (!keybindsList) return; 
+    keybindsList.innerHTML = ''; 
+
+    for (const action in keybinds) {
+        const keybindItem = document.createElement('div');
+        keybindItem.className = 'keybind-item';
+        const displayAction = action.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        keybindItem.innerHTML = `
+            <span>${displayAction}</span>
+            <input type="text" class="keybind-input" value="${keybinds[action]}" readonly data-action="${action}">
+        `;
+        keybindsList.appendChild(keybindItem);
+    }
+
+    keybindsList.querySelectorAll('.keybind-input').forEach(input => {
+        input.addEventListener('focus', (e) => {
+            e.target.value = 'Press keys...';
+            e.target.dataset.recording = 'true';
+        });
+        input.addEventListener('blur', (e) => {
+            if (e.target.dataset.recording === 'true') {
+                e.target.value = keybinds[e.target.dataset.action]; 
+            }
+            e.target.dataset.recording = 'false';
+        });
+        input.addEventListener('keydown', (e) => {
+            if (e.target.dataset.recording === 'true') {
+                e.preventDefault(); // Prevent default browser actions
+                let key = e.key;
+                let modifiers = [];
+                if (e.ctrlKey) modifiers.push('Control');
+                if (e.shiftKey) modifiers.push('Shift');
+                if (e.altKey) modifiers.push('Alt');
+                if (e.metaKey) modifiers.push('Meta'); 
+
+                if (['Control', 'Shift', 'Alt', 'Meta'].includes(key)) { key = ''; } // Don't add modifier as the key itself
+                if (key === ' ') key = 'Space'; 
+
+                const newKeybind = [...modifiers, key].filter(Boolean).join('+');
+                e.target.value = newKeybind;
+                keybinds[e.target.dataset.action] = newKeybind;
+                localStorage.setItem('dashboardKeybinds', JSON.stringify(keybinds));
+                e.target.blur();
+                logActivity(`Keybind for "${e.target.dataset.action}" set to "${newKeybind}"`, 'Keybinds');
+            }
+        });
+    });
+}
+
+document.addEventListener('keydown', (e) => {
+    // Don't trigger keybinds if an input field or content-editable is focused or active
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || 
+        e.target.isContentEditable || e.target.closest('.keybind-input[data-recording="true"]')) {
+        return;
+    }
+
+    let pressedKey = e.key;
+    let modifiers = [];
+    if (e.ctrlKey) modifiers.push('Control');
+    if (e.shiftKey) modifiers.push('Shift');
+    if (e.altKey) modifiers.push('Alt');
+    if (e.metaKey) modifiers.push('Meta');
+
+    if (['Control', 'Shift', 'Alt', 'Meta'].includes(pressedKey)) { pressedKey = ''; }
+    if (pressedKey === ' ') pressedKey = 'Space';
+
+    const currentKeybind = [...modifiers, pressedKey].filter(Boolean).join('+');
+
+    for (const action in keybinds) {
+        if (keybinds[action] === currentKeybind) {
+            e.preventDefault(); 
+            triggerKeybindAction(action);
+            logActivity(`Keybind triggered: "${action}" with "${currentKeybind}"`, 'Keybinds');
+            break;
+        }
+    }
+});
+
+function triggerKeybindAction(action) {
+    switch (action) {
+        case 'openSettings': togglePanel('settingsModal'); break;
+        case 'quickSearch': 
+            document.getElementById('searchBar')?.focus();
+            showNotification("Quick search enabled. Type your query!", "info");
+            break;
+        case 'newNote': togglePanel('notesPanel'); break;
+        case 'saveAll': saveCanvas(); saveTextNotes(); showNotification('All notes saved!', 'success'); break;
+        case 'toggleTheme': 
+            // Cycle through some themes or trigger a quick dark/light switch
+            const themeNames = Object.keys(defaultKeybinds).filter(k => k.startsWith('theme-')).map(k => k.replace('theme-','')); // Get dynamic themes
+            const currentThemeIndex = themeNames.indexOf(settings.theme);
+            const nextThemeIndex = (currentThemeIndex + 1) % themeNames.length;
+            applyTheme(themeNames[nextThemeIndex] || 'dark'); // Fallback to dark if array is empty
+            break;
+        case 'openCalculator': togglePanel('calculatorPanel'); break;
+        case 'openMedia': togglePanel('mediaPanel'); break;
+        case 'openTimer': togglePanel('timerPanel'); break;
+        case 'openStats': showStats(); break;
+        case 'downloadLogs': downloadActivityLogs(); break;
+        case 'refreshFact': refreshFact(); break;
+        case 'refreshQuote': refreshQuote(); break;
+        case 'clearCanvas': clearCanvas(); break;
+        case 'undoCanvas': undoCanvas(); break;
+        case 'redoCanvas': redoCanvas(); break;
+        default: console.log(`Keybind action "${action}" not yet fully implemented.`, `Key: ${action}`);
+    }
+}
+
+
+// --- Refresh functions for dashboard panels ---
 function refreshFact() {
   const facts = [
     "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3000 years old and still perfectly edible.",
     "A group of flamingos is called a 'flamboyance'.",
     "Bananas are berries, but strawberries aren't.",
-    "The shortest war in history lasted only 38-45 minutes.",
-    "A single cloud can weigh more than a million pounds."
+    "The shortest war in history lasted only 38 to 45 minutes (Anglo-Zanzibar War, 1896).",
+    "A single cloud can weigh more than a million pounds.",
+    "The Great Wall of China is not visible from space with the naked eye.",
+    "Octopuses have three hearts and blue blood.",
+    "A 'jiffy' is an actual unit of time: 1/100th of a second.",
+    "The average person walks the equivalent of three times around the world in a lifetime.",
+    "There are more stars in the universe than grains of sand on all the beaches on Earth.",
+    "The oldest known living tree is over 5,000 years old (Methuselah tree in California).",
+    "Humans share 50% of their DNA with bananas.",
+    "It is impossible for most people to lick their own elbow.",
+    "The sun is so large that it could hold approximately 1.3 million Earths.",
+    "Light takes about 8 minutes and 20 seconds to travel from the Sun to Earth."
   ];
   
-  document.getElementById('randomFact').textContent = facts[Math.floor(Math.random() * facts.length)];
-  logActivity('Random fact refreshed');
+  const randomFactEl = document.getElementById('randomFact');
+  if(randomFactEl) randomFactEl.textContent = facts[Math.floor(Math.random() * facts.length)];
+  logActivity('Random fact refreshed', 'Content');
+  stats.buttonPresses++; // Increment if clicked
+  updateStats();
 }
 
 function refreshQuote() {
@@ -2354,100 +4154,287 @@ function refreshQuote() {
     "\"Innovation distinguishes between a leader and a follower.\" - Steve Jobs",
     "\"Life is what happens to you while you're busy making other plans.\" - John Lennon",
     "\"The future belongs to those who believe in the beauty of their dreams.\" - Eleanor Roosevelt",
-    "\"It is during our darkest moments that we must focus to see the light.\" - Aristotle"
+    "\"It is during our darkest moments that we must focus to see the light.\" - Aristotle",
+    "\"Strive not to be a success, but rather to be of value.\" - Albert Einstein",
+    "\"Believe you can and you're halfway there.\" - Theodore Roosevelt",
+    "\"The mind is everything. What you think you become.\" - Buddha",
+    "\"The best way to predict the future is to create it.\" - Peter Drucker",
+    "\"Success is not final, failure is not fatal: It is the courage to continue that counts.\" – Winston Churchill",
+    "\"The greatest glory in living lies not in never falling, but in rising every time we fall.\" - Nelson Mandela",
+    "\"Your time is limited, don't waste it living someone else's life.\" - Steve Jobs",
+    "\"If you want to live a happy life, tie it to a goal, not to people or things.\" - Albert Einstein",
+    "\"Keep your eyes on the stars, and your feet on the ground.\" - Theodore Roosevelt",
+    "\"The secret of getting ahead is getting started.\" - Mark Twain"
   ];
   
-  document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
-  logActivity('Daily quote refreshed');
+  const dailyQuoteEl = document.getElementById('dailyQuote');
+  if(dailyQuoteEl) dailyQuoteEl.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+  logActivity('Daily quote refreshed', 'Content');
+  stats.buttonPresses++; // Increment if clicked
+  updateStats();
 }
 
-function refreshWifi() {
-  logActivity('WiFi information refreshed');
-  showNotification('WiFi data updated');
+// System Status / WiFi functions (now combined into one logic for simplicity)
+function refreshSystemStatus() {
+    const cpuUsageEl = document.getElementById('cpuUsage');
+    const ramUsageEl = document.getElementById('ramUsage');
+    const networkLatencyEl = document.getElementById('networkLatency');
+    const diskIOEl = document.getElementById('diskIO');
+    const batteryStatusEl = document.getElementById('batteryStatus');
+    const internetSpeedEl = document.getElementById('internetSpeed');
+
+    // Simulate real-time data - highly client-side approximated
+    if (cpuUsageEl) cpuUsageEl.textContent = `${Math.floor(Math.random() * 50) + 10}%`; // 10-60%
+    if (ramUsageEl) ramUsageEl.textContent = `${Math.floor(Math.random() * 60) + 20}%`; // 20-80%
+    if (networkLatencyEl) networkLatencyEl.textContent = `${Math.floor(Math.random() * 100) + 20}ms`; // 20-120ms
+    if (diskIOEl) diskIOEl.textContent = (Math.random() > 0.5 ? 'Reading' : 'Writing') + (Math.random() > 0.7 ? ' (High)' : ' (Normal)');
+    if (batteryStatusEl) {
+        const level = navigator.getBattery ? (Math.random() * 100).toFixed(0) : 'N/A'; // Better simulate without async
+        batteryStatusEl.textContent = level === 'N/A' ? "N/A" : `${level}% Charged`;
+    }
+    if (internetSpeedEl) internetSpeedEl.textContent = `${Math.floor(Math.random() * 100) + 20}Mbps`; // 20-120 Mbps
+
+    showNotification('System status updated!', 'info');
+    logActivity('System status refreshed', 'System');
+    stats.buttonPresses++; // Increment if clicked
+    updateStats();
 }
 
 function clearNotifications() {
-  document.getElementById('notificationsList').innerHTML = '';
-  logActivity('Notifications cleared');
+  const notificationsListEl = document.getElementById('notificationsList');
+  if(notificationsListEl) notificationsListEl.innerHTML = '<p class="p-2 text-gray-500 rounded text-xs">No new notifications.</p>';
+  showNotification('Notifications cleared', 'info');
+  logActivity('Notifications cleared', 'Notifications');
 }
 
 function clearActivityLogs() {
   activityLogs = [];
   updateActivityLogDisplay();
-  logActivity('Activity logs cleared');
+  showNotification('Activity logs cleared', 'info');
+  logActivity('Activity logs cleared', 'System');
 }
 
-function saveTextNotes() {
-  const notes = document.getElementById('textNotes').value;
-  localStorage.setItem('textNotes', notes);
-  showNotification('Notes saved successfully');
-  logActivity('Text notes saved');
-}
+function showNotification(message, type = 'info') {
+  const notification = document.getElementById('welcomeNotification');
+  if (!notification) return; // Guard against element not existing
+  const icon = notification.querySelector('i');
+  const textSpan = notification.querySelector('span');
 
-function clearTextNotes() {
-  document.getElementById('textNotes').value = '';
-  logActivity('Text notes cleared');
-}
-
-function showNotification(message) {
-  const notification = document.createElement('div');
-  notification.className = 'notification';
-  notification.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
-  document.body.appendChild(notification);
+  textSpan.textContent = message;
   
+  notification.className = 'notification'; // Reset classes
+  if(icon) icon.className = '';
+
+  // Apply type-specific styling and icon
+  if (type === 'success') {
+      notification.style.background = 'linear-gradient(135deg, var(--success-color), #00cc33)';
+      if(icon) icon.classList.add('fas', 'fa-check-circle');
+  } else if (type === 'warning') {
+      notification.style.background = 'linear-gradient(135deg, var(--warning-color), #e69900)';
+      if(icon) icon.classList.add('fas', 'fa-exclamation-triangle');
+  } else if (type === 'error') {
+      notification.style.background = 'linear-gradient(135deg, var(--error-color), #cc0033)';
+      if(icon) icon.classList.add('fas', 'fa-times-circle');
+  } else { // info
+      notification.style.background = 'linear-gradient(135deg, var(--accent-color), var(--accent-secondary))';
+      if(icon) icon.classList.add('fas', 'fa-info-circle');
+  }
+  
+  notification.classList.add('show');
   setTimeout(() => {
-    notification.remove();
-  }, 3000);
+    notification.classList.remove('show'); // Trigger CSS transition
+  }, (settings.notificationDuration || 3) * 1000); // Duration from settings, default 3s
 }
 
 function logout() {
-  if (confirm('Are you sure you want to logout?')) {
+  if (confirm('Are you sure you want to log out?')) {
+    logActivity('User logged out', 'Login');
+    localStorage.removeItem('sessionStartTime'); // Clear session timer for next load
+    // Any other session cleanup can go here.
     location.reload();
   }
 }
 
-// Event listeners
-document.addEventListener('DOMContentLoaded', () => {
-  setupToggles();
-  
-  // Submit button
-  document.getElementById('submitBtn').addEventListener('click', (e) => {
-    e.preventDefault();
-    stats.buttonPresses++;
-    attemptLogin();
-  });
-  
-  // Enter key for login
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' && !document.getElementById('loginScreen').classList.contains('hidden')) {
-      attemptLogin();
+function applyWifiLevelColors() {
+    // This is now integrated with the new 'System Status' panel
+    const wifiItems = document.querySelectorAll('#systemStatusPanel .system-status-item[data-level]');
+    if (wifiItems.length === 0) { // If there's no data-level in System Status, apply to old wifi-grid if exists
+      document.querySelectorAll('.wifi-grid .wifi-item[data-level]').forEach(item => {
+        item.classList.remove('wifi-level-high', 'wifi-level-medium', 'wifi-level-low'); 
+        const levelText = item.dataset.level; 
+        if (levelText === 'High') { item.classList.add('wifi-level-high'); } 
+        else if (levelText === 'Medium') { item.classList.add('wifi-level-medium'); } 
+        else if (levelText === 'Low') { item.classList.add('wifi-level-low'); }
+      });
+    } else {
+        // Handle System Status with potentially data-level items or just general color rules
+        wifiItems.forEach(item => {
+            item.classList.remove('wifi-level-high', 'wifi-level-medium', 'wifi-level-low');
+            const levelText = item.dataset.level; // Could add specific elements here for coloring
+            if (levelText === 'High') { item.classList.add('wifi-level-high'); }
+            else if (levelText === 'Medium') { item.classList.add('wifi-level-medium'); }
+            else if (levelText === 'Low') { item.classList.add('wifi-level-low'); }
+        });
     }
-  });
-  
-  // Color and thickness updates for drawing
-  document.getElementById('penColor').addEventListener('change', (e) => {
-    currentColor = e.target.value;
-  });
-  
-  document.getElementById('penThickness').addEventListener('input', (e) => {
-    currentThickness = parseInt(e.target.value);
-  });
-  
-  // Load saved notes
-  const savedNotes = localStorage.getItem('textNotes');
-  if (savedNotes) {
-    document.getElementById('textNotes').value = savedNotes;
+
+    logActivity('Applied WiFi/System status level colors', 'UI');
+}
+
+// Attaches event listeners for all the quickbar buttons on dashboard load
+function attachDashboardQuickbarListeners() {
+    // Already defined directly on buttons where onclick points to togglePanel or specific functions
+    // e.g. `<button class="quick-btn" onclick="togglePanel('settingsModal')" id="settingsBtn">`
+    // Ensure `stats.buttonPresses` is incremented for these if they are wrapped by this check.
+}
+
+
+// --- Event listeners (mostly existing from your previous code) ---
+document.addEventListener('DOMContentLoaded', () => {
+  setupToggles(); // Setup toggles for login & settings modals
+  loadStats(); // Load stats on DOM ready (for login page tracking before dashboard starts fully)
+
+  // Login related event listeners
+  const submitBtn = document.getElementById('submitBtn');
+  if(submitBtn) {
+    submitBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      stats.buttonPresses++;
+      attemptLogin();
+    });
   }
   
-  // Track all button clicks for stats
-  document.addEventListener('click', (e) => {
-    if (e.target.tagName === 'BUTTON' || e.target.classList.contains('quick-btn')) {
-      stats.buttonPresses++;
-      updateStats();
+  // Enter key for login/reset dialog
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const loginScreen = document.getElementById('loginScreen');
+      const resetPopup = document.getElementById('resetPopup');
+      if (loginScreen && loginScreen.classList.contains('active')) { // On login screen
+        if (resetPopup && resetPopup.style.display === 'block') { // If reset popup is active
+          document.getElementById('resetBtn')?.click(); 
+        } else {
+          document.getElementById('submitBtn')?.click(); 
+        }
+      } else if (document.getElementById('searchBar')?.matches(':focus')) {
+          // If search bar is focused, prevent default (e.g. form submit)
+          e.preventDefault();
+          performSearch(); // Perform search
+      }
     }
   });
+  
+  // Reset button listener for popup
+  const resetBtn = document.getElementById('resetBtn');
+  if (resetBtn) resetBtn.addEventListener('click', resetCounter);
+
+  // General click listener for stats tracking (can be optimized but fine for demo)
+  document.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' || e.target.classList.contains('quick-btn') || e.target.closest('.tool-btn')) {
+      // Buttons directly with handlers already trigger stats++ individually within their functions.
+      // This general handler acts as a fallback/additional counter for untracked buttons.
+      // For precision, specific function should track. For generality, this is okay.
+      if (!e.target.dataset.tracked) { // Simple guard
+        stats.buttonPresses++;
+        updateStats();
+        e.target.dataset.tracked = 'true';
+      }
+    }
+  });
+
+  // Export/Import config buttons (inside settings modal, dynamically added handlers)
+  const settingsContent = document.getElementById('settingsModal')?.querySelector('.settings-content');
+  if (settingsContent) {
+      // Find export config button (example selector, adjust if structure changes)
+      const exportConfigBtn = settingsContent.querySelector('.setting-item:nth-child(21) button'); // Export is 20th + 1 in array
+      if (exportConfigBtn) {
+          exportConfigBtn.onclick = () => {
+              const settingsData = localStorage.getItem('dashboardSettings');
+              if (settingsData) {
+                  const blob = new Blob([settingsData], { type: 'application/json' });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `private_system_settings_${new Date().toISOString().split('T')[0]}.json`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                  showNotification('Settings exported!', 'success');
+                  logActivity('Settings exported', 'Settings');
+              } else {
+                  showNotification('No settings to export!', 'warning');
+              }
+              stats.buttonPresses++; updateStats();
+          };
+      }
+      
+      const importConfigBtn = settingsContent.querySelector('.setting-item:nth-child(22) button');
+      if (importConfigBtn) {
+          importConfigBtn.onclick = () => {
+              const fileInput = document.createElement('input');
+              fileInput.type = 'file';
+              fileInput.accept = 'application/json';
+              fileInput.onchange = (e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                          try {
+                              const importedSettings = JSON.parse(event.target?.result as string);
+                              localStorage.setItem('dashboardSettings', JSON.stringify(importedSettings));
+                              loadSettings(); // Apply new settings
+                              showNotification('Settings imported! Refreshing page to apply fully...', 'success');
+                              setTimeout(() => location.reload(), 1000);
+                              logActivity('Settings imported', 'Settings');
+                          } catch (error) {
+                              showNotification('Invalid settings file format.', 'error');
+                              logActivity(`Failed to import settings: ${error}`, 'Settings Error');
+                          }
+                      };
+                      reader.readAsText(file);
+                  }
+              };
+              fileInput.click();
+              stats.buttonPresses++; updateStats();
+          };
+      }
+  }
+
 });
+// Specific export canvas for new quickbar.
+function exportNotesAsPNG() {
+    const canvasEl = document.getElementById('drawingCanvas');
+    if (canvasEl) {
+        const link = document.createElement('a');
+        link.download = `notes_canvas_${Date.now()}.png`;
+        link.href = canvasEl.toDataURL();
+        link.click();
+        logActivity('Exported Notes Canvas as PNG', 'Canvas');
+        showNotification('Notes Canvas exported!', 'success');
+    } else {
+        showNotification('Notes Canvas not available or rendered.', 'error');
+        logActivity('Failed to export Notes Canvas (not available)', 'Canvas Error');
+    }
+    stats.buttonPresses++; updateStats();
+}
+
+// Setup persistence for input/number settings within settings modal
+document.addEventListener('change', (e) => {
+    if (e.target.matches('#idleTimeoutSetting')) {
+        const value = parseInt((e.target as HTMLInputElement).value);
+        saveSetting('idleTimeout', isNaN(value) ? 30 : value); // Save or default
+        logActivity(`Idle timeout set to ${value}`, 'Settings');
+        stats.buttonPresses++; updateStats();
+    } else if (e.target.matches('#notificationDurationSetting')) {
+        const value = parseInt((e.target as HTMLInputElement).value);
+        saveSetting('notificationDuration', isNaN(value) ? 3 : value); // Save or default
+        logActivity(`Notification duration set to ${value}`, 'Settings');
+        stats.buttonPresses++; updateStats();
+    }
+});
+
+
 </script>
 
 </body>
 </html>
+```
