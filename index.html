@@ -22,6 +22,10 @@
       --success-color: #00ff41;
       --warning-color: #ffaa00;
       --error-color: #ff0040;
+      --update-item-bg: #0d0d0d; /* Background for update items */
+      --update-item-border: var(--accent-color); /* Border for update items */
+      --notification-item-bg-info: #172a3b; /* Specific bg for blue notif */
+      --notification-item-bg-success: #173b1a; /* Specific bg for green notif */
     }
 
     /* Light Theme Variables */
@@ -36,6 +40,10 @@
       --success-color: #28a745; /* Green for light theme success */
       --warning-color: #ffc107; /* Yellow for light theme warning */
       --error-color: #dc3545;   /* Red for light theme error */
+      --update-item-bg: #e2e8f0; /* Light background for update items */
+      --update-item-border: var(--accent-color); /* Keeps accent border */
+      --notification-item-bg-info: #e0f2fe; /* Light bg for blue notif */
+      --notification-item-bg-success: #e6ffed; /* Light bg for green notif */
     }
 
     /* Adjust specific elements for light theme */
@@ -124,19 +132,53 @@
     body.light-theme .log-time {
       color: var(--text-secondary);
     }
-    body.light-theme .login-history-success {
-        background-color: var(--success-color); /* Dynamic color from theme var */
-        color: var(--text-primary); /* Should be dark on light success color */
+    body.light-theme .login-entry-container {
+        background-color: var(--primary-bg);
     }
-    body.light-theme .login-history-failed {
-        background-color: var(--error-color); /* Dynamic color from theme var */
-        color: white; /* Should be white on light error color for contrast */
+    body.light-theme .login-entry-container.success {
+        border-left: 4px solid var(--success-color);
     }
-    body.light-theme .notification {
+    body.light-theme .login-entry-container.failed {
+        border-left: 4px solid var(--error-color);
+    }
+    body.light-theme .error-log-entry {
+        background-color: var(--primary-bg);
+        border-left: 4px solid var(--error-color);
+        color: var(--text-primary);
+    }
+
+    /* Updated styling for .notification to be theme adaptive */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
       background: var(--secondary-bg);
-      border: 2px solid var(--success-color); /* Accent border to signify its status */
-      color: var(--text-primary); /* Should contrast well with bg */
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Lighter shadow */
+      border: 2px solid var(--success-color);
+      color: var(--text-primary);
+      padding: 15px 25px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+      animation: slideIn 0.5s ease;
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Update Panel item styling */
+    .update-item {
+        padding: 8px;
+        background-color: var(--update-item-bg);
+        border-left: 4px solid var(--update-item-border);
+        border-radius: 6px;
+        color: var(--text-primary);
+        margin-bottom: 8px; /* Tailwind `space-y-2` handles this */
+    }
+
+    /* Notifications list items (p-2 inside notificationsList) */
+    #notificationsList > .p-2.bg-blue-900 {
+        background-color: var(--notification-item-bg-info); /* The info notification */
+    }
+    #notificationsList > .p-2.bg-green-900 {
+        background-color: var(--notification-item-bg-success); /* The success notification */
     }
 
     body.light-theme .settings-content {
@@ -207,837 +249,112 @@
       border-color: var(--border-color);
       color: var(--text-primary);
     }
-
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    /* Styles for new Important Dates panel elements */
+    .important-date-input, .important-date-select, .important-date-event-input {
+        background-color: var(--primary-bg);
+        color: var(--text-primary);
+        border: 1px solid var(--border-color);
+        padding: 8px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        width: 100%;
+    }
+    .important-date-item {
+        background-color: var(--primary-bg);
+        border: 1px solid var(--border-color);
+        padding: 10px;
+        border-left: 4px solid var(--accent-color);
+        border-radius: 6px;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: var(--text-primary);
+    }
+    .important-date-item .date-time {
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+    .important-date-item .event-description {
+        font-style: italic;
+        color: var(--text-secondary);
+    }
+    
+    /* Mouse Clicker styles */
+    .click-button {
+        background: var(--accent-color);
+        color: white;
+        border: none;
+        padding: 20px;
+        border-radius: 15px;
+        font-size: 24px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        width: 100%;
+        margin-top: 15px;
+        text-align: center;
+    }
+    .click-button:hover {
+        background: var(--accent-secondary);
+    }
+    .click-count-display {
+        font-family: 'Orbitron', monospace;
+        font-size: 48px;
+        color: var(--success-color);
+        text-align: center;
+        margin-top: 20px;
+    }
+    .mouse-clicker-controls {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
     }
 
-    body {
-      font-family: 'Roboto', sans-serif;
+    /* Error Log styles */
+    .error-log-entry {
+      padding: 10px;
       background: var(--primary-bg);
-      color: var(--text-primary);
-      overflow-x: hidden;
-      transition: background-color 0.3s ease, color 0.3s ease;
-    }
-
-    /* Initialization Screen */
-    .init-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: radial-gradient(circle at center, #1a1a2e, #16213e, #0f0f0f);
+      border-left: 4px solid var(--error-color);
+      margin-bottom: 10px;
+      border-radius: 6px;
+      font-size: 12px;
       display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
+      justify-content: space-between;
+      color: var(--text-primary);
+    }
+    .error-log-time {
+        color: var(--text-secondary);
+        font-size: 10px;
     }
 
-    .rotating-cube {
-      width: 80px;
-      height: 80px;
-      position: relative;
-      transform-style: preserve-3d;
-      animation: rotateCube 2s infinite linear;
-      margin-bottom: 30px;
-    }
-
-    .cube-face {
-      position: absolute;
-      width: 80px;
-      height: 80px;
-      background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary));
-      border: 2px solid #fff;
-      opacity: 0.8;
-    }
-
-    .cube-face.front { transform: rotateY(0deg) translateZ(40px); }
-    .cube-face.back { transform: rotateY(180deg) translateZ(40px); }
-    .cube-face.right { transform: rotateY(90deg) translateZ(40px); }
-    .cube-face.left { transform: rotateY(-90deg) translateZ(40px); }
-    .cube-face.top { transform: rotateX(90deg) translateZ(40px); }
-    .cube-face.bottom { transform: rotateX(-90deg) translateZ(40px); }
-
-    @keyframes rotateCube {
-      0% { transform: rotateX(0deg) rotateY(0deg); }
-      100% { transform: rotateX(360deg) rotateY(360deg); }
-    }
-
-    .init-text {
-      font-family: 'Orbitron', monospace;
-      font-size: 24px;
-      font-weight: 700;
-      background: linear-gradient(45deg, #ff4500, #ff0040);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientShift 3s ease-in-out infinite;
-      text-align: center;
-    }
-
-    @keyframes gradientShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    .code-rain {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      opacity: 0.3;
-    }
-
+    /* Code Rain animation - changed to go upwards */
     .code-char {
       position: absolute;
       color: var(--success-color);
       font-family: 'Courier New', monospace;
       font-size: 12px;
-      animation: fall 3s linear infinite;
+      animation: rise 3s linear infinite; /* Changed animation to 'rise' */
     }
 
-    @keyframes fall {
-      0% { transform: translateY(-100vh); opacity: 1; }
-      100% { transform: translateY(100vh); opacity: 0; }
+    @keyframes rise {
+      0% { transform: translateY(100vh); opacity: 0.8; } /* Start from bottom of screen */
+      100% { transform: translateY(-100vh); opacity: 0; } /* Move upwards and fade */
     }
 
-    /* Enhanced Login Styles */
-    .login-container {
-      min-height: 100vh;
-      background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-
-    .login-quickbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.9);
-      backdrop-filter: blur(10px);
-      padding: 10px 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1000;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .login-quickbar button {
-      background: var(--accent-color);
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 0.3s ease;
-      margin: 0 5px;
-    }
-
-    .login-quickbar button:hover {
-      background: var(--accent-secondary);
-      transform: translateY(-2px);
-    }
-
-    .panic-btn {
-      background: var(--error-color) !important;
-    }
-
-    .login-box {
-      background: rgba(26, 26, 26, 0.95);
-      backdrop-filter: blur(15px);
-      border: 3px solid var(--accent-color);
-      border-radius: 20px;
-      box-shadow: 0 0 30px rgba(255, 69, 0, 0.5);
-      width: 420px;
-      padding: 40px 30px;
-      text-align: center;
-      position: relative;
-      margin-top: 60px;
-      transition: all 0.3s ease;
-    }
-
-    .login-box.error-shake {
-      animation: shake 0.5s ease-in-out;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-10px); }
-      75% { transform: translateX(10px); }
-    }
-
-    .login-box h2 {
-      font-family: 'Orbitron', monospace;
-      font-size: 28px;
-      font-weight: 900;
-      margin-bottom: 30px;
-      background: linear-gradient(45deg, var(--accent-color), #fff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .input-group {
-      position: relative;
-      margin-bottom: 20px;
-    }
-
-    .login-box input {
-      width: 100%;
-      padding: 15px;
-      background: rgba(30, 30, 30, 0.8);
-      border: 2px solid var(--border-color);
-      color: white;
-      border-radius: 10px;
-      font-size: 16px;
-      transition: all 0.3s ease;
-    }
-
-    .login-box input:focus {
-      border-color: var(--accent-color);
-      box-shadow: 0 0 15px rgba(255, 69, 0, 0.3);
-      outline: none;
-    }
-
-    .toggle-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 15px 0;
-      padding: 10px;
-      background: rgba(30, 30, 30, 0.5);
-      border-radius: 10px;
-    }
-
-    .toggle-switch {
-      position: relative;
-      width: 50px;
-      height: 25px;
-      background: #333;
-      border-radius: 25px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .toggle-switch.active {
-      background: var(--success-color);
-    }
-
-    .toggle-slider {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 21px;
-      height: 21px;
-      background: white;
-      border-radius: 50%;
-      transition: all 0.3s ease;
-    }
-
-    .toggle-switch.active .toggle-slider {
-      transform: translateX(25px);
-    }
-
-    .submit-btn {
-      width: 100%;
-      padding: 15px;
-      background: linear-gradient(45deg, var(--accent-color), var(--accent-secondary));
-      color: white;
-      font-size: 18px;
-      font-weight: 700;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .submit-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(255, 69, 0, 0.4);
-    }
-
-    .time-date-box {
-      background: rgba(30, 30, 30, 0.8);
-      border: 2px solid var(--border-color);
-      border-radius: 15px;
-      padding: 20px;
-      margin-top: 20px;
-      text-align: center;
-    }
-
-    .time-display {
-      font-family: 'Orbitron', monospace;
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--accent-color);
-      margin-bottom: 10px;
-    }
-
-    .date-display {
-      font-size: 16px;
-      color: var(--text-secondary);
-    }
-
-    /* Dashboard Styles */
-    .dashboard {
-      min-height: 100vh;
-      background: var(--primary-bg);
-      padding: 20px;
-      display: none;
-    }
-
-    .dashboard.active {
-      display: block;
-    }
-
-    .dashboard-header {
-      background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
-      padding: 20px 30px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: white;
-    }
-
-    .dashboard-quickbar {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between; /* Space out the left and right groups */
-      gap: 10px;
-      margin-bottom: 20px;
-      padding: 15px;
-      background: var(--secondary-bg);
-      border-radius: 15px;
-      border: 1px solid var(--border-color);
-      align-items: center; /* Align items vertically in quickbar */
-    }
-
-    /* Styles for the time displays within the search container */
-    .quickbar-time-info {
-        display: flex;
-        align-items: center;
-        gap: 5px; /* Space between the text labels and the actual time */
-        font-size: 12px;
-        white-space: nowrap;
-        background-color: var(--primary-bg); /* Add background */
-        padding: 6px 10px; /* Add padding */
-        border-radius: 6px; /* Add border-radius */
-        border: 1px solid var(--border-color); /* Add border */
-        color: var(--text-primary); /* Ensure text color adapts */
-    }
-    .quickbar-time-value {
-        font-family: 'Orbitron', monospace;
-        color: var(--accent-color);
-        font-weight: bold;
-        font-size: 13px; /* Slightly smaller than regular buttons but legible */
-    }
-
-    .search-group { /* New container for search input and time displays */
-        display: flex;
-        align-items: center;
-        gap: 10px; /* Space between search and time info */
-        flex-grow: 1; /* Allow it to grow, but respecting max-width */
-        max-width: 50%; /* Adjust based on desired layout balance */
-        min-width: 350px; /* Ensure minimum width for contents */
-    }
-    .search-container { /* This now just wraps the input and search button visually */
-      position: relative;
-      display: flex; /* Make it a flex container to align search bar and button */
-      flex-grow: 1;
-      max-width: 300px; /* Restrict max width of the input group */
-    }
-
-    .search-bar {
-      width: 100%;
-      padding: 10px 40px 10px 15px;
-      background: var(--primary-bg);
-      border: 2px solid var(--border-color);
-      border-radius: 25px;
-      color: white;
-      font-size: 14px;
-      flex-grow: 1; /* Allow the input to take available space */
-    }
-
-    .search-btn {
-      position: absolute; /* Keep it absolute for placement inside the search input visuals */
-      right: 5px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: var(--accent-color);
-      border: none;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      color: white;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .search-btn:hover {
-        background: var(--accent-secondary);
-    }
-
-    .quick-btn-group { /* New container for all buttons to the right */
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: flex-end; /* Align buttons to the right within their group */
-    }
-
-    .quick-btn {
-      background: var(--accent-color);
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-    }
-
-    .quick-btn:hover {
-      background: var(--accent-secondary);
-      transform: translateY(-2px);
-    }
-
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--secondary-bg); /* Use theme background */
-      border: 2px solid var(--success-color); /* Accent border to signify its status */
-      color: var(--text-primary); /* Use theme text color */
-      padding: 15px 25px;
-      border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Adjust shadow for both themes */
-      z-index: 1000;
-      animation: slideIn 0.5s ease;
-    }
-
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    .panels-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
-      margin-bottom: 30px;
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    .panel {
-      background: var(--secondary-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 15px;
-      padding: 20px;
-      position: relative;
-      transition: all 0.3s ease;
-      resize: both;
-      overflow: auto;
-      min-height: 200px;
-    }
-
-    .panel:hover {
-      box-shadow: 0 5px 20px rgba(255, 69, 0, 0.2);
-    }
-
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .panel-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--accent-color);
-    }
-
-    .panel-controls {
-      display: flex;
-      gap: 5px;
-    }
-
-    .panel-btn {
-      background: none;
-      border: 1px solid var(--border-color);
-      color: var(--text-secondary);
-      border-radius: 4px;
-      width: 25px;
-      height: 25px;
-      cursor: pointer;
-      font-size: 10px;
-      transition: all 0.3s ease;
-    }
-
-    .panel-btn:hover {
-      background: var(--accent-color);
-      color: white;
-    }
-
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 5px;
-      margin-top: 15px;
-    }
-
-    .calendar-cell {
-      aspect-ratio: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: var(--primary-bg);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 12px;
-    }
-
-    .calendar-cell:hover {
-      background: var(--accent-color);
-    }
-
-    .calendar-cell.today {
-      background: var(--accent-color);
-      color: white;
-      font-weight: bold;
-    }
-
-    /* Login History Entries */
-    .login-entry-container {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-        margin-bottom: 5px;
-        border-radius: 6px;
-        font-size: 12px;
-        border: 1px solid var(--border-color);
-        background-color: var(--primary-bg);
-        transition: background-color 0.3s ease;
-    }
-    .login-entry-container.success {
-        border-left: 4px solid var(--success-color);
-        background-color: var(--primary-bg); /* Use primary for list item backgrounds */
-    }
-    .login-entry-container.failed {
-        border-left: 4px solid var(--error-color);
-        background-color: var(--primary-bg); /* Use primary for list item backgrounds */
-    }
-    .login-entry-status {
-        font-weight: bold;
-        color: var(--text-primary);
-    }
-    .login-entry-time {
-        color: var(--text-secondary);
-        font-size: 10px;
-    }
-
-
-    /* Settings Modal */
-    .settings-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 2000;
-    }
-
-    .settings-content {
-      background: var(--secondary-bg);
-      border: 2px solid var(--accent-color);
-      border-radius: 20px;
-      padding: 30px;
-      width: 90%;
-      max-width: 800px;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-
-    .settings-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .setting-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      background: var(--primary-bg);
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-    }
-
-    /* Drawing Tools */
-    .drawing-tools {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 15px;
-      padding: 15px;
-      background: var(--primary-bg);
-      border-radius: 10px;
-    }
-
-    .tool-btn {
-      padding: 8px 12px;
-      background: var(--accent-color);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 0.3s ease;
-    }
-
-    .tool-btn:hover, .tool-btn.active {
-      background: var(--accent-secondary);
-      transform: scale(1.05);
-    }
-
-    .color-picker {
-      width: 30px;
-      height: 30px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-
-    .thickness-slider {
-      width: 100px;
-      accent-color: var(--accent-color);
-    }
-
-    /* Timer/Stopwatch */
-    .timer-display {
-      font-family: 'Orbitron', monospace;
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--accent-color);
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .timer-controls {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    /* Activity Logs */
-    .log-entry {
-      padding: 10px;
-      background: var(--primary-bg);
-      border-left: 4px solid var(--accent-color);
-      margin-bottom: 10px;
-      border-radius: 6px;
-      font-size: 12px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .log-time {
-      color: var(--text-secondary);
-      font-size: 10px;
-    }
-
-    /* Stats Display */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 15px;
-      margin-top: 15px;
-    }
-
-    .stat-item {
-      text-align: center;
-      padding: 15px;
-      background: var(--primary-bg);
-      border-radius: 10px;
-      border: 1px solid var(--border-color);
-    }
-
-    .stat-number {
-      font-family: 'Orbitron', monospace;
-      font-size: 24px;
-      font-weight: 700;
-      color: var(--accent-color);
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: var(--text-secondary);
-      margin-top: 5px;
-    }
-
-    /* Themes */
-    .theme-selector {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .theme-option {
-      aspect-ratio: 1;
-      border-radius: 10px;
-      cursor: pointer;
-      border: 3px solid transparent;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .theme-option:hover, .theme-option.active {
-      border-color: var(--accent-color);
-      transform: scale(1.05);
-    }
-
-    /* Calculator */
-    .calculator {
-      background: var(--primary-bg);
-      border-radius: 15px;
-      padding: 20px;
-      margin-top: 15px;
-    }
-
-    .calc-display {
-      background: var(--secondary-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 15px;
-      text-align: right;
-      font-family: 'Orbitron', monospace;
-      font-size: 24px;
-      color: var(--accent-color);
-      margin-bottom: 15px;
-      min-height: 60px;
-    }
-
-    .calc-buttons {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-
-    .calc-btn {
-      aspect-ratio: 1;
-      border: none;
-      border-radius: 8px;
-      background: var(--secondary-bg);
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .calc-btn:hover {
-      background: var(--accent-color);
-    }
-
-    .calc-btn.operator {
-      background: var(--accent-color);
-    }
-
-    .calc-btn.equals {
-      background: var(--success-color);
-      color: black;
-    }
-
-    /* Media Player */
-    .media-container {
-      background: var(--primary-bg);
-      border-radius: 15px;
-      padding: 20px;
-      margin-top: 15px;
-    }
-
-    .media-input {
-      width: 100%;
-      padding: 10px;
-      background: var(--secondary-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      color: white;
-      margin-bottom: 15px;
-    }
-
-    .media-frame {
-      width: 100%;
-      height: 400px;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      background: var(--secondary-bg);
-    }
-
-    /* Keybinds */
-    .keybind-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px;
-      background: var(--primary-bg);
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-
-    .keybind-input {
-      background: var(--secondary-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 4px;
-      padding: 5px 10px;
-      color: white;
-      font-family: 'Courier New', monospace;
-    }
 
-    /* Responsive */
+    /* Responsive adjustments for new panels */
     @media (max-width: 1200px) {
         .dashboard-quickbar .search-group {
-            flex-direction: column; /* Stack search bar and time info on smaller screens */
+            flex-direction: column;
             max-width: 100%;
-            align-items: flex-start; /* Align text left */
+            align-items: flex-start;
         }
         .dashboard-quickbar .quickbar-time-info {
             width: 100%;
             justify-content: space-between;
         }
         .dashboard-quickbar .quick-btn-group {
-            width: 100%; /* Make buttons take full width when stacked */
+            width: 100%;
             justify-content: center;
         }
         .search-container {
@@ -1049,16 +366,13 @@
         width: 90%;
         margin: 20px auto;
       }
-      
       .panels-grid {
         grid-template-columns: 1fr;
       }
-      
       .dashboard-quickbar {
         flex-direction: column;
         gap: 10px;
       }
-      
       .search-container {
         max-width: 100%;
       }
@@ -1271,6 +585,26 @@
       </div>
     </div>
 
+    <!-- Important Dates Panel -->
+    <div class="panel" data-panel="importantDates">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-star"></i> Important Dates</div>
+        <div class="panel-controls">
+          <button class="panel-btn" onclick="clearImportantDates()"><i class="fas fa-trash"></i></button>
+          <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="content">
+        <input type="date" id="importantDateDay" class="important-date-input">
+        <input type="time" id="importantDateTime" class="important-date-input">
+        <input type="text" id="importantDateEvent" class="important-date-event-input" placeholder="Event Description...">
+        <button class="quick-btn w-full mt-2" onclick="addImportantDate()">Add Event</button>
+        <div id="importantDatesList" class="mt-4 max-h-40 overflow-y-auto space-y-2">
+            <!-- Important dates will be populated here -->
+        </div>
+      </div>
+    </div>
+
     <!-- Random Facts Panel -->
     <div class="panel" data-panel="facts">
       <div class="panel-header">
@@ -1308,9 +642,9 @@
         </div>
       </div>
       <div class="space-y-2">
-        <div class="p-2 bg-orange-900 rounded text-xs">Enhanced UI v2.0 Deployed</div>
-        <div class="p-2 bg-orange-900 rounded text-xs">New Security Features Added</div>
-        <div class="p-2 bg-orange-900 rounded text-xs">Performance Optimizations</div>
+        <div class="update-item">Enhanced UI v2.0 Deployed</div>
+        <div class="update-item">New Security Features Added</div>
+        <div class="update-item">Performance Optimizations</div>
       </div>
     </div>
 
@@ -1344,6 +678,22 @@
       </div>
     </div>
 
+    <!-- Error Log Panel -->
+    <div class="panel" data-panel="errorLog">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-bug"></i> Error Log</div>
+        <div class="panel-controls">
+          <button class="panel-btn" onclick="downloadErrorLogs()"><i class="fas fa-download"></i></button>
+          <button class="panel-btn" onclick="clearErrorLogs()"><i class="fas fa-trash"></i></button>
+          <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div id="errorLogsList" class="max-h-40 overflow-y-auto">
+        <!-- Error logs will be populated here -->
+      </div>
+    </div>
+
+
     <!-- Login History Panel -->
     <div class="panel" data-panel="loginHistory">
       <div class="panel-header">
@@ -1356,6 +706,24 @@
         <!-- Login history will be populated here -->
       </div>
     </div>
+
+    <!-- Mouse Clicker Panel -->
+    <div class="panel" data-panel="mouseClicker">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-mouse-pointer"></i> Mouse Clicker</div>
+        <div class="panel-controls">
+          <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="content">
+        <div id="clickCountDisplay" class="click-count-display">0</div>
+        <button class="click-button" onclick="incrementClickCounter()">Click Me!</button>
+        <div class="mouse-clicker-controls">
+            <button class="quick-btn mt-2" onclick="resetClickCounter()"><i class="fas fa-undo-alt"></i> Reset</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Settings Modal -->
@@ -1791,7 +1159,11 @@ let loginAttempts = 3;
 let is24HourFormat = false;
 let currentZoom = 1;
 let activityLogs = [];
-let loginHistory = []; // Now used for login history
+let loginHistory = [];
+let importantDates = []; // New array for important dates
+let clickCount = 0; // New variable for mouse clicker
+let errorLogs = []; // New array for error logs
+
 let stats = {
   buttonPresses: 0,
   toggleSwitches: 0,
@@ -1824,7 +1196,10 @@ let calcOperation = '';
 // Initialization sequence
 window.addEventListener('load', () => {
   startInitialization();
-  loadLoginHistoryFromStorage(); // Load history when the page loads
+  loadLoginHistoryFromStorage();
+  loadImportantDatesFromStorage();
+  loadClickCountFromStorage();
+  loadErrorLogsFromStorage();
 });
 
 function startInitialization() {
@@ -1842,21 +1217,31 @@ function startInitialization() {
 
 function generateCodeRain(containerId) {
   const container = document.getElementById(containerId);
+  // Ensure the container exists before attempting to add children
+  if (!container) return;
+
   const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   
   setInterval(() => {
-    const char = document.createElement('div');
-    char.className = 'code-char';
-    char.textContent = chars[Math.floor(Math.random() * chars.length)];
-    char.style.left = Math.random() * 100 + '%';
-    char.style.animationDelay = Math.random() * 2 + 's';
-    container.appendChild(char);
-    
-    setTimeout(() => {
-      if (char.parentNode) {
-        char.parentNode.removeChild(char);
-      }
-    }, 3000);
+    // Only generate new characters if the initial screen is visible or loading screen is visible
+    if (document.getElementById('initScreen') && !document.getElementById('initScreen').classList.contains('hidden') ||
+        document.getElementById('loadingScreen') && !document.getElementById('loadingScreen').classList.contains('hidden')) {
+        const char = document.createElement('div');
+        char.className = 'code-char';
+        char.textContent = chars[Math.floor(Math.random() * chars.length)];
+        char.style.left = Math.random() * 100 + '%';
+        char.style.animationDelay = Math.random() * 2 + 's';
+        container.appendChild(char);
+        
+        setTimeout(() => {
+        if (char.parentNode) {
+            char.parentNode.removeChild(char);
+        }
+        }, 3000);
+    } else {
+        // Clear all code rain characters if not on an init/loading screen
+        container.innerHTML = ''; 
+    }
   }, 100);
 }
 
@@ -1948,8 +1333,13 @@ function successfulLogin(username, userID) {
   // Show loading screen
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('loadingScreen').classList.remove('hidden');
-  generateCodeRain('loadingCodeRain');
-  
+  // Re-generate code rain for loading screen
+  const loadingCodeRainContainer = document.getElementById('loadingCodeRain');
+  if (loadingCodeRainContainer) {
+      loadingCodeRainContainer.innerHTML = ''; // Clear previous
+      generateCodeRain('loadingCodeRain');
+  }
+
   setTimeout(() => {
     document.getElementById('loadingScreen').classList.add('hidden');
     document.getElementById('dashboard').classList.add('active');
@@ -1959,6 +1349,7 @@ function successfulLogin(username, userID) {
 
 function failedLogin() {
   loginAttempts--;
+  const errorMsg = 'Invalid credentials';
   document.getElementById('attemptsText').textContent = `Attempts Left: ${loginAttempts}`;
   document.getElementById('loginBox').classList.add('error-shake');
   
@@ -1967,10 +1358,11 @@ function failedLogin() {
   }, 500);
   
   if (loginAttempts <= 0) {
-    showError('No attempts remaining. System locked.');
+    const lockMsg = 'No attempts remaining. System locked.';
+    showError(lockMsg); // Will also log to error log
     document.getElementById('submitBtn').disabled = true;
   } else {
-    showError('Invalid credentials');
+    showError(errorMsg); // Will also log to error log
   }
   
   // Add to login history
@@ -1983,10 +1375,17 @@ function failedLogin() {
 }
 
 function showError(message) {
-  document.getElementById('errorMsg').textContent = message;
-  setTimeout(() => {
-    document.getElementById('errorMsg').textContent = '';
-  }, 3000);
+  const errorDisplay = document.getElementById('errorMsg');
+  if (errorDisplay) {
+      errorDisplay.textContent = message;
+      logError(message); // Log to the new error log panel
+      setTimeout(() => {
+        errorDisplay.textContent = '';
+      }, 3000);
+  } else {
+      console.error("Error display element not found:", message);
+      logError(message); // Still log if UI display is missing
+  }
 }
 
 // Dashboard initialization
@@ -1994,28 +1393,38 @@ function initializeDashboard() {
   stats.sessionStartTime = Date.now();
   
   // Show welcome notification
-  document.getElementById('loggedUser').textContent = currentUser;
-  document.getElementById('currentUser').textContent = currentUser;
-  document.getElementById('currentUserID').textContent = currentUserID;
-  
-  setTimeout(() => {
-    document.getElementById('welcomeNotification').style.display = 'none';
-  }, 5000);
+  const welcomeNotification = document.getElementById('welcomeNotification');
+  if (welcomeNotification) {
+      document.getElementById('loggedUser').textContent = currentUser;
+      document.getElementById('currentUser').textContent = currentUser;
+      document.getElementById('currentUserID').textContent = currentUserID;
+      welcomeNotification.style.display = 'block'; // Make sure it's visible initially
+
+      setTimeout(() => {
+        welcomeNotification.style.display = 'none';
+      }, 5000);
+  }
   
   // Initialize components
   generateCalendar();
   initializeCanvas();
-  startSessionTimer(); // Now also updates quickbar session time
-  updateClock(); // To initialize quickbar real-time clock
-  setInterval(updateClock, 1000); // Keep real-time clock updated
+  startSessionTimer(); 
+  updateClock(); 
+  // No need for setInterval here as it's already set in startClock, which is called once initially.
+  // Instead, the startClock function's setInterval handles continuous updates.
   updateStats();
-  updateLoginHistoryDisplay(); // Display any accumulated login history
+  updateLoginHistoryDisplay();
+  updateImportantDatesDisplay(); // Update important dates display
+  updateClickCountDisplay(); // Update click count display
+  updateErrorLogDisplay(); // Update error logs display
   
   logActivity('Dashboard initialized');
 }
 
 function generateCalendar() {
   const calendar = document.getElementById('calendarGrid');
+  if (!calendar) return;
+
   calendar.innerHTML = '';
   
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -2058,6 +1467,7 @@ function generateCalendar() {
 
 function initializeCanvas() {
   canvas = document.getElementById('drawingCanvas');
+  if (!canvas) return; // Safely exit if canvas element is not present
   ctx = canvas.getContext('2d');
   
   canvas.addEventListener('mousedown', startDrawing);
@@ -2068,6 +1478,7 @@ function initializeCanvas() {
 
 function startDrawing(e) {
   isDrawing = true;
+  if (!canvas) return;
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
   const y = e.clientY - rect.top;
@@ -2077,7 +1488,7 @@ function startDrawing(e) {
 }
 
 function draw(e) {
-  if (!isDrawing) return;
+  if (!isDrawing || !canvas) return;
   
   const rect = canvas.getBoundingClientRect();
   const x = e.clientX - rect.left;
@@ -2095,11 +1506,16 @@ function draw(e) {
 
 function stopDrawing() {
   isDrawing = false;
-  ctx.beginPath();
+  if (ctx) { // Ensure context exists before trying to access it
+    ctx.beginPath();
+  }
 }
 
 function startSessionTimer() {
-  setInterval(() => {
+  // Clear any existing session timer interval to prevent duplicates
+  if (this.sessionTimerInterval) clearInterval(this.sessionTimerInterval); 
+  
+  this.sessionTimerInterval = setInterval(() => { // Store interval ID on `this` (window)
     if (stats.sessionStartTime) {
       const elapsed = Math.floor((Date.now() - stats.sessionStartTime) / 1000);
       const hours = Math.floor(elapsed / 3600);
@@ -2108,13 +1524,11 @@ function startSessionTimer() {
       
       const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       
-      // Update the main dashboard session time
       const mainSessionTime = document.getElementById('sessionTime');
       if (mainSessionTime) {
           mainSessionTime.textContent = timeString;
       }
       
-      // Update the quickbar session time
       const quickbarSessionTime = document.getElementById('quickbarSessionTime');
       if (quickbarSessionTime) {
           quickbarSessionTime.textContent = timeString;
@@ -2126,12 +1540,15 @@ function startSessionTimer() {
 // Utility functions
 function togglePanel(panelId) {
   const panel = document.getElementById(panelId);
+  if (!panel) {
+      console.warn(`Panel with ID ${panelId} not found.`);
+      return;
+  }
   const isVisible = panel.style.display === 'flex' || panel.style.display === 'block';
   
-  // For modal-style panels like settings/timer/notes, toggle 'flex' display
   if (panel.classList.contains('settings-modal')) {
     panel.style.display = isVisible ? 'none' : 'flex';
-  } else { // For grid panels, toggle 'block' display
+  } else {
     panel.style.display = isVisible ? 'none' : 'block';
   }
 
@@ -2149,6 +1566,7 @@ function togglePanel(panelId) {
 
 function minimizePanel(button) {
   const panel = button.closest('.panel');
+  if (!panel) return;
   const content = panel.querySelector('.panel-header').nextElementSibling;
   
   if (content.style.display === 'none') {
@@ -2165,6 +1583,7 @@ function minimizePanel(button) {
 
 function closePanel(button) {
   const panel = button.closest('.panel');
+  if (!panel) return;
   panel.style.display = 'none';
   stats.panelsClosed++;
   stats.buttonPresses++;
@@ -2173,34 +1592,41 @@ function closePanel(button) {
 }
 
 function performSearch() {
-  const query = document.getElementById('searchBar').value.toLowerCase();
+  const queryBar = document.getElementById('searchBar');
+  if (!queryBar) return;
+
+  const query = queryBar.value.toLowerCase();
   if (!query) return;
   
   stats.searchQueries++;
   logActivity(`Searched for: ${query}`);
   
-  // Simple search implementation
-  const panels = document.querySelectorAll('.panels-grid > .panel'); // Only target direct children
+  const panels = document.querySelectorAll('.panels-grid > .panel'); 
   let found = false;
   panels.forEach(panel => {
-    const text = panel.textContent.toLowerCase();
-    const panelTitle = panel.querySelector('.panel-title').textContent.toLowerCase();
+    // Only check if panel has a title for comparison, exclude general body.
+    const panelTitleElement = panel.querySelector('.panel-title');
+    const panelTitle = panelTitleElement ? panelTitleElement.textContent.toLowerCase() : '';
     
-    if (text.includes(query) || panelTitle.includes(query)) {
-      panel.style.display = 'block'; // Ensure panel is visible if matched
-      panel.style.border = '2px solid var(--accent-color)'; // Highlight found panel
+    // Attempt to get text from children, but exclude potentially long/irrelevant data for searching (e.g. text areas)
+    const panelContentText = panel.textContent.toLowerCase(); 
+
+    if (panelContentText.includes(query) || panelTitle.includes(query)) {
+      panel.style.display = 'block'; 
+      panel.style.border = '2px solid var(--accent-color)'; 
       found = true;
       setTimeout(() => {
         panel.style.border = '1px solid var(--border-color)';
       }, 2000);
     } else {
-        // Optional: hide non-matching panels if search is meant to filter
-        // panel.style.display = 'none';
+        // You might choose to hide non-matching panels or just let them stay
+        // panel.style.display = 'none'; 
     }
   });
 
   if (!found) {
-      showNotification("No matching panels found.");
+      showNotification("No matching panels found for '" + query + "'.");
+      logError("Search failed: No matching panels found for query '" + query + "'.");
   }
   
   updateStats();
@@ -2214,7 +1640,6 @@ function logActivity(activity) {
     id: Date.now()
   });
   
-  // Keep only last 100 logs
   if (activityLogs.length > 100) {
     activityLogs = activityLogs.slice(0, 100);
   }
@@ -2224,7 +1649,7 @@ function logActivity(activity) {
 
 function updateActivityLogDisplay() {
   const container = document.getElementById('activityLogsList');
-  if (!container) return; // Safely exit if element not found
+  if (!container) return;
   container.innerHTML = '';
   
   activityLogs.slice(0, 10).forEach(log => {
@@ -2238,6 +1663,67 @@ function updateActivityLogDisplay() {
   });
 }
 
+function logError(message) {
+    const timestamp = new Date().toISOString();
+    errorLogs.unshift({
+        timestamp,
+        message,
+        id: Date.now()
+    });
+
+    if (errorLogs.length > 100) { // Keep last 100 errors
+        errorLogs = errorLogs.slice(0, 100);
+    }
+    saveErrorLogsToStorage(); // Persist changes
+    updateErrorLogDisplay();
+}
+
+function updateErrorLogDisplay() {
+    const container = document.getElementById('errorLogsList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    errorLogs.slice(0, 10).forEach(err => {
+        const errorElement = document.createElement('div');
+        errorElement.className = 'error-log-entry';
+        errorElement.innerHTML = `
+            <span>${err.message}</span>
+            <span class="error-log-time">${new Date(err.timestamp).toLocaleTimeString()}</span>
+        `;
+        container.appendChild(errorElement);
+    });
+}
+
+function clearErrorLogs() {
+    errorLogs = [];
+    saveErrorLogsToStorage();
+    updateErrorLogDisplay();
+    showNotification("Error logs cleared.");
+    logActivity("Error logs cleared.");
+}
+
+function downloadErrorLogs() {
+    const data = {
+        errorLogs: errorLogs,
+        timestamp: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `error_logs_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showNotification("Error logs downloaded.");
+    logActivity("Error logs downloaded.");
+    stats.buttonPresses++;
+    updateStats();
+}
+
+
 function saveLoginHistoryToStorage() {
   localStorage.setItem('loginHistory', JSON.stringify(loginHistory));
 }
@@ -2250,13 +1736,48 @@ function loadLoginHistoryFromStorage() {
   updateLoginHistoryDisplay();
 }
 
+function saveImportantDatesToStorage() {
+    localStorage.setItem('importantDates', JSON.stringify(importantDates));
+}
+
+function loadImportantDatesFromStorage() {
+    const storedDates = localStorage.getItem('importantDates');
+    if (storedDates) {
+        importantDates = JSON.parse(storedDates);
+    }
+    updateImportantDatesDisplay();
+}
+
+function saveClickCountToStorage() {
+    localStorage.setItem('mouseClickCount', clickCount);
+}
+
+function loadClickCountFromStorage() {
+    const storedClickCount = localStorage.getItem('mouseClickCount');
+    if (storedClickCount !== null) {
+        clickCount = parseInt(storedClickCount);
+    }
+    updateClickCountDisplay();
+}
+
+function saveErrorLogsToStorage() {
+    localStorage.setItem('errorLogs', JSON.stringify(errorLogs));
+}
+
+function loadErrorLogsFromStorage() {
+    const storedErrorLogs = localStorage.getItem('errorLogs');
+    if (storedErrorLogs) {
+        errorLogs = JSON.parse(storedErrorLogs);
+    }
+    updateErrorLogDisplay();
+}
+
 
 function updateLoginHistoryDisplay() {
   const container = document.getElementById('loginHistoryList');
-  if (!container) return; // Safely exit if element not found
-  container.innerHTML = ''; // Clear previous entries
+  if (!container) return;
+  container.innerHTML = '';
 
-  // Display most recent login attempts first (max 10 for readability)
   loginHistory.slice(0, 10).forEach(entry => { 
     const logElement = document.createElement('div');
     const statusClass = entry.success ? 'success' : 'failed';
@@ -2272,6 +1793,90 @@ function updateLoginHistoryDisplay() {
   });
 }
 
+// New Important Dates functions
+function addImportantDate() {
+    const dateInput = document.getElementById('importantDateDay');
+    const timeInput = document.getElementById('importantDateTime');
+    const eventInput = document.getElementById('importantDateEvent');
+
+    if (dateInput.value && timeInput.value && eventInput.value) {
+        const fullDate = `${dateInput.value}T${timeInput.value}`; // Format for Date object
+        const newDate = {
+            id: Date.now(),
+            datetime: new Date(fullDate).toISOString(),
+            event: eventInput.value
+        };
+        importantDates.unshift(newDate); // Add to the beginning
+        importantDates.sort((a, b) => new Date(a.datetime) - new Date(b.datetime)); // Keep sorted by date
+        saveImportantDatesToStorage();
+        updateImportantDatesDisplay();
+        logActivity(`Added important date: ${eventInput.value} on ${new Date(fullDate).toLocaleString()}`);
+        showNotification("Important date added!");
+
+        // Clear inputs
+        const today = new Date();
+        dateInput.value = today.toISOString().split('T')[0];
+        timeInput.value = "09:00"; // Default to 9 AM for easier entry
+        eventInput.value = '';
+    } else {
+        showError("Please fill in all important date fields.");
+    }
+}
+
+function clearImportantDates() {
+    if (confirm("Are you sure you want to clear all important dates?")) {
+        importantDates = [];
+        saveImportantDatesToStorage();
+        updateImportantDatesDisplay();
+        logActivity("All important dates cleared.");
+        showNotification("All important dates cleared.");
+    }
+}
+
+function updateImportantDatesDisplay() {
+    const container = document.getElementById('importantDatesList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    importantDates.forEach(dateEntry => {
+        const entryElement = document.createElement('div');
+        entryElement.className = 'important-date-item';
+        const formattedDate = new Date(dateEntry.datetime).toLocaleString();
+        entryElement.innerHTML = `
+            <div class="date-time">${formattedDate}</div>
+            <div class="event-description">${dateEntry.event}</div>
+        `;
+        container.appendChild(entryElement);
+    });
+}
+
+
+// New Mouse Clicker functions
+function incrementClickCounter() {
+    clickCount++;
+    updateClickCountDisplay();
+    saveClickCountToStorage();
+    logActivity('Mouse click incremented');
+}
+
+function resetClickCounter() {
+    if (confirm("Are you sure you want to reset the click counter?")) {
+        clickCount = 0;
+        updateClickCountDisplay();
+        saveClickCountToStorage();
+        logActivity('Mouse clicker reset');
+        showNotification("Click counter reset!");
+    }
+}
+
+function updateClickCountDisplay() {
+    const display = document.getElementById('clickCountDisplay');
+    if (display) {
+        display.textContent = clickCount;
+    }
+}
+
+
 function updateStats() {
   document.getElementById('buttonPresses').textContent = stats.buttonPresses;
   document.getElementById('toggleSwitches').textContent = stats.toggleSwitches;
@@ -2283,7 +1888,10 @@ function updateStats() {
 function downloadActivityLogs() {
   const data = {
     activityLogs,
-    loginHistory, // Include login history in the download
+    loginHistory, 
+    importantDates,
+    mouseClickCount: clickCount,
+    errorLogs,
     stats,
     timestamp: new Date().toISOString()
   };
@@ -2300,6 +1908,7 @@ function downloadActivityLogs() {
   
   stats.buttonPresses++;
   logActivity('Activity logs downloaded');
+  showNotification('Activity logs downloaded!');
   updateStats();
 }
 
@@ -2308,17 +1917,16 @@ function showStats() {
   
   // Create stats chart
   const ctx = document.getElementById('statsChart').getContext('2d');
-  // Destroy existing chart if it exists to prevent recreation errors
   if (Chart.getChart(ctx)) {
     Chart.getChart(ctx).destroy();
   }
   new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries'],
+      labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries', 'Mouse Clicks'], // Added Mouse Clicks
       datasets: [{
-        data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries],
-        backgroundColor: ['#ff4500', '#ff6b35', '#00ff41', '#ffaa00', '#0066cc']
+        data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries, clickCount], // Included clickCount
+        backgroundColor: ['#ff4500', '#ff6b35', '#00ff41', '#ffaa00', '#0066cc', '#8800cc'] // Added a color
       }]
     },
     options: {
@@ -2327,7 +1935,7 @@ function showStats() {
       plugins: {
         legend: {
           labels: {
-            color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary') // Adjust label color based on theme
+            color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary')
           }
         }
       }
@@ -2375,9 +1983,13 @@ function updateStopwatchDisplay() {
 }
 
 function startTimer() {
-  const hours = parseInt(document.getElementById('timerHours').value) || 0;
-  const minutes = parseInt(document.getElementById('timerMinutes').value) || 0;
-  const seconds = parseInt(document.getElementById('timerSeconds').value) || 0;
+  const hoursInput = document.getElementById('timerHours');
+  const minutesInput = document.getElementById('timerMinutes');
+  const secondsInput = document.getElementById('timerSeconds');
+
+  const hours = parseInt(hoursInput.value) || 0;
+  const minutes = parseInt(minutesInput.value) || 0;
+  const seconds = parseInt(secondsInput.value) || 0;
   
   timerTime = (hours * 3600) + (minutes * 60) + seconds;
   
@@ -2391,6 +2003,10 @@ function startTimer() {
         pauseTimer();
         showNotification('Timer finished!');
         logActivity('Timer completed');
+        // Clear inputs after timer finishes
+        hoursInput.value = '';
+        minutesInput.value = '';
+        secondsInput.value = '';
       }
     }, 1000);
     logActivity('Timer started');
@@ -2409,6 +2025,11 @@ function resetTimer() {
   timerTime = 0;
   updateTimerDisplay();
   logActivity('Timer reset');
+
+  // Clear inputs on reset
+  document.getElementById('timerHours').value = '';
+  document.getElementById('timerMinutes').value = '';
+  document.getElementById('timerSeconds').value = '';
 }
 
 function updateTimerDisplay() {
@@ -2436,7 +2057,7 @@ function addReminder() {
       }, timeout);
       
       const reminderElement = document.createElement('div');
-      reminderElement.className = 'p-2 bg-gray-700 rounded';
+      reminderElement.className = 'p-2 bg-gray-700 rounded'; // Keep a consistent styling for reminder elements
       reminderElement.innerHTML = `
         <div class="font-semibold">${text}</div>
         <div class="text-sm text-gray-400">${reminderTime.toLocaleString()}</div>
@@ -2448,7 +2069,11 @@ function addReminder() {
       document.getElementById('reminderTime').value = '';
       
       logActivity(`Reminder set: ${text}`);
+    } else {
+        showError("Reminder time must be in the future.");
     }
+  } else {
+    showError("Please enter both reminder text and a time.");
   }
 }
 
@@ -2458,29 +2083,43 @@ function selectTool(button, tool) {
   button.classList.add('active');
   currentTool = tool;
   
-  const canvas = document.getElementById('drawingCanvas');
-  canvas.style.cursor = tool === 'eraser' ? 'crosshair' : 'crosshair';
+  const canvasElement = document.getElementById('drawingCanvas');
+  if (canvasElement) {
+    canvasElement.style.cursor = tool === 'eraser' ? 'crosshair' : 'crosshair';
+  }
   
   logActivity(`Drawing tool changed to: ${tool}`);
 }
 
 function clearCanvas() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  logActivity('Canvas cleared');
+  if (ctx && canvas) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    logActivity('Canvas cleared');
+  } else {
+    logError("Attempted to clear canvas but canvas context is not initialized.");
+  }
 }
 
 function saveCanvas() {
+  if (!canvas) {
+      logError("Attempted to save canvas but canvas element is not initialized.");
+      return;
+  }
   const link = document.createElement('a');
   link.download = `drawing_${Date.now()}.png`;
   link.href = canvas.toDataURL();
+  document.body.appendChild(link);
   link.click();
+  document.body.removeChild(link);
   logActivity('Canvas saved');
+  showNotification("Canvas saved!");
 }
 
 // Calculator functions (still in code but not exposed via quickbar buttons)
 function appendToCalc(value) {
   const display = document.getElementById('calcDisplay');
-  if (display.textContent === '0' && value !== '.') { // Handle initial 0 logic for non-decimal entry
+  if (!display) return;
+  if (display.textContent === '0' && value !== '.') { 
     display.textContent = value;
   } else {
     display.textContent += value;
@@ -2488,11 +2127,13 @@ function appendToCalc(value) {
 }
 
 function clearCalc() {
-  document.getElementById('calcDisplay').textContent = '0';
+  const display = document.getElementById('calcDisplay');
+  if (display) display.textContent = '0';
 }
 
 function deleteLast() {
   const display = document.getElementById('calcDisplay');
+  if (!display) return;
   if (display.textContent.length > 1) {
     display.textContent = display.textContent.slice(0, -1);
   } else {
@@ -2502,20 +2143,26 @@ function deleteLast() {
 
 function calculateResult() {
   const display = document.getElementById('calcDisplay');
+  if (!display) return;
   try {
-    const result = eval(display.textContent.replace('×', '*').replace('÷', '/')); // Added ÷ handling
+    // Basic evaluation for demo, caution in production with eval()
+    const result = eval(display.textContent.replace(/×/g, '*').replace(/÷/g, '/')); 
     display.textContent = result;
     logActivity(`Calculation performed: ${display.textContent} = ${result}`);
   } catch (error) {
     display.textContent = 'Error';
+    logError(`Calculator error: ${error.message} for expression '${display.textContent}'`);
   }
 }
 
 // Unit converter (still in code but not exposed via quickbar buttons)
 function updateConversionUnits() {
-  const type = document.getElementById('conversionType').value;
+  const conversionType = document.getElementById('conversionType');
   const fromUnit = document.getElementById('fromUnit');
   const toUnit = document.getElementById('toUnit');
+
+  if (!conversionType || !fromUnit || !toUnit) return;
+  const type = conversionType.value;
   
   const units = {
     length: [
@@ -2552,34 +2199,39 @@ function updateConversionUnits() {
     fromUnit.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
     toUnit.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
   });
-  convertUnits(); // Perform conversion with new units
+  convertUnits(); 
 }
 
 function convertUnits() {
-  const fromValue = parseFloat(document.getElementById('fromValue').value);
-  const fromUnit = document.getElementById('fromUnit').value;
-  const toUnit = document.getElementById('toUnit').value;
-  const type = document.getElementById('conversionType').value;
+  const fromValueInput = document.getElementById('fromValue');
+  const fromUnitSelect = document.getElementById('fromUnit');
+  const toUnitSelect = document.getElementById('toUnit');
+  const toValueInput = document.getElementById('toValue');
+  const conversionType = document.getElementById('conversionType');
+
+  if (!fromValueInput || !fromUnitSelect || !toUnitSelect || !toValueInput || !conversionType) return;
+
+
+  const fromValue = parseFloat(fromValueInput.value);
+  const fromUnit = fromUnitSelect.value;
+  const toUnit = toUnitSelect.value;
+  const type = conversionType.value;
   
   if (isNaN(fromValue)) {
-    document.getElementById('toValue').value = '';
+    toValueInput.value = '';
     return;
   }
   
   let result = fromValue;
   
-  // Conversion factors (to base unit, then from base unit)
   const factors = {
-    length: { // to meters
+    length: { 
       'm': 1, 'km': 1000, 'cm': 0.01, 'mm': 0.001, 'in': 0.0254, 'ft': 0.3048
     },
-    weight: { // to grams
+    weight: { 
       'kg': 1000, 'g': 1, 'lb': 453.592, 'oz': 28.3495
     },
-    temperature: { // conversions handled separately (Celsius is base)
-        // will convert to celsius, then from celsius
-    },
-    volume: { // to liters
+    volume: { 
         'l': 1, 'ml': 0.001, 'gal': 3.78541, 'qt': 0.946353
     }
   };
@@ -2601,19 +2253,16 @@ function convertUnits() {
       else if (toUnit === 'k') result = tempInC + 273.15;
   }
   
-  document.getElementById('toValue').value = result.toFixed(6);
+  toValueInput.value = result.toFixed(6);
   logActivity(`Unit converted: ${fromValue} ${fromUnit} to ${result.toFixed(6)} ${toUnit}`);
 }
-
-
-// Media functions removed as per instructions
 
 // Theme functions
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
   isLightMode = document.body.classList.contains('light-theme');
   logActivity('Theme toggled to ' + (isLightMode ? 'Light Mode' : 'Dark Mode'));
-  updateStatsChartTheme(); // Update chart theme immediately
+  updateStatsChartTheme(); 
 }
 
 function applyAccentTheme(theme, event) {
@@ -2631,23 +2280,26 @@ function applyAccentTheme(theme, event) {
   };
   
   if (themes[theme]) {
-    // These only change the ACCENT colors, not the main dark/light theme
     root.style.setProperty('--accent-color', themes[theme].primary);
     root.style.setProperty('--accent-secondary', themes[theme].secondary);
     
     // For light theme, update these too for a new accent
     if (document.body.classList.contains('light-theme')) {
-        root.style.setProperty('--success-color', (theme === 'green' ? '#28a745' : themes[theme].primary)); // Example
-        root.style.setProperty('--error-color', (theme === 'red' ? '#dc3545' : themes[theme].primary));   // Example
-        root.style.setProperty('--warning-color', (theme === 'amber' ? '#ffc107' : themes[theme].primary)); // Example
+        root.style.setProperty('--success-color', themes[theme].primary); 
+        root.style.setProperty('--error-color', themes[theme].primary);   
+        root.style.setProperty('--warning-color', themes[theme].primary); 
+    } else {
+        root.style.setProperty('--success-color', '#00ff41'); 
+        root.style.setProperty('--error-color', '#ff0040');   
+        root.style.setProperty('--warning-color', '#ffaa00');
     }
 
-
     document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
-    event.target.classList.add('active'); // Use event.target to highlight the clicked button
+    // event.target could be an <i> tag if inside button, ensure it's the button itself
+    (event.target.closest('.theme-option') || event.target).classList.add('active'); 
     
     logActivity(`Accent theme changed to: ${theme}`);
-    updateStatsChartTheme(); // Update chart theme immediately
+    updateStatsChartTheme(); 
   }
 }
 
@@ -2659,11 +2311,13 @@ function updateStatsChartTheme() {
     }
 }
 
-
 function toggleSetting(toggle) {
+  if (!toggle) return;
   toggle.classList.toggle('active');
   stats.toggleSwitches++;
-  logActivity(`Setting toggled: ${toggle.previousElementSibling.textContent}`);
+  // Ensure previousElementSibling exists before accessing textContent
+  const settingName = toggle.previousElementSibling ? toggle.previousElementSibling.textContent : 'Unknown Setting';
+  logActivity(`Setting toggled: ${settingName}`);
   updateStats();
 }
 
@@ -2677,8 +2331,11 @@ function refreshFact() {
     "A single cloud can weigh more than a million pounds."
   ];
   
-  document.getElementById('randomFact').textContent = facts[Math.floor(Math.random() * facts.length)];
-  logActivity('Random fact refreshed');
+  const randomFactElement = document.getElementById('randomFact');
+  if (randomFactElement) {
+    randomFactElement.textContent = facts[Math.floor(Math.random() * facts.length)];
+    logActivity('Random fact refreshed');
+  }
 }
 
 function refreshQuote() {
@@ -2690,31 +2347,44 @@ function refreshQuote() {
     "\"It is during our darkest moments that we must focus to see the light.\" - Aristotle"
   ];
   
-  document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
-  logActivity('Daily quote refreshed');
+  const dailyQuoteElement = document.getElementById('dailyQuote');
+  if (dailyQuoteElement) {
+    dailyQuoteElement.textContent = quotes[Math.floor(Math.random() * quotes.length)];
+    logActivity('Daily quote refreshed');
+  }
 }
 
 function clearNotifications() {
-  document.getElementById('notificationsList').innerHTML = '';
-  logActivity('Notifications cleared');
+  const notificationsList = document.getElementById('notificationsList');
+  if (notificationsList) {
+    notificationsList.innerHTML = '';
+    logActivity('Notifications cleared');
+  }
 }
 
 function clearActivityLogs() {
   activityLogs = [];
   updateActivityLogDisplay();
   logActivity('Activity logs cleared');
+  showNotification("Activity logs cleared.");
 }
 
 function saveTextNotes() {
-  const notes = document.getElementById('textNotes').value;
-  localStorage.setItem('textNotes', notes);
-  showNotification('Notes saved successfully');
-  logActivity('Text notes saved');
+  const textNotesElement = document.getElementById('textNotes');
+  if (textNotesElement) {
+    const notes = textNotesElement.value;
+    localStorage.setItem('textNotes', notes);
+    showNotification('Notes saved successfully');
+    logActivity('Text notes saved');
+  }
 }
 
 function clearTextNotes() {
-  document.getElementById('textNotes').value = '';
-  logActivity('Text notes cleared');
+  const textNotesElement = document.getElementById('textNotes');
+  if (textNotesElement) {
+    textNotesElement.value = '';
+    logActivity('Text notes cleared');
+  }
 }
 
 function showNotification(message) {
@@ -2730,6 +2400,12 @@ function showNotification(message) {
 
 function logout() {
   if (confirm('Are you sure you want to logout?')) {
+    logActivity('System logged out');
+    // Clear the loading rain characters if they are still running from login
+    const loadingCodeRainContainer = document.getElementById('loadingCodeRain');
+    if (loadingCodeRainContainer) {
+        loadingCodeRainContainer.innerHTML = ''; 
+    }
     location.reload();
   }
 }
@@ -2752,16 +2428,18 @@ function takeScreenshot() {
 
 function togglePanelsGridVisibility() {
     const panelsGrid = document.getElementById('panelsGrid');
-    if (panelsGrid.style.display === 'none') {
+    if (!panelsGrid) return;
+
+    if (panelsGrid.style.display === 'none' || panelsGrid.style.opacity === '0') {
         panelsGrid.style.display = 'grid';
         panelsGrid.style.opacity = '1';
         showNotification('Sections are now visible.');
         logActivity('Sections toggled ON');
     } else {
-        panelsGrid.style.opacity = '0'; // Add a fade effect
+        panelsGrid.style.opacity = '0'; 
         setTimeout(() => {
             panelsGrid.style.display = 'none';
-        }, 300); // Wait for fade out
+        }, 300);
         showNotification('Sections are now hidden.');
         logActivity('Sections toggled OFF');
     }
@@ -2770,9 +2448,9 @@ function togglePanelsGridVisibility() {
 }
 
 function restartSystem() {
-    if (confirm('Are you sure you want to restart the system? You will be logged out.')) {
+    if (confirm('Are you sure you want to restart the system? You will be logged out and all unsaved data will be lost.')) {
         logActivity('System restarted');
-        localStorage.clear(); // Clear all data on restart for a clean slate
+        localStorage.clear(); 
         location.reload(); 
     }
 }
@@ -2782,21 +2460,18 @@ function restartSystem() {
 document.addEventListener('DOMContentLoaded', () => {
   setupToggles();
   
-  // Submit button
   document.getElementById('submitBtn').addEventListener('click', (e) => {
     e.preventDefault();
     stats.buttonPresses++;
     attemptLogin();
   });
   
-  // Enter key for login
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !document.getElementById('loginScreen').classList.contains('hidden')) {
       attemptLogin();
     }
   });
   
-  // Color and thickness updates for drawing
   document.getElementById('penColor').addEventListener('change', (e) => {
     currentColor = e.target.value;
   });
@@ -2805,24 +2480,35 @@ document.addEventListener('DOMContentLoaded', () => {
     currentThickness = parseInt(e.target.value);
   });
   
-  // Load saved notes
   const savedNotes = localStorage.getItem('textNotes');
   if (savedNotes) {
-    document.getElementById('textNotes').value = savedNotes;
+    const textNotesElement = document.getElementById('textNotes');
+    if (textNotesElement) {
+        textNotesElement.value = savedNotes;
+    }
   }
   
-  // Track all button clicks for stats (general button, excludes login specific as already tracked)
   document.addEventListener('click', (e) => {
     // Only increment stats if the click target is a button, but exclude specific elements if they already increment stats elsewhere (like login)
     // and ensure it's not a panel-btn as these are handled separately within their panel functions
-    if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls')) || e.target.closest('.quick-btn')) {
+    if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) || e.target.closest('.quick-btn')) {
         // Prevent double counting if quick-btn handler also has a specific handler
-        if (!e.target.classList.contains('submit-btn')) { // Submit button already tracked
-            stats.buttonPresses++;
-            updateStats();
-        }
+        // Don't track submit button here, it's tracked in its specific function
+        stats.buttonPresses++;
+        updateStats();
     }
   });
+  // Set default values for Important Dates inputs (current date and a default time)
+  const today = new Date();
+  const importantDateDay = document.getElementById('importantDateDay');
+  const importantDateTime = document.getElementById('importantDateTime');
+  if (importantDateDay) {
+      importantDateDay.value = today.toISOString().split('T')[0];
+  }
+  if (importantDateTime) {
+      importantDateTime.value = "09:00"; // Default to 9 AM
+  }
+
 });
 </script>
 
