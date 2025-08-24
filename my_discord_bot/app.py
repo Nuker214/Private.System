@@ -36,7 +36,7 @@ last_ping_times = {} # Tracks last client activity to identify truly "online" us
 
 # Webhook URL for Flask to send general activity (login, logout, data returns from client) to Discord
 SITE_GENERAL_ACTIVITY_WEBHOOK_URL = os.getenv("SITE_GENERAL_ACTIVITY_WEBHOOK_URL")
-WHITELIST_JSON_URL = os.getenv("https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json") # URL to fetch whitelist from
+WHITELIST_JSON_URL = os.getenv("WHITELIST_JSON_URL") # URL to fetch whitelist from
 
 # Store whitelist in memory (can be periodically reloaded if WHITELIST_JSON_URL points to a dynamic source)
 whitelist_data = []
