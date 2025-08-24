@@ -124,19 +124,33 @@
     body.light-theme .log-time {
       color: var(--text-secondary);
     }
-    body.light-theme .login-history-success {
-        background-color: var(--success-color); /* Dynamic color from theme var */
-        color: var(--text-primary); /* Should be dark on light success color */
+    body.light-theme .login-entry-container {
+        background-color: var(--primary-bg);
     }
-    body.light-theme .login-history-failed {
-        background-color: var(--error-color); /* Dynamic color from theme var */
-        color: white; /* Should be white on light error color for contrast */
+    body.light-theme .login-entry-container.success {
+        border-left: 4px solid var(--success-color);
     }
+    body.light-theme .login-entry-container.failed {
+        border-left: 4px solid var(--error-color);
+    }
+    body.light-theme .error-log-entry.error {
+        border-left: 4px solid var(--error-color);
+        background-color: var(--primary-bg);
+        color: var(--text-primary);
+    }
+
+    /* Fixed styling for system update items to match theme */
+    body.light-theme .system-update-item {
+        background-color: var(--primary-bg); /* Match other list items */
+        border-left: 4px solid var(--accent-secondary); /* Give it an accent */
+        color: var(--text-primary);
+    }
+
     body.light-theme .notification {
       background: var(--secondary-bg);
       border: 2px solid var(--success-color); /* Accent border to signify its status */
       color: var(--text-primary); /* Should contrast well with bg */
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Lighter shadow */
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Lighter shadow */
     }
 
     body.light-theme .settings-content {
@@ -756,6 +770,19 @@
     }
 
 
+    /* System Updates Panel Styling */
+    .system-update-item {
+        padding: 8px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        font-size: 12px;
+        background-color: var(--primary-bg); /* Apply theme-adaptive background */
+        border-left: 4px solid var(--accent-secondary); /* Give it a subtle accent border */
+        color: var(--text-primary); /* Ensure text color adapts */
+        transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }
+
+
     /* Settings Modal */
     .settings-modal {
       position: fixed;
@@ -1271,6 +1298,26 @@
       </div>
     </div>
 
+    <!-- Important Dates Panel -->
+    <div class="panel" data-panel="importantDates">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-star"></i> Important Dates</div>
+        <div class="panel-controls">
+          <button class="panel-btn" onclick="clearImportantDates()"><i class="fas fa-trash"></i></button>
+          <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="content">
+        <input type="date" id="importantDateDay" class="important-date-input" value="2025-08-24">
+        <input type="time" id="importantDateTime" class="important-date-input" value="09:00">
+        <input type="text" id="importantDateEvent" class="important-date-event-input" placeholder="Event Description...">
+        <button class="quick-btn w-full mt-2" onclick="addImportantDate()">Add Event</button>
+        <div id="importantDatesList" class="mt-4 max-h-40 overflow-y-auto space-y-2">
+            <!-- Important dates will be populated here -->
+        </div>
+      </div>
+    </div>
+
     <!-- Random Facts Panel -->
     <div class="panel" data-panel="facts">
       <div class="panel-header">
@@ -1308,9 +1355,9 @@
         </div>
       </div>
       <div class="space-y-2">
-        <div class="p-2 bg-orange-900 rounded text-xs">Enhanced UI v2.0 Deployed</div>
-        <div class="p-2 bg-orange-900 rounded text-xs">New Security Features Added</div>
-        <div class="p-2 bg-orange-900 rounded text-xs">Performance Optimizations</div>
+        <div class="system-update-item">Enhanced UI v2.0 Deployed</div>
+        <div class="system-update-item">New Security Features Added</div>
+        <div class="system-update-item">Performance Optimizations</div>
       </div>
     </div>
 
@@ -1344,6 +1391,21 @@
       </div>
     </div>
 
+    <!-- Error Log Panel -->
+    <div class="panel" data-panel="errorLog">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-bug"></i> Error Log</div>
+        <div class="panel-controls">
+          <button class="panel-btn" onclick="downloadErrorLogs()"><i class="fas fa-download"></i></button>
+          <button class="panel-btn" onclick="clearErrorLogs()"><i class="fas fa-trash"></i></button>
+          <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div id="errorLogsList" class="max-h-40 overflow-y-auto space-y-2">
+        <!-- Error logs will be populated here -->
+      </div>
+    </div>
+
     <!-- Login History Panel -->
     <div class="panel" data-panel="loginHistory">
       <div class="panel-header">
@@ -1356,6 +1418,24 @@
         <!-- Login history will be populated here -->
       </div>
     </div>
+
+    <!-- Mouse Clicker Panel -->
+    <div class="panel" data-panel="mouseClicker">
+      <div class="panel-header">
+        <div class="panel-title"><i class="fas fa-mouse-pointer"></i> Mouse Clicker</div>
+        <div class="panel-controls">
+          <button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+      <div class="content">
+        <div id="clickCountDisplay" class="click-count-display">0</div>
+        <button class="click-button" onclick="incrementClickCounter()">Click Me!</button>
+        <div class="mouse-clicker-controls">
+            <button class="quick-btn mt-2" onclick="resetClickCounter()"><i class="fas fa-undo-alt"></i> Reset</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- Settings Modal -->
@@ -1791,7 +1871,11 @@ let loginAttempts = 3;
 let is24HourFormat = false;
 let currentZoom = 1;
 let activityLogs = [];
-let loginHistory = []; // Now used for login history
+let loginHistory = [];
+let importantDates = []; // New array for important dates
+let clickCount = 0; // New variable for mouse clicker
+let errorLogs = []; // New array for error logs
+
 let stats = {
   buttonPresses: 0,
   toggleSwitches: 0,
@@ -1824,7 +1908,10 @@ let calcOperation = '';
 // Initialization sequence
 window.addEventListener('load', () => {
   startInitialization();
-  loadLoginHistoryFromStorage(); // Load history when the page loads
+  loadLoginHistoryFromStorage();
+  loadImportantDatesFromStorage();
+  loadClickCountFromStorage();
+  loadErrorLogsFromStorage();
 });
 
 function startInitialization() {
@@ -1959,6 +2046,7 @@ function successfulLogin(username, userID) {
 
 function failedLogin() {
   loginAttempts--;
+  const errorMsg = 'Invalid credentials';
   document.getElementById('attemptsText').textContent = `Attempts Left: ${loginAttempts}`;
   document.getElementById('loginBox').classList.add('error-shake');
   
@@ -1967,10 +2055,11 @@ function failedLogin() {
   }, 500);
   
   if (loginAttempts <= 0) {
-    showError('No attempts remaining. System locked.');
+    const lockMsg = 'No attempts remaining. System locked.';
+    showError(lockMsg); // Will also log to error log
     document.getElementById('submitBtn').disabled = true;
   } else {
-    showError('Invalid credentials');
+    showError(errorMsg); // Will also log to error log
   }
   
   // Add to login history
@@ -1984,6 +2073,7 @@ function failedLogin() {
 
 function showError(message) {
   document.getElementById('errorMsg').textContent = message;
+  logError(message); // Log to the new error log panel
   setTimeout(() => {
     document.getElementById('errorMsg').textContent = '';
   }, 3000);
@@ -2005,11 +2095,14 @@ function initializeDashboard() {
   // Initialize components
   generateCalendar();
   initializeCanvas();
-  startSessionTimer(); // Now also updates quickbar session time
-  updateClock(); // To initialize quickbar real-time clock
-  setInterval(updateClock, 1000); // Keep real-time clock updated
+  startSessionTimer(); 
+  updateClock(); 
+  setInterval(updateClock, 1000); 
   updateStats();
-  updateLoginHistoryDisplay(); // Display any accumulated login history
+  updateLoginHistoryDisplay();
+  updateImportantDatesDisplay(); // Update important dates display
+  updateClickCountDisplay(); // Update click count display
+  updateErrorLogDisplay(); // Update error logs display
   
   logActivity('Dashboard initialized');
 }
@@ -2108,13 +2201,11 @@ function startSessionTimer() {
       
       const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       
-      // Update the main dashboard session time
       const mainSessionTime = document.getElementById('sessionTime');
       if (mainSessionTime) {
           mainSessionTime.textContent = timeString;
       }
       
-      // Update the quickbar session time
       const quickbarSessionTime = document.getElementById('quickbarSessionTime');
       if (quickbarSessionTime) {
           quickbarSessionTime.textContent = timeString;
@@ -2128,10 +2219,9 @@ function togglePanel(panelId) {
   const panel = document.getElementById(panelId);
   const isVisible = panel.style.display === 'flex' || panel.style.display === 'block';
   
-  // For modal-style panels like settings/timer/notes, toggle 'flex' display
   if (panel.classList.contains('settings-modal')) {
     panel.style.display = isVisible ? 'none' : 'flex';
-  } else { // For grid panels, toggle 'block' display
+  } else {
     panel.style.display = isVisible ? 'none' : 'block';
   }
 
@@ -2179,28 +2269,28 @@ function performSearch() {
   stats.searchQueries++;
   logActivity(`Searched for: ${query}`);
   
-  // Simple search implementation
-  const panels = document.querySelectorAll('.panels-grid > .panel'); // Only target direct children
+  const panels = document.querySelectorAll('.panels-grid > .panel'); 
   let found = false;
   panels.forEach(panel => {
     const text = panel.textContent.toLowerCase();
     const panelTitle = panel.querySelector('.panel-title').textContent.toLowerCase();
     
     if (text.includes(query) || panelTitle.includes(query)) {
-      panel.style.display = 'block'; // Ensure panel is visible if matched
-      panel.style.border = '2px solid var(--accent-color)'; // Highlight found panel
+      panel.style.display = 'block'; 
+      panel.style.border = '2px solid var(--accent-color)'; 
       found = true;
       setTimeout(() => {
         panel.style.border = '1px solid var(--border-color)';
       }, 2000);
     } else {
-        // Optional: hide non-matching panels if search is meant to filter
-        // panel.style.display = 'none';
+        // You might choose to hide non-matching panels or just let them stay
+        // panel.style.display = 'none'; 
     }
   });
 
   if (!found) {
       showNotification("No matching panels found.");
+      logError("Search failed: No matching panels found for query '" + query + "'.");
   }
   
   updateStats();
@@ -2214,7 +2304,6 @@ function logActivity(activity) {
     id: Date.now()
   });
   
-  // Keep only last 100 logs
   if (activityLogs.length > 100) {
     activityLogs = activityLogs.slice(0, 100);
   }
@@ -2224,7 +2313,7 @@ function logActivity(activity) {
 
 function updateActivityLogDisplay() {
   const container = document.getElementById('activityLogsList');
-  if (!container) return; // Safely exit if element not found
+  if (!container) return;
   container.innerHTML = '';
   
   activityLogs.slice(0, 10).forEach(log => {
@@ -2238,6 +2327,67 @@ function updateActivityLogDisplay() {
   });
 }
 
+function logError(message) {
+    const timestamp = new Date().toISOString();
+    errorLogs.unshift({
+        timestamp,
+        message,
+        id: Date.now()
+    });
+
+    if (errorLogs.length > 100) { // Keep last 100 errors
+        errorLogs = errorLogs.slice(0, 100);
+    }
+    saveErrorLogsToStorage(); // Persist changes
+    updateErrorLogDisplay();
+}
+
+function updateErrorLogDisplay() {
+    const container = document.getElementById('errorLogsList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    errorLogs.slice(0, 10).forEach(err => {
+        const errorElement = document.createElement('div');
+        errorElement.className = 'error-log-entry';
+        errorElement.innerHTML = `
+            <span>${err.message}</span>
+            <span class="error-log-time">${new Date(err.timestamp).toLocaleTimeString()}</span>
+        `;
+        container.appendChild(errorElement);
+    });
+}
+
+function clearErrorLogs() {
+    errorLogs = [];
+    saveErrorLogsToStorage();
+    updateErrorLogDisplay();
+    showNotification("Error logs cleared.");
+    logActivity("Error logs cleared.");
+}
+
+function downloadErrorLogs() {
+    const data = {
+        errorLogs: errorLogs,
+        timestamp: new Date().toISOString()
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `error_logs_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showNotification("Error logs downloaded.");
+    logActivity("Error logs downloaded.");
+    stats.buttonPresses++;
+    updateStats();
+}
+
+
 function saveLoginHistoryToStorage() {
   localStorage.setItem('loginHistory', JSON.stringify(loginHistory));
 }
@@ -2250,13 +2400,48 @@ function loadLoginHistoryFromStorage() {
   updateLoginHistoryDisplay();
 }
 
+function saveImportantDatesToStorage() {
+    localStorage.setItem('importantDates', JSON.stringify(importantDates));
+}
+
+function loadImportantDatesFromStorage() {
+    const storedDates = localStorage.getItem('importantDates');
+    if (storedDates) {
+        importantDates = JSON.parse(storedDates);
+    }
+    updateImportantDatesDisplay();
+}
+
+function saveClickCountToStorage() {
+    localStorage.setItem('mouseClickCount', clickCount);
+}
+
+function loadClickCountFromStorage() {
+    const storedClickCount = localStorage.getItem('mouseClickCount');
+    if (storedClickCount !== null) {
+        clickCount = parseInt(storedClickCount);
+    }
+    updateClickCountDisplay();
+}
+
+function saveErrorLogsToStorage() {
+    localStorage.setItem('errorLogs', JSON.stringify(errorLogs));
+}
+
+function loadErrorLogsFromStorage() {
+    const storedErrorLogs = localStorage.getItem('errorLogs');
+    if (storedErrorLogs) {
+        errorLogs = JSON.parse(storedErrorLogs);
+    }
+    updateErrorLogDisplay();
+}
+
 
 function updateLoginHistoryDisplay() {
   const container = document.getElementById('loginHistoryList');
-  if (!container) return; // Safely exit if element not found
-  container.innerHTML = ''; // Clear previous entries
+  if (!container) return;
+  container.innerHTML = '';
 
-  // Display most recent login attempts first (max 10 for readability)
   loginHistory.slice(0, 10).forEach(entry => { 
     const logElement = document.createElement('div');
     const statusClass = entry.success ? 'success' : 'failed';
@@ -2272,6 +2457,89 @@ function updateLoginHistoryDisplay() {
   });
 }
 
+// New Important Dates functions
+function addImportantDate() {
+    const dateInput = document.getElementById('importantDateDay').value;
+    const timeInput = document.getElementById('importantDateTime').value;
+    const eventInput = document.getElementById('importantDateEvent').value;
+
+    if (dateInput && timeInput && eventInput) {
+        const fullDate = `${dateInput}T${timeInput}`; // Format for Date object
+        const newDate = {
+            id: Date.now(),
+            datetime: new Date(fullDate).toISOString(),
+            event: eventInput
+        };
+        importantDates.unshift(newDate); // Add to the beginning
+        importantDates.sort((a, b) => new Date(a.datetime) - new Date(b.datetime)); // Keep sorted by date
+        saveImportantDatesToStorage();
+        updateImportantDatesDisplay();
+        logActivity(`Added important date: ${eventInput} on ${new Date(fullDate).toLocaleString()}`);
+        showNotification("Important date added!");
+
+        // Clear inputs
+        document.getElementById('importantDateDay').value = new Date().toISOString().split('T')[0];
+        document.getElementById('importantDateTime').value = new Date().toTimeString().slice(0,5);
+        document.getElementById('importantDateEvent').value = '';
+    } else {
+        showError("Please fill in all important date fields.");
+    }
+}
+
+function clearImportantDates() {
+    if (confirm("Are you sure you want to clear all important dates?")) {
+        importantDates = [];
+        saveImportantDatesToStorage();
+        updateImportantDatesDisplay();
+        logActivity("All important dates cleared.");
+        showNotification("All important dates cleared.");
+    }
+}
+
+function updateImportantDatesDisplay() {
+    const container = document.getElementById('importantDatesList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    importantDates.forEach(dateEntry => {
+        const entryElement = document.createElement('div');
+        entryElement.className = 'important-date-item';
+        const formattedDate = new Date(dateEntry.datetime).toLocaleString();
+        entryElement.innerHTML = `
+            <div class="date-time">${formattedDate}</div>
+            <div class="event-description">${dateEntry.event}</div>
+        `;
+        container.appendChild(entryElement);
+    });
+}
+
+
+// New Mouse Clicker functions
+function incrementClickCounter() {
+    clickCount++;
+    updateClickCountDisplay();
+    saveClickCountToStorage();
+    logActivity('Mouse click incremented');
+}
+
+function resetClickCounter() {
+    if (confirm("Are you sure you want to reset the click counter?")) {
+        clickCount = 0;
+        updateClickCountDisplay();
+        saveClickCountToStorage();
+        logActivity('Mouse clicker reset');
+        showNotification("Click counter reset!");
+    }
+}
+
+function updateClickCountDisplay() {
+    const display = document.getElementById('clickCountDisplay');
+    if (display) {
+        display.textContent = clickCount;
+    }
+}
+
+
 function updateStats() {
   document.getElementById('buttonPresses').textContent = stats.buttonPresses;
   document.getElementById('toggleSwitches').textContent = stats.toggleSwitches;
@@ -2283,7 +2551,10 @@ function updateStats() {
 function downloadActivityLogs() {
   const data = {
     activityLogs,
-    loginHistory, // Include login history in the download
+    loginHistory, 
+    importantDates,
+    mouseClickCount: clickCount,
+    errorLogs,
     stats,
     timestamp: new Date().toISOString()
   };
@@ -2300,6 +2571,7 @@ function downloadActivityLogs() {
   
   stats.buttonPresses++;
   logActivity('Activity logs downloaded');
+  showNotification('Activity logs downloaded!');
   updateStats();
 }
 
@@ -2308,17 +2580,16 @@ function showStats() {
   
   // Create stats chart
   const ctx = document.getElementById('statsChart').getContext('2d');
-  // Destroy existing chart if it exists to prevent recreation errors
   if (Chart.getChart(ctx)) {
     Chart.getChart(ctx).destroy();
   }
   new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries'],
+      labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries', 'Mouse Clicks'], // Added Mouse Clicks
       datasets: [{
-        data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries],
-        backgroundColor: ['#ff4500', '#ff6b35', '#00ff41', '#ffaa00', '#0066cc']
+        data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries, clickCount], // Included clickCount
+        backgroundColor: ['#ff4500', '#ff6b35', '#00ff41', '#ffaa00', '#0066cc', '#8800cc'] // Added a color
       }]
     },
     options: {
@@ -2327,7 +2598,7 @@ function showStats() {
       plugins: {
         legend: {
           labels: {
-            color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary') // Adjust label color based on theme
+            color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary')
           }
         }
       }
@@ -2480,7 +2751,7 @@ function saveCanvas() {
 // Calculator functions (still in code but not exposed via quickbar buttons)
 function appendToCalc(value) {
   const display = document.getElementById('calcDisplay');
-  if (display.textContent === '0' && value !== '.') { // Handle initial 0 logic for non-decimal entry
+  if (display.textContent === '0' && value !== '.') { 
     display.textContent = value;
   } else {
     display.textContent += value;
@@ -2503,7 +2774,7 @@ function deleteLast() {
 function calculateResult() {
   const display = document.getElementById('calcDisplay');
   try {
-    const result = eval(display.textContent.replace('×', '*').replace('÷', '/')); // Added ÷ handling
+    const result = eval(display.textContent.replace('×', '*').replace('÷', '/')); 
     display.textContent = result;
     logActivity(`Calculation performed: ${display.textContent} = ${result}`);
   } catch (error) {
@@ -2552,7 +2823,7 @@ function updateConversionUnits() {
     fromUnit.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
     toUnit.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
   });
-  convertUnits(); // Perform conversion with new units
+  convertUnits(); 
 }
 
 function convertUnits() {
@@ -2568,18 +2839,16 @@ function convertUnits() {
   
   let result = fromValue;
   
-  // Conversion factors (to base unit, then from base unit)
   const factors = {
-    length: { // to meters
+    length: { 
       'm': 1, 'km': 1000, 'cm': 0.01, 'mm': 0.001, 'in': 0.0254, 'ft': 0.3048
     },
-    weight: { // to grams
+    weight: { 
       'kg': 1000, 'g': 1, 'lb': 453.592, 'oz': 28.3495
     },
-    temperature: { // conversions handled separately (Celsius is base)
-        // will convert to celsius, then from celsius
+    temperature: { 
     },
-    volume: { // to liters
+    volume: { 
         'l': 1, 'ml': 0.001, 'gal': 3.78541, 'qt': 0.946353
     }
   };
@@ -2605,15 +2874,12 @@ function convertUnits() {
   logActivity(`Unit converted: ${fromValue} ${fromUnit} to ${result.toFixed(6)} ${toUnit}`);
 }
 
-
-// Media functions removed as per instructions
-
 // Theme functions
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
   isLightMode = document.body.classList.contains('light-theme');
   logActivity('Theme toggled to ' + (isLightMode ? 'Light Mode' : 'Dark Mode'));
-  updateStatsChartTheme(); // Update chart theme immediately
+  updateStatsChartTheme(); 
 }
 
 function applyAccentTheme(theme, event) {
@@ -2631,24 +2897,39 @@ function applyAccentTheme(theme, event) {
   };
   
   if (themes[theme]) {
-    // These only change the ACCENT colors, not the main dark/light theme
     root.style.setProperty('--accent-color', themes[theme].primary);
     root.style.setProperty('--accent-secondary', themes[theme].secondary);
     
-    // For light theme, update these too for a new accent
+    // For light theme, update these too for a new accent for better visibility of success/error etc.
     if (document.body.classList.contains('light-theme')) {
-        root.style.setProperty('--success-color', (theme === 'green' ? '#28a745' : themes[theme].primary)); // Example
-        root.style.setProperty('--error-color', (theme === 'red' ? '#dc3545' : themes[theme].primary));   // Example
-        root.style.setProperty('--warning-color', (theme === 'amber' ? '#ffc107' : themes[theme].primary)); // Example
+        // These are just example replacements, ideally you'd pick good contrasting colors per accent.
+        // For simplicity, reusing the accent color for notification borders/left-borders on specific items.
+        root.style.setProperty('--success-color', themes[theme].primary); 
+        root.style.setProperty('--error-color', themes[theme].primary);   
+        root.style.setProperty('--warning-color', themes[theme].primary); 
+    } else {
+        // Reset to original dark theme colors if not in light mode for consistency
+        root.style.setProperty('--success-color', '#00ff41'); 
+        root.style.setProperty('--error-color', '#ff0040');   
+        root.style.setProperty('--warning-color', '#ffaa00');
     }
 
 
     document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
-    event.target.classList.add('active'); // Use event.target to highlight the clicked button
+    event.target.classList.add('active'); 
     
     logActivity(`Accent theme changed to: ${theme}`);
-    updateStatsChartTheme(); // Update chart theme immediately
+    updateStatsChartTheme(); 
   }
+}
+
+// Helper to get a contrasting color for notification icons (simplistic example)
+function getContrastColor(hexcolor) {
+    const r = parseInt(hexcolor.substr(1, 2), 16);
+    const g = parseInt(hexcolor.substr(3, 2), 16);
+    const b = parseInt(hexcolor.substr(5, 2), 16);
+    const y = (r * 299 + g * 587 + b * 114) / 1000;
+    return (y >= 128) ? '#000000' : '#FFFFFF'; // returns black or white
 }
 
 function updateStatsChartTheme() {
@@ -2730,6 +3011,7 @@ function showNotification(message) {
 
 function logout() {
   if (confirm('Are you sure you want to logout?')) {
+    logActivity('System logged out');
     location.reload();
   }
 }
@@ -2752,16 +3034,16 @@ function takeScreenshot() {
 
 function togglePanelsGridVisibility() {
     const panelsGrid = document.getElementById('panelsGrid');
-    if (panelsGrid.style.display === 'none') {
+    if (panelsGrid.style.display === 'none' || panelsGrid.style.opacity === '0') {
         panelsGrid.style.display = 'grid';
         panelsGrid.style.opacity = '1';
         showNotification('Sections are now visible.');
         logActivity('Sections toggled ON');
     } else {
-        panelsGrid.style.opacity = '0'; // Add a fade effect
+        panelsGrid.style.opacity = '0'; 
         setTimeout(() => {
             panelsGrid.style.display = 'none';
-        }, 300); // Wait for fade out
+        }, 300);
         showNotification('Sections are now hidden.');
         logActivity('Sections toggled OFF');
     }
@@ -2770,9 +3052,9 @@ function togglePanelsGridVisibility() {
 }
 
 function restartSystem() {
-    if (confirm('Are you sure you want to restart the system? You will be logged out.')) {
+    if (confirm('Are you sure you want to restart the system? You will be logged out and all unsaved data will be lost.')) {
         logActivity('System restarted');
-        localStorage.clear(); // Clear all data on restart for a clean slate
+        localStorage.clear(); 
         location.reload(); 
     }
 }
@@ -2782,21 +3064,18 @@ function restartSystem() {
 document.addEventListener('DOMContentLoaded', () => {
   setupToggles();
   
-  // Submit button
   document.getElementById('submitBtn').addEventListener('click', (e) => {
     e.preventDefault();
     stats.buttonPresses++;
     attemptLogin();
   });
   
-  // Enter key for login
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && !document.getElementById('loginScreen').classList.contains('hidden')) {
       attemptLogin();
     }
   });
   
-  // Color and thickness updates for drawing
   document.getElementById('penColor').addEventListener('change', (e) => {
     currentColor = e.target.value;
   });
@@ -2805,24 +3084,22 @@ document.addEventListener('DOMContentLoaded', () => {
     currentThickness = parseInt(e.target.value);
   });
   
-  // Load saved notes
   const savedNotes = localStorage.getItem('textNotes');
   if (savedNotes) {
     document.getElementById('textNotes').value = savedNotes;
   }
   
-  // Track all button clicks for stats (general button, excludes login specific as already tracked)
   document.addEventListener('click', (e) => {
-    // Only increment stats if the click target is a button, but exclude specific elements if they already increment stats elsewhere (like login)
-    // and ensure it's not a panel-btn as these are handled separately within their panel functions
-    if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls')) || e.target.closest('.quick-btn')) {
-        // Prevent double counting if quick-btn handler also has a specific handler
-        if (!e.target.classList.contains('submit-btn')) { // Submit button already tracked
-            stats.buttonPresses++;
-            updateStats();
-        }
+    if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) || e.target.closest('.quick-btn')) {
+        stats.buttonPresses++;
+        updateStats();
     }
   });
+  // Set default values for Important Dates inputs (current date and a default time)
+  const today = new Date();
+  document.getElementById('importantDateDay').value = today.toISOString().split('T')[0];
+  document.getElementById('importantDateTime').value = "09:00"; // Default to 9 AM
+
 });
 </script>
 
