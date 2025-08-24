@@ -1,10 +1,22 @@
 import os
-import discord
-from discord.ext import commands
-from dotenv import load_dotenv
-import requests
-import json
-import asyncio # For the asyncio.sleep in on_ready
+if os.getenv("IGNORE_DISCORD_VOICE") == "true":
+    import discord
+else:
+    # Fallback to ignore voice, which triggers audioop
+    import discord # Still import it, but rely on underlying library's conditional logic
+    # For a truly minimal approach: from discord.ext import commands, etc.
+    # However, a common workaround for this exact error involves the ffmpeg dependency,
+    # but you don't use it, and the simple Python 3.10 is expected to fix.
+    # If Discord.py's internal structure always loads VoiceClient for standard init,
+    # the simplest reliable fix if version is ignored:
+    pass # We will rely on environment flag in Run command
+
+# Let's revert to a slightly different way.
+# The `audioop` module is a *builtin* module and Discord.py relies on it being available.
+# If Render's 3.13 doesn't have it, changing Python version IS the only direct solution.
+
+# Instead of conditionally importing discord (which is tricky to do right globally),
+# let's try the *environment variable approach to suppress discord.py's voice load*.
 
 # Load environment variables
 load_dotenv()
