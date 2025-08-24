@@ -133,7 +133,7 @@
     body.light-theme .login-entry-container.failed {
         border-left: 4px solid var(--error-color);
     }
-    body.light-theme .error-log-entry.error {
+    body.light-theme .error-log-entry.error { /* This rule is specific to .error class, adjusted below */
         border-left: 4px solid var(--error-color);
         background-color: var(--primary-bg);
         color: var(--text-primary);
@@ -220,6 +220,27 @@
       background: var(--secondary-bg);
       border-color: var(--border-color);
       color: var(--text-primary);
+    }
+    /* Light theme specific styles for new elements */
+    body.light-theme .important-date-input, 
+    body.light-theme .important-date-event-input,
+    body.light-theme .important-date-item,
+    body.light-theme #randomFact,
+    body.light-theme #dailyQuote,
+    body.light-theme .error-log-entry {
+        background-color: var(--primary-bg) !important; /* Use !important to ensure override */
+        color: var(--text-primary) !important;
+        border-color: var(--border-color) !important;
+    }
+    body.light-theme .important-date-item {
+        border-left-color: var(--accent-secondary) !important;
+    }
+    body.light-theme .click-button {
+        background: var(--accent-color) !important;
+        color: white !important;
+    }
+    body.light-theme .click-button:hover {
+        background: var(--accent-secondary) !important;
     }
 
 
@@ -769,6 +790,42 @@
         font-size: 10px;
     }
 
+    /* Important Dates styling */
+    .important-date-input, .important-date-event-input {
+        width: 100%;
+        padding: 8px 10px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background-color: var(--primary-bg); /* Added background color */
+        color: var(--text-primary);
+        font-size: 14px;
+        transition: border-color 0.3s ease;
+    }
+    .important-date-input:focus, .important-date-event-input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+    }
+    .important-date-item {
+        padding: 8px 10px;
+        margin-bottom: 8px;
+        border-radius: 6px;
+        background-color: var(--primary-bg); /* Added background color */
+        border-left: 4px solid var(--accent-secondary); /* Accent for visual interest */
+        color: var(--text-primary);
+        font-size: 13px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .important-date-item .date-time {
+        font-weight: bold;
+        color: var(--accent-color);
+    }
+    .important-date-item .event-description {
+        color: var(--text-secondary);
+    }
+
 
     /* System Updates Panel Styling */
     .system-update-item {
@@ -898,6 +955,24 @@
       color: var(--text-secondary);
       font-size: 10px;
     }
+
+    /* Error Log Entries */
+    .error-log-entry {
+        padding: 10px;
+        background: var(--primary-bg); /* Added background color */
+        border-left: 4px solid var(--error-color);
+        margin-bottom: 10px;
+        border-radius: 6px;
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        color: var(--text-primary);
+    }
+    .error-log-time {
+        color: var(--text-secondary);
+        font-size: 10px;
+    }
+
 
     /* Stats Display */
     .stats-grid {
@@ -1050,6 +1125,51 @@
       padding: 5px 10px;
       color: white;
       font-family: 'Courier New', monospace;
+    }
+
+    /* Clicker Button */
+    .click-button {
+        width: 100%;
+        padding: 15px;
+        background: var(--accent-color); /* Matches quick-btn */
+        color: white;
+        font-size: 18px;
+        font-weight: 700;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 10px;
+    }
+    .click-button:hover {
+        background: var(--accent-secondary);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(var(--accent-color), 0.4);
+    }
+    .click-count-display {
+        font-family: 'Orbitron', monospace;
+        font-size: 48px;
+        font-weight: 900;
+        color: var(--accent-color);
+        text-align: center;
+        margin-bottom: 20px;
+        padding: 10px;
+        background-color: var(--primary-bg); /* Add background */
+        border-radius: 10px;
+        border: 1px solid var(--border-color);
+    }
+
+    /* Daily Quotes & Random Facts content styling */
+    #randomFact, #dailyQuote {
+        background-color: var(--primary-bg); /* Background for text content */
+        padding: 15px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        line-height: 1.5;
+        font-style: italic;
+        color: var(--text-primary);
     }
 
     /* Responsive */
