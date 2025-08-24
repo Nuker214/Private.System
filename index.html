@@ -73,6 +73,9 @@
     body.light-theme .search-btn {
       background: var(--accent-color);
     }
+    body.light-theme .search-btn:hover { /* Added for light mode hover effect */
+        background: var(--accent-secondary);
+    }
     body.light-theme .panels-grid {
       border: none;
     }
@@ -142,6 +145,9 @@
       background: var(--secondary-bg);
       border-color: var(--border-color);
       color: var(--accent-color);
+    }
+    body.light-theme .calc-buttons {
+        border-color: var(--border-color); /* Added for clarity in light theme */
     }
     body.light-theme .calc-btn {
       background: var(--secondary-bg);
@@ -485,6 +491,7 @@
     .dashboard-quickbar {
       display: flex;
       flex-wrap: wrap;
+      justify-content: space-between; /* Space out the left and right groups */
       gap: 10px;
       margin-bottom: 20px;
       padding: 15px;
@@ -494,22 +501,35 @@
       align-items: center; /* Align items vertically in quickbar */
     }
 
-    .quickbar-text-display {
-        font-family: 'Orbitron', monospace;
-        font-size: 14px;
-        color: var(--accent-color);
-        background: var(--primary-bg);
-        padding: 8px 12px;
-        border-radius: 8px;
+    /* Styles for the time displays within the search container */
+    .quickbar-time-info {
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Space between the text labels and the actual time */
+        color: var(--text-primary);
+        font-size: 12px;
         white-space: nowrap;
-        border: 1px solid var(--border-color);
+    }
+    .quickbar-time-value {
+        font-family: 'Orbitron', monospace;
+        color: var(--accent-color);
+        font-weight: bold;
+        font-size: 13px; /* Slightly smaller than regular buttons but legible */
     }
 
-
-    .search-container {
+    .search-group { /* New container for search input and time displays */
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Space between search and time info */
+        flex-grow: 1; /* Allow it to grow, but respecting max-width */
+        max-width: 50%; /* Adjust based on desired layout balance */
+        min-width: 350px; /* Ensure minimum width for contents */
+    }
+    .search-container { /* This now just wraps the input and search button visually */
       position: relative;
-      flex: 1;
-      max-width: 300px;
+      display: flex; /* Make it a flex container to align search bar and button */
+      flex-grow: 1;
+      max-width: 300px; /* Restrict max width of the input group */
     }
 
     .search-bar {
@@ -520,10 +540,11 @@
       border-radius: 25px;
       color: white;
       font-size: 14px;
+      flex-grow: 1; /* Allow the input to take available space */
     }
 
     .search-btn {
-      position: absolute;
+      position: absolute; /* Keep it absolute for placement inside the search input visuals */
       right: 5px;
       top: 50%;
       transform: translateY(-50%);
@@ -534,6 +555,17 @@
       height: 30px;
       color: white;
       cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .search-btn:hover {
+        background: var(--accent-secondary);
+    }
+
+    .quick-btn-group { /* New container for all buttons to the right */
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-end; /* Align buttons to the right within their group */
     }
 
     .quick-btn {
@@ -932,6 +964,24 @@
     }
 
     /* Responsive */
+    @media (max-width: 1200px) {
+        .dashboard-quickbar .search-group {
+            flex-direction: column; /* Stack search bar and time info on smaller screens */
+            max-width: 100%;
+            align-items: flex-start; /* Align text left */
+        }
+        .dashboard-quickbar .quickbar-time-info {
+            width: 100%;
+            justify-content: space-between;
+        }
+        .dashboard-quickbar .quick-btn-group {
+            width: 100%; /* Make buttons take full width when stacked */
+            justify-content: center;
+        }
+        .search-container {
+            max-width: 100%;
+        }
+    }
     @media (max-width: 768px) {
       .login-box {
         width: 90%;
@@ -1090,51 +1140,57 @@
     </div>
   </div>
 
-  <!-- Quick Bar with Search -->
+  <!-- Quick Bar with Search, Session Time, Real Time, and Buttons -->
   <div class="dashboard-quickbar">
-    <div class="search-container">
-      <input type="text" class="search-bar" id="searchBar" placeholder="Search panels, features...">
-      <button class="search-btn" onclick="performSearch()"><i class="fas fa-search"></i></button>
+    <!-- Left Section: Search and Time Displays -->
+    <div class="search-group">
+        <div class="search-container">
+            <input type="text" class="search-bar" id="searchBar" placeholder="Search panels, features...">
+            <button class="search-btn" onclick="performSearch()"><i class="fas fa-search"></i></button>
+        </div>
+        <div class="quickbar-time-info">Session Time: <span id="quickbarSessionTime" class="quickbar-time-value">00:00:00</span></div>
+        <div class="quickbar-time-info">Real Time: <span id="quickbarCurrentTime" class="quickbar-time-value">00:00:00</span></div>
     </div>
     
-    <button class="quick-btn" onclick="togglePanel('settingsModal')">
-      <i class="fas fa-cog"></i> Settings
-    </button>
-    <button class="quick-btn" onclick="togglePanel('timerPanel')">
-      <i class="fas fa-stopwatch"></i> Timer
-    </button>
-    <button class="quick-btn" onclick="togglePanel('notesPanel')">
-      <i class="fas fa-pen"></i> Notes
-    </button>
-    <button class="quick-btn" onclick="showStats()">
-      <i class="fas fa-chart-bar"></i> Stats
-    </button>
-    <span class="quickbar-text-display">Session Time: <span id="quickbarSessionTime">00:00:00</span></span>
-    <span class="quickbar-text-display">Real Time: <span id="quickbarCurrentTime">00:00:00</span></span>
-    <button class="quick-btn" onclick="takeScreenshot()">
-        <i class="fas fa-camera"></i> Screenshot
-    </button>
-    <button class="quick-btn" onclick="togglePanelsGridVisibility()">
-        <i class="fas fa-toggle-on"></i> Toggle Sections
-    </button>
-    <button class="quick-btn" onclick="adjustZoom(0.1)">
-        <i class="fas fa-search-plus"></i> Zoom In
-    </button>
-    <button class="quick-btn" onclick="adjustZoom(-0.1)">
-        <i class="fas fa-search-minus"></i> Zoom Out
-    </button>
-    <button class="quick-btn" onclick="restartSystem()">
-        <i class="fas fa-redo-alt"></i> Restart
-    </button>
-    <button class="quick-btn panic-btn" onclick="window.open('https://clever.com', '_blank')">
-        <i class="fas fa-exclamation-triangle"></i> Panic
-    </button>
-    <button class="quick-btn" onclick="toggleTheme()">
-      <i class="fas fa-palette"></i> Theme
-    </button>
-    <button class="quick-btn" onclick="logout()">
-      <i class="fas fa-sign-out-alt"></i> Logout
-    </button>
+    <!-- Right Section: All other buttons -->
+    <div class="quick-btn-group">
+      <button class="quick-btn" onclick="togglePanel('settingsModal')">
+        <i class="fas fa-cog"></i> Settings
+      </button>
+      <button class="quick-btn" onclick="togglePanel('timerPanel')">
+        <i class="fas fa-stopwatch"></i> Timer
+      </button>
+      <button class="quick-btn" onclick="togglePanel('notesPanel')">
+        <i class="fas fa-pen"></i> Notes
+      </button>
+      <button class="quick-btn" onclick="showStats()">
+        <i class="fas fa-chart-bar"></i> Stats
+      </button>
+      <button class="quick-btn" onclick="takeScreenshot()">
+          <i class="fas fa-camera"></i> Screenshot
+      </button>
+      <button class="quick-btn" onclick="togglePanelsGridVisibility()">
+          <i class="fas fa-toggle-on"></i> Toggle Sections
+      </button>
+      <button class="quick-btn" onclick="adjustZoom(0.1)">
+          <i class="fas fa-search-plus"></i> Zoom In
+      </button>
+      <button class="quick-btn" onclick="adjustZoom(-0.1)">
+          <i class="fas fa-search-minus"></i> Zoom Out
+      </button>
+      <button class="quick-btn" onclick="restartSystem()">
+          <i class="fas fa-redo-alt"></i> Restart
+      </button>
+      <button class="quick-btn panic-btn" onclick="window.open('https://clever.com', '_blank')">
+          <i class="fas fa-exclamation-triangle"></i> Panic
+      </button>
+      <button class="quick-btn" onclick="toggleTheme()">
+        <i class="fas fa-palette"></i> Theme
+      </button>
+      <button class="quick-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
+    </div>
   </div>
 
   <!-- Main Panels Grid -->
@@ -1757,10 +1813,11 @@ function updateClock() {
     day: 'numeric' 
   });
   
+  // Update login screen time
   document.getElementById('currentTime').textContent = time;
   document.getElementById('currentDate').textContent = date;
   
-  // Update real-time clock in quickbar if it exists
+  // Update quickbar real-time clock if it exists
   const quickbarRealTimeClock = document.getElementById('quickbarCurrentTime');
   if (quickbarRealTimeClock) {
     quickbarRealTimeClock.textContent = time;
@@ -2301,7 +2358,7 @@ function saveCanvas() {
   logActivity('Canvas saved');
 }
 
-// Calculator functions
+// Calculator functions (still in code but not exposed via quickbar buttons)
 function appendToCalc(value) {
   const display = document.getElementById('calcDisplay');
   if (display.textContent === '0' && value !== '.') { // Handle initial 0 logic for non-decimal entry
@@ -2335,7 +2392,7 @@ function calculateResult() {
   }
 }
 
-// Unit converter
+// Unit converter (still in code but not exposed via quickbar buttons)
 function updateConversionUnits() {
   const type = document.getElementById('conversionType').value;
   const fromUnit = document.getElementById('fromUnit');
@@ -2506,7 +2563,7 @@ function refreshQuote() {
     "\"It is during our darkest moments that we must focus to see the light.\" - Aristotle"
   ];
   
-  document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * facts.length)];
   logActivity('Daily quote refreshed');
 }
 
@@ -2630,17 +2687,19 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Track all button clicks for stats (general button, excludes login specific as already tracked)
   document.addEventListener('click', (e) => {
-    if (e.target.tagName === 'BUTTON' && !e.target.id.includes('submitBtn')) {
-      stats.buttonPresses++;
-      updateStats();
-    } else if (e.target.closest('.quick-btn')) { // Capture clicks on quickbar buttons
-      stats.buttonPresses++;
-      updateStats();
+    // Only increment stats if the click target is a button, but exclude specific elements if they already increment stats elsewhere (like login)
+    // and ensure it's not a panel-btn as these are handled separately within their panel functions
+    if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls')) || e.target.closest('.quick-btn')) {
+        // Prevent double counting if quick-btn handler also has a specific handler
+        if (!e.target.classList.contains('submit-btn')) { // Submit button already tracked
+            stats.buttonPresses++;
+            updateStats();
+        }
     }
   });
 
   // Initialize conversion units
-  updateConversionUnits();
+  // updateConversionUnits(); // Commented out, as Calculator and Media are removed from QuickBar
 });
 </script>
 
