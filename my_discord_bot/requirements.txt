@@ -1,1 +1,8 @@
-
+discord-py==2.3.2           # Discord API wrapper for your bot
+Flask==2.3.2                # Web framework for your backend server
+Flask-SocketIO==5.3.6       # Adds Socket.IO support to Flask for real-time communication
+python-dotenv==1.0.0        # Used to load environment variables from the .env file
+requests==2.31.0            # Used by your bot.py to make HTTP requests to the Flask backend
+Flask-Cors==4.0.0           # Enables Cross-Origin Resource Sharing (CORS) for Flask. Crucial for GitHub Pages to talk to your Render backend.
+gunicorn==22.0.0            # A WSGI HTTP server, used to run Flask apps in production on Render.
+gevent-websocket==0.10.1    # Required by Gunicorn to efficiently handle WebSockets with Flask-SocketIO.
