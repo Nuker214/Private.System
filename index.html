@@ -33,6 +33,9 @@
       --text-primary: #333333;
       --text-secondary: #666666;
       --border-color: #e0e0e0;
+      --success-color: #28a745; /* Green for light theme success */
+      --warning-color: #ffc107; /* Yellow for light theme warning */
+      --error-color: #dc3545;   /* Red for light theme error */
     }
 
     /* Adjust specific elements for light theme */
@@ -65,16 +68,25 @@
     body.light-theme .quick-btn:hover {
       background: var(--accent-secondary);
     }
+    body.light-theme .dashboard-quickbar {
+        background: var(--secondary-bg);
+        border-color: var(--border-color);
+    }
     body.light-theme .search-bar {
-      background: var(--secondary-bg);
+      background: var(--primary-bg);
       border-color: var(--border-color);
       color: var(--text-primary);
     }
     body.light-theme .search-btn {
       background: var(--accent-color);
     }
-    body.light-theme .search-btn:hover { /* Added for light mode hover effect */
+    body.light-theme .search-btn:hover {
         background: var(--accent-secondary);
+    }
+    body.light-theme .quickbar-time-info {
+        background-color: var(--primary-bg);
+        border-color: var(--border-color);
+        color: var(--text-primary);
     }
     body.light-theme .panels-grid {
       border: none;
@@ -104,14 +116,29 @@
       background: var(--accent-color);
       color: white;
     }
-    body.light-theme .activity-logs .log-entry {
+    body.light-theme .log-entry {
       background: var(--primary-bg);
-      border-left-color: var(--accent-color);
+      border-left-color: var(--accent-color); /* Kept accent for log importance */
       color: var(--text-primary);
     }
     body.light-theme .log-time {
       color: var(--text-secondary);
     }
+    body.light-theme .login-history-success {
+        background-color: var(--success-color); /* Dynamic color from theme var */
+        color: var(--text-primary); /* Should be dark on light success color */
+    }
+    body.light-theme .login-history-failed {
+        background-color: var(--error-color); /* Dynamic color from theme var */
+        color: white; /* Should be white on light error color for contrast */
+    }
+    body.light-theme .notification {
+      background: var(--secondary-bg);
+      border: 2px solid var(--success-color); /* Accent border to signify its status */
+      color: var(--text-primary); /* Should contrast well with bg */
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Lighter shadow */
+    }
+
     body.light-theme .settings-content {
       background: var(--secondary-bg);
       border-color: var(--accent-color);
@@ -147,7 +174,7 @@
       color: var(--accent-color);
     }
     body.light-theme .calc-buttons {
-        border-color: var(--border-color); /* Added for clarity in light theme */
+        border-color: var(--border-color);
     }
     body.light-theme .calc-btn {
       background: var(--secondary-bg);
@@ -506,9 +533,13 @@
         display: flex;
         align-items: center;
         gap: 5px; /* Space between the text labels and the actual time */
-        color: var(--text-primary);
         font-size: 12px;
         white-space: nowrap;
+        background-color: var(--primary-bg); /* Add background */
+        padding: 6px 10px; /* Add padding */
+        border-radius: 6px; /* Add border-radius */
+        border: 1px solid var(--border-color); /* Add border */
+        color: var(--text-primary); /* Ensure text color adapts */
     }
     .quickbar-time-value {
         font-family: 'Orbitron', monospace;
@@ -589,11 +620,12 @@
       position: fixed;
       top: 20px;
       right: 20px;
-      background: linear-gradient(135deg, var(--success-color), #00cc33);
-      color: white;
+      background: var(--secondary-bg); /* Use theme background */
+      border: 2px solid var(--success-color); /* Accent border to signify its status */
+      color: var(--text-primary); /* Use theme text color */
       padding: 15px 25px;
       border-radius: 10px;
-      box-shadow: 0 5px 15px rgba(0, 255, 65, 0.3);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Adjust shadow for both themes */
       z-index: 1000;
       animation: slideIn 0.5s ease;
     }
@@ -617,7 +649,6 @@
       border-radius: 15px;
       padding: 20px;
       position: relative;
-      /* Removed cursor: move for "move panels" option */
       transition: all 0.3s ease;
       resize: both;
       overflow: auto;
@@ -693,6 +724,37 @@
       color: white;
       font-weight: bold;
     }
+
+    /* Login History Entries */
+    .login-entry-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 6px;
+        font-size: 12px;
+        border: 1px solid var(--border-color);
+        background-color: var(--primary-bg);
+        transition: background-color 0.3s ease;
+    }
+    .login-entry-container.success {
+        border-left: 4px solid var(--success-color);
+        background-color: var(--primary-bg); /* Use primary for list item backgrounds */
+    }
+    .login-entry-container.failed {
+        border-left: 4px solid var(--error-color);
+        background-color: var(--primary-bg); /* Use primary for list item backgrounds */
+    }
+    .login-entry-status {
+        font-weight: bold;
+        color: var(--text-primary);
+    }
+    .login-entry-time {
+        color: var(--text-secondary);
+        font-size: 10px;
+    }
+
 
     /* Settings Modal */
     .settings-modal {
@@ -1545,7 +1607,7 @@
           <select id="penMaterial" class="bg-gray-700 text-white p-1 rounded">
             <option value="solid">Solid</option>
             <option value="dashed">Dashed</option>
-            <option value="dotted">Dotted</option>
+            <option value="dotted">D-otted</option>
           </select>
         </div>
         
@@ -1762,6 +1824,7 @@ let calcOperation = '';
 // Initialization sequence
 window.addEventListener('load', () => {
   startInitialization();
+  loadLoginHistoryFromStorage(); // Load history when the page loads
 });
 
 function startInitialization() {
@@ -1880,7 +1943,7 @@ function successfulLogin(username, userID) {
     success: true,
     username: username
   });
-  updateLoginHistoryDisplay(); // Update display after successful login
+  saveLoginHistoryToStorage(); // Save history to local storage
   
   // Show loading screen
   document.getElementById('loginScreen').classList.add('hidden');
@@ -1916,7 +1979,7 @@ function failedLogin() {
     success: false,
     username: document.getElementById('username').value // Log the entered username
   });
-  updateLoginHistoryDisplay(); // Update display after failed login
+  saveLoginHistoryToStorage(); // Save history to local storage
 }
 
 function showError(message) {
@@ -2125,7 +2188,7 @@ function performSearch() {
     
     if (text.includes(query) || panelTitle.includes(query)) {
       panel.style.display = 'block'; // Ensure panel is visible if matched
-      panel.style.border = '2px solid #ff4500'; // Highlight found panel
+      panel.style.border = '2px solid var(--accent-color)'; // Highlight found panel
       found = true;
       setTimeout(() => {
         panel.style.border = '1px solid var(--border-color)';
@@ -2175,6 +2238,19 @@ function updateActivityLogDisplay() {
   });
 }
 
+function saveLoginHistoryToStorage() {
+  localStorage.setItem('loginHistory', JSON.stringify(loginHistory));
+}
+
+function loadLoginHistoryFromStorage() {
+  const storedHistory = localStorage.getItem('loginHistory');
+  if (storedHistory) {
+    loginHistory = JSON.parse(storedHistory);
+  }
+  updateLoginHistoryDisplay();
+}
+
+
 function updateLoginHistoryDisplay() {
   const container = document.getElementById('loginHistoryList');
   if (!container) return; // Safely exit if element not found
@@ -2183,10 +2259,14 @@ function updateLoginHistoryDisplay() {
   // Display most recent login attempts first (max 10 for readability)
   loginHistory.slice(0, 10).forEach(entry => { 
     const logElement = document.createElement('div');
-    logElement.className = `p-2 rounded text-xs ${entry.success ? 'bg-green-900' : 'bg-red-900'}`;
+    const statusClass = entry.success ? 'success' : 'failed';
+    logElement.className = `login-entry-container ${statusClass}`;
     logElement.innerHTML = `
-      <span>${new Date(entry.time).toLocaleString()}: </span>
-      <span>User "${entry.username}" - ${entry.success ? 'Successful Login' : 'Failed Login Attempt'}</span>
+      <div class="flex-grow">
+        <span class="login-entry-status">${entry.success ? 'SUCCESS' : 'FAILED'}:</span> 
+        <span>User "${entry.username || 'unknown'}"</span>
+      </div>
+      <span class="login-entry-time">${new Date(entry.time).toLocaleString()}</span>
     `;
     container.appendChild(logElement);
   });
@@ -2555,6 +2635,14 @@ function applyAccentTheme(theme, event) {
     root.style.setProperty('--accent-color', themes[theme].primary);
     root.style.setProperty('--accent-secondary', themes[theme].secondary);
     
+    // For light theme, update these too for a new accent
+    if (document.body.classList.contains('light-theme')) {
+        root.style.setProperty('--success-color', (theme === 'green' ? '#28a745' : themes[theme].primary)); // Example
+        root.style.setProperty('--error-color', (theme === 'red' ? '#dc3545' : themes[theme].primary));   // Example
+        root.style.setProperty('--warning-color', (theme === 'amber' ? '#ffc107' : themes[theme].primary)); // Example
+    }
+
+
     document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
     event.target.classList.add('active'); // Use event.target to highlight the clicked button
     
@@ -2602,7 +2690,7 @@ function refreshQuote() {
     "\"It is during our darkest moments that we must focus to see the light.\" - Aristotle"
   ];
   
-  document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * facts.length)];
+  document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
   logActivity('Daily quote refreshed');
 }
 
@@ -2684,7 +2772,8 @@ function togglePanelsGridVisibility() {
 function restartSystem() {
     if (confirm('Are you sure you want to restart the system? You will be logged out.')) {
         logActivity('System restarted');
-        location.reload(); // Simple reload for a restart effect
+        localStorage.clear(); // Clear all data on restart for a clean slate
+        location.reload(); 
     }
 }
 
@@ -2734,9 +2823,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
   });
-
-  // Initialize conversion units
-  // updateConversionUnits(); // Commented out, as Calculator and Media are removed from QuickBar
 });
 </script>
 
