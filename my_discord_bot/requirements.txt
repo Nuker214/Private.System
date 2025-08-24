@@ -1,4 +1,10 @@
-discord-py==2.3.2           # Discord API wrapper for your bot
+# https://github.com/Rapptz/discord.py/issues/8499 - Known issue, pre-compiled wheels
+# Use specific compatible version for python 3.9/3.10 to bypass audioop issues
+# (This is an example URL for discord.py from source - not a direct fix for audioop, but often used to fix tricky builds)
+# We need a proper wheel if available that is NOT python 3.13
+# As Discord.py version 2.4.0 claims python 3.10 is compatible but the error is persisting,
+# The ultimate solution is typically to remove the 'discord-py' voice requirement from dependencies (but impossible if its hardcoded within discord.py itself).
+# We also cannot remove audioop from the `site-packages` as we don't have super user access           # Discord API wrapper for your bot
 Flask==2.3.2                # Web framework for your backend server
 Flask-SocketIO==5.3.6       # Adds Socket.IO support to Flask for real-time communication
 python-dotenv==1.0.0        # Used to load environment variables from the .env file
