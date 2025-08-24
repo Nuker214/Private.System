@@ -1,26 +1,3 @@
-I sincerely apologize for the frustration. You are absolutely right; I mistakenly re-inserted the incorrect `attemptLogin()` logic and missed updating the `loginAttempts` count.
-
-My goal is to integrate your desired code **precisely**.
-
-**My immediate corrective action:**
-
-1.  **Directly insert the provided `attemptLogin` and `resetCounter` snippets, ensuring the `attempts` count starts at `5` as specified in your desired login logic.**
-2.  **Ensure `flashRedOutline` and `updateAttemptsText` behave as per your provided logic.**
-3.  **Confirm the specific webhook URLs you provided for `RESET DETECTOR`, `CORRECT LOGGING`, and `INCORRECT LOGGING` are correctly mapped in the `webhookUrls` constant.**
-4.  **Rectify the issue of getting stuck on the loading screen**, which likely stemmed from misconfiguration or errors in the transition logic that were introduced during previous changes. This could be due to:
-    *   Incorrectly handling display states (`.hidden` vs `.active` classes).
-    *   Errors in one of the `init` functions causing the subsequent `setTimeout` to not trigger.
-    *   `stopCodeRain` / `generateCodeRain` not working as expected.
-    *   Incorrect webhook URLs preventing fetches from completing (which could silently stall promises).
-
-I will review the initialization and login sequence thoroughly to eliminate these errors.
-
-This next output will contain the *complete and corrected `index.html`*, adhering to your specified login logic, `attempts` count, webhook URLs for resets, and fixing the loading screen issue.
-
----
-Here's the corrected and re-integrated code:
-
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
