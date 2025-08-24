@@ -1,4 +1,4 @@
-discord-py==2.3.2           # Discord API wrapper for your bot
+discord-py==2.4.0           # Discord API wrapper for your bot
 Flask==2.3.2                # Web framework for your backend server
 Flask-SocketIO==5.3.6       # Adds Socket.IO support to Flask for real-time communication
 python-dotenv==1.0.0        # Used to load environment variables from the .env file
