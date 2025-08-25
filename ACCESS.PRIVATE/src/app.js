@@ -82,10 +82,12 @@ connectDB().then(() => {
         }
     });
 }).catch(error => {
-    logger.error(`Failed to start server due to database connection error: ${error.message}`);
+    // Add a console.error here to ensure it gets printed even if logger has issues
+    console.error(`CRITICAL ERROR: Failed to start server due to database connection error: ${error.message}`);
+    // Also try to log with stack for more info
+    logger.error(`Failed to start server due to database connection error: ${error.message}`, { stack: error.stack });
     process.exit(1);
 });
-
 // --- Global Error Handling ---
 app.use((err, req, res, next) => {
     logger.error(`Unhandled application error: ${err.message}`, { stack: err.stack, requestUrl: req.originalUrl });
