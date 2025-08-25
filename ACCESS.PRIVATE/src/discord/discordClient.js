@@ -2,12 +2,6 @@ const { Client, GatewayIntentBits, Collection, REST, Routes } = require('discord
 const path = require('path');
 const fs = require('fs');
 const { logger } = require('../utils/logging'); // Adjust path as needed
-
-logger.info('This is an informational message.');
-logger.warn('Something might be going wrong here.');
-logger.error('An error occurred!', new Error('Detailed error message')); // You can pass an Error object
-logger.debug('This is a debug message, visible in console but not info file.');
-logger.http('Incoming request: GET /api/data');
 const fetch = require('node-fetch'); // For making HTTP requests to your backend
 
 // Load environment variables
