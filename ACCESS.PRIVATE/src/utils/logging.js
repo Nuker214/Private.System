@@ -1,6 +1,6 @@
 const winston = require('winston');
 const path = require('path');
-const fs = require('fs');
+// const fs = require('fs'); // Commented out as fs is no longer needed for file creation
 
 // Define log levels and their associated colors (for console output)
 const levels = {
@@ -25,11 +25,11 @@ const colors = {
 
 winston.addColors(colors);
 
-// Determine the log directory
-const logDir = path.join(__dirname, '../../logs'); // logs directory at the project root
-if (!fs.existsSync(logDir)) {
-    fs.mkdirSync(logDir);
-}
+// Determine the log directory - COMMENTED OUT FOR RENDER DEPLOYMENT
+// const logDir = path.join(__dirname, '../../logs'); // logs directory at the project root
+// if (!fs.existsSync(logDir)) {
+//     fs.mkdirSync(logDir);
+// }
 
 // Define the format for log messages
 const logFormat = winston.format.combine(
@@ -60,30 +60,42 @@ const logger = winston.createLogger({
                 logFormat
             )
         }),
-        // File Transport (Info): Logs info and above to a combined log file
-        new winston.transports.File({
-            filename: path.join(logDir, 'combined.log'),
-            level: 'info', // Log info and above to combined.log
-            maxsize: 5 * 1024 * 1024, // 5MB
-            maxFiles: 5,
-            tailable: true // Keep the latest logs
-        }),
-        // File Transport (Error): Logs only errors to a separate error log file
-        new winston.transports.File({
-            filename: path.join(logDir, 'error.log'),
-            level: 'error', // Log only errors to error.log
-            maxsize: 5 * 1024 * 1024, // 5MB
-            maxFiles: 5,
-            tailable: true
-        })
+        // File Transports are COMMENTED OUT for Render deployment
+        // new winston.transports.File({
+        //     filename: path.join(logDir, 'combined.log'),
+        //     level: 'info',
+        //     maxsize: 5 * 1024 * 1024, // 5MB
+        //     maxFiles: 5,
+        //     tailable: true
+        // }),
+        // new winston.transports.File({
+        //     filename: path.join(logDir, 'error.log'),
+        //     level: 'error',
+        //     maxsize: 5 * 1024 * 1024, // 5MB
+        //     maxFiles: 5,
+        //     tailable: true
+        // })
     ],
     // Handle uncaught exceptions to prevent Node.js process from crashing
+    // These are also changed to rely on console output instead of files.
     exceptionHandlers: [
-        new winston.transports.File({ filename: path.join(logDir, 'exceptions.log') })
+        new winston.transports.Console({ // Log exceptions to console
+            format: winston.format.combine(
+                winston.format.colorize({ all: true }),
+                logFormat
+            )
+        }),
+        // new winston.transports.File({ filename: path.join(logDir, 'exceptions.log') }) // Commented out
     ],
     // Handle unhandled rejections (promises that reject without a catch block)
     rejectionHandlers: [
-        new winston.transports.File({ filename: path.join(logDir, 'rejections.log') })
+        new winston.transports.Console({ // Log rejections to console
+            format: winston.format.combine(
+                winston.format.colorize({ all: true }),
+                logFormat
+            )
+        }),
+        // new winston.transports.File({ filename: path.join(logDir, 'rejections.log') }) // Commented out
     ]
 });
 
