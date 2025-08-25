@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { logger } = require('../utils/logging'); // Adjust path as needed
+
 logger.info('This is an informational message.');
 logger.warn('Something might be going wrong here.');
 logger.error('An error occurred!', new Error('Detailed error message')); // You can pass an Error object
