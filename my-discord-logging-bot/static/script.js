@@ -442,41 +442,83 @@ async function resetCounter() {
 }
 
 
+// ... (rest of your script.js code) ...
+
 // Client-side Initialization sequence
 window.addEventListener('load', () => {
+  // It's possible for load to fire, but then generateCodeRain's interval fights it.
+  // We'll make generateCodeRain non-interval-based for simplicity for a faster transition.
+  // And ensures that it happens only ONCE.
+  console.log("DOM fully loaded and parsed. Starting initialization.");
   startInitialization();
   loadLoginHistoryFromStorage();
   loadImportantDatesFromStorage();
   loadClickCountFromStorage();
   loadErrorLogsFromStorage();
-  loadWhitelist(); // Load whitelist (from backend) on page load
-  updateAttemptsText(); // Display initial attempts
+  loadWhitelist();
+  updateAttemptsText();
 });
 
-function startInitialization() { /* ... (No change) ... */
-  generateCodeRain('codeRain');
+function startInitialization() {
+  console.log("Executing startInitialization.");
+  generateCodeRain('codeRain'); // Still call it
+  
+  // Set a specific, non-interruptible timeout for transition
   setTimeout(() => {
     document.getElementById('initText').textContent = 'Initializing Login Page...';
+    console.log("Init text changed. Transitioning to login screen soon...");
+    
     setTimeout(() => {
-      document.getElementById('initScreen').classList.add('hidden');
-      document.getElementById('loginScreen').classList.remove('hidden');
+      // Ensure these elements actually exist. A common error source.
+      const initScreen = document.getElementById('initScreen');
+      const loginScreen = document.getElementById('loginScreen');
+
+      if (initScreen) initScreen.classList.add('hidden'); else console.warn("initScreen element not found.");
+      if (loginScreen) loginScreen.classList.remove('hidden'); else console.error("loginScreen element not found! Cannot transition.");
+
+      console.log("Transitioned to login screen. Starting clock.");
       startClock();
-    }, 2000);
-  }, 3000);
+    }, 2000); // Wait 2 seconds for text change visibility
+  }, 3000); // Wait 3 seconds for initial cube animation
 }
 
-function generateCodeRain(containerId) { /* ... (No change) ... */
-  const container = document.getElementById(containerId);
-  if (!container) return;
-  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  container.innerHTML = '';
-  for(let i=0; i < 50; i++) {
-    const char = document.createElement('div');
-    char.className = 'code-char'; char.textContent = chars[Math.floor(Math.random() * chars.length)];
-    char.style.left = Math.random() * 100 + '%'; char.style.animationDelay = Math.random() * 3 + 's'; char.style.animationDuration = Math.random() * 5 + 3 + 's';
-    container.appendChild(char);
-  }
+
+// MODIFIED: Simplified generateCodeRain - do not use setInterval to continuously add/remove elements
+// Instead, pre-fill some elements and let their CSS animation run.
+let codeRainIntervalId = null; // Variable to hold the interval ID if you still need it
+let codeRainTimeoutId = null; // Variable to hold timeout for cleaning
+
+function generateCodeRain(containerId) {
+    const container = document.getElementById(containerId);
+    if (!container) {
+        console.warn(`Code rain container with ID ${containerId} not found.`);
+        return;
+    }
+    
+    console.log(`Generating code rain for ${containerId}...`);
+    container.innerHTML = ''; // Clear previous code rain elements if any
+
+    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const numChars = 100; // Generate a fixed, manageable number of characters
+
+    for (let i = 0; i < numChars; i++) {
+        const charElement = document.createElement('div');
+        charElement.className = 'code-char';
+        charElement.textContent = chars[Math.floor(Math.random() * chars.length)];
+        
+        charElement.style.left = Math.random() * 100 + '%';
+        charElement.style.animationDelay = Math.random() * 5 + 's'; // Vary initial delay
+        charElement.style.animationDuration = Math.random() * 10 + 5 + 's'; // Vary duration 5-15s
+        
+        container.appendChild(charElement);
+    }
+    console.log(`Generated ${numChars} code rain elements.`);
+    // No continuous interval for adding/removing. CSS animations handle it now.
 }
+
+
+// ... (rest of your script.js code unchanged) ...
+// ensure the startClock function does not use any codeRain logic inside.
 
 function startClock() { /* ... (No change) ... */
   updateClock();
