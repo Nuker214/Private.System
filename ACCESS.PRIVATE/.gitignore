@@ -1,7 +1,5 @@
 # Node.js dependencies
 /node_modules
-/package-lock.json
-/yarn.lock
 
 # Environment variables
 .env
@@ -43,7 +41,7 @@ desktop.ini
 *.swp
 .history/
 
-# Uploaded files (e.g., screenshots if saved locally)
+# Uploaded files (e.g., screenshots if saved locally by backend)
 /screenshots/
 
 # Database files (if using local files like SQLite, though MongoDB is external)
