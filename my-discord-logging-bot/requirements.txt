@@ -1,7 +1,0 @@
-discord.py
-aiohttp
-Flask
-requests
-Flask-SocketIO
-python-socketio
-eventlet
