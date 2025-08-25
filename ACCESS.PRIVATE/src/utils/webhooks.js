@@ -1,10 +1,10 @@
 const crypto = require('crypto');
-const { logger } = require('./logging'); // Your centralized logging utility
+const { logger } = require('./logging');
 const { emitToAll, emitToUser } = require('./frontendCommunicator'); // For sending events to frontend
 
 // Load environment variables
 require('dotenv').config();
-const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET;
+const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET; // <--- This must be a string, not a URL!
 
 /**
  * Verifies the signature of an incoming GitHub webhook request.
@@ -39,7 +39,7 @@ function verifyGitHubSignature(signature, payload) {
 async function handleGitHubWebhook(req, res) {
     const githubEvent = req.headers['x-github-event'];
     const signature = req.headers['x-hub-signature-256'];
-    const payload = JSON.stringify(req.body); // GitHub sends JSON, so req.body is already parsed
+    const payload = JSON.stringify(req.body);
 
     logger.info(`Received GitHub webhook event: ${githubEvent}`);
 
@@ -70,9 +70,7 @@ async function handleGitHubWebhook(req, res) {
                     message: `New code pushed to '${branch}' by ${pusher}: "${commitMessage.substring(0, 50)}..."`
                 });
                 // You could also send a Discord webhook here if you want to notify a Discord channel
-                // await sendDiscordWebhook(process.env.DISCORD_GITHUB_WEBHOOK, {
-                //     content: `New push to \`${branch}\` by **${pusher}**: \`${commitMessage}\``
-                // });
+                // For now, this is just emitting to frontend.
 
                 res.status(200).send('Push event processed.');
                 break;
