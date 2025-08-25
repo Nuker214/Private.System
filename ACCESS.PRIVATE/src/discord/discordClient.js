@@ -40,9 +40,35 @@ const client = new Client({
     ],
 });
 
-// Store commands in a Collection
-client.commands = new Collection();
-const commands = [];
+// // Store commands in a Collection
+// client.commands = new Collection();
+// const commands = [];
+
+// // Path to the commands directory
+// const commandsPath = path.join(__dirname, 'commands');
+// try {
+//     const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+//     // Load command files
+//     for (const file of commandFiles) {
+//         const filePath = path.join(commandsPath, file);
+//         const command = require(filePath);
+//         if ('data' in command && 'execute' in command) {
+//             client.commands.set(command.data.name, command);
+//             commands.push(command.data.toJSON());
+//             logger.info(`Loaded Discord command: ${command.data.name}`);
+//         } else {
+//             logger.warn(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
+//         }
+//     }
+// } catch (error) {
+//     logger.error(`Failed to load Discord commands: ${error.message}`, { stack: error.stack });
+//     // Optionally re-throw or exit if commands are critical
+//     // process.exit(1);
+// }
+
+// (Ensure client.commands and commands are initialized to empty if you do this)
+client.commands = new Collection(); // Keep this if you comment out the block above
+const commands = []; // Keep this if you comment out the block above
 
 // Path to the commands directory
 const commandsPath = path.join(__dirname, 'commands');
