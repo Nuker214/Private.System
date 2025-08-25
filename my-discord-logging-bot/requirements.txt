@@ -1,6 +1,11 @@
 discord.py
 aiohttp
-Flask         
-Quart        
-uvicorn       
-requests     
+Flask
+requests
+gunicorn      # Highly recommended for robust WSGI server
+# If you wanted Websockets, you'd add:
+# websockets  # If using 'websockets' library with asyncio
+# gevent      # If gunicorn is configured with gevent workers for websockets + Flask
+# If using Quart (async Flask framework) instead of Flask for cleaner async:
+# quart
+# uvicorn     # Uvicorn serves ASGI apps like Quart
