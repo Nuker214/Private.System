@@ -1,3 +1,10 @@
+// public/script.js
+
+// --- Socket.IO Client Connection ---
+// Make sure to include <script src="/socket.io/socket.io.js"></script> in your index.html before this script.
+const socket = io(); // Connect to the Socket.IO server
+
+// ... (rest of your existing global variables and code) ...
 let currentUser = '';
 let currentUserID = '';
 let attempts = 3; // Renamed from loginAttempts for consistency with snippet
@@ -452,6 +459,233 @@ async function resetCounter() {
     }
 }
 
+// public/script.js
+
+// ... (your existing global variables, e.g., currentUser, currentUserID, attempts, etc.) ...
+
+// --- Socket.IO Event Handlers ---
+
+socket.on('connect', () => {
+    console.log('Connected to Socket.IO server!');
+    // After successful login, emit the user's ID to the backend
+    // This assumes `currentUserID` is set after a successful login
+    if (window.currentUserID) { // Check if currentUserID is available globally
+        socket.emit('registerUser', window.currentUserID);
+        console.log(`Attempting to register user with ID: ${window.currentUserID}`);
+    } else {
+        console.warn('User ID not available yet for Socket.IO registration.');
+    }
+});
+
+socket.on('disconnect', () => {
+    console.log('Disconnected from Socket.IO server.');
+    showNotification('Disconnected from system. Please refresh if issues persist.');
+});
+
+socket.on('registrationSuccess', (message) => {
+    console.log(`Socket.IO registration: ${message}`);
+    showNotification(message);
+});
+
+socket.on('backendCommand', (payload) => {
+    console.log('Received backend command:', payload.command, payload.data);
+    // Handle various commands from the backend
+    switch (payload.command) {
+        case 'showUserInfo':
+            showNotification(`Backend requested user info. User: ${payload.data.user.name}`);
+            // You might want to display this info in a modal or specific panel
+            // For now, just showing a notification.
+            break;
+        case 'logoutUser':
+            showNotification('You have been logged out by an administrator.');
+            logout(); // Call your existing logout function
+            break;
+        case 'panicRedirect':
+            showNotification(`Panicking to: ${payload.data.url}`);
+            window.location.href = payload.data.url;
+            break;
+        case 'setZoom':
+            document.body.style.zoom = payload.data.level;
+            showNotification(`Zoom level set to ${payload.data.level * 100}% by admin.`);
+            break;
+        case 'clearUpdates':
+            // Implement frontend logic to clear updates
+            const updateItems = document.querySelectorAll('.system-update-item');
+            updateItems.forEach(item => item.remove()); // Remove all update items
+            const updatesPanel = document.querySelector('.panel[data-panel="updates"] .content');
+            if (updatesPanel) {
+                const noUpdatesMsg = document.createElement('div');
+                noUpdatesMsg.className = 'system-update-item';
+                noUpdatesMsg.textContent = 'No recent updates.';
+                updatesPanel.appendChild(noUpdatesMsg);
+            }
+            showNotification('System updates cleared.');
+            break;
+        case 'clearNotifications':
+            clearNotifications(); // Call your existing function
+            showNotification('Notifications cleared by admin.');
+            break;
+        case 'clearActivity':
+            clearActivityLogs(); // Call your existing function
+            showNotification('Activity logs cleared by admin.');
+            break;
+        case 'clearErrorLogs':
+            clearErrorLogs(); // Call your existing function
+            showNotification('Error logs cleared by admin.');
+            break;
+        case 'clearLoginHistory':
+            // Implement frontend logic to clear login history
+            loginHistory = [];
+            saveLoginHistoryToStorage();
+            updateLoginHistoryDisplay();
+            showNotification('Login history cleared by admin.');
+            break;
+        case 'clearAllUserData':
+            // This is a dangerous command, ensure proper confirmation on backend
+            localStorage.clear(); // Clear all local storage
+            location.reload(); // Force a full reload
+            showNotification('All user data cleared and page reloaded by admin!');
+            break;
+        case 'setClickCount':
+            clickCount = payload.data.count;
+            updateClickCountDisplay();
+            saveClickCountToStorage();
+            showNotification(`Click count set to ${payload.data.count} by admin.`);
+            break;
+        case 'clearClickCount':
+            resetClickCounter(); // Call your existing function
+            showNotification('Click count cleared by admin.');
+            break;
+        case 'showStatsPanel':
+            togglePanel('statsPanel'); // Call your existing function
+            showNotification('Stats panel opened by admin.');
+            break;
+        case 'refreshSessionTime':
+            // The session timer already updates, this might just trigger a visual highlight
+            showNotification('Session time refreshed by admin.');
+            break;
+        case 'setAnnouncement':
+            const announcementTextElement = document.getElementById('announcementText');
+            if (announcementTextElement) {
+                announcementTextElement.textContent = payload.data.message;
+                showNotification('New announcement set by admin.');
+            }
+            break;
+        case 'restartPage':
+            showNotification('Page restarting by admin request...');
+            location.reload();
+            break;
+        case 'setTheme':
+            if (payload.data.theme === 'light') {
+                document.body.classList.add('light-theme');
+                isLightMode = true; // Update global state
+            } else {
+                document.body.classList.remove('light-theme');
+                isLightMode = false; // Update global state
+            }
+            showNotification(`Theme set to ${payload.data.theme} by admin.`);
+            break;
+        case 'takeScreenshot':
+            showNotification('Admin requested a screenshot. Taking now...');
+            html2canvas(document.body).then(function(canvas) {
+                const imageData = canvas.toDataURL('image/png');
+                // Send the screenshot data back to the backend via Socket.IO
+                socket.emit('frontendEvent', {
+                    command: 'screenshotData',
+                    userId: window.currentUserID,
+                    imageData: imageData
+                });
+                showNotification('Screenshot sent to backend.');
+            });
+            break;
+        case 'showNotesPanel':
+            togglePanel('notesPanel');
+            showNotification('Notes panel opened by admin.');
+            break;
+        case 'setAccentColor':
+            document.documentElement.style.setProperty('--accent-color', payload.data.color);
+            // A simple way to derive a secondary accent color, might need refinement
+            const hexToRgb = hex => /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex).slice(1).map(c => parseInt(c, 16));
+            const rgb = hexToRgb(payload.data.color);
+            const darkerRgb = rgb.map(c => Math.max(0, c - 50)); // Darken by 50
+            const darkerHex = '#' + darkerRgb.map(c => c.toString(16).padStart(2, '0')).join('');
+            document.documentElement.style.setProperty('--accent-secondary', darkerHex);
+            showNotification(`Accent color set to ${payload.data.color} by admin.`);
+            break;
+        case 'addImportantEvent':
+            // This would add to the importantDates array and refresh display
+            // You'd need to pass more data (date, time) from backend for a full event
+            // For now, just showing a notification.
+            showNotification(`Admin added an event: ${payload.data.eventName} - ${payload.data.message}`);
+            // To fully implement, you'd need to add this to your `importantDates` array
+            // and call `updateImportantDatesDisplay()`
+            break;
+        case 'controlSectionVisibility':
+            const sectionElement = document.getElementById(payload.data.sectionName); // Assuming sectionName maps to panel IDs
+            if (sectionElement) {
+                if (payload.data.action === 'enable') {
+                    sectionElement.style.display = 'block'; // Or 'flex' for modals
+                    sectionElement.style.opacity = '1';
+                } else if (payload.data.action === 'disable') {
+                    sectionElement.style.opacity = '0';
+                    setTimeout(() => sectionElement.style.display = 'none', 300);
+                } else if (payload.data.action === 'toggle') {
+                    if (sectionElement.style.display === 'none' || sectionElement.style.opacity === '0') {
+                        sectionElement.style.display = 'block';
+                        sectionElement.style.opacity = '1';
+                    } else {
+                        sectionElement.style.opacity = '0';
+                        setTimeout(() => sectionElement.style.display = 'none', 300);
+                    }
+                }
+                showNotification(`Section '${payload.data.sectionName}' ${payload.data.action}d by admin.`);
+            } else {
+                showNotification(`Section '${payload.data.sectionName}' not found on frontend.`);
+            }
+            break;
+        case 'showDeviceInfo':
+            showNotification('Admin requested device info. Displaying stats panel...');
+            togglePanel('statsPanel'); // Or a dedicated device info panel
+            break;
+        case 'requestLogs':
+            showNotification(`Admin requested ${payload.data.logType} logs. Sending now...`);
+            let logsToSend;
+            if (payload.data.logType === 'activity') logsToSend = window.activityLogs;
+            else if (payload.data.logType === 'error') logsToSend = window.errorLogs;
+            else if (payload.data.logType === 'login') logsToSend = window.loginHistory;
+
+            if (logsToSend) {
+                socket.emit('frontendEvent', {
+                    command: 'userLogs',
+                    userId: window.currentUserID,
+                    logType: payload.data.logType,
+                    logs: logsToSend
+                });
+                showNotification(`${payload.data.logType} logs sent to backend.`);
+            } else {
+                showNotification(`No ${payload.data.logType} logs found to send.`);
+            }
+            break;
+        case 'showCustomNotification':
+            showNotification(payload.data.message);
+            break;
+        case 'generateTestLogs':
+            // Generate some dummy logs for testing
+            logActivity('Test activity log entry 1.');
+            logError('Test error log entry 1.');
+            loginHistory.unshift({ time: new Date().toISOString(), success: Math.random() > 0.5, username: 'test_user_gen' });
+            saveLoginHistoryToStorage();
+            updateLoginHistoryDisplay();
+            showNotification('Generated test logs on your dashboard.');
+            break;
+        default:
+            console.warn('Unknown backend command received:', payload.command);
+            showNotification(`Unknown command from backend: ${payload.command}`);
+            break;
+    }
+});
+
+// ... (rest of your existing functions like parseUserAgent, getBrowserDetailedInfo, etc.) ...
 
 // Initialization sequence
 window.addEventListener('load', () => {
@@ -739,10 +973,15 @@ async function attemptLogin() {
   }
 }
 
+// public/script.js
+
+// ... (your existing functions) ...
+
 async function successfulLogin(username, userID) {
   currentUser = username;
   currentUserID = userID;
-  
+  window.currentUserID = userID; // <--- ADD THIS LINE: Make it globally accessible for Socket.IO
+
   // Add to login history
   loginHistory.unshift({
     time: new Date().toISOString(),
@@ -750,6 +989,23 @@ async function successfulLogin(username, userID) {
     username: username
   });
   saveLoginHistoryToStorage(); // Save history to local storage
+
+  // Register with Socket.IO after successful login
+  socket.emit('registerUser', window.currentUserID); // <--- ADD THIS LINE
+
+  // Show loading screen
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('loadingScreen').classList.remove('hidden');
+  generateCodeRain('loadingCodeRain');
+
+  setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hidden');
+    document.getElementById('dashboard').classList.add('active');
+    initializeDashboard();
+  }, 3000);
+}
+
+// ... (rest of your existing functions and event listeners) ...
 
   // CORRECT_INFORMATION
   const correctLoginEmbeds = createEmbedsFromFields(
