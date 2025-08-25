@@ -2,3 +2,6 @@ discord.py
 aiohttp
 Flask
 requests
+Flask-SocketIO  # NEWLY REQUIRED
+python-socketio
+eventlet        # Flask-SocketIO often defaults to eventlet for async compatibility
