@@ -3,7 +3,15 @@ const path = require('path');
 const fs = require('fs');
 const { logger } = require('../utils/logging');
 const fetch = require('node-fetch'); // Still needed for commands that interact with backend API
-const { sendWebhook, createEmbedsFromFields } = require('../../utils/discordWebhookSender'); // Still needed for backend-initiated webhooks if any
+const { Client, GatewayIntentBits, Collection, REST, Routes, EmbedBuilder } = require('discord.js');
+const path = require('path');
+const fs = require('fs');
+const { logger } = require('../utils/logging');
+const fetch = require('node-fetch');
+// CHANGE THIS LINE:
+const { sendWebhook, createEmbedsFromFields } = require('../utils/discordWebhookSender'); // Corrected path!
+
+// ... rest of your discordClient.js code ...y
 
 // Load environment variables
 require('dotenv').config();
