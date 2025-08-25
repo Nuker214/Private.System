@@ -1,2 +1,6 @@
 discord.py
 aiohttp
+Flask         
+Quart        
+uvicorn       
+requests     
