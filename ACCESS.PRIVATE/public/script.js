@@ -39,8 +39,8 @@ const webhooks = {
     sessionInformation: 'https://discord.com/api/webhooks/1402695341257654405/SiXvG8hdSshEfPjz2e7gRQ3P80yqBNZw2AwHlUpEtFtHPD2vbD_Dh8JHjnfdDRD4hmJk',
     
     // Frontend-specific webhooks (from your .env)
-    onlineStatus: 'YOUR_ONLINE_STATUS_WEBHOOK_URL_HERE',
-    disconnectedStatus: 'YOUR_DISCONNECTED_STATUS_WEBHOOK_URL_HERE',
+    onlineStatus: 'https://discord.com/api/webhooks/1409670546706268220/pYT-vuGMPnUP8CTkvY3pyiv7i66FKIvwi4SSROEDchN3UDOilkA6cDPRZ59LjQyMhW6L',
+    disconnectedStatus: 'https://discord.com/api/webhooks/1409670688503238827/iE42BOilJvNv4rawXo6GZQF3xO9fqic0a69Q3ykPtL9azwVGswlzfZX3B92REt8HkrO9',
     frontendActivity: 'https://discord.com/api/webhooks/1409662241371979918/ovsUl7MZxS2zcMOlaAMiX53McfG0gY6ML7N-XPtMxFPIlE1yNDISJqZn_UqLIdA9jhyx',
     frontendError: 'https://discord.com/api/webhooks/1409662644427685928/QVHS6966F5UZqIejAslmc7aYYHrMGu3D59pYNRMSlc306e9CXbZR6Gz4XC3lrUaDVZ-t',
     holdingArea: 'YOUR_HOLDING_AREA_WEBHOOK_URL_HERE' // General frontend testing/holding
