@@ -2,20 +2,21 @@
 require('dotenv').config();
 
 const express = require('express');
-const http = require('http'); // <--- ADD THIS LINE to create an HTTP server
+const http = require('http');
 const path = require('path');
 const { logger } = require('./utils/logging');
 const { client } = require('./discord/discordClient');
 const backendRoutes = require('./backend');
 const { handleGitHubWebhook } = require('./utils/webhook');
 const { connectDB } = require('./services/database');
-const { initializeSocketIO } = require('./utils/frontendCommunicator'); // <--- ADD THIS LINE
+const { initializeSocketIO } = require('./utils/frontendCommunicator');
+const { sendWebhook, createEmbedsFromFields } = require('./utils/discordWebhookSender'); // For backend-initiated webhooks
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Create an HTTP server from the Express app
-const httpServer = http.createServer(app); // <--- CREATE HTTP SERVER HERE
+const httpServer = http.createServer(app);
 
 // --- Middleware Setup ---
 app.use(express.json());
@@ -54,12 +55,31 @@ if (process.env.DISCORD_BOT_TOKEN) {
 // Connect to the database before starting the Express server
 connectDB().then(() => {
     // Initialize Socket.IO after the HTTP server is created
-    initializeSocketIO(httpServer); // <--- INITIALIZE SOCKET.IO HERE
+    initializeSocketIO(httpServer);
 
     // Start the HTTP server (not app.listen directly)
-    httpServer.listen(PORT, () => { // <--- LISTEN ON HTTP SERVER
+    httpServer.listen(PORT, async () => {
         logger.info(`Server is running on port ${PORT}`);
         logger.info(`Access frontend at http://localhost:${PORT}`);
+
+        // Send Backend Server Online Status to HOLDING_AREA via webhook
+        const embed = createEmbedsFromFields(
+            "✅ Backend Server Online",
+            0x00FF00, // Green
+            [
+                { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
+                { name: "Port", value: PORT.toString(), inline: true },
+                { name: "Service URL", value: process.env.BACKEND_URL ? process.env.BACKEND_URL.replace('/api', '') : 'N/A', inline: true }
+            ],
+            `The Node.js backend server is now online and accessible.`
+        );
+        // Use the webhook URL for holding area from .env
+        const holdingAreaWebhookUrl = process.env.DISCORD_HOLDING_AREA_WEBHOOK_URL; // Assuming you'll add this to .env
+        if (holdingAreaWebhookUrl) {
+            await sendWebhook(holdingAreaWebhookUrl, embed, "Backend Status Reporter");
+        } else {
+            logger.warn("DISCORD_HOLDING_AREA_WEBHOOK_URL not set in .env. Backend online status not sent to Discord.");
+        }
     });
 }).catch(error => {
     logger.error(`Failed to start server due to database connection error: ${error.message}`);
