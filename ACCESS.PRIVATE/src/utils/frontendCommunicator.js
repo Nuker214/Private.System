@@ -1,5 +1,11 @@
 const { Server } = require('socket.io');
 const { logger } = require('./logging');
+// const { sendWebhook, createEmbedsFromFields } = require('./discordWebhookSender'); // Only needed if frontendCommunicator itself sends webhooks directly
+
+// Load environment variables (if needed for webhooks sent from here)
+require('dotenv').config();
+// const DISCORD_SCREENSHOT_WEBHOOK_URL = process.env.DISCORD_SCREENSHOT_WEBHOOK_URL; // Example if you add this later
+// const DISCORD_USER_LOGS_WEBHOOK_URL = process.env.DISCORD_USER_LOGS_WEBHOOK_URL; // Example if you add this later
 
 // A map to store connected clients, mapping userID to their Socket.IO socket ID
 // This allows us to target specific users.
@@ -52,24 +58,44 @@ function initializeSocketIO(httpServer) {
             }
         });
 
-        // Handle incoming messages/events from the frontend if needed
-        socket.on('frontendEvent', (data) => {
+        // Handle incoming messages/events from the frontend
+        // This is where frontend-initiated data (like screenshots, logs) is received.
+        socket.on('frontendEvent', async (data) => { // Make this async
             logger.debug(`Received frontend event from ${socket.id}:`, data);
+            
             // Example: If frontend sends a screenshot, process it here
             if (data.command === 'screenshotData' && data.userId && data.imageData) {
                 logger.info(`Received screenshot data from user ${data.userId}.`);
                 // Here you would process the screenshot, e.g., save it, send to Discord webhook
-                // Example: sendDiscordWebhook(process.env.DISCORD_SCREENSHOT_WEBHOOK, { image: data.imageData });
-                // For now, just log it.
-                // You might want to save this to a file or upload it.
-                // fs.writeFileSync(path.join(__dirname, `../../screenshots/${data.userId}_${Date.now()}.png`), data.imageData.split(',')[1], 'base64');
-                // logger.info(`Screenshot saved for user ${data.userId}`);
+                // This logic could be moved to a dedicated API endpoint in backend.js
+                // For now, just logging.
+                // Example:
+                // if (DISCORD_SCREENSHOT_WEBHOOK_URL) {
+                //     const embed = createEmbedsFromFields("📸 User Screenshot", 0x0099FF, [
+                //         { name: "User ID", value: data.userId, inline: true },
+                //         { name: "Timestamp", value: new Date().toLocaleString(), inline: false }
+                //     ], "Screenshot received from user.");
+                //     // You'd need to send the image data separately or as an attachment
+                //     // This is more complex than a simple embed.
+                //     // await sendWebhook(DISCORD_SCREENSHOT_WEBHOOK_URL, embed, "Screenshot Receiver");
+                // }
             }
             // Example: If frontend sends logs, process them here
             if (data.command === 'userLogs' && data.userId && data.logType && data.logs) {
                 logger.info(`Received ${data.logType} logs from user ${data.userId}. Log count: ${data.logs.length}`);
-                // Here you would process the logs, e.g., save to database, send to Discord webhook
-                // Example: sendDiscordWebhook(process.env.DISCORD_LOGS_WEBHOOK, { content: `Logs from ${data.userId}: ${JSON.stringify(data.logs)}` });
+                // This logic could also be moved to a dedicated API endpoint in backend.js
+                // For now, just logging.
+                // Example:
+                // if (DISCORD_USER_LOGS_WEBHOOK_URL) {
+                //     const embed = createEmbedsFromFields(`📄 User ${data.logType} Logs`, 0x0099FF, [
+                //         { name: "User ID", value: data.userId, inline: true },
+                //         { name: "Log Type", value: data.logType, inline: true },
+                //         { name: "Log Count", value: data.logs.length.toString(), inline: true },
+                //         { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
+                //         { name: "Logs Snippet", value: JSON.stringify(data.logs.slice(0, 3), null, 2).substring(0, 1024), inline: false }
+                //     ], `Received ${data.logType} logs from user ${data.userId}.`);
+                //     await sendWebhook(DISCORD_USER_LOGS_WEBHOOK_URL, embed, "User Log Receiver");
+                // }
             }
         });
     });
