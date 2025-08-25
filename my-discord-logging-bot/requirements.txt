@@ -5,4 +5,3 @@ requests
 Flask-SocketIO
 python-socketio
 eventlet
-import os
