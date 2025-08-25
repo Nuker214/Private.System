@@ -4,6 +4,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const { logger } = require('./utils/logging'); // Your centralized logging utility
+
 logger.info('This is an informational message.');
 logger.warn('Something might be going wrong here.');
 logger.error('An error occurred!', new Error('Detailed error message')); // You can pass an Error object
