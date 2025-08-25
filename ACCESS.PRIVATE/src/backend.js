@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { logger } = require('./utils/logging'); // For server-side logging
+const { logger } = require('../utils/logging'); // Adjust path as needed
+logger.info('This is an informational message.');
+logger.warn('Something might be going wrong here.');
+logger.error('An error occurred!', new Error('Detailed error message')); // You can pass an Error object
+logger.debug('This is a debug message, visible in console but not info file.');
+logger.http('Incoming request: GET /api/data');
 const { emitToUser } = require('./utils/frontendCommunicator'); // To send commands to specific frontend users
 const whitelist = require('../config/whitelist.json'); // For user validation
 const fs = require('fs'); // To read/write JSON config files
