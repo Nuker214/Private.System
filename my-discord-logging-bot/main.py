@@ -15,8 +15,7 @@ from config import (
 )
 
 # --- Integrated Whitelist Data ---
-# IMPORTANT: This data is now part of your main.py. Ensure passwords are
-# test/dummy values as they are embedded directly in your code.
+# ... (WHITELIST_DATA as before) ...
 WHITELIST_DATA = [
   {
     "name": "Testing Purposes",
@@ -40,7 +39,6 @@ WHITELIST_DATA = [
   },
   {
     "name": "Curtis",
-    "username": "Zapperix",
     "password": "DEMO_PASSWORD_Zapperix",
     "rank": 12,
     "role": "Normal User",
@@ -751,7 +749,8 @@ def api_bot_screenshot_user():
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members = True
-bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
+# Disable default help command so we can define our own
+bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents, help_command=None)
 
 
 # --- Attach Discord Handlers (Called within bot.on_ready event) ---
@@ -839,7 +838,58 @@ class DiscordHandler(logging.Handler):
             print(f"[{self.__class__.__name__}] CRITICAL: Unexpected error when trying to send log to Discord: {e}", exc_info=True)
 
 
-# --- Discord Bot's internal functions for User Connection/Disconnection Announcements ---
+# --- Discord-triggered Website Interaction functions (used by Discord commands) ---
+async def website_send_command(endpoint: str, user_id: str = None, **kwargs):
+    # This calls YOUR OWN Flask API which needs to implement /api/user/logout etc.
+    # It dynamically constructs the base URL for internal communication
+    api_base = f"http://localhost:{WEB_SERVER_PORT}"
+    full_url = f"{api_base}{endpoint}"
+    payload = {"user_id": user_id, **kwargs}
+    logger.info(f"[Website API] Bot sending command: {full_url} with payload: {payload}")
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(full_url, json=payload) as response:
+                response.raise_for_status()
+                data = await response.json()
+                logger.info(f"[Website API] Bot received response ({response.status}) from {full_url}: {data}")
+                return data
+    except aiohttp.ClientResponseError as e:
+        logger.error(f"[Website API] Bot-to-API error {e.status} for {full_url}. Response: {e.message}", exc_info=True, extra={'endpoint': endpoint, 'status_code': e.status, 'user_id': user_id})
+        return {"status": "error", "message": f"Website API error {e.status}: {e.message}"}
+    except aiohttp.ClientConnectionError as e:
+        logger.error(f"[Website API] Bot failed to connect to local Flask API at {full_url}: {e}", exc_info=True, extra={'endpoint': endpoint, 'error_type': 'ConnectionError', 'user_id': user_id})
+        return {"status": "error", "message": f"Could not connect to internal Flask API."}
+    except Exception as e:
+        logger.error(f"[Website API] Bot-side unexpected error interacting with Flask API {full_url}: {e}", exc_info=True, extra={'endpoint': endpoint, 'error_type': 'UnexpectedError', 'user_id': user_id})
+        return {"status": "error", "message": f"An unexpected error occurred in bot-to-website interaction."}
+
+async def website_get_data(endpoint: str, user_id: str = None):
+    # Similar to website_send_command, calls the local Flask API.
+    api_base = f"http://localhost:{WEB_SERVER_PORT}"
+    query_params = f"?user_id={user_id}" if user_id else ""
+    full_url = f"{api_base}{endpoint}{query_params}"
+    logger.info(f"[Website API] Bot fetching data from: {full_url}")
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.get(full_url) as response:
+                response.raise_for_status()
+                data = await response.json()
+                logger.info(f"[Website API] Bot received response ({response.status}) from {full_url}: {data}")
+                return data
+    except aiohttp.ClientResponseError as e:
+        logger.error(f"[Website API] Bot-to-API error {e.status} for {full_url}. Response: {e.message}", exc_info=True, extra={'endpoint': endpoint, 'status_code': e.status, 'user_id': user_id})
+        return {"status": "error", "message": f"Website API error {e.status}: {e.message}"}
+    except aiohttp.ClientConnectionError as e:
+        logger.error(f"[Website API] Bot failed to connect to local Flask API at {full_url}: {e}", exc_info=True, extra={'endpoint': endpoint, 'error_type': 'ConnectionError', 'user_id': user_id})
+        return {"status": "error", "message": f"Could not connect to internal Flask API."}
+    except Exception as e:
+        logger.error(f"[Website API] Bot-side unexpected error fetching from Flask API {full_url}: {e}", exc_info=True, extra={'endpoint': endpoint, 'error_type': 'UnexpectedError', 'user_id': user_id})
+        return {"status": "error", "message": f"An unexpected error occurred in bot-to-website data fetch."}
+
+
+# --- Bot's internal functions for User Connection/Disconnection Announcements ---
 # These can be called by the Flask app (e.g., when login/logout API is hit for real-time internal status change).
 # The frontend client handles its own webhooks now, so these are mostly for backend's internal use if any logic requires the bot to speak.
 async def bot_user_connected_announcement(user_id: str, username: str = "Unknown User"):
@@ -1040,7 +1090,7 @@ def is_admin():
 
 # --- Discord Bot Commands ---
 @bot.command(name='help')
-async def help_command(ctx): # ... (as before) ...
+async def help_command(ctx):
     """Displays this help dialog."""
     help_message = f"""
 **__Discord Control Commands (Prefix: `{COMMAND_PREFIX}`)__**
@@ -1406,15 +1456,40 @@ async def get_device_info(ctx, user_id: str):
 def start_discord_bot_in_thread():
     """Runs the Discord bot in its own event loop within a new thread."""
     try:
-        asyncio.set_event_loop(asyncio.new_event_loop()) # Create new event loop for this thread
-        bot.run(DISCORD_TOKEN, log_handler=None) # Don't let discord.py setup its own logger. Our custom is already there.
+        # Create new event loop for this thread (essential for thread safety)
+        bot_loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(bot_loop)
+        
+        # Don't let discord.py setup its own logger handler, we already have our custom ones.
+        bot_loop.run_until_complete(bot.start(DISCORD_TOKEN)) 
     except discord.errors.LoginFailure as e:
         logger.critical(f"Discord Bot Login Failed in thread: Invalid Token. {e}", exc_info=True)
-        # Attempt to signal to main thread or simply let thread die
-        os._exit(1) # For a critical error, force exit
+        # Attempt to notify the error channel if possible, then force exit
+        asyncio.run_coroutine_threadsafe(
+            _send_critical_notification_during_thread_failure("Discord Bot Thread Critical Error: Login Failure", str(e)), bot.loop)
+        os._exit(1) # For a critical error in a non-main thread, force exit is often needed.
     except Exception as e:
         logger.critical(f"Discord bot thread crashed unexpectedly: {e}", exc_info=True)
-        os._exit(1) # For a critical error, force exit
+        asyncio.run_coroutine_threadsafe(
+            _send_critical_notification_during_thread_failure("Discord Bot Thread Critical Error: Unhandled Exception", str(e)), bot.loop)
+        os._exit(1) # Force exit
+
+async def _send_critical_notification_during_thread_failure(title, details):
+    """Internal helper to attempt sending a critical Discord message during thread failure."""
+    # This tries to send, but bot might not be connected or loop might be bad
+    if ERROR_CHANNEL_ID != 0:
+        error_channel = bot.get_channel(ERROR_CHANNEL_ID)
+        if error_channel:
+            embed = discord.Embed(
+                title=title,
+                description=f"```fix\n{details}\n```\nBot task in thread likely terminated.",
+                color=discord.Color.dark_red(),
+                timestamp=discord.utils.utcnow()
+            )
+            try:
+                await error_channel.send(embed=embed)
+            except Exception: # Ignore further exceptions if even sending fails
+                pass
 
 
 if __name__ == '__main__':
@@ -1423,17 +1498,18 @@ if __name__ == '__main__':
         exit(1)
 
     # --- Start the Discord Bot in a Separate Thread ---
+    # `daemon=True` means this thread will exit when the main process (Flask app) exits.
     logger.info("Starting Discord bot in a separate thread...")
-    discord_bot_thread = Thread(target=start_discord_bot_in_thread, daemon=True) # daemon=True means thread dies with main process
+    discord_bot_thread = Thread(target=start_discord_bot_in_thread, daemon=True) 
     discord_bot_thread.start()
 
     # --- Start the Flask Web App in the Main Thread ---
-    # Render's Web Service expects the main process to handle the web server.
+    # Render's Web Service expects the main process to handle the web server and keep the port open.
     try:
         logger.info(f"Starting Flask web app in MAIN thread on 0.0.0.0:{WEB_SERVER_PORT} for Render Web Service...")
+        # Note: web_app.run() blocks. It should be the last call in the main thread.
         web_app.run(host='0.0.0.0', port=WEB_SERVER_PORT, debug=False, use_reloader=False)
     except Exception as e:
         logger.critical(f"An unhandled critical error occurred in the Flask web app (main thread) startup: {e}. Exiting.", exc_info=True)
-        # In a Web Service, if the main process crashes, Render will restart the service.
-        # Additional cleanup or specific Discord notification during *Flask crash* is complex from here.
+        # Render will likely restart the service. Clean exit is sufficient.
         exit(1)
