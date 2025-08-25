@@ -13,6 +13,7 @@ logger.http('Incoming request: GET /api/data');
 const { client } = require('./discord/discordClient'); // Your Discord bot client
 const backendRoutes = require('./backend'); // Your core backend API routes
 const { handleGitHubWebhook } = require('./utils/webhook'); // Your webhook handler
+const { connectDB } = require('./services/database'); 
 
 const app = express();
 const PORT = process.env.PORT || 3000; // Use port from .env or default to 3000
