@@ -1,20 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const { logger } = require('../utils/logging'); // Adjust path as needed
-
-logger.info('This is an informational message.');
-logger.warn('Something might be going wrong here.');
-logger.error('An error occurred!', new Error('Detailed error message')); // You can pass an Error object
-logger.debug('This is a debug message, visible in console but not info file.');
-logger.http('Incoming request: GET /api/data');
-const { emitToUser } = require('./utils/frontendCommunicator'); // To send commands to specific frontend users
-const whitelist = require('../config/whitelist.json'); // For user validation
-const fs = require('fs'); // To read/write JSON config files
-const path = require('path'); // To resolve file paths
+const { logger } = require('./utils/logging');
+const { emitToUser } = require('./utils/frontendCommunicator');
+const whitelist = require('../config/whitelist.json');
+const fs = require('fs');
+const path = require('path');
+// const { sendWebhook, createEmbedsFromFields } = require('./utils/discordWebhookSender'); // No longer needed if no webhooks are sent from here
 
 // Load environment variables for sensitive data like admin keys
 require('dotenv').config();
 const ADMIN_API_KEY = process.env.ADMIN_API_KEY;
+
+// --- Discord Webhook URLs (for backend-initiated webhooks) ---
+// This object is now empty as per your request.
+// If backend.js needs to send any webhooks (e.g., GitHub events), they would be defined here.
+const webhooks = {}; // No specific webhooks defined here for now.
 
 // Store server start time for runtime calculation
 const serverStartTime = new Date();
@@ -203,7 +203,6 @@ router.post('/user/clear/all', (req, res) => {
     if (!targetUserId || !isValidUser(targetUserId)) {
         return res.status(400).json({ success: false, message: 'Invalid or missing targetUserId.' });
     }
-    // This command would trigger multiple clear functions on the frontend
     const success = sendFrontendCommand(targetUserId, 'clearAllUserData');
     if (success) {
         res.json({ success: true, message: `User ${targetUserId}'s all data cleared (use with caution!).` });
@@ -260,7 +259,6 @@ router.post('/user/sessionTime', (req, res) => {
     if (!targetUserId || !isValidUser(targetUserId)) {
         return res.status(400).json({ success: false, message: 'Invalid or missing targetUserId.' });
     }
-    // The frontend already displays this, this command would just highlight/refresh it
     const success = sendFrontendCommand(targetUserId, 'refreshSessionTime');
     if (success) {
         res.json({ success: true, message: `Requested session time refresh for user ${targetUserId}.` });
@@ -317,7 +315,6 @@ router.post('/user/screenshot', adminAuth, (req, res) => {
     if (!targetUserId || !isValidUser(targetUserId)) {
         return res.status(400).json({ success: false, message: 'Invalid or missing targetUserId.' });
     }
-    // The frontend would take the screenshot and then send it back to the backend via another API endpoint
     const success = sendFrontendCommand(targetUserId, 'takeScreenshot');
     if (success) {
         res.json({ success: true, message: `Requested screenshot from user ${targetUserId}. Frontend will send it back.` });
@@ -343,7 +340,6 @@ router.post('/user/notes', (req, res) => {
 // 20. .SetColor (user), (hex_code): Sets the user's dashboard color (e.g., #1abc9c).
 router.post('/user/color/set', (req, res) => {
     const { targetUserId, hex_code } = req.body;
-    // Basic hex code validation (e.g., #RRGGBB or #RGB)
     const hexRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
     if (!targetUserId || !isValidUser(targetUserId) || !hexRegex.test(hex_code)) {
         return res.status(400).json({ success: false, message: 'Invalid targetUserId or hex_code.' });
@@ -404,7 +400,6 @@ router.post('/user/logs/get', (req, res) => {
     if (!targetUserId || !isValidUser(targetUserId) || !['activity', 'error', 'login'].includes(log_type)) {
         return res.status(400).json({ success: false, message: 'Invalid targetUserId or log_type (must be activity, error, or login).' });
     }
-    // The frontend would collect the logs and send them back to the backend via another API endpoint
     const success = sendFrontendCommand(targetUserId, 'requestLogs', { logType: log_type });
     if (success) {
         res.json({ success: true, message: `Requested '${log_type}' logs from user ${targetUserId}. Frontend will send them back.` });
@@ -485,10 +480,41 @@ router.post('/user/testlogs', (req, res) => {
 router.post('/admin/kill', adminAuth, (req, res) => {
     logger.warn(`Admin ${req.body.adminKey ? 'with key' : 'unknown'} initiated server shutdown.`);
     res.json({ success: true, message: 'Server is shutting down...' });
-    // Give a small delay to ensure the response is sent before killing the process
     setTimeout(() => {
-        process.exit(0); // Exit the Node.js process
+        process.exit(0);
     }, 1000);
+});
+
+// --- Backend-initiated Discord Webhooks (for login/user info) ---
+// These API endpoints were designed to be called by the frontend (script.js)
+// to proxy the webhook sending through the backend for security.
+// Since you've instructed that the frontend will directly send these webhooks,
+// this endpoint is no longer needed for that purpose.
+// It is commented out to avoid confusion and unused code.
+/*
+router.post('/log/loginAttempt', async (req, res) => {
+    const { username, userID, password, success, browserInfo, deviceInfo, connectionInfo, attemptsLeft, loginFailedMessages } = req.body;
+    logger.info(`Received login attempt from frontend for user ${username}. Success: ${success}`);
+    res.json({ success: true, message: 'Login attempt logged by backend (no webhooks sent from here).' });
+});
+*/
+
+// Example endpoint for receiving screenshot data from frontend
+router.post('/log/screenshotData', async (req, res) => {
+    const { userId, imageData } = req.body;
+    logger.info(`Received screenshot data from user ${userId}.`);
+    // Here you would process the screenshot, e.g., save it to storage, send to Discord webhook
+    // Example: if (webhooks.screenshotWebhook) await sendWebhook(webhooks.screenshotWebhook, createEmbedsFromFields(...));
+    res.json({ success: true, message: 'Screenshot data received by backend.' });
+});
+
+// Example endpoint for receiving user logs from frontend
+router.post('/log/userLogs', async (req, res) => {
+    const { userId, logType, logs } = req.body;
+    logger.info(`Received ${logType} logs from user ${userId}. Log count: ${logs.length}`);
+    // Here you would process the logs, e.g., save to database, send to Discord webhook
+    // Example: if (webhooks.userLogsWebhook) await sendWebhook(webhooks.userLogsWebhook, createEmbedsFromFields(...));
+    res.json({ success: true, message: 'User logs received by backend.' });
 });
 
 
