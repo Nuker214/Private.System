@@ -1,1 +1,52 @@
+# Node.js dependencies
+/node_modules
+/package-lock.json
+/yarn.lock
 
+# Environment variables
+.env
+
+# Log files
+/logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Runtime files
+/tmp
+/pids
+*.pid
+*.seed
+*.log
+
+# Build artifacts
+/dist
+/build
+.next/ # If using Next.js
+.nuxt/ # If using Nuxt.js
+.svelte-kit/ # If using SvelteKit
+
+# OS generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+.Spotlight-V100
+.Trashes
+desktop.ini
+
+# IDE and editor files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+.history/
+
+# Uploaded files (e.g., screenshots if saved locally)
+/screenshots/
+
+# Database files (if using local files like SQLite, though MongoDB is external)
+*.sqlite
+*.sqlite3
+*.db
