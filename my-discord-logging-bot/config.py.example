@@ -1,23 +1,52 @@
 # config.py.example
-# Copy this file to config.py and fill in your actual values.
-# DO NOT commit your actual config.py with sensitive information to GitHub!
-# For deployment, these values should be set as Environment Variables on your hosting platform.
+# ------------------------------------------------------------------------------------------------------------------
+# IMPORTANT: DO NOT rename this file to config.py and fill in your actual sensitive data
+# if you plan to commit to a public GitHub repository.
+# Instead, copy the contents into your actual config.py (which should be in .gitignore if storing secrets directly),
+# or BETTER YET, use ENVIRONMENT VARIABLES on your hosting platform for deployment.
+# This file serves as a reference for required variables.
+# ------------------------------------------------------------------------------------------------------------------
+
 
 # --- Discord Bot Configuration ---
-DISCORD_TOKEN = "YOUR_DISCORD_BOT_TOKEN_HERE" # Get this from Discord Developer Portal -> Your Application -> Bot -> Token
+# Your Discord Bot Token:
+# Get this from Discord Developer Portal -> Your Application -> Bot -> Token -> "Reset Token"
+# SET THIS AS AN ENVIRONMENT VARIABLE named "DISCORD_TOKEN" on your hosting platform.
+DISCORD_TOKEN = "YOUR_DISCORD_BOT_TOKEN_HERE"
 
-COMMAND_PREFIX = "." # Default command prefix (e.g., '!', '.', '?')
+# Bot's Command Prefix (e.g., '!', '.', '?'):
+# SET THIS AS AN ENVIRONMENT VARIABLE named "COMMAND_PREFIX". Defaults to '.' if not set.
+COMMAND_PREFIX = "."
 
 # --- Discord Channel IDs ---
-# Enable Discord Developer Mode (User Settings -> Advanced), then right-click a channel -> Copy ID
-WEBSITE_CHANNEL_ID = 123456789012345678 # Example ID for "System Is Now Online" messages
-LOGIN_CHANNEL_ID = 987654321098765432   # Example ID for "(user) Has Been Connected" messages
+# These are your specific Discord Channel IDs for the bot to interact with.
+# To get a Channel ID: Enable Discord Developer Mode (User Settings -> Advanced),
+# then right-click on the desired channel -> "Copy ID".
+# SET THESE AS ENVIRONMENT VARIABLES on your hosting platform (e.g., Render.com).
+# For example, for 'WEBSITE_CHANNEL_ID', you would create an environment variable with
+# KEY = "WEBSITE_CHANNEL_ID" and VALUE = "1409339938427637811".
+
+WEBSITE_CHANNEL_ID    = 1409339938427637811 # Channel for 'System Is Now Online' announcements (from the bot when it starts up)
+LOGIN_CHANNEL_ID      = 1409340483255144608 # Channel for '(user) Has Been Connected' announcements (if triggered by your website)
+DISCONNECTED_CHANNEL_ID = 1409350070326792293 # Channel for '(user) Has Been Disconnected' announcements (if triggered by your website), AND for bot's own disconnection status.
+LOGGING_CHANNEL_ID    = 1409340101825265704 # Channel for general bot operational logs and command invocations
+ERROR_CHANNEL_ID      = 1409349720928948244 # Channel for reporting critical errors and unhandled exceptions
 
 # --- Discord Role ID for Admin Commands (Optional) ---
-# Right-click on your admin role -> Copy ID. Leave as None if no admin restriction.
-ADMIN_ROLE_ID = None # Example: 112233445566778899
+# If you want certain commands to be admin-only:
+# To get a Role ID: Right-click on your admin role in Discord -> "Copy ID".
+# If you don't need admin roles, leave it as None in your environment.
+# SET THIS AS AN ENVIRONMENT VARIABLE named "ADMIN_ROLE_ID".
+ADMIN_ROLE_ID = None # Example: 112233445566778899 (Your actual Admin Role ID)
 
 # --- Your Website API Configuration ---
-# This is the base URL for your deployed website's API.
-# Your bot will send requests to this URL for most commands (e.g., "https://your-custom-site.com/api").
+# This is the base URL for your *deployed* website's backend API.
+# Your Discord bot will send requests to this URL for most commands (e.g., fetching user data, executing actions).
+# Make sure this is the PUBLICLY ACCESSIBLE URL of your backend.
+# SET THIS AS AN ENVIRONMENT VARIABLE named "WEBSITE_API_BASE_URL".
 WEBSITE_API_BASE_URL = "http://localhost:5000/api" # CHANGE THIS to your actual deployed website API base URL!
+
+# --- Debugging (for local use only, should not be active in production) ---
+# Set this to "True" for verbose local debugging, "False" for production.
+# SET THIS AS AN ENVIRONMENT VARIABLE named "DEBUG_MODE".
+DEBUG_MODE = "False"
