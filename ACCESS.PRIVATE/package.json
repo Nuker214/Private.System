@@ -1,7 +1,7 @@
 {
-  "name": "enhanced-private-system",
+  "name": "Private-System Startup",
   "version": "1.0.0",
-  "description": "A private system with a web dashboard and Discord bot integration.",
+  "description": "Starting, Please wait..",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
