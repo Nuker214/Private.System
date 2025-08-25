@@ -1,4 +1,3 @@
-# main.py - Integrated Bot and Flask Web App for Fly.io
 import discord
 from discord.ext import commands
 import os
@@ -8,9 +7,6 @@ import aiohttp
 import json
 from threading import Thread
 
-# --- Flask imports ---
-from flask import Flask, render_template_string, request, jsonify, send_from_directory, current_app
-
 # --- Configuration Imports ---
 from config import (
     DISCORD_TOKEN, COMMAND_PREFIX, WEBSITE_API_BASE_URL, ADMIN_ROLE_ID,
@@ -18,9 +14,9 @@ from config import (
     LOGGING_CHANNEL_ID, ERROR_CHANNEL_ID
 )
 
-# --- Integrated Whitelist Data (from your provided whitelist.json) ---
+# --- Integrated Whitelist Data ---
 # IMPORTANT: This data is now part of your main.py. Ensure passwords are
-# test/dummy values as they are embedded in the code.
+# test/dummy values as they are embedded directly in your code.
 WHITELIST_DATA = [
   {
     "name": "Testing Purposes",
@@ -467,20 +463,23 @@ file_handler = logging.FileHandler('bot.log', encoding='utf-8')
 file_handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 logger.addHandler(file_handler)
 
-# Silence discord.py and aiohttp verbose logging
+# Silence verbose logging from external libraries like discord.py and aiohttp
 logging.getLogger('discord').setLevel(logging.INFO)
 logging.getLogger('aiohttp').setLevel(logging.WARNING)
 
 
-# --- Flask App Initialization (Serves web pages and optional REST APIs) ---
-# Assuming 'static' folder is at the root alongside main.py for Flask to find.
+# --- Flask App Initialization (Serves web pages and API for Discord bot & Frontend) ---
+from flask import Flask, render_template_string, request, jsonify, send_from_directory, current_app
 web_app = Flask(__name__, static_folder='static', static_url_path='/')
-WEB_SERVER_PORT = int(os.getenv("PORT", 8080)) # Default to 8080 or use env PORT
+# Render's Web Service injects a 'PORT' environment variable.
+# Flask should bind to '0.0.0.0' and this 'PORT'.
+WEB_SERVER_PORT = int(os.getenv("PORT", 8000)) # Default to 8000 for local testing
 
 
-# --- Serve Static Files and Root Index ---
+# --- Flask Routes to Serve Static Files ---
 @web_app.route('/')
 def serve_index():
+    # Serves the index.html from the 'static' folder when root URL is accessed.
     return send_from_directory('static', 'index.html')
 
 @web_app.route('/<path:filename>')
@@ -489,9 +488,10 @@ def serve_static(filename):
     # from the 'static' folder directly.
     return send_from_directory('static', filename)
 
-# --- API Endpoints (For your Discord Bot to Interact, or Frontend for data) ---
 
-# Endpoint to serve the whitelist data from memory
+# --- Flask API Endpoints (For Frontend & Discord Bot Interaction) ---
+
+# Frontend requests this to get whitelist data for client-side authentication.
 @web_app.route('/api/whitelist', methods=['GET'])
 def api_get_whitelist():
     logger.info("[WEB_API] Frontend requested whitelist data.")
@@ -499,27 +499,25 @@ def api_get_whitelist():
     return jsonify(WHITELIST_DATA), 200
 
 
-# API endpoints below are examples of what your DISCORD BOT'S `website_send_command`
-# and `website_get_data` functions (in this SAME main.py file!) might call.
-# These mock endpoints now query the integrated WHITELIST_DATA.
+# --- Discord Bot's Backend-facing API (These endpoints are called by Discord bot commands) ---
 
 @web_app.route('/api/users/<user_id>/info', methods=['GET'])
 def api_get_user_info_for_bot(user_id):
     """Retrieves user information for the Discord bot, querying WHITELIST_DATA."""
     # Find user by userID or username
-    user_info = next((user for user in WHITELIST_DATA if user["userID"] == user_id or user["username"] == user_id), None)
+    user_info = next((user for user in WHITELIST_DATA if str(user["userID"]) == user_id or user["username"] == user_id), None)
 
     if user_info:
         # Create a copy to remove sensitive password before sending (mock for production)
         safe_user_info = user_info.copy()
         safe_user_info.pop("password", None) # Remove password for security
         # Add a mock online status
-        safe_user_info["is_online"] = True if user_id in ["9999", "1", "3923"] else False # Mock for actual online tracking
+        safe_user_info["is_online"] = True if safe_user_info["username"] in ["TEST", "Tester", "Zapperix"] else False # Mock active users
         logger.info(f"[WEB_API] Retrieved user info for bot: {user_id}")
         return jsonify({"status": "success", "data": safe_user_info}), 200
 
     logger.warning(f"[WEB_API] User info for bot: {user_id} not found.")
-    return jsonify({"status": "error", "message": f"User {user_id} not found."}), 404
+    return jsonify({"status": "error", "message": f"User {user_id} not found in whitelist."}), 404
 
 @web_app.route('/api/online_users', methods=['GET'])
 def api_get_online_users_for_bot():
@@ -527,75 +525,226 @@ def api_get_online_users_for_bot():
     online_users_list = []
     for user in WHITELIST_DATA:
         # Simple mock logic for 'online' status for now
-        if user["status"] == "active" and user["username"] in ["TEST", "Tester"]:
+        if user["status"] == "active" and user["username"] in ["TEST", "Tester", "Zapperix"]:
             online_users_list.append({"user_id": user["userID"], "username": user["username"], "status": "online"})
     
     logger.info("[WEB_API] Retrieved mock online users for bot.")
     return jsonify({"status": "success", "data": online_users_list}), 200
 
-# Placeholder for user stats
+# Mock for user stats, dynamically generates based on userID
 @web_app.route('/api/users/<user_id>/stats', methods=['GET'])
 def api_get_user_stats_for_bot(user_id):
-    user_info = next((user for user in WHITELIST_DATA if user["userID"] == user_id or user["username"] == user_id), None)
+    user_info = next((user for user in WHITELIST_DATA if str(user["userID"]) == user_id or user["username"] == user_id), None)
     if user_info:
-        # Mock stats data for the user
+        # Mock stats data for the user (can be dynamic based on userID)
         stats_data = {
             "username": user_info["username"],
-            "total_clicks": 100 + int(user_id) % 50,
-            "session_count": 5 + int(user_id) % 3,
-            "avg_session_time": f"{1 + int(user_id) % 2}h {(10 + int(user_id) % 30)}m",
-            "error_count": int(user_id) % 5,
+            "total_clicks": 100 + (int(user_id) % 50 if user_id.isdigit() else 0),
+            "session_count": 5 + (int(user_id) % 3 if user_id.isdigit() else 0),
+            "avg_session_time": f"{1 + (int(user_id) % 2 if user_id.isdigit() else 0)}h {(10 + (int(user_id) % 30 if user_id.isdigit() else 0))}m",
+            "error_count": (int(user_id) % 5 if user_id.isdigit() else 0),
             "last_activity": "2025-08-25 10:30:00Z"
         }
+        logger.info(f"[WEB_API] Retrieved mock stats for user {user_id} for bot.")
         return jsonify({"status": "success", "data": stats_data}), 200
+    logger.warning(f"[WEB_API] Stats for bot: User {user_id} not found in whitelist.")
     return jsonify({"status": "error", "message": f"Stats for user {user_id} not found."}), 404
 
-# Placeholder for other commands your Discord bot can send
+# Mock for user session time
+@web_app.route('/api/users/<user_id>/session_time', methods=['GET'])
+def api_get_user_session_time_for_bot(user_id):
+    user_info = next((user for user in WHITELIST_DATA if str(user["userID"]) == user_id or user["username"] == user_id), None)
+    if user_info:
+        session_time_str = f"{(int(user_id) % 3 if user_id.isdigit() else 1)}h {(int(user_id) % 59 if user_id.isdigit() else 30)}m"
+        logger.info(f"[WEB_API] Retrieved mock session time for user {user_id} for bot.")
+        return jsonify({"status": "success", "data": {"current_session_time": session_time_str}}), 200
+    logger.warning(f"[WEB_API] Session time for bot: User {user_id} not found in whitelist.")
+    return jsonify({"status": "error", "message": f"Session time for user {user_id} not found."}), 404
+
+# Mock for user notes
+@web_app.route('/api/users/<user_id>/notes', methods=['GET'])
+def api_get_user_notes_for_bot(user_id):
+    user_info = next((user for user in WHITELIST_DATA if str(user["userID"]) == user_id or user["username"] == user_id), None)
+    if user_info:
+        mock_notes = f"This is a mock note for {user_info['username']}. They are a {user_info['role']}."
+        logger.info(f"[WEB_API] Retrieved mock notes for user {user_id} for bot.")
+        return jsonify({"status": "success", "data": {"notes": mock_notes}}), 200
+    logger.warning(f"[WEB_API] Notes for bot: User {user_id} not found in whitelist.")
+    return jsonify({"status": "error", "message": f"Notes for user {user_id} not found."}), 404
+
+# Mock for device info
+@web_app.route('/api/users/<user_id>/device_info', methods=['GET'])
+def api_get_user_device_info_for_bot(user_id):
+    user_info = next((user for user in WHITELIST_DATA if str(user["userID"]) == user_id or user["username"] == user_id), None)
+    if user_info:
+        mock_device_info = {
+            "user_agent": "Mozilla/5.0 (Mock) Chrome/116.0.0.0",
+            "ip_address": "192.168.1.1 (Mock Internal)",
+            "browser": "Chrome (Mock)",
+            "os": "Linux (Mock)",
+            "screen_resolution": "1920x1080 (Mock)"
+        }
+        logger.info(f"[WEB_API] Retrieved mock device info for user {user_id} for bot.")
+        return jsonify({"status": "success", "data": mock_device_info}), 200
+    logger.warning(f"[WEB_API] Device info for bot: User {user_id} not found in whitelist.")
+    return jsonify({"status": "error", "message": f"Device info for user {user_id} not found."}), 404
+
+# --- API Endpoints for Bot-Triggered Actions (Mocks for now) ---
 @web_app.route('/api/user/logout', methods=['POST'])
 def api_bot_logout_user():
     data = request.json
     user_id = data.get('user_id')
-    logger.info(f"[WEB_API] Bot requested user logout: {user_id}")
-    # Here, implement logic to actually logout user (e.g., terminate session via WebSockets)
-    return jsonify({"status": "success", "message": f"Bot requested logout for {user_id}. Logic to be implemented."}), 200
+    logger.info(f"[WEB_API] Bot requested user logout for {user_id}.")
+    # TODO: Implement actual session termination for this user.
+    return jsonify({"status": "success", "message": f"Logout request for {user_id} received. Implementation pending."}), 200
 
 @web_app.route('/api/user/panic', methods=['POST'])
 def api_bot_panic_user():
     data = request.json
     user_id = data.get('user_id')
     url = data.get('url')
-    logger.info(f"[WEB_API] Bot requested user panic: {user_id} to {url}")
-    # Implement real-time panic to client (via WebSockets or client-polling for commands)
-    return jsonify({"status": "success", "message": f"Bot requested panic for {user_id} to {url}. Logic to be implemented."}), 200
+    logger.info(f"[WEB_API] Bot requested user {user_id} to panic to {url}.")
+    # TODO: Implement real-time panic/redirect via WebSockets to the client's browser.
+    return jsonify({"status": "success", "message": f"Panic request for {user_id} to {url} received. Implementation pending."}), 200
 
 @web_app.route('/api/user/zoom', methods=['POST'])
 def api_bot_zoom_user():
     data = request.json
     user_id = data.get('user_id')
     level = data.get('level')
-    logger.info(f"[WEB_API] Bot requested zoom change for user {user_id} to {level}%")
-    # Implement real-time zoom change to client (via WebSockets)
-    return jsonify({"status": "success", "message": f"Bot requested zoom for {user_id} to {level}%. Logic to be implemented."}), 200
+    logger.info(f"[WEB_API] Bot requested zoom level {level} for user {user_id}.")
+    # TODO: Implement real-time zoom control via WebSockets to the client's browser.
+    return jsonify({"status": "success", "message": f"Zoom request for {user_id} to {level}% received. Implementation pending."}), 200
+
+@web_app.route('/api/user/clear_updates', methods=['POST'])
+def api_bot_clear_updates():
+    data = request.json
+    user_id = data.get('user_id')
+    logger.info(f"[WEB_API] Bot requested to clear updates for user {user_id}.")
+    # TODO: Implement logic to clear user updates.
+    return jsonify({"status": "success", "message": f"Clear updates for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/clear_notifications', methods=['POST'])
+def api_bot_clear_notifications():
+    data = request.json
+    user_id = data.get('user_id')
+    logger.info(f"[WEB_API] Bot requested to clear notifications for user {user_id}.")
+    # TODO: Implement logic to clear user notifications.
+    return jsonify({"status": "success", "message": f"Clear notifications for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/clear_activity', methods=['POST'])
+def api_bot_clear_activity():
+    data = request.json
+    user_id = data.get('user_id')
+    logger.info(f"[WEB_API] Bot requested to clear activity for user {user_id}.")
+    # TODO: Implement logic to clear user activity logs.
+    return jsonify({"status": "success", "message": f"Clear activity for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/clear_errors', methods=['POST'])
+def api_bot_clear_errors():
+    data = request.json
+    user_id = data.get('user_id')
+    logger.info(f"[WEB_API] Bot requested to clear errors for user {user_id}.")
+    # TODO: Implement logic to clear user error logs.
+    return jsonify({"status": "success", "message": f"Clear errors for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/clear_login_history', methods=['POST'])
+def api_bot_clear_login_history():
+    data = request.json
+    user_id = data.get('user_id')
+    logger.info(f"[WEB_API] Bot requested to clear login history for user {user_id}.")
+    # TODO: Implement logic to clear user login history.
+    return jsonify({"status": "success", "message": f"Clear login history for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/clear_all_data', methods=['POST'])
+def api_bot_clear_all_data():
+    data = request.json
+    user_id = data.get('user_id')
+    logger.warning(f"[WEB_API] Bot requested to clear ALL data for user {user_id}.")
+    # TODO: Implement logic to clear ALL user data. Requires extreme caution.
+    return jsonify({"status": "success", "message": f"Clear all data for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/set_clicks', methods=['POST'])
+def api_bot_set_clicks():
+    data = request.json
+    user_id = data.get('user_id')
+    count = data.get('count')
+    logger.info(f"[WEB_API] Bot requested to set clicks for user {user_id} to {count}.")
+    # TODO: Implement logic to set user clicks.
+    return jsonify({"status": "success", "message": f"Set clicks for {user_id} to {count} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/clear_clicks', methods=['POST'])
+def api_bot_clear_clicks():
+    data = request.json
+    user_id = data.get('user_id')
+    logger.info(f"[WEB_API] Bot requested to clear clicks for user {user_id}.")
+    # TODO: Implement logic to clear user clicks.
+    return jsonify({"status": "success", "message": f"Clear clicks for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/set_announcement', methods=['POST'])
+def api_bot_set_announcement():
+    data = request.json
+    user_id = data.get('user_id')
+    message = data.get('message')
+    logger.info(f"[WEB_API] Bot requested to set announcement for user {user_id}: {message}.")
+    # TODO: Implement logic to set custom announcement for user.
+    return jsonify({"status": "success", "message": f"Set announcement for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/restart_page', methods=['POST'])
+def api_bot_restart_page():
+    data = request.json
+    user_id = data.get('user_id')
+    logger.info(f"[WEB_API] Bot requested to restart page for user {user_id}.")
+    # TODO: Implement logic to restart user page.
+    return jsonify({"status": "success", "message": f"Restart page for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/set_theme', methods=['POST'])
+def api_bot_set_theme():
+    data = request.json
+    user_id = data.get('user_id')
+    theme = data.get('theme_name')
+    logger.info(f"[WEB_API] Bot requested to set theme for user {user_id} to {theme}.")
+    # TODO: Implement logic to set user theme.
+    return jsonify({"status": "success", "message": f"Set theme for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/set_dashboard_color', methods=['POST'])
+def api_bot_set_dashboard_color():
+    data = request.json
+    user_id = data.get('user_id')
+    color = data.get('color')
+    logger.info(f"[WEB_API] Bot requested to set dashboard color for user {user_id} to {color}.")
+    # TODO: Implement logic to set user dashboard color.
+    return jsonify({"status": "success", "message": f"Set dashboard color for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/set_event', methods=['POST'])
+def api_bot_set_event():
+    data = request.json
+    user_id = data.get('user_id')
+    event_name = data.get('event_name')
+    message = data.get('message')
+    logger.info(f"[WEB_API] Bot requested to set event for user {user_id}: {event_name} - {message}.")
+    # TODO: Implement logic to set custom event for user.
+    return jsonify({"status": "success", "message": f"Set event for {user_id} request received. Implementation pending."}), 200
+
+@web_app.route('/api/user/control_section', methods=['POST'])
+def api_bot_control_section():
+    data = request.json
+    user_id = data.get('user_id')
+    action = data.get('action')
+    section = data.get('section')
+    logger.info(f"[WEB_API] Bot requested to {action} section {section} for user {user_id}.")
+    # TODO: Implement logic to control user website sections.
+    return jsonify({"status": "success", "message": f"Control section for {user_id} ({action} {section}) request received. Implementation pending."}), 200
 
 @web_app.route('/api/user/screenshot', methods=['POST'])
 def api_bot_screenshot_user():
     data = request.json
     user_id = data.get('user_id')
-    logger.info(f"[WEB_API] Bot requested screenshot for user {user_id}")
+    logger.info(f"[WEB_API] Bot requested screenshot for user {user_id}.")
     # In a real app, this would trigger client-side JS to take a screenshot,
     # upload it back to this backend, and this backend would return an image URL.
-    mock_image_url = "https://picsum.photos/800/600" # Placeholder image
-    return jsonify({"status": "success", "message": f"Bot requested screenshot for {user_id}.", "data": {"image_url": mock_image_url}}), 200
-
-# (Add all other `/api/user/*` endpoints that your Discord bot commands are calling in `website_send_command` or `website_get_data`.)
-# E.g., for `/user/clear_updates`, `/user/set_clicks`, `/user/set_theme`, etc.
-
-# --- Run Flask app in a separate thread ---
-def run_flask_app():
-    logger.info(f"Starting Flask web app in a separate thread on 0.0.0.0:{WEB_SERVER_PORT}")
-    web_app.run(host='0.0.0.0', port=WEB_SERVER_PORT, debug=False, use_reloader=False)
-
-flask_thread = Thread(target=run_flask_app)
+    mock_image_url = "https://picsum.photos/800/600" # Placeholder image URL
+    return jsonify({"status": "success", "message": f"Bot requested screenshot for {user_id}. Implementation pending.", "data": {"image_url": mock_image_url}}), 200
 
 
 # --- Discord Bot Core ---
@@ -604,7 +753,8 @@ intents.message_content = True
 intents.members = True
 bot = commands.Bot(command_prefix=COMMAND_PREFIX, intents=intents)
 
-# --- Discord Logging Handlers ---
+
+# --- Attach Discord Handlers (Called within bot.on_ready event) ---
 class DiscordHandler(logging.Handler):
     """
     A custom logging handler that sends log records to a specific Discord channel.
@@ -618,107 +768,82 @@ class DiscordHandler(logging.Handler):
 
     def emit(self, record):
         if not self.bot or not self.bot.is_ready():
-            return
+            return # Can't send to Discord if bot isn't ready or still connecting
 
         channel = self.bot.get_channel(self.channel_id)
         if not channel:
+            # Fallback to console print if Discord channel itself is not found/accessible
             print(f"[{self.__class__.__name__}] ERROR: Configured Discord channel with ID {self.channel_id} not found. "
                   f"Log: {self.format(record)}")
             return
 
+        # Schedule the coroutine to send the message using the bot's event loop
         self.bot.loop.create_task(self.send_to_discord(channel, record))
 
     async def send_to_discord(self, channel, record):
         try:
-            guild_info = record.guild_name if hasattr(record, 'guild_name') else "N/A"
-            channel_info = record.channel_name if hasattr(record, 'channel_name') else "N/A"
-            user_info = f"{record.user_name} (ID: {record.user_id})" if hasattr(record, 'user_name') else "N/A"
-            command_info = record.command_name if hasattr(record, 'command_name') else "N/A"
-            full_command_info = record.full_command if hasattr(record, 'full_command') else "N/A"
+            # Use extra attributes for better embed fields, falling back to "N/A"
+            guild_info = getattr(record, 'guild_name', "N/A")
+            channel_info = getattr(record, 'channel_name', "N/A")
+            user_info = f"{getattr(record, 'user_name', 'N/A')} (ID: {getattr(record, 'user_id', 'N/A')})"
+            command_info = getattr(record, 'command_name', "N/A")
+            full_command_info = getattr(record, 'full_command', "N/A")
+
 
             if record.levelname == 'ERROR' or record.levelname == 'CRITICAL':
-                embed = discord.Embed(title=f"❌ {record.levelname}: {record.name}", description=f"```py\n{record.message}```", color=discord.Color.red(), timestamp=discord.utils.utcnow())
+                embed = discord.Embed(
+                    title=f"❌ {record.levelname}: {record.name}",
+                    description=f"```py\n{record.message}```", # Present message in code block
+                    color=discord.Color.red(),
+                    timestamp=discord.utils.utcnow()
+                )
                 embed.add_field(name="Source", value=f"`{record.filename}:{record.lineno}`", inline=True)
                 embed.add_field(name="Guild", value=guild_info, inline=True)
                 embed.add_field(name="Channel", value=channel_info, inline=True)
                 if command_info != "N/A": embed.add_field(name="Command", value=command_info, inline=True)
                 if user_info != "N/A": embed.add_field(name="User", value=user_info, inline=True)
                 if full_command_info != "N/A": embed.add_field(name="Full Command", value=f"`{full_command_info}`", inline=False)
-                if record.exc_text:
+
+
+                if record.exc_text: # Contains traceback
                     trace = record.exc_text
-                    if len(trace) > 1024: trace = trace[:1020] + "..."
+                    if len(trace) > 1024:
+                        trace = trace[:1020] + "..." # Truncate if too long for field value
                     embed.add_field(name="Traceback", value=f"```py\n{trace}```", inline=False)
+
                 await channel.send(embed=embed)
 
             elif record.levelname == 'WARNING':
-                embed = discord.Embed(title=f"⚠️ {record.levelname}: {record.name}", description=f"`{record.message}`", color=discord.Color.gold(), timestamp=discord.utils.utcnow())
+                embed = discord.Embed(
+                    title=f"⚠️ {record.levelname}: {record.name}",
+                    description=f"`{record.message}`",
+                    color=discord.Color.gold(),
+                    timestamp=discord.utils.utcnow()
+                )
                 embed.add_field(name="Source", value=f"`{record.filename}:{record.lineno}`", inline=True)
                 embed.add_field(name="Guild", value=guild_info, inline=True)
                 embed.add_field(name="Channel", value=channel_info, inline=True)
                 if user_info != "N/A": embed.add_field(name="User", value=user_info, inline=True)
                 await channel.send(embed=embed)
-            elif record.levelname == 'INFO': await channel.send(f"[`{record.asctime.split(',')[0]} INFO`] {record.message}")
-            else: await channel.send(f"[{record.levelname}] {record.message}")
-        except discord.Forbidden: print(f"[{self.__class__.__name__}] ERROR: Missing permissions for Discord channel '{channel.name}' (ID: {channel.id}). Cannot send log.")
-        except discord.HTTPException as e: print(f"[{self.__class__.__name__}] ERROR: Failed to send log to Discord channel '{channel.name}' (ID: {channel.id}) - HTTP error {e.status}: {e.text}")
-        except Exception as e: print(f"[{self.__class__.__name__}] CRITICAL: Unexpected error when trying to send log to Discord: {e}", exc_info=True)
+
+            elif record.levelname == 'INFO':
+                # General info logs as a simple message to reduce embed spam in busy log channels
+                await channel.send(f"[`{record.asctime.split(',')[0]} INFO`] {record.message}")
+            else:
+                await channel.send(f"[{record.levelname}] {record.message}")
+        except discord.Forbidden:
+            print(f"[{self.__class__.__name__}] ERROR: Missing permissions for Discord channel '{channel.name}' (ID: {channel.id}). Cannot send log.")
+        except discord.HTTPException as e:
+            print(f"[{self.__class__.__name__}] ERROR: Failed to send log to Discord channel '{channel.name}' (ID: {channel.id}) - HTTP error {e.status}: {e.text}")
+        except Exception as e:
+            print(f"[{self.__class__.__name__}] CRITICAL: Unexpected error when trying to send log to Discord: {e}", exc_info=True)
 
 
-# --- Discord-triggered Website Interaction functions (used by Discord commands) ---
-async def website_send_command(endpoint: str, user_id: str = None, **kwargs):
-    # This calls YOUR OWN FLASK API which needs to implement /api/user/logout etc.
-    api_base = f"http://localhost:{WEB_SERVER_PORT}" if os.getenv('FLY_APP_NAME') else WEBSITE_API_BASE_URL
-    full_url = f"{api_base}{endpoint}"
-    payload = {"user_id": user_id, **kwargs}
-    logger.info(f"[Website API] Bot sending command: {full_url} with payload: {payload}")
-
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.post(full_url, json=payload) as response:
-                response.raise_for_status()
-                data = await response.json()
-                logger.info(f"[Website API] Bot received response ({response.status}) from {full_url}: {data}")
-                return data
-    except aiohttp.ClientResponseError as e:
-        logger.error(f"[Website API] Bot-to-API error {e.status} for {full_url}. Response: {e.message}", exc_info=True, extra={'endpoint': endpoint, 'status_code': e.status, 'user_id': user_id})
-        return {"status": "error", "message": f"Website API error {e.status}: {e.message}"}
-    except aiohttp.ClientConnectionError as e:
-        logger.error(f"[Website API] Bot failed to connect to local Flask API at {full_url}: {e}", exc_info=True, extra={'endpoint': endpoint, 'error_type': 'ConnectionError', 'user_id': user_id})
-        return {"status": "error", "message": f"Could not connect to internal Flask API."}
-    except Exception as e:
-        logger.error(f"[Website API] Bot-side unexpected error interacting with Flask API {full_url}: {e}", exc_info=True, extra={'endpoint': endpoint, 'error_type': 'UnexpectedError', 'user_id': user_id})
-        return {"status": "error", "message": f"An unexpected error occurred in bot-to-website interaction."}
-
-async def website_get_data(endpoint: str, user_id: str = None):
-    # Similar to website_send_command, calls the local Flask API.
-    api_base = f"http://localhost:{WEB_SERVER_PORT}" if os.getenv('FLY_APP_NAME') else WEBSITE_API_BASE_URL
-    query_params = f"?user_id={user_id}" if user_id else ""
-    full_url = f"{api_base}{endpoint}{query_params}"
-    logger.info(f"[Website API] Bot fetching data from: {full_url}")
-
-    try:
-        async with aiohttp.ClientSession() as session:
-            async with session.get(full_url) as response:
-                response.raise_for_status()
-                data = await response.json()
-                logger.info(f"[Website API] Bot received response ({response.status}) from {full_url}: {data}")
-                return data
-    except aiohttp.ClientResponseError as e:
-        logger.error(f"[Website API] Bot-to-API error {e.status} for {full_url}. Response: {e.message}", exc_info=True, extra={'endpoint': endpoint, 'status_code': e.status, 'user_id': user_id})
-        return {"status": "error", "message": f"Website API error {e.status}: {e.message}"}
-    except aiohttp.ClientConnectionError as e:
-        logger.error(f"[Website API] Bot failed to connect to local Flask API at {full_url}: {e}", exc_info=True, extra={'endpoint': endpoint, 'error_type': 'ConnectionError', 'user_id': user_id})
-        return {"status": "error", "message": f"Could not connect to internal Flask API."}
-    except Exception as e:
-        logger.error(f"[Website API] Bot-side unexpected error fetching from Flask API {full_url}: {e}", exc_info=True, extra={'endpoint': endpoint, 'error_type': 'UnexpectedError', 'user_id': user_id})
-        return {"status": "error", "message": f"An unexpected error occurred in bot-to-website data fetch."}
-
-
-# --- Bot's internal functions for User Connection/Disconnection Announcements (to Discord) ---
-# These would be called IF the Flask API (or another server-side process) signals the bot
-# via an internal bot API endpoint, not for direct client-side logins.
+# --- Discord Bot's internal functions for User Connection/Disconnection Announcements ---
+# These can be called by the Flask app (e.g., when login/logout API is hit for real-time internal status change).
+# The frontend client handles its own webhooks now, so these are mostly for backend's internal use if any logic requires the bot to speak.
 async def bot_user_connected_announcement(user_id: str, username: str = "Unknown User"):
-    """Sends a user connected message to Discord's LOGIN_CHANNEL_ID."""
+    """Sends a user connected message to Discord's LOGIN_CHANNEL_ID (if triggered internally)."""
     if LOGIN_CHANNEL_ID == 0:
         logger.warning(f"LOGIN_CHANNEL_ID is 0. Cannot send user connected announcement for {username}.")
         return
@@ -732,7 +857,7 @@ async def bot_user_connected_announcement(user_id: str, username: str = "Unknown
                        f"Cannot announce user '{username}' connected.")
 
 async def bot_user_disconnected_announcement(user_id: str, username: str = "Unknown User"):
-    """Sends a user disconnected message to Discord's DISCONNECTED_CHANNEL_ID."""
+    """Sends a user disconnected message to Discord's DISCONNECTED_CHANNEL_ID (if triggered internally)."""
     if DISCONNECTED_CHANNEL_ID == 0:
         logger.warning(f"DISCONNECTED_CHANNEL_ID is 0. Cannot send user disconnected announcement for {username}.")
         return
@@ -914,9 +1039,8 @@ def is_admin():
     return commands.check(predicate)
 
 # --- Discord Bot Commands ---
-
 @bot.command(name='help')
-async def help_command(ctx):
+async def help_command(ctx): # ... (as before) ...
     """Displays this help dialog."""
     help_message = f"""
 **__Discord Control Commands (Prefix: `{COMMAND_PREFIX}`)__**
@@ -1004,7 +1128,7 @@ async def online_users(ctx):
     except Exception as e:
         logger.error(f"Error in online_users command by {ctx.author}: {e}", exc_info=True,
                      extra={'command_name': 'Online', 'user_name': str(ctx.author)})
-        await ctx.send("An unexpected error occurred while fetching online users. Please try again later.")
+        await ctx.send(f"An unexpected error occurred while fetching online users. Please try again later.")
 
 @bot.command(name='Logout')
 async def logout_user(ctx, user_id: str):
@@ -1278,15 +1402,19 @@ async def get_device_info(ctx, user_id: str):
         await ctx.send(f"An unexpected error occurred while fetching device info for user `{user_id}`. Please try again later.")
 
 
-# --- Startup Script ---
-async def start_discord_bot_and_web_app():
-    # Start the Flask app in a separate thread first
-    flask_thread.start()
-    logger.info("Flask web server thread started.")
-
-    # Then, start the Discord bot (this blocks the current thread until bot disconnects)
-    # bot.start automatically logs in, handles reconnection.
-    await bot.start(DISCORD_TOKEN)
+# --- Startup and Shutdown ---
+def start_discord_bot_in_thread():
+    """Runs the Discord bot in its own event loop within a new thread."""
+    try:
+        asyncio.set_event_loop(asyncio.new_event_loop()) # Create new event loop for this thread
+        bot.run(DISCORD_TOKEN, log_handler=None) # Don't let discord.py setup its own logger. Our custom is already there.
+    except discord.errors.LoginFailure as e:
+        logger.critical(f"Discord Bot Login Failed in thread: Invalid Token. {e}", exc_info=True)
+        # Attempt to signal to main thread or simply let thread die
+        os._exit(1) # For a critical error, force exit
+    except Exception as e:
+        logger.critical(f"Discord bot thread crashed unexpectedly: {e}", exc_info=True)
+        os._exit(1) # For a critical error, force exit
 
 
 if __name__ == '__main__':
@@ -1294,28 +1422,18 @@ if __name__ == '__main__':
         logger.critical("DISCORD_TOKEN not found in environment variables. Bot cannot start. Exiting.")
         exit(1)
 
-    # Helper for critical startup errors before bot.run() completes (i.e., before on_ready)
-    async def send_critical_startup_error_to_discord(message: str, error_details: str):
-        if ERROR_CHANNEL_ID != 0:
-            print(f"Attempting to send critical startup error to Discord channel {ERROR_CHANNEL_ID}.")
-            error_channel = None
-            if bot.is_ready(): error_channel = bot.get_channel(ERROR_CHANNEL_ID)
+    # --- Start the Discord Bot in a Separate Thread ---
+    logger.info("Starting Discord bot in a separate thread...")
+    discord_bot_thread = Thread(target=start_discord_bot_in_thread, daemon=True) # daemon=True means thread dies with main process
+    discord_bot_thread.start()
 
-            if error_channel:
-                embed = discord.Embed(title="🚨 CRITICAL BOT STARTUP ERROR! 🚨", description=f"```fix\n{message}\n```\n**Details:** {error_details}\nBot failed to start properly. Check host logs for full traceback.", color=discord.Color.dark_red(), timestamp=discord.utils.utcnow())
-                try: await error_channel.send(embed=embed)
-                except (discord.Forbidden, discord.HTTPException): print(f"Failed to send critical startup error to Discord channel {ERROR_CHANNEL_ID} (permissions error?).")
-            else: print(f"ERROR: Could not get Discord channel object with ID {ERROR_CHANNEL_ID} for critical startup error notification.")
-        else: print("ERROR_CHANNEL_ID not set or is 0. Cannot send critical startup error notification to Discord.")
-
+    # --- Start the Flask Web App in the Main Thread ---
+    # Render's Web Service expects the main process to handle the web server.
     try:
-        logger.info("Starting integrated Bot and Web App...")
-        asyncio.run(start_discord_bot_and_web_app())
-    except discord.errors.LoginFailure as e:
-        logger.critical(f"Invalid Discord Bot Token provided: {e}. Bot cannot log in. Exiting.", exc_info=True)
-        asyncio.run(send_critical_startup_error_to_discord("Bot Login Failed: Invalid Token", str(e)))
-        exit(1)
+        logger.info(f"Starting Flask web app in MAIN thread on 0.0.0.0:{WEB_SERVER_PORT} for Render Web Service...")
+        web_app.run(host='0.0.0.0', port=WEB_SERVER_PORT, debug=False, use_reloader=False)
     except Exception as e:
-        logger.critical(f"An unhandled critical error occurred during app startup: {e}. Exiting.", exc_info=True)
-        asyncio.run(send_critical_startup_error_to_discord("Critical Unhandled Error during Combined Startup", str(e)))
+        logger.critical(f"An unhandled critical error occurred in the Flask web app (main thread) startup: {e}. Exiting.", exc_info=True)
+        # In a Web Service, if the main process crashes, Render will restart the service.
+        # Additional cleanup or specific Discord notification during *Flask crash* is complex from here.
         exit(1)
