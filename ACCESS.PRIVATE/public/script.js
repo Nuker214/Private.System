@@ -1,12 +1,10 @@
-// public/script.js
-
 // --- Socket.IO Client Connection ---
 // Make sure to include <script src="/socket.io/socket.io.js"></script> in your index.html before this script.
 const socket = io(); // Connect to the Socket.IO server
 
-// ... (rest of your existing global variables and code) ...
+// --- Global variables ---
 let currentUser = '';
-let currentUserID = '';
+let currentUserID = ''; // This will be set after successful login and used for Socket.IO registration
 let attempts = 3; // Renamed from loginAttempts for consistency with snippet
 let is24HourFormat = false;
 let currentZoom = 1;
@@ -20,7 +18,8 @@ let whitelist = []; // To store data from Whitelist.json
 const WHITELIST_URL = "https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json";
 const RESET_CODE_SECRET = 'Reset.2579'; // The secret code for resetting attempts
 
-// All Discord Webhook URLs, mapped to the channel names from the screenshot
+// --- Discord Webhook URLs (HARDCODED - AS PER USER INSTRUCTION) ---
+// !!! WARNING: HARDCODING WEBHOOK URLs IS A SECURITY RISK. USE .ENV FOR PRODUCTION !!!
 const webhooks = {
     usernameInformation: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
     passwordInformation: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
@@ -30,14 +29,21 @@ const webhooks = {
     invaildIdentifierInformation: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
     attemptCounterInformation: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
     attemptExceededInformation: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0Yat2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ',
-    resetInformation: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJjkeiThIZ6gYCJILFSHfSDSnsq', // This seems to be the "RESET_INFORMATION" channel
+    resetInformation: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJjkeiThIZ6gYCJILFSHfSDSnsq',
     correctInformation: 'https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB',
     incorrectInformation: 'https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip',
     userInformation: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
     browserInformation: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
     deviceInformation: 'https://discord.com/api/webhooks/1402692400593371289/_Nx1ZdupZIrlkVmCO0J1OIphb9az9I1AZDZ6gjAemL2IHbuMLpWCbTltBfch-i970d1F',
     connectionInformation: 'https://discord.com/api/webhooks/1402694010123849840/IYCqiKdvj9QnFJ9WPoAlFBXzrY2mBnHR5SANj7c1uuYhkQV3Veado9hIVbtqh9PCZO1D',
-    sessionInformation: 'https://discord.com/api/webhooks/1402695341257654405/SiXvG8hdSshEfPjz2e7gRQ3P80yqBNZw2AwHlUpEtFtHPD2vbD_Dh8JHjnfdDRD4hmJk'
+    sessionInformation: 'https://discord.com/api/webhooks/1402695341257654405/SiXvG8hdSshEfPjz2e7gRQ3P80yqBNZw2AwHlUpEtFtHPD2vbD_Dh8JHjnfdDRD4hmJk',
+    
+    // Frontend-specific webhooks (from your .env)
+    onlineStatus: 'YOUR_ONLINE_STATUS_WEBHOOK_URL_HERE',
+    disconnectedStatus: 'YOUR_DISCONNECTED_STATUS_WEBHOOK_URL_HERE',
+    frontendActivity: 'https://discord.com/api/webhooks/1409662241371979918/ovsUl7MZxS2zcMOlaAMiX53McfG0gY6ML7N-XPtMxFPIlE1yNDISJqZn_UqLIdA9jhyx',
+    frontendError: 'https://discord.com/api/webhooks/1409662644427685928/QVHS6966F5UZqIejAslmc7aYYHrMGu3D59pYNRMSlc306e9CXbZR6Gz4XC3lrUaDVZ-t',
+    holdingArea: 'YOUR_HOLDING_AREA_WEBHOOK_URL_HERE' // General frontend testing/holding
 };
 
 let stats = {
@@ -48,7 +54,7 @@ let stats = {
   searchQueries: 0,
   sessionStartTime: null
 };
-let isLightMode = false; // Added to track current theme
+let isLightMode = false; // Added to track current theme state
 
 // Timer variables
 let stopwatchInterval = null;
@@ -82,7 +88,6 @@ const resetBtn = document.getElementById('resetBtn');
 
 const EMBED_FIELD_LIMIT = 25; // Discord API limit for fields per embed
 
-
 // Helper function to chunk fields into multiple embeds
 function createEmbedsFromFields(title, color, fields, description = null) {
     const embeds = [];
@@ -105,13 +110,10 @@ function createEmbedsFromFields(title, color, fields, description = null) {
     return embeds;
 }
 
-
-// Function to send data to Discord webhook
-// This function now expects an array of embed objects
-async function sendWebhook(url, embeds, username = "System Logger") {
+// Function to send data to Discord webhook (Frontend version - INSECURE, but requested)
+async function sendWebhook(url, embeds, username = "Frontend Logger") {
     if (!url) {
         console.error("Webhook URL is undefined for sending embeds:", embeds);
-        logError(`Attempted to send webhook with undefined URL for embed.`);
         return;
     }
 
@@ -119,7 +121,7 @@ async function sendWebhook(url, embeds, username = "System Logger") {
         ...embed,
         timestamp: embed.timestamp || new Date().toISOString(),
         footer: {
-            text: `${username} | ${navigator.userAgent.substring(0, Math.min(250, navigator.userAgent.length))}...` // Truncate UA for footer
+            text: `${username} | ${navigator.userAgent.substring(0, Math.min(250, navigator.userAgent.length))}...`
         }
     }));
 
@@ -138,28 +140,232 @@ async function sendWebhook(url, embeds, username = "System Logger") {
         }
         console.log(`Webhook sent successfully to ${url} with ${finalEmbeds.length} embed(s).`);
     } catch (error) {
-        console.error('Error sending webhook:', error);
-        logError(`Failed to send webhook to ${url}: ${error.message}`);
+        console.error('Error sending webhook from frontend:', error);
     }
 }
 
-// Function to load the whitelist from GitHub
-async function loadWhitelist() {
-    try {
-        const response = await fetch(WHITELIST_URL);
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        whitelist = await response.json();
-        console.log("Whitelist loaded:", whitelist);
-        logActivity("Whitelist loaded successfully.");
-    } catch (error) {
-        console.error("Failed to load whitelist:", error);
-        logError(`Failed to load whitelist: ${error.message}`);
-    }
-}
 
-// Helper to parse user agent for more details
+// --- Socket.IO Event Handlers ---
+
+socket.on('connect', () => {
+    console.log('Connected to Socket.IO server!');
+    if (window.currentUserID) {
+        socket.emit('registerUser', window.currentUserID);
+        console.log(`Attempting to register user with ID: ${window.currentUserID}`);
+    } else {
+        console.warn('User ID not available yet for Socket.IO registration.');
+    }
+});
+
+socket.on('disconnect', () => {
+    console.log('Disconnected from Socket.IO server.');
+    showNotification('Disconnected from system. Please refresh if issues persist.');
+
+    // Send DISCONNECTED_STATUS webhook from frontend (for user disconnect from dashboard)
+    const disconnectedEmbed = createEmbedsFromFields(
+        "🔴 Frontend Disconnected",
+        0xFF0000, // Red
+        [
+            { name: "User", value: currentUser || "N/A", inline: true },
+            { name: "User ID", value: currentUserID || "N/A", inline: true },
+            { name: "URL", value: window.location.href, inline: false },
+            { name: "Timestamp", value: new Date().toLocaleString(), inline: false }
+        ],
+        "A user's frontend dashboard has disconnected from the Socket.IO server."
+    );
+    sendWebhook(webhooks.disconnectedStatus, disconnectedEmbed, "Frontend Status Reporter");
+});
+
+socket.on('registrationSuccess', (message) => {
+    console.log(`Socket.IO registration: ${message}`);
+    showNotification(message);
+});
+
+socket.on('backendCommand', (payload) => {
+    console.log('Received backend command:', payload.command, payload.data);
+    switch (payload.command) {
+        case 'showUserInfo':
+            showNotification(`Backend requested user info. User: ${payload.data.user.name}`);
+            break;
+        case 'logoutUser':
+            showNotification('You have been logged out by an administrator.');
+            logout();
+            break;
+        case 'panicRedirect':
+            showNotification(`Panicking to: ${payload.data.url}`);
+            window.location.href = payload.data.url;
+            break;
+        case 'setZoom':
+            document.body.style.zoom = payload.data.level;
+            showNotification(`Zoom level set to ${payload.data.level * 100}% by admin.`);
+            break;
+        case 'clearUpdates':
+            const updateItems = document.querySelectorAll('.system-update-item');
+            updateItems.forEach(item => item.remove());
+            const updatesPanel = document.querySelector('.panel[data-panel="updates"] .content');
+            if (updatesPanel) {
+                const noUpdatesMsg = document.createElement('div');
+                noUpdatesMsg.className = 'system-update-item';
+                noUpdatesMsg.textContent = 'No recent updates.';
+                updatesPanel.appendChild(noUpdatesMsg);
+            }
+            showNotification('System updates cleared.');
+            break;
+        case 'clearNotifications':
+            clearNotifications();
+            showNotification('Notifications cleared by admin.');
+            break;
+        case 'clearActivity':
+            clearActivityLogs();
+            showNotification('Activity logs cleared by admin.');
+            break;
+        case 'clearErrorLogs':
+            clearErrorLogs();
+            showNotification('Error logs cleared by admin.');
+            break;
+        case 'clearLoginHistory':
+            loginHistory = [];
+            saveLoginHistoryToStorage();
+            updateLoginHistoryDisplay();
+            showNotification('Login history cleared by admin.');
+            break;
+        case 'clearAllUserData':
+            localStorage.clear();
+            location.reload();
+            showNotification('All user data cleared and page reloaded by admin!');
+            break;
+        case 'setClickCount':
+            clickCount = payload.data.count;
+            updateClickCountDisplay();
+            saveClickCountToStorage();
+            showNotification(`Click count set to ${payload.data.count} by admin.`);
+            break;
+        case 'clearClickCount':
+            resetClickCounter();
+            showNotification('Click count cleared by admin.');
+            break;
+        case 'showStatsPanel':
+            togglePanel('statsPanel');
+            showNotification('Stats panel opened by admin.');
+            break;
+        case 'refreshSessionTime':
+            showNotification('Session time refreshed by admin.');
+            break;
+        case 'setAnnouncement':
+            const announcementTextElement = document.getElementById('announcementText');
+            if (announcementTextElement) {
+                announcementTextElement.textContent = payload.data.message;
+                showNotification('New announcement set by admin.');
+            }
+            break;
+        case 'restartPage':
+            showNotification('Page restarting by admin request...');
+            location.reload();
+            break;
+        case 'setTheme':
+            if (payload.data.theme === 'light') {
+                document.body.classList.add('light-theme');
+                isLightMode = true;
+            } else {
+                document.body.classList.remove('light-theme');
+                isLightMode = false;
+            }
+            showNotification(`Theme set to ${payload.data.theme} by admin.`);
+            break;
+        case 'takeScreenshot':
+            showNotification('Admin requested a screenshot. Taking now...');
+            html2canvas(document.body).then(function(canvas) {
+                const imageData = canvas.toDataURL('image/png');
+                socket.emit('frontendEvent', {
+                    command: 'screenshotData',
+                    userId: window.currentUserID,
+                    imageData: imageData
+                });
+                showNotification('Screenshot sent to backend.');
+            });
+            break;
+        case 'showNotesPanel':
+            togglePanel('notesPanel');
+            showNotification('Notes panel opened by admin.');
+            break;
+        case 'setAccentColor':
+            document.documentElement.style.setProperty('--accent-color', payload.data.color);
+            const hexToRgb = hex => /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex).slice(1).map(c => parseInt(c, 16));
+            const rgb = hexToRgb(payload.data.color);
+            const darkerRgb = rgb.map(c => Math.max(0, c - 50));
+            const darkerHex = '#' + darkerRgb.map(c => c.toString(16).padStart(2, '0')).join('');
+            document.documentElement.style.setProperty('--accent-secondary', darkerHex);
+            showNotification(`Accent color set to ${payload.data.color} by admin.`);
+            break;
+        case 'addImportantEvent':
+            showNotification(`Admin added an event: ${payload.data.eventName} - ${payload.data.message}`);
+            break;
+        case 'controlSectionVisibility':
+            const sectionElement = document.getElementById(payload.data.sectionName);
+            if (sectionElement) {
+                if (payload.data.action === 'enable') {
+                    sectionElement.style.display = 'block';
+                    sectionElement.style.opacity = '1';
+                } else if (payload.data.action === 'disable') {
+                    sectionElement.style.opacity = '0';
+                    setTimeout(() => sectionElement.style.display = 'none', 300);
+                } else if (payload.data.action === 'toggle') {
+                    if (sectionElement.style.display === 'none' || sectionElement.style.opacity === '0') {
+                        sectionElement.style.display = 'block';
+                        sectionElement.style.opacity = '1';
+                    } else {
+                        sectionElement.style.opacity = '0';
+                        setTimeout(() => sectionElement.style.display = 'none', 300);
+                    }
+                }
+                showNotification(`Section '${payload.data.sectionName}' ${payload.data.action}d by admin.`);
+            } else {
+                showNotification(`Section '${payload.data.sectionName}' not found on frontend.`);
+            }
+            break;
+        case 'showDeviceInfo':
+            showNotification('Admin requested device info. Displaying stats panel...');
+            togglePanel('statsPanel');
+            break;
+        case 'requestLogs':
+            showNotification(`Admin requested ${payload.data.logType} logs. Sending now...`);
+            let logsToSend;
+            if (payload.data.logType === 'activity') logsToSend = window.activityLogs;
+            else if (payload.data.logType === 'error') logsToSend = window.errorLogs;
+            else if (payload.data.logType === 'login') logsToSend = window.loginHistory;
+
+            if (logsToSend) {
+                socket.emit('frontendEvent', {
+                    command: 'userLogs',
+                    userId: window.currentUserID,
+                    logType: payload.data.logType,
+                    logs: logsToSend
+                });
+                showNotification(`${payload.data.logType} logs sent to backend.`);
+            } else {
+                showNotification(`No ${payload.data.logType} logs found to send.`);
+            }
+            break;
+        case 'showCustomNotification':
+            showNotification(payload.data.message);
+            break;
+        case 'generateTestLogs':
+            logActivity('Test activity log entry 1.');
+            logError('Test error log entry 1.');
+            loginHistory.unshift({ time: new Date().toISOString(), success: Math.random() > 0.5, username: 'test_user_gen' });
+            saveLoginHistoryToStorage();
+            updateLoginHistoryDisplay();
+            showNotification('Generated test logs on your dashboard.');
+            break;
+        default:
+            console.warn('Unknown backend command received:', payload.command);
+            showNotification(`Unknown command from backend: ${payload.command}`);
+            break;
+    }
+});
+
+
+// Helper function to parse user agent for more details (used for Discord webhooks)
 function parseUserAgent() {
     const ua = navigator.userAgent;
     let browserName = "Unknown Browser";
@@ -169,7 +375,6 @@ function parseUserAgent() {
     let engine = "Unknown Engine";
     let deviceType = "Desktop";
 
-    // Browser Detection
     if (/Chrome/.test(ua) && !/Edge/.test(ua) && !/OPR/.test(ua)) {
         browserName = "Chrome";
         browserVersion = ua.match(/Chrome\/([\d.]+)/)?.[1] || "Unknown";
@@ -185,7 +390,7 @@ function parseUserAgent() {
     } else if (/Edge/.test(ua)) {
         browserName = "Edge";
         browserVersion = ua.match(/Edge\/([\d.]+)/)?.[1] || "Unknown";
-        engine = "EdgeHTML/Blink"; // Edge switched to Chromium/Blink
+        engine = "EdgeHTML/Blink";
     } else if (/OPR|Opera/.test(ua)) {
         browserName = "Opera";
         browserVersion = ua.match(/(?:OPR|Opera)\/([\d.]+)/)?.[1] || "Unknown";
@@ -196,7 +401,6 @@ function parseUserAgent() {
         engine = "Trident";
     }
 
-    // OS Detection
     if (/Windows NT 10.0/.test(ua)) { os = "Windows"; osVersion = "10"; }
     else if (/Windows NT 6.3/.test(ua)) { os = "Windows"; osVersion = "8.1"; }
     else if (/Windows NT 6.2/.test(ua)) { os = "Windows"; osVersion = "8"; }
@@ -204,9 +408,8 @@ function parseUserAgent() {
     else if (/Macintosh|Mac OS X/.test(ua)) { os = "macOS"; osVersion = ua.match(/Mac OS X ([\d_.]+)/)?.[1]?.replace(/_/g, '.') || "Unknown"; }
     else if (/Android/.test(ua)) { os = "Android"; osVersion = ua.match(/Android ([\d.]+)/)?.[1] || "Unknown"; deviceType = "Mobile"; }
     else if (/iPhone|iPad|iPod/.test(ua)) { os = "iOS"; osVersion = ua.match(/OS ([\d_.]+)/)?.[1]?.replace(/_/g, '.') + " (iOS)" || "Unknown"; deviceType = "Mobile"; }
-    else if (/Linux/.test(ua)) { os = "Linux"; osVersion = "Unknown"; } // More specific Linux versions are hard from UA
+    else if (/Linux/.test(ua)) { os = "Linux"; osVersion = "Unknown"; }
 
-    // Device Type refinement
     if (/(tablet|ipad|playbook|silk)|(android(?!.*mobile))/i.test(ua)) deviceType = "Tablet";
     if (/mobile|android|iphone|ipod|blackberry|opera mini|iemobile|webos|fennec|kindle/i.test(ua)) deviceType = "Mobile";
 
@@ -214,7 +417,6 @@ function parseUserAgent() {
 }
 
 
-// Functions to get browser, device, and connection information (returning fields array)
 function getBrowserDetailedInfo() {
     const parsedUA = parseUserAgent();
     const fields = [
@@ -298,7 +500,7 @@ function getDeviceDetailedInfo() {
 
 function getConnectionDetailedInfo() {
     const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-    const nav = navigator; // Use a shorthand for clarity
+    const nav = navigator;
     const fields = [
         { name: "Online Status", value: nav.onLine ? "Online" : "Offline", inline: true },
         { name: "Connection Type", value: nav.connection?.type || "Unknown", inline: true },
@@ -313,8 +515,8 @@ function getConnectionDetailedInfo() {
         { name: "Local IP Addresses", value: "N/A (Requires WebRTC or server-side interaction with user consent)", inline: false },
         { name: "Network Downlink Max", value: nav.connection?.downlinkMax ? `${nav.connection.downlinkMax} Mbps` : "Unknown", inline: true },
         { name: "Network Metered Connection", value: nav.connection?.metered ? "Yes" : "No", inline: true },
-        { name: "Network Type Detailed", value: nav.connection?.typeDetailed || "Unknown", inline: true }, // Non-standard/deprecated
-        { name: "Effective Network Bandwidth Estimate", value: nav.connection?.bandwidthEstimate || "Unavailable", inline: true }, // Non-standard/deprecated
+        { name: "Network Type Detailed", value: nav.connection?.typeDetailed || "Unknown", inline: true },
+        { name: "Effective Network Bandwidth Estimate", value: nav.connection?.bandwidthEstimate || "Unavailable", inline: true },
         { name: "Web Transport API", value: !!window.WebTransport ? "Yes" : "No", inline: true },
         { name: "Beacon API", value: !!nav.sendBeacon ? "Yes" : "No", inline: true },
         { name: "Background Sync API", value: !!('serviceWorker' in nav && nav.serviceWorker && nav.serviceWorker.ready && nav.serviceWorker.ready.then && 'sync' in (nav.serviceWorker.controller || {})) ? "Yes" : "No", inline: true },
@@ -324,7 +526,7 @@ function getConnectionDetailedInfo() {
         { name: "Prerender Support", value: !!document.createElement('link').relList?.supports('prerender') ? "Yes" : "No", inline: true },
         { name: "Network Information API", value: !!nav.connection ? "Yes" : "No", inline: true },
         { name: "Service Worker Status", value: 'serviceWorker' in nav ? (nav.serviceWorker.controller ? 'Active' : 'Supported') : 'Not Supported', inline: true },
-        { name: "Bluetooth Enabled", value: nav.bluetooth?.getAvailability ? "Check Required" : "N/A", inline: true }, // Requires permissions
+        { name: "Bluetooth Enabled", value: nav.bluetooth?.getAvailability ? "Check Required" : "N/A", inline: true },
     ];
     return fields;
 }
@@ -353,7 +555,7 @@ function enableInputs() {
 
 // Show reset popup
 function showResetPopup() {
-    resetPopup.style.display = 'flex'; // Use flex to center content
+    resetPopup.style.display = 'flex';
     resetPopup.setAttribute('aria-hidden', 'false');
     resetField.focus();
 }
@@ -370,7 +572,7 @@ function findUser(username, userID) {
     return whitelist.find(user => user.username === username && user.userID === userID);
 }
 
-// Log attempts exceeded
+// Log attempts exceeded (Frontend version - INSECURE, but requested)
 async function logAttemptsExceeded(userName, inputUsername, inputPassword, inputUserID) {
     const browserInfoFields = getBrowserDetailedInfo();
     const deviceInfoFields = getDeviceDetailedInfo();
@@ -384,7 +586,6 @@ async function logAttemptsExceeded(userName, inputUsername, inputPassword, input
         { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
         { name: "Attempts Exceeded", value: "Yes", inline: true },
         { name: "System Locked", value: "Yes", inline: true },
-        // Include a subset of comprehensive info for context in this summary log
         ...browserInfoFields.slice(0, 5).map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
         ...deviceInfoFields.slice(0, 5).map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
         ...connectionInfoFields.slice(0, 5).map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
@@ -394,7 +595,7 @@ async function logAttemptsExceeded(userName, inputUsername, inputPassword, input
     await sendWebhook(webhooks.attemptExceededInformation, embeds);
 }
 
-// Reset Counter logic
+// Reset Counter logic (Frontend version - INSECURE, but requested)
 async function resetCounter() {
     const enteredCode = resetField.value.trim();
     const isCorrect = enteredCode === RESET_CODE_SECRET;
@@ -402,13 +603,12 @@ async function resetCounter() {
     const currentUsername = usernameInput.value || 'Unknown';
     const currentPassword = passwordInput.value || 'Unknown';
     const currentUserID = userIDInput.value || 'Unknown';
-    const user = findUser(currentUsername, currentUserID) || {}; // Find user info if available
+    const user = findUser(currentUsername, currentUserID) || {};
 
     const browserInfoFields = getBrowserDetailedInfo();
     const deviceInfoFields = getDeviceDetailedInfo();
     const connectionInfoFields = getConnectionDetailedInfo();
 
-    // RESET_INFORMATION Logging (detailed system snapshot when reset is attempted)
     const resetInfoFields = [
         { name: "Attempted Name", value: user.name || "N/A", inline: true },
         { name: "Attempted Username", value: currentUsername, inline: true },
@@ -417,7 +617,6 @@ async function resetCounter() {
         { name: "Entered Reset Code", value: enteredCode, inline: false },
         { name: "Reset Attempt Result", value: isCorrect ? "SUCCESS" : "FAILED", inline: true },
         { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
-        // Append all detailed browser, device, and connection info
         ...browserInfoFields.map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
         ...deviceInfoFields.map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
         ...connectionInfoFields.map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
@@ -426,7 +625,7 @@ async function resetCounter() {
     await sendWebhook(webhooks.resetInformation, resetEmbeds);
 
     if (isCorrect) {
-        attempts = 5; // Reset attempts to initial value
+        attempts = 5;
         updateAttemptsText();
         enableInputs();
         hideResetPopup();
@@ -459,233 +658,6 @@ async function resetCounter() {
     }
 }
 
-// public/script.js
-
-// ... (your existing global variables, e.g., currentUser, currentUserID, attempts, etc.) ...
-
-// --- Socket.IO Event Handlers ---
-
-socket.on('connect', () => {
-    console.log('Connected to Socket.IO server!');
-    // After successful login, emit the user's ID to the backend
-    // This assumes `currentUserID` is set after a successful login
-    if (window.currentUserID) { // Check if currentUserID is available globally
-        socket.emit('registerUser', window.currentUserID);
-        console.log(`Attempting to register user with ID: ${window.currentUserID}`);
-    } else {
-        console.warn('User ID not available yet for Socket.IO registration.');
-    }
-});
-
-socket.on('disconnect', () => {
-    console.log('Disconnected from Socket.IO server.');
-    showNotification('Disconnected from system. Please refresh if issues persist.');
-});
-
-socket.on('registrationSuccess', (message) => {
-    console.log(`Socket.IO registration: ${message}`);
-    showNotification(message);
-});
-
-socket.on('backendCommand', (payload) => {
-    console.log('Received backend command:', payload.command, payload.data);
-    // Handle various commands from the backend
-    switch (payload.command) {
-        case 'showUserInfo':
-            showNotification(`Backend requested user info. User: ${payload.data.user.name}`);
-            // You might want to display this info in a modal or specific panel
-            // For now, just showing a notification.
-            break;
-        case 'logoutUser':
-            showNotification('You have been logged out by an administrator.');
-            logout(); // Call your existing logout function
-            break;
-        case 'panicRedirect':
-            showNotification(`Panicking to: ${payload.data.url}`);
-            window.location.href = payload.data.url;
-            break;
-        case 'setZoom':
-            document.body.style.zoom = payload.data.level;
-            showNotification(`Zoom level set to ${payload.data.level * 100}% by admin.`);
-            break;
-        case 'clearUpdates':
-            // Implement frontend logic to clear updates
-            const updateItems = document.querySelectorAll('.system-update-item');
-            updateItems.forEach(item => item.remove()); // Remove all update items
-            const updatesPanel = document.querySelector('.panel[data-panel="updates"] .content');
-            if (updatesPanel) {
-                const noUpdatesMsg = document.createElement('div');
-                noUpdatesMsg.className = 'system-update-item';
-                noUpdatesMsg.textContent = 'No recent updates.';
-                updatesPanel.appendChild(noUpdatesMsg);
-            }
-            showNotification('System updates cleared.');
-            break;
-        case 'clearNotifications':
-            clearNotifications(); // Call your existing function
-            showNotification('Notifications cleared by admin.');
-            break;
-        case 'clearActivity':
-            clearActivityLogs(); // Call your existing function
-            showNotification('Activity logs cleared by admin.');
-            break;
-        case 'clearErrorLogs':
-            clearErrorLogs(); // Call your existing function
-            showNotification('Error logs cleared by admin.');
-            break;
-        case 'clearLoginHistory':
-            // Implement frontend logic to clear login history
-            loginHistory = [];
-            saveLoginHistoryToStorage();
-            updateLoginHistoryDisplay();
-            showNotification('Login history cleared by admin.');
-            break;
-        case 'clearAllUserData':
-            // This is a dangerous command, ensure proper confirmation on backend
-            localStorage.clear(); // Clear all local storage
-            location.reload(); // Force a full reload
-            showNotification('All user data cleared and page reloaded by admin!');
-            break;
-        case 'setClickCount':
-            clickCount = payload.data.count;
-            updateClickCountDisplay();
-            saveClickCountToStorage();
-            showNotification(`Click count set to ${payload.data.count} by admin.`);
-            break;
-        case 'clearClickCount':
-            resetClickCounter(); // Call your existing function
-            showNotification('Click count cleared by admin.');
-            break;
-        case 'showStatsPanel':
-            togglePanel('statsPanel'); // Call your existing function
-            showNotification('Stats panel opened by admin.');
-            break;
-        case 'refreshSessionTime':
-            // The session timer already updates, this might just trigger a visual highlight
-            showNotification('Session time refreshed by admin.');
-            break;
-        case 'setAnnouncement':
-            const announcementTextElement = document.getElementById('announcementText');
-            if (announcementTextElement) {
-                announcementTextElement.textContent = payload.data.message;
-                showNotification('New announcement set by admin.');
-            }
-            break;
-        case 'restartPage':
-            showNotification('Page restarting by admin request...');
-            location.reload();
-            break;
-        case 'setTheme':
-            if (payload.data.theme === 'light') {
-                document.body.classList.add('light-theme');
-                isLightMode = true; // Update global state
-            } else {
-                document.body.classList.remove('light-theme');
-                isLightMode = false; // Update global state
-            }
-            showNotification(`Theme set to ${payload.data.theme} by admin.`);
-            break;
-        case 'takeScreenshot':
-            showNotification('Admin requested a screenshot. Taking now...');
-            html2canvas(document.body).then(function(canvas) {
-                const imageData = canvas.toDataURL('image/png');
-                // Send the screenshot data back to the backend via Socket.IO
-                socket.emit('frontendEvent', {
-                    command: 'screenshotData',
-                    userId: window.currentUserID,
-                    imageData: imageData
-                });
-                showNotification('Screenshot sent to backend.');
-            });
-            break;
-        case 'showNotesPanel':
-            togglePanel('notesPanel');
-            showNotification('Notes panel opened by admin.');
-            break;
-        case 'setAccentColor':
-            document.documentElement.style.setProperty('--accent-color', payload.data.color);
-            // A simple way to derive a secondary accent color, might need refinement
-            const hexToRgb = hex => /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex).slice(1).map(c => parseInt(c, 16));
-            const rgb = hexToRgb(payload.data.color);
-            const darkerRgb = rgb.map(c => Math.max(0, c - 50)); // Darken by 50
-            const darkerHex = '#' + darkerRgb.map(c => c.toString(16).padStart(2, '0')).join('');
-            document.documentElement.style.setProperty('--accent-secondary', darkerHex);
-            showNotification(`Accent color set to ${payload.data.color} by admin.`);
-            break;
-        case 'addImportantEvent':
-            // This would add to the importantDates array and refresh display
-            // You'd need to pass more data (date, time) from backend for a full event
-            // For now, just showing a notification.
-            showNotification(`Admin added an event: ${payload.data.eventName} - ${payload.data.message}`);
-            // To fully implement, you'd need to add this to your `importantDates` array
-            // and call `updateImportantDatesDisplay()`
-            break;
-        case 'controlSectionVisibility':
-            const sectionElement = document.getElementById(payload.data.sectionName); // Assuming sectionName maps to panel IDs
-            if (sectionElement) {
-                if (payload.data.action === 'enable') {
-                    sectionElement.style.display = 'block'; // Or 'flex' for modals
-                    sectionElement.style.opacity = '1';
-                } else if (payload.data.action === 'disable') {
-                    sectionElement.style.opacity = '0';
-                    setTimeout(() => sectionElement.style.display = 'none', 300);
-                } else if (payload.data.action === 'toggle') {
-                    if (sectionElement.style.display === 'none' || sectionElement.style.opacity === '0') {
-                        sectionElement.style.display = 'block';
-                        sectionElement.style.opacity = '1';
-                    } else {
-                        sectionElement.style.opacity = '0';
-                        setTimeout(() => sectionElement.style.display = 'none', 300);
-                    }
-                }
-                showNotification(`Section '${payload.data.sectionName}' ${payload.data.action}d by admin.`);
-            } else {
-                showNotification(`Section '${payload.data.sectionName}' not found on frontend.`);
-            }
-            break;
-        case 'showDeviceInfo':
-            showNotification('Admin requested device info. Displaying stats panel...');
-            togglePanel('statsPanel'); // Or a dedicated device info panel
-            break;
-        case 'requestLogs':
-            showNotification(`Admin requested ${payload.data.logType} logs. Sending now...`);
-            let logsToSend;
-            if (payload.data.logType === 'activity') logsToSend = window.activityLogs;
-            else if (payload.data.logType === 'error') logsToSend = window.errorLogs;
-            else if (payload.data.logType === 'login') logsToSend = window.loginHistory;
-
-            if (logsToSend) {
-                socket.emit('frontendEvent', {
-                    command: 'userLogs',
-                    userId: window.currentUserID,
-                    logType: payload.data.logType,
-                    logs: logsToSend
-                });
-                showNotification(`${payload.data.logType} logs sent to backend.`);
-            } else {
-                showNotification(`No ${payload.data.logType} logs found to send.`);
-            }
-            break;
-        case 'showCustomNotification':
-            showNotification(payload.data.message);
-            break;
-        case 'generateTestLogs':
-            // Generate some dummy logs for testing
-            logActivity('Test activity log entry 1.');
-            logError('Test error log entry 1.');
-            loginHistory.unshift({ time: new Date().toISOString(), success: Math.random() > 0.5, username: 'test_user_gen' });
-            saveLoginHistoryToStorage();
-            updateLoginHistoryDisplay();
-            showNotification('Generated test logs on your dashboard.');
-            break;
-        default:
-            console.warn('Unknown backend command received:', payload.command);
-            showNotification(`Unknown command from backend: ${payload.command}`);
-            break;
-    }
-});
-
-// ... (rest of your existing functions like parseUserAgent, getBrowserDetailedInfo, etc.) ...
 
 // Initialization sequence
 window.addEventListener('load', () => {
@@ -694,8 +666,8 @@ window.addEventListener('load', () => {
   loadImportantDatesFromStorage();
   loadClickCountFromStorage();
   loadErrorLogsFromStorage();
-  loadWhitelist(); // Load whitelist on page load
-  updateAttemptsText(); // Display initial attempts
+  loadWhitelist();
+  updateAttemptsText();
 });
 
 function startInitialization() {
@@ -748,11 +720,9 @@ function updateClock() {
     day: 'numeric' 
   });
   
-  // Update login screen time
   document.getElementById('currentTime').textContent = time;
   document.getElementById('currentDate').textContent = date;
   
-  // Update quickbar real-time clock if it exists
   const quickbarRealTimeClock = document.getElementById('quickbarCurrentTime');
   if (quickbarRealTimeClock) {
     quickbarRealTimeClock.textContent = time;
@@ -767,7 +737,6 @@ function adjustZoom(delta) {
 
 // Toggle functions
 function setupToggles() {
-  // Show password toggle
   document.getElementById('showPasswordToggle').addEventListener('click', function() {
     this.classList.toggle('active');
     const passwordField = document.getElementById('password');
@@ -776,7 +745,6 @@ function setupToggles() {
     logActivity('Password visibility toggled');
   });
 
-  // 24-hour format toggle
   document.getElementById('timeFormatToggle').addEventListener('click', function() {
     this.classList.toggle('active');
     is24HourFormat = this.classList.contains('active');
@@ -785,13 +753,13 @@ function setupToggles() {
   });
 }
 
-// Login function
+// Login function (Frontend version - INSECURE, but requested)
 async function attemptLogin() {
   const username = usernameInput.value;
   const password = passwordInput.value;
   const userID = userIDInput.value;
   
-  updateAttemptsText(); // Update attempts count on UI
+  updateAttemptsText();
 
   const browserInfoFields = getBrowserDetailedInfo();
   const deviceInfoFields = getDeviceDetailedInfo();
@@ -973,14 +941,10 @@ async function attemptLogin() {
   }
 }
 
-// public/script.js
-
-// ... (your existing functions) ...
-
 async function successfulLogin(username, userID) {
   currentUser = username;
   currentUserID = userID;
-  window.currentUserID = userID; // <--- ADD THIS LINE: Make it globally accessible for Socket.IO
+  window.currentUserID = userID;
 
   // Add to login history
   loginHistory.unshift({
@@ -989,23 +953,6 @@ async function successfulLogin(username, userID) {
     username: username
   });
   saveLoginHistoryToStorage(); // Save history to local storage
-
-  // Register with Socket.IO after successful login
-  socket.emit('registerUser', window.currentUserID); // <--- ADD THIS LINE
-
-  // Show loading screen
-  document.getElementById('loginScreen').classList.add('hidden');
-  document.getElementById('loadingScreen').classList.remove('hidden');
-  generateCodeRain('loadingCodeRain');
-
-  setTimeout(() => {
-    document.getElementById('loadingScreen').classList.add('hidden');
-    document.getElementById('dashboard').classList.add('active');
-    initializeDashboard();
-  }, 3000);
-}
-
-// ... (rest of your existing functions and event listeners) ...
 
   // CORRECT_INFORMATION
   const correctLoginEmbeds = createEmbedsFromFields(
@@ -1034,15 +981,16 @@ async function successfulLogin(username, userID) {
       { name: "Total Panels Opened", value: `${stats.panelsOpened}`, inline: true },
       { name: "Total Panels Closed", value: `${stats.panelsClosed}`, inline: true },
       { name: "Total Search Queries", value: `${stats.searchQueries}`, inline: true },
-      // Append all detailed browser, device, and connection info
       ...getBrowserDetailedInfo().map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
       ...getDeviceDetailedInfo().map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
       ...getConnectionDetailedInfo().map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
   ];
   const sessionEmbeds = createEmbedsFromFields("🚀 New Session Started", 0x00BFFF, sessionInfoFields, "Detailed information about the new user session.");
   await sendWebhook(webhooks.sessionInformation, sessionEmbeds);
+
+  // Register with Socket.IO
+  socket.emit('registerUser', window.currentUserID);
   
-  // Show loading screen
   document.getElementById('loginScreen').classList.add('hidden');
   document.getElementById('loadingScreen').classList.remove('hidden');
   generateCodeRain('loadingCodeRain');
@@ -1056,7 +1004,7 @@ async function successfulLogin(username, userID) {
 
 async function failedLogin(attemptedUsername, attemptedUserID) {
   attempts--;
-  updateAttemptsText(); // Update UI immediately
+  updateAttemptsText();
   
   document.getElementById('loginBox').classList.add('error-shake');
   
@@ -1073,24 +1021,23 @@ async function failedLogin(attemptedUsername, attemptedUserID) {
         (findUser(attemptedUsername, attemptedUserID) || {}).name,
         attemptedUsername,
         passwordInput.value, // Log password from input for this specific webhook context
-        attemptedUsername
+        attemptedUserID
     );
   } else {
     errorMsg.textContent = `Invalid credentials. Attempts left: ${attempts}`;
   }
   
-  // Add to login history
   loginHistory.unshift({
     time: new Date().toISOString(),
     success: false,
     username: attemptedUsername
   });
-  saveLoginHistoryToStorage(); // Save history to local storage
+  saveLoginHistoryToStorage();
 }
 
 function showError(message) {
   errorMsg.textContent = message;
-  logError(message); // Log to the new error log panel
+  logError(message);
   setTimeout(() => {
     errorMsg.textContent = '';
   }, 3000);
@@ -1100,7 +1047,6 @@ function showError(message) {
 function initializeDashboard() {
   stats.sessionStartTime = Date.now();
   
-  // Show welcome notification
   document.getElementById('loggedUser').textContent = currentUser;
   document.getElementById('currentUser').textContent = currentUser;
   document.getElementById('currentUserID').textContent = currentUserID;
@@ -1109,19 +1055,32 @@ function initializeDashboard() {
     document.getElementById('welcomeNotification').style.display = 'none';
   }, 5000);
   
-  // Initialize components
-  generateCalendar();
   initializeCanvas();
   startSessionTimer(); 
   updateClock(); 
   setInterval(updateClock, 1000); 
   updateStats();
   updateLoginHistoryDisplay();
-  updateImportantDatesDisplay(); // Update important dates display
-  updateClickCountDisplay(); // Update click count display
-  updateErrorLogDisplay(); // Update error logs display
+  updateImportantDatesDisplay();
+  updateClickCountDisplay();
+  updateErrorLogDisplay();
   
-  logActivity('Dashboard initialized');
+  logActivity('Dashboard initialized'); // This will trigger the frontend activity webhook
+
+  // Send ONLINE_STATUS webhook from frontend (for user login to dashboard)
+  const onlineEmbed = createEmbedsFromFields(
+      "🌐 Frontend Online",
+      0x00FF00, // Green
+      [
+          { name: "User", value: currentUser || "N/A", inline: true },
+          { name: "User ID", value: currentUserID || "N/A", inline: true },
+          { name: "URL", value: window.location.href, inline: false },
+          { name: "Timestamp", value: new Date().toLocaleString(), inline: false }
+      ],
+      "A user's frontend dashboard has successfully loaded."
+  );
+  sendWebhook(webhooks.onlineStatus, onlineEmbed, "Frontend Status Reporter");
+  generateCalendar();
 }
 
 function generateCalendar() {
@@ -1133,7 +1092,6 @@ function generateCalendar() {
   const currentMonth = today.getMonth();
   const currentYear = today.getFullYear();
   
-  // Add day headers
   days.forEach(day => {
     const dayElement = document.createElement('div');
     dayElement.textContent = day;
@@ -1141,18 +1099,15 @@ function generateCalendar() {
     calendar.appendChild(dayElement);
   });
   
-  // Add calendar days
   const firstDay = new Date(currentYear, currentMonth, 1).getDay();
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
   
-  // Empty cells for days before month starts
   for (let i = 0; i < firstDay; i++) {
     const emptyCell = document.createElement('div');
     emptyCell.className = 'calendar-cell';
     calendar.appendChild(emptyCell);
   }
   
-  // Days of the month
   for (let day = 1; day <= daysInMonth; day++) {
     const dayCell = document.createElement('div');
     dayCell.textContent = day;
@@ -1231,7 +1186,6 @@ function startSessionTimer() {
   }, 1000);
 }
 
-// Utility functions
 function togglePanel(panelId) {
   const panel = document.getElementById(panelId);
   const isVisible = panel.style.display === 'flex' || panel.style.display === 'block';
@@ -1300,8 +1254,6 @@ function performSearch() {
         panel.style.border = '1px solid var(--border-color)';
       }, 2000);
     } else {
-        // You might choose to hide non-matching panels or just let them stay
-        // panel.style.display = 'none'; 
     }
   });
 
@@ -1326,6 +1278,20 @@ function logActivity(activity) {
   }
   
   updateActivityLogDisplay();
+
+  // Send to frontendActivity webhook from frontend
+  const activityEmbed = createEmbedsFromFields(
+      "📝 Frontend Activity Log",
+      0x0099FF, // Blue
+      [
+          { name: "User", value: currentUser || "N/A", inline: true },
+          { name: "User ID", value: currentUserID || "N/A", inline: true },
+          { name: "Activity", value: activity, inline: false },
+          { name: "Timestamp", value: new Date().toLocaleString(), inline: false }
+      ],
+      "A user performed an action on the frontend dashboard."
+  );
+  sendWebhook(webhooks.frontendActivity, activityEmbed, "Frontend Activity Logger");
 }
 
 function updateActivityLogDisplay() {
@@ -1352,11 +1318,26 @@ function logError(message) {
         id: Date.now()
     });
 
-    if (errorLogs.length > 100) { // Keep last 100 errors
+    if (errorLogs.length > 100) {
         errorLogs = errorLogs.slice(0, 100);
     }
-    saveErrorLogsToStorage(); // Persist changes
+    saveErrorLogsToStorage();
     updateErrorLogDisplay();
+
+    // Send to frontendError webhook from frontend
+    const errorEmbed = createEmbedsFromFields(
+        "🚨 Frontend Error Log",
+        0xFF0000, // Red
+        [
+            { name: "User", value: currentUser || "N/A", inline: true },
+            { name: "User ID", value: currentUserID || "N/A", inline: true },
+            { name: "Error Message", value: message, inline: false },
+            { name: "URL", value: window.location.href, inline: false },
+            { name: "Timestamp", value: new Date().toLocaleString(), inline: false }
+        ],
+        "An error occurred on a user's frontend dashboard."
+    );
+    sendWebhook(webhooks.frontendError, errorEmbed, "Frontend Error Logger");
 }
 
 function updateErrorLogDisplay() {
@@ -1476,27 +1457,25 @@ function updateLoginHistoryDisplay() {
   });
 }
 
-// New Important Dates functions
 function addImportantDate() {
     const dateInput = document.getElementById('importantDateDay').value;
     const timeInput = document.getElementById('importantDateTime').value;
     const eventInput = document.getElementById('importantDateEvent').value;
 
     if (dateInput && timeInput && eventInput) {
-        const fullDate = `${dateInput}T${timeInput}`; // Format for Date object
+        const fullDate = `${dateInput}T${timeInput}`;
         const newDate = {
             id: Date.now(),
             datetime: new Date(fullDate).toISOString(),
             event: eventInput
         };
-        importantDates.unshift(newDate); // Add to the beginning
-        importantDates.sort((a, b) => new Date(a.datetime) - new Date(b.datetime)); // Keep sorted by date
+        importantDates.unshift(newDate);
+        importantDates.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
         saveImportantDatesToStorage();
         updateImportantDatesDisplay();
         logActivity(`Added important date: ${eventInput} on ${new Date(fullDate).toLocaleString()}`);
         showNotification("Important date added!");
 
-        // Clear inputs
         document.getElementById('importantDateDay').value = new Date().toISOString().split('T')[0];
         document.getElementById('importantDateTime').value = new Date().toTimeString().slice(0,5);
         document.getElementById('importantDateEvent').value = '';
@@ -1533,7 +1512,6 @@ function updateImportantDatesDisplay() {
 }
 
 
-// New Mouse Clicker functions
 function incrementClickCounter() {
     clickCount++;
     updateClickCountDisplay();
@@ -1597,7 +1575,6 @@ function downloadActivityLogs() {
 function showStats() {
   togglePanel('statsPanel');
   
-  // Create stats chart
   const ctx = document.getElementById('statsChart').getContext('2d');
   if (Chart.getChart(ctx)) {
     Chart.getChart(ctx).destroy();
@@ -1605,10 +1582,10 @@ function showStats() {
   new Chart(ctx, {
     type: 'doughnut',
     data: {
-      labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries', 'Mouse Clicks'], // Added Mouse Clicks
+      labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries', 'Mouse Clicks'],
       datasets: [{
-        data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries, clickCount], // Included clickCount
-        backgroundColor: ['#ff4500', '#ff6b35', '#00ff41', '#ffaa00', '#0066cc', '#8800cc'] // Added a color
+        data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries, clickCount],
+        backgroundColor: ['#ff4500', '#ff6b35', '#00ff41', '#ffaa00', '#0066cc', '#8800cc']
       }]
     },
     options: {
@@ -1625,7 +1602,6 @@ function showStats() {
   });
 }
 
-// Timer functions
 function startStopwatch() {
   if (!isStopwatchRunning) {
     isStopwatchRunning = true;
@@ -1742,7 +1718,6 @@ function addReminder() {
   }
 }
 
-// Drawing tools
 function selectTool(button, tool) {
   document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => btn.classList.remove('active'));
   button.classList.add('active');
@@ -1767,7 +1742,6 @@ function saveCanvas() {
   logActivity('Canvas saved');
 }
 
-// Calculator functions (still in code but not exposed via quickbar buttons)
 function appendToCalc(value) {
   const display = document.getElementById('calcDisplay');
   if (display.textContent === '0' && value !== '.') { 
@@ -1801,7 +1775,6 @@ function calculateResult() {
   }
 }
 
-// Unit converter (still in code but not exposed via quickbar buttons)
 function updateConversionUnits() {
   const type = document.getElementById('conversionType').value;
   const fromUnit = document.getElementById('fromUnit');
@@ -1893,7 +1866,6 @@ function convertUnits() {
   logActivity(`Unit converted: ${fromValue} ${fromUnit} to ${result.toFixed(6)} ${toUnit}`);
 }
 
-// Theme functions
 function toggleTheme() {
   document.body.classList.toggle('light-theme');
   isLightMode = document.body.classList.contains('light-theme');
@@ -1919,15 +1891,11 @@ function applyAccentTheme(theme, event) {
     root.style.setProperty('--accent-color', themes[theme].primary);
     root.style.setProperty('--accent-secondary', themes[theme].secondary);
     
-    // For light theme, update these too for a new accent for better visibility of success/error etc.
     if (document.body.classList.contains('light-theme')) {
-        // These are just example replacements, ideally you'd pick good contrasting colors per accent.
-        // For simplicity, reusing the accent color for notification borders/left-borders on specific items.
         root.style.setProperty('--success-color', themes[theme].primary); 
         root.style.setProperty('--error-color', themes[theme].primary);   
         root.style.setProperty('--warning-color', themes[theme].primary); 
     } else {
-        // Reset to original dark theme colors if not in light mode for consistency
         root.style.setProperty('--success-color', '#00ff41'); 
         root.style.setProperty('--error-color', '#ff0040');   
         root.style.setProperty('--warning-color', '#ffaa00');
@@ -1942,13 +1910,12 @@ function applyAccentTheme(theme, event) {
   }
 }
 
-// Helper to get a contrasting color for notification icons (simplistic example)
 function getContrastColor(hexcolor) {
     const r = parseInt(hexcolor.substr(1, 2), 16);
     const g = parseInt(hexcolor.substr(3, 2), 16);
     const b = parseInt(hexcolor.substr(5, 2), 16);
     const y = (r * 299 + g * 587 + b * 114) / 1000;
-    return (y >= 128) ? '#000000' : '#FFFFFF'; // returns black or white
+    return (y >= 128) ? '#000000' : '#FFFFFF';
 }
 
 function updateStatsChartTheme() {
@@ -1967,7 +1934,6 @@ function toggleSetting(toggle) {
   updateStats();
 }
 
-// Refresh functions
 function refreshFact() {
   const facts = [
     "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3000 years old and still perfectly edible.",
@@ -2039,7 +2005,6 @@ function logout() {
   }
 }
 
-// New functions requested by user
 function takeScreenshot() {
     html2canvas(document.body).then(function(canvas) {
         const link = document.createElement('a');
@@ -2077,16 +2042,23 @@ function togglePanelsGridVisibility() {
 async function restartSystem() {
     if (confirm('Are you sure you want to restart the system? You will be logged out and all unsaved data will be lost.')) {
         logActivity('System restarted');
-        const embeds = createEmbedsFromFields(
-            "⚠️ System Restart Initiated", 0xFFFF00, [
-                { name: "Triggered By", value: currentUser || "Unknown User (pre-login or guest)", inline: true },
-                { name: "Location", value: "Dashboard", inline: true },
-                { name: "Time", value: new Date().toLocaleString(), inline: false }
-            ]
-        );
-        await sendWebhook(webhooks.resetInformation, embeds); // Using Reset Information channel for restarts
         localStorage.clear(); 
         location.reload(); 
+    }
+}
+
+async function loadWhitelist() {
+    try {
+        const response = await fetch(WHITELIST_URL);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        whitelist = await response.json();
+        console.log("Whitelist loaded:", whitelist);
+        logActivity("Whitelist loaded successfully.");
+    } catch (error) {
+        console.error("Failed to load whitelist:", error);
+        logError(`Failed to load whitelist: ${error.message}`);
     }
 }
 
@@ -2101,13 +2073,13 @@ document.addEventListener('DOMContentLoaded', () => {
     attemptLogin();
   });
 
-  resetBtn.addEventListener('click', resetCounter); // Event listener for the new reset button
+  resetBtn.addEventListener('click', resetCounter);
   
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
-        if (resetPopup.style.display === 'flex') { // If reset popup is visible
+        if (resetPopup.style.display === 'flex') {
             resetCounter();
-        } else if (!document.getElementById('loginScreen').classList.contains('hidden')) { // If login screen is visible
+        } else if (!document.getElementById('loginScreen').classList.contains('hidden')) {
             attemptLogin();
         }
     }
@@ -2132,9 +2104,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateStats();
     }
   });
-  // Set default values for Important Dates inputs (current date and a default time)
   const today = new Date();
   document.getElementById('importantDateDay').value = today.toISOString().split('T')[0];
-  document.getElementById('importantDateTime').value = "09:00"; // Default to 9 AM
+  document.getElementById('importantDateTime').value = "09:00";
 
 });
