@@ -18,10 +18,6 @@ async function connectDB() {
     try {
         await mongoose.connect(DATABASE_URL, {
             // Recommended options for Mongoose 6.x+ (some are default now but good to be explicit)
-            // useNewUrlParser: true, // Deprecated in Mongoose 6.x, now default
-            // useUnifiedTopology: true, // Deprecated in Mongoose 6.x, now default
-            // useCreateIndex: true, // Deprecated in Mongoose 6.x, now default
-            // useFindAndModify: false, // Deprecated in Mongoose 6.x, now default
             serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
             socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
             family: 4 // Use IPv4, skip trying IPv6
