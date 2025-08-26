@@ -3614,6 +3614,7 @@ updateClock();
 setInterval(updateClock, 1000);
 updateStats();
 updateLoginHistoryDisplay();
+loadImportantDatesFromStorage(); // Ensure this is called to load existing dates
 updateImportantDatesDisplay(); // Update important dates display
 updateClickCountDisplay(); // Update click count display
 updateErrorLogDisplay(); // Update error logs display
@@ -3753,7 +3754,10 @@ updateStats();
 // NEW FUNCTION: Toggles sub-panels within a modal (e.g., in iPad Restrictions)
 function toggleSubPanel(subPanelId, panelTitle = '') {
     const parentModalContent = document.getElementById(subPanelId).closest('.settings-content');
-    if (!parentModalContent) return;
+    if (!parentModalContent) {
+        console.error(`Parent modal content not found for sub-panel: ${subPanelId}`);
+        return;
+    }
 
     // Hide all other sub-panels within the same modal
     parentModalContent.querySelectorAll('.text-popup-content').forEach(panel => {
@@ -3771,6 +3775,9 @@ function toggleSubPanel(subPanelId, panelTitle = '') {
         } else {
             logActivity(`Sub-panel closed: ${panelTitle || subPanelId}`);
         }
+    } else {
+        console.error(`Sub-panel element not found: ${subPanelId}`);
+        logError(`Attempted to toggle non-existent sub-panel: ${subPanelId}`);
     }
     stats.buttonPresses++;
     updateStats();
