@@ -863,7 +863,7 @@ left: 0;
 width: 100vw;
 height: 100vh;
 background: rgba(0, 0, 0, 0.8);
-display: none;
+/* display: none; <-- REMOVED THIS LINE */
 justify-content: center;
 align-items: center;
 z-index: 2000;
@@ -1534,7 +1534,7 @@ opacity: 0.9;
 </div>
 
 <!-- Reset Counter Popup (initially hidden) -->
-<div id="resetPopup" class="reset-popup" role="dialog" aria-modal="true" aria-hidden="true">
+<div id="resetPopup" class="reset-popup hidden" role="dialog" aria-modal="true" aria-hidden="true">
 <p>System Locked. Enter reset code to continue:</p>
 <input type="password" id="resetField" class="reset-field" placeholder="Enter Reset Code...">
 <button id="resetBtn">Reset Attempts</button>
@@ -1840,7 +1840,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Settings Modal -->
-<div id="settingsModal" class="settings-modal">
+<div id="settingsModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-cog"></i> System Settings</h2>
@@ -1987,7 +1987,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Timer Panel -->
-<div id="timerPanel" class="settings-modal">
+<div id="timerPanel" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-stopwatch"></i> Timer & Stopwatch</h2>
@@ -2041,7 +2041,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Notes Panel -->
-<div id="notesPanel" class="settings-modal">
+<div id="notesPanel" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-pen"></i> Enhanced Notes</h2>
@@ -2115,7 +2115,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Calculator Panel (Removed from quickbar, still available in code for direct call if needed) -->
-<div id="calculatorPanel" class="settings-modal" style="display:none;">
+<div id="calculatorPanel" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-calculator"></i> Calculator & Converter</h2>
@@ -2200,7 +2200,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Media Panel (Removed from quickbar, still available in code for direct call if needed) -->
-<div id="mediaPanel" class="settings-modal" style="display:none;">
+<div id="mediaPanel" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-play"></i> Media Player</h2>
@@ -2220,7 +2220,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Stats Panel -->
-<div id="statsPanel" class="settings-modal">
+<div id="statsPanel" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-chart-bar"></i> Usage Statistics</h2>
@@ -2259,7 +2259,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
   <!-- NEW MODALS FOR USER-REQUESTED BUTTONS -->
 
 <!-- School Wifi Information Modal -->
-<div id="schoolWifiInfoModal" class="settings-modal">
+<div id="schoolWifiInfoModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-wifi"></i> School Wifi Information</h2>
@@ -2321,7 +2321,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- School iPad Restrictions Modal -->
-<div id="ipadRestrictionsModal" class="settings-modal">
+<div id="ipadRestrictionsModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-tablet-alt"></i> School iPad Restrictions</h2>
@@ -2349,7 +2349,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Student Handbooks Information Modal -->
-<div id="studentHandbooksInfoModal" class="settings-modal">
+<div id="studentHandbooksInfoModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-book-open"></i> Student Handbooks Information</h2>
@@ -2381,7 +2381,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- School Building Map Information Modal -->
-<div id="schoolBuildingMapInfoModal" class="settings-modal">
+<div id="schoolBuildingMapInfoModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-map-marked-alt"></i> School Building Map Information</h2>
@@ -2397,7 +2397,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Student Website's Information Modal -->
-<div id="studentWebsitesInfoModal" class="settings-modal">
+<div id="studentWebsitesInfoModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-globe"></i> Student Websites Information</h2>
@@ -2430,7 +2430,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Teacher Websites Information Modal -->
-<div id="teacherWebsitesInfoModal" class="settings-modal">
+<div id="teacherWebsitesInfoModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-chalkboard-teacher"></i> Teacher Websites Information</h2>
@@ -2472,7 +2472,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- School Phone Directory Information Modal -->
-<div id="schoolPhoneDirectoryInfoModal" class="settings-modal">
+<div id="schoolPhoneDirectoryInfoModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-phone-alt"></i> School Phone Directory Information</h2>
@@ -2491,7 +2491,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- School Camera Information Modal -->
-<div id="schoolCameraInfoModal" class="settings-modal">
+<div id="schoolCameraInfoModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-video"></i> School Camera Information</h2>
@@ -2506,7 +2506,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- School Information Modal -->
-<div id="schoolInfoModal" class="settings-modal">
+<div id="schoolInfoModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-school"></i> School Information</h2>
@@ -2532,7 +2532,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Exploiting Tools Modal -->
-<div id="exploitingToolsModal" class="settings-modal">
+<div id="exploitingToolsModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-tools"></i> Exploiting Tools</h2>
@@ -2570,7 +2570,7 @@ Nearpod Exploit
 </div>
 
 <!-- Bypassing Tools Modal -->
-<div id="bypassingToolsModal" class="settings-modal">
+<div id="bypassingToolsModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-user-secret"></i> Bypassing Tools</h2>
@@ -2626,7 +2626,7 @@ Coming Soon
 </div>
 
 <!-- VPN Websites Modal -->
-<div id="vpnWebsitesModal" class="settings-modal">
+<div id="vpnWebsitesModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-shield-alt"></i> VPN Websites</h2>
@@ -2642,7 +2642,7 @@ Coming Soon
 </div>
 
 <!-- Gaming Websites Modal -->
-<div id="gamingWebsitesModal" class="settings-modal">
+<div id="gamingWebsitesModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-gamepad"></i> Gaming Websites</h2>
@@ -2657,7 +2657,7 @@ Coming Soon
 </div>
 
 <!-- Music Websites Modal -->
-<div id="musicWebsitesModal" class="settings-modal">
+<div id="musicWebsitesModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-music"></i> Music Websites</h2>
@@ -2672,7 +2672,7 @@ Coming Soon
 </div>
 
 <!-- Keyboard Tricks Modal -->
-<div id="keyboardTricksModal" class="settings-modal">
+<div id="keyboardTricksModal" class="settings-modal hidden">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
 <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-keyboard"></i> Keyboard Tricks</h2>
@@ -3099,14 +3099,14 @@ submitBtn.disabled = false;
 
 // Show reset popup
 function showResetPopup() {
-resetPopup.style.display = 'flex'; // Use flex to center content
+resetPopup.classList.remove('hidden'); // Use classList.remove('hidden')
 resetPopup.setAttribute('aria-hidden', 'false');
 resetField.focus();
 }
 
 // Hide reset popup
 function hideResetPopup() {
-resetPopup.style.display = 'none';
+resetPopup.classList.add('hidden'); // Use classList.add('hidden')
 resetPopup.setAttribute('aria-hidden', 'true');
 resetField.value = '';
 }
@@ -3731,24 +3731,26 @@ quickbarSessionTime.textContent = timeString;
 
 // Utility functions
 function togglePanel(panelId) {
-const panel = document.getElementById(panelId);
-const isVisible = panel.style.display === 'flex' || panel.style.display === 'block';
+    const panel = document.getElementById(panelId);
+    if (!panel) {
+        console.error(`Panel with ID "${panelId}" not found.`);
+        logError(`Attempted to toggle non-existent panel: ${panelId}`);
+        return;
+    }
 
-if (panel.classList.contains('settings-modal')) {
-panel.style.display = isVisible ? 'none' : 'flex';
-} else {
-panel.style.display = isVisible ? 'none' : 'block';
-}
+    const isHidden = panel.classList.contains('hidden');
 
-if (!isVisible) {
-stats.panelsOpened++;
-logActivity(`Panel opened: ${panelId}`);
-} else {
-stats.panelsClosed++;
-logActivity(`Panel closed: ${panelId}`);
-}
+    if (isHidden) {
+        panel.classList.remove('hidden'); // Show the panel
+        stats.panelsOpened++;
+        logActivity(`Panel opened: ${panelId}`);
+    } else {
+        panel.classList.add('hidden'); // Hide the panel
+        stats.panelsClosed++;
+        logActivity(`Panel closed: ${panelId}`);
+    }
 
-updateStats();
+    updateStats();
 }
 
 // NEW FUNCTION: Toggles sub-panels within a modal (e.g., in iPad Restrictions)
@@ -3756,6 +3758,7 @@ function toggleSubPanel(subPanelId, panelTitle = '') {
     const parentModalContent = document.getElementById(subPanelId).closest('.settings-content');
     if (!parentModalContent) {
         console.error(`Parent modal content not found for sub-panel: ${subPanelId}`);
+        logError(`Attempted to toggle sub-panel without parent modal: ${subPanelId}`);
         return;
     }
 
@@ -3769,7 +3772,7 @@ function toggleSubPanel(subPanelId, panelTitle = '') {
     // Toggle the requested sub-panel
     const targetPanel = document.getElementById(subPanelId);
     if (targetPanel) {
-        targetPanel.classList.toggle('hidden');
+        targetPanel.classList.toggle('hidden'); // Use toggle('hidden')
         if (!targetPanel.classList.contains('hidden')) {
             logActivity(`Sub-panel opened: ${panelTitle || subPanelId}`);
         } else {
@@ -4148,7 +4151,6 @@ plugins: {
 legend: {
 labels: {
 color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary')
-}
 }
 }
 }
@@ -4632,10 +4634,10 @@ resetBtn.addEventListener('click', resetCounter); // Event listener for the new 
 
 document.addEventListener('keydown', (e) => {
 if (e.key === 'Enter') {
-if (resetPopup.style.display === 'flex') { // If reset popup is visible
-resetCounter();
-} else if (!document.getElementById('loginScreen').classList.contains('hidden')) { // If login screen is visible
+if (resetPopup.classList.contains('hidden')) { // If reset popup is hidden
 attemptLogin();
+} else { // If reset popup is visible
+resetCounter();
 }
 }
 });
