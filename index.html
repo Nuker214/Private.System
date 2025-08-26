@@ -144,7 +144,7 @@ color: var(--text-primary);
 /* Fixed styling for system update items to match theme */
 body.light-theme .system-update-item {
 background-color: var(--primary-bg); /* Match other list items */
-border-left: 44px solid var(--accent-secondary); /* Give it a subtle accent border */
+border-left: 44px solid var(--accent-secondary); /* Give it an accent */
 color: var(--text-primary);
 transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
@@ -241,7 +241,7 @@ body.light-theme .error-log-entry,
 body.light-theme .announcement-bar,
 body.light-theme .reset-popup .reset-field,
 body.light-theme .info-display-area, /* New style for info display areas */
-body.light-theme .info-button /* New style for generic info buttons */
+body.light-theme .feature-button-group button /* New style for generic info buttons */
 { /* Added announcement-bar and reset elements for light theme */
 background-color: var(--primary-bg) !important; /* Use !important to ensure override */
 color: var(--text-primary) !important;
@@ -252,14 +252,14 @@ border-left-color: var(--accent-secondary) !important;
 }
 body.light-theme .click-button,
 body.light-theme .reset-popup button,
-body.light-theme .info-button /* New style for generic info buttons */
+body.light-theme .feature-button-group button /* New style for generic info buttons */
 { /* Added reset button for light theme */
 background: var(--accent-color) !important;
 color: white !important;
 }
 body.light-theme .click-button:hover,
 body.light-theme .reset-popup button:hover,
-body.light-theme .info-button:hover /* New style for generic info buttons */
+body.light-theme .feature-button-group button:hover /* New style for generic info buttons */
 { /* Added reset button hover for light theme */
 background: var(--accent-secondary) !important;
 }
@@ -872,7 +872,7 @@ transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 
-/* Settings Modal */
+/* Settings Modal (used for all pop-up panels now) */
 .settings-modal {
 position: fixed;
 top: 0;
@@ -880,7 +880,7 @@ left: 0;
 width: 100vw;
 height: 100vh;
 background: rgba(0, 0, 0, 0.8);
-display: none;
+display: none; /* Hidden by default */
 justify-content: center;
 align-items: center;
 z-index: 2000;
@@ -892,8 +892,8 @@ border: 2px solid var(--accent-color);
 border-radius: 20px;
 padding: 30px;
 width: 90%;
-max-width: 800px;
-max-height: 80vh;
+max-width: 800px; /* Large width */
+max-height: 90vh; /* Increased height */
 overflow-y: auto;
 }
 
@@ -1284,26 +1284,56 @@ transform: translateY(-2px);
 box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
 }
 
-/* New General Button Style for Panels */
-.info-button {
-display: block; /* Make buttons stack vertically */
-width: 100%;
-padding: 10px 15px;
-margin-bottom: 10px; /* Space between buttons */
-background: var(--accent-color);
-color: white;
-border: none;
-border-radius: 8px;
-cursor: pointer;
-font-size: 14px;
-transition: all 0.3s ease;
-text-align: center;
-text-decoration: none; /* For anchor tags */
+/* Styles for the new "Feature Hub" buttons */
+.feature-hub-section {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: var(--secondary-bg);
+    border-radius: 15px;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center; /* Center buttons horizontally */
 }
 
-.info-button:hover {
-background: var(--accent-secondary);
-transform: translateY(-1px);
+.feature-button-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center icon and text */
+    text-align: center;
+    min-width: 120px; /* Ensure buttons have a minimum width */
+    max-width: 180px; /* Max width to keep them from getting too wide */
+    flex-grow: 1;
+}
+
+.feature-button-group .icon-wrapper {
+    font-size: 3em; /* Large icon size */
+    margin-bottom: 10px;
+    color: var(--accent-color); /* Apply accent color to icons */
+    line-height: 1; /* Adjust line height for emojis */
+}
+
+.feature-button-group button {
+    display: block;
+    width: 100%;
+    padding: 12px 15px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.feature-button-group button:hover {
+    background: var(--accent-secondary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .info-display-area {
@@ -1336,12 +1366,20 @@ align-items: flex-start; /* Align text left */
 width: 100%;
 justify-content: space-between;
 }
-.dashboard-quickbar .quick-btn-group {
+.quick-btn-group {
 width: 100%; /* Make buttons take full width when stacked */
 justify-content: center;
 }
 .search-container {
 max-width: 100%;
+}
+.feature-hub-section {
+    justify-content: center; /* Center buttons on smaller screens */
+}
+.feature-button-group {
+    min-width: unset; /* Remove min-width to allow more flexibility */
+    width: 48%; /* Adjust width for 2 columns */
+    max-width: 250px; /* Prevent them from getting too big on medium screens */
 }
 }
 @media (max-width: 768px) {
@@ -1361,6 +1399,9 @@ gap: 10px;
 
 .search-container {
 max-width: 100%;
+}
+.feature-button-group {
+    width: 100%; /* Full width on very small screens */
 }
 }
 
@@ -1386,7 +1427,7 @@ opacity: 0.9;
 .loading-face.back { transform: rotateY(180deg) translateZ(30px); }
 .loading-face.right { transform: rotateY(90deg) translateZ(30px); }
 .loading-face.left { transform: rotateY(-90deg) translateZ(30px); }
-.loading-face.top { transform: rotateX(90deg) translateZ(30px); }
+.cube-face.top { transform: rotateX(90deg) translateZ(30px); }
 .cube-face.bottom { transform: rotateX(-90deg) translateZ(30px); }
 
 @keyframes loadingRotate {
@@ -1533,9 +1574,6 @@ Version 2.0.0
 <button class="quick-btn" onclick="togglePanel('notesPanel')">
 <i class="fas fa-pen"></i> Notes
 </button>
-<button class="quick-btn" onclick="togglePanel('mediaPlayer')">
-<i class="fas fa-play-circle"></i> Media Player
-</button>
 <button class="quick-btn" onclick="showStats()">
 <i class="fas fa-chart-bar"></i> Stats
 </button>
@@ -1549,52 +1587,6 @@ Version 2.0.0
 <i class="fas fa-search-plus"></i> Zoom In</button>
 <button class="quick-btn" onclick="adjustZoom(-0.1)">
 <i class="fas fa-search-minus"></i> Zoom Out</button>
-
-<!-- NEW QUICK ACCESS BUTTONS FOR ADDED PANELS -->
-<button class="quick-btn" onclick="togglePanel('schoolWifi')">
-<i class="fas fa-wifi"></i> Wifi Info
-</button>
-<button class="quick-btn" onclick="togglePanel('ipadRestrictions')">
-<i class="fas fa-ban"></i> iPad Restr.
-</button>
-<button class="quick-btn" onclick="togglePanel('studentHandbooks')">
-<i class="fas fa-book-reader"></i> Handbooks
-</button>
-<button class="quick-btn" onclick="togglePanel('studentWebsites')">
-<i class="fas fa-globe"></i> Student Sites
-</button>
-<button class="quick-btn" onclick="togglePanel('teacherWebsites')">
-<i class="fas fa-chalkboard-teacher"></i> Teacher Sites
-</button>
-<button class="quick-btn" onclick="togglePanel('schoolInfo')">
-<i class="fas fa-school"></i> School Info
-</button>
-<button class="quick-btn" onclick="togglePanel('exploitingTools')">
-<i class="fas fa-wrench"></i> Exploits
-</button>
-<button class="quick-btn" onclick="togglePanel('keyboardTricks')">
-<i class="fas fa-keyboard"></i> Key Tricks
-</button>
-<button class="quick-btn" onclick="togglePanel('bypassingTools')">
-<i class="fas fa-mask"></i> Bypasses
-</button>
-<button class="quick-btn" onclick="togglePanel('schoolMap')">
-<i class="fas fa-map-marked-alt"></i> School Map
-</button>
-<button class="quick-btn" onclick="togglePanel('phoneDirectory')">
-<i class="fas fa-phone-alt"></i> Directory
-</button>
-<button class="quick-btn" onclick="togglePanel('musicWebsites')">
-<i class="fas fa-music"></i> Music
-</button>
-<button class="quick-btn" onclick="togglePanel('gamingWebsites')">
-<i class="fas fa-gamepad"></i> Gaming
-</button>
-<button class="quick-btn" onclick="togglePanel('vpnWebsites')">
-<i class="fas fa-globe-americas"></i> VPNs
-</button>
-<!-- END NEW QUICK ACCESS BUTTONS -->
-
 <button class="quick-btn" onclick="restartSystem()">
 <i class="fas fa-redo-alt"></i> Restart</button>
 <button class="quick-btn panic-btn" onclick="window.open('https://clever.com', '_blank')">
@@ -1609,14 +1601,80 @@ Version 2.0.0
 </div>
 </div>
 
-<!-- Announcement Bar (newly added) -->
+<!-- Announcement Bar -->
 <div class="announcement-bar mt-4">
 <div class="announcement-content">
 <p id="announcementText">Important System Announcement: Scheduled maintenance this weekend. System may experience brief interruptions. Please save your work regularly!</p>
 </div>
 </div>
 
-<!-- Main Panels Grid -->
+<!-- NEW: Feature Hub - Buttons with Icons for new categories -->
+<div class="feature-hub-section">
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-wifi"></i></span>
+        <button onclick="togglePanel('schoolWifiModal')">School Wifi Info</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-ban"></i></span>
+        <button onclick="togglePanel('ipadRestrictionsModal')">iPad Restrictions</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-book-reader"></i></span>
+        <button onclick="togglePanel('studentHandbooksModal')">Student Handbooks</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-globe"></i></span>
+        <button onclick="togglePanel('studentWebsitesModal')">Student Websites</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-chalkboard-teacher"></i></span>
+        <button onclick="togglePanel('teacherWebsitesModal')">Teacher Websites</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-school"></i></span>
+        <button onclick="togglePanel('schoolInfoModal')">School Information</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-wrench"></i></span>
+        <button onclick="togglePanel('exploitingToolsModal')">Exploiting Tools</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-keyboard"></i></span>
+        <button onclick="togglePanel('keyboardTricksModal')">Keyboard Tricks</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-mask"></i></span>
+        <button onclick="togglePanel('bypassingToolsModal')">Bypassing Tools</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-map-marked-alt"></i></span>
+        <button onclick="togglePanel('schoolMapModal')">School Map</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-phone-alt"></i></span>
+        <button onclick="togglePanel('phoneDirectoryModal')">Phone Directory</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-music"></i></span>
+        <button onclick="togglePanel('musicWebsitesModal')">Music Websites</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-gamepad"></i></span>
+        <button onclick="togglePanel('gamingWebsitesModal')">Gaming Websites</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-globe-americas"></i></span>
+        <button onclick="togglePanel('vpnWebsitesModal')">VPN Websites</button>
+    </div>
+    <div class="feature-button-group">
+        <span class="icon-wrapper"><i class="fas fa-play-circle"></i></span>
+        <button onclick="togglePanel('mediaPlayerModal')">Media Player</button>
+    </div>
+</div>
+<!-- END NEW: Feature Hub -->
+
+
+<!-- Main Panels Grid (These are your always-on, resizeable panels) -->
 <div class="panels-grid" id="panelsGrid">
 <!-- Calendar Panel -->
 <div class="panel" data-panel="calendar">
@@ -1769,302 +1827,333 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 </div>
-
-<!-- START OF NEW PANELS - NO LONGER HIDDEN BY DEFAULT -->
-
-<!-- School Wifi Information Panel -->
-<div class="panel" data-panel="schoolWifi">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-wifi"></i> School Wifi Information</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<button class="info-button" onclick="displayWifiInfo('Middletown_Core')">Middletown_Core</button>
-<button class="info-button" onclick="displayWifiInfo('Mtown_Core')">Mtown_Core</button>
-<button class="info-button" onclick="displayWifiInfo('Mtown Guest')">Mtown Guest</button>
-<button class="info-button" onclick="displayWifiInfo('Radius Test')">Radius Test</button>
-<div id="wifiInfoDisplay" class="info-display-area">Click a network to see details.</div>
-</div>
 </div>
 
-<!-- School iPad Restrictions Panel -->
-<div class="panel" data-panel="ipadRestrictions">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-ban"></i> School iPad Restrictions</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<button class="info-button" onclick="displayiPadRestrictions('restrictions')">Restrictions</button>
-<button class="info-button" onclick="displayiPadRestrictions('bypasses')">Bypasses</button>
-<div id="ipadRestrictionsDisplay" class="info-display-area">Select to view restrictions or bypasses.</div>
-</div>
+
+<!-- START OF NEW MODAL PANELS (converted from grid panels) -->
+
+<!-- School Wifi Information Modal -->
+<div id="schoolWifiModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-wifi"></i> School Wifi Information</h2>
+            <button onclick="togglePanel('schoolWifiModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <button class="info-button" onclick="displayWifiInfo('Middletown_Core')">Middletown_Core</button>
+            <button class="info-button" onclick="displayWifiInfo('Mtown_Core')">Mtown_Core</button>
+            <button class="info-button" onclick="displayWifiInfo('Mtown Guest')">Mtown Guest</button>
+            <button class="info-button" onclick="displayWifiInfo('Radius Test')">Radius Test</button>
+            <div id="wifiInfoDisplay" class="info-display-area">Click a network to see details.</div>
+        </div>
+    </div>
 </div>
 
-<!-- Student Handbooks Information Panel -->
-<div class="panel" data-panel="studentHandbooks">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-book-reader"></i> Student Handbooks</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<a href="https://cdnsm5-ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Elementary%20Handbook.pdf" target="_blank" class="info-button">Elementary Handbook (Jan 2025)</a>
-<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Secondary%20Student%20Handbook.pdf" target="_blank" class="info-button">Secondary Student Handbook (Jan 2025)</a>
-<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/District%20Handbook%20copy.pdf" target="_blank" class="info-button">District Handbook</a>
-<a href="https://middletown.ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025B%20RA%20Academy%20Handbook%20copy.pdf" target="_blank" class="info-button">RA Academy Handbook (Jan 2025)</a>
-<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/MASD%202024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf" target="_blank" class="info-button">Virtual Learning Plan (2024 - 2025)</a>
-<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Dress%20Code.docx.pdf" target="_blank" class="info-button">Dress Code (2024 - 2025)</a>
-</div>
-</div>
-
-<!-- Student Websites Information Panel -->
-<div class="panel" data-panel="studentWebsites">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-globe"></i> Student Websites</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<a href="https://www.raiderweb.org" target="_blank" class="info-button">School website</a>
-<a href="https://middletownsd.instructure.com/login" target="_blank" class="info-button">Canvas</a>
-<a href="https://caresolace.com/site/middletownarea" target="_blank" class="info-button">CareSolace</a>
-<a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank" class="info-button">Clever</a>
-<a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank" class="info-button">Rumba</a>
-<a href="https://myhealthyzone.fitnessgram.net" target="_blank" class="info-button">FitnessGram</a>
-<a href="https://www.raiderweb.org/student_services/hazing_reporting" target="_blank" class="info-button">Hazing Reporting</a>
-<a href="https://www.youtube.com/user/MAHSAnnouncements?app=desktop" target="_blank" class="info-button">MAHS Announcements</a>
-<a href="https://id.naviance.com" target="_blank" class="info-button">Naviance</a>
-<a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank" class="info-button">Follett Destiny</a>
-<a href="https://powerschool.raiderweb.org/public/" target="_blank" class="info-button">PowerSchool</a>
-<a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank" class="info-button">Scholastic</a>
-<a href="https://www.safe2saypa.org" target="_blank" class="info-button">Safe2Say</a>
-<a href="https://mail.google.com/mail/" target="_blank" class="info-button">Gmail</a>
-<a href="https://www.balfour.com/pennsylvania/middletown/middletown-area-high-school" target="_blank" class="info-button">Balfour</a>
-<a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank" class="info-button">Linkit</a>
-<a href="https://search.follettsoftware.com/metasearch/ui/53085" target="_blank" class="info-button">Destiny Discover</a>
-<a href="https://sites.google.com/raiderweb.org/mams-library/home?authuser=0" target="_blank" class="info-button">MAMS Library</a>
-<a href="https://mackinvia.com" target="_blank" class="info-button">MackinVIA</a>
-<a href="https://www.noodletools.com" target="_blank" class="info-button">Noodletools</a>
-<a href="https://www.worldbookonline.com/home/" target="_blank" class="info-button">Worldbook</a>
-<a href="https://teens.powerlibrary.org/?ID=PL2509" target="_blank" class="info-button">Teens Power Library</a>
-<a href="https://kids.powerlibrary.org/?ID=PL7321" target="_blank" class="info-button">Powerkids</a>
-</div>
+<!-- School iPad Restrictions Modal -->
+<div id="ipadRestrictionsModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-ban"></i> School iPad Restrictions</h2>
+            <button onclick="togglePanel('ipadRestrictionsModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <button class="info-button" onclick="displayiPadRestrictions('restrictions')">Restrictions</button>
+            <button class="info-button" onclick="displayiPadRestrictions('bypasses')">Bypasses</button>
+            <div id="ipadRestrictionsDisplay" class="info-display-area">Select to view restrictions or bypasses.</div>
+        </div>
+    </div>
 </div>
 
-<!-- Teacher Websites Information Panel -->
-<div class="panel" data-panel="teacherWebsites">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-chalkboard-teacher"></i> Teacher Websites</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<a href="https://alo.acadiencelearning.org/login" target="_blank" class="info-button">Acadience Learning</a>
-<a href="https://app.aimswebplus.com/#/login" target="_blank" class="info-button">AimswebPlus</a>
-<a href="https://ep1.erplinq.com/MIDDLETOWN/" target="_blank" class="info-button">ERP Linq</a>
-<a href="https://sso.barracuda.com/u/login/identifier?state=hKFo2SBFYnNBRjVRYmczc2t0ZjlSNmwxel9GT25LZWp3QzVDV6Fur3VuaXZlcnNhbC1sb2dpbqN0aWTZIDQ1U0hHOGVubzF0eE10WlhiSkRZRnNQSmJqY1dwcnFlo2NpZNkgQk1yY2JuRWdkS3BkSjZRWGVjN0hiRHdlTkpMUW1MSUk" target="_blank" class="info-button">Barracuda SSO</a>
-<a href="https://shop.buyguernsey.com/thmBootstrapHome.aspx" target="_blank" class="info-button">Buy Guernsey</a>
-<a href="https://middletownsd.instructure.com/login/ldap" target="_blank" class="info-button">Canvas (LDAP)</a>
-<a href="https://caresolace.com/site/middletownarea" target="_blank" class="info-button">CareSolace</a>
-<a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank" class="info-button">Clever</a>
-<a href="https://www.discoveryeducation.com" target="_blank" class="info-button">Discovery Education</a>
-<a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank" class="info-button">Rumba</a>
-<a href="https://raiderweb.gofmx.com/login" target="_blank" class="info-button">FMX</a>
-<a href="https://myhealthyzone.fitnessgram.net" target="_blank" class="info-button">FitnessGram</a>
-<a href="https://login.frontlineeducation.com/login?signin=d0e98b785fd46dad06ce5509e61ef781&productId=ABSMGMT&clientId=ABSMGMT#/login" target="_blank" class="info-button">Frontline Education</a>
-<a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank" class="info-button">Linkit</a>
-<a href="https://id.naviance.com" target="_blank" class="info-button">Naviance</a>
-<a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank" class="info-button">Follett Destiny</a>
-<a href="https://paetep.edulinksolutions.com/login" target="_blank" class="info-button">PAETEP</a>
-<a href="https://powerschool.raiderweb.org/teachers/pw.html" target="_blank" class="info-button">PowerSchool (Teachers)</a>
-<a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank" class="info-button">Scholastic</a>
-<a href="https://go.schoolmessenger.com/#/home" target="_blank" class="info-button">SchoolMessenger</a>
-<a href="https://www.pdesas.org/standard/" target="_blank" class="info-button">PDE SAS</a>
-<a href="https://www.pbisapps.org" target="_blank" class="info-button">PBISApps</a>
-<a href="https://masd.happyfox.com/home/" target="_blank" class="info-button">HappyFox</a>
-<a href="https://middletownasd-pa.safeschools.com/login" target="_blank" class="info-button">SafeSchools</a>
-<a href="https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b"id_token"%3a%7b"xms_cc"%3a%7b"values"%3a%5b"CP1"%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8" target="_blank" class="info-button">Microsoft Outlook</a>
-</div>
+<!-- Student Handbooks Information Modal -->
+<div id="studentHandbooksModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-book-reader"></i> Student Handbooks</h2>
+            <button onclick="togglePanel('studentHandbooksModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <a href="https://cdnsm5-ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Elementary%20Handbook.pdf" target="_blank" class="info-button">Elementary Handbook (Jan 2025)</a>
+            <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Secondary%20Student%20Handbook.pdf" target="_blank" class="info-button">Secondary Student Handbook (Jan 2025)</a>
+            <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/District%20Handbook%20copy.pdf" target="_blank" class="info-button">District Handbook</a>
+            <a href="https://middletown.ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025B%20RA%20Academy%20Handbook%20copy.pdf" target="_blank" class="info-button">RA Academy Handbook (Jan 2025)</a>
+            <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/MASD%202024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf" target="_blank" class="info-button">Virtual Learning Plan (2024 - 2025)</a>
+            <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Dress%20Code.docx.pdf" target="_blank" class="info-button">Dress Code (2024 - 2025)</a>
+        </div>
+    </div>
 </div>
 
-<!-- School Information Panel -->
-<div class="panel" data-panel="schoolInfo">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-school"></i> School Information</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<button class="info-button" onclick="displaySchoolDetails()">Show School Details</button>
-<div id="schoolInfoDisplay" class="info-display-area">Click button for school information.</div>
-</div>
-</div>
-
-<!-- Exploiting Tools Panel -->
-<div class="panel" data-panel="exploitingTools">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-wrench"></i> Exploiting Tools</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<p class="text-red-400 text-xs mb-2">Warning: These tools are external. Use at your own risk. Not affiliated with this system.</p>
-<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Blooket Exploit</a>
-<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Kahoot Exploit</a>
-<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Gimkit Exploit</a>
-<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Quizlet Exploit</a>
-<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Quizzes Exploit</a>
-<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Quills Exploit</a>
-<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Edpuzzle Exploit</a>
-<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Nearpod Exploit</a>
-</div>
-</div>
-
-<!-- Keyboard Tricks Panel -->
-<div class="panel" data-panel="keyboardTricks">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-keyboard"></i> Keyboard Tricks</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<button class="info-button" onclick="displayKeyboardShortcuts()">Show Keyboard Shortcuts</button>
-<div id="keyboardShortcutsDisplay" class="info-display-area">Click button to show system shortcuts.</div>
-</div>
+<!-- Student Websites Information Modal -->
+<div id="studentWebsitesModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-globe"></i> Student Websites</h2>
+            <button onclick="togglePanel('studentWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <a href="https://www.raiderweb.org" target="_blank" class="info-button">School website</a>
+            <a href="https://middletownsd.instructure.com/login" target="_blank" class="info-button">Canvas</a>
+            <a href="https://caresolace.com/site/middletownarea" target="_blank" class="info-button">CareSolace</a>
+            <a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank" class="info-button">Clever</a>
+            <a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank" class="info-button">Rumba</a>
+            <a href="https://myhealthyzone.fitnessgram.net" target="_blank" class="info-button">FitnessGram</a>
+            <a href="https://www.raiderweb.org/student_services/hazing_reporting" target="_blank" class="info-button">Hazing Reporting</a>
+            <a href="https://www.youtube.com/user/MAHSAnnouncements?app=desktop" target="_blank" class="info-button">MAHS Announcements</a>
+            <a href="https://id.naviance.com" target="_blank" class="info-button">Naviance</a>
+            <a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank" class="info-button">Follett Destiny</a>
+            <a href="https://powerschool.raiderweb.org/public/" target="_blank" class="info-button">PowerSchool</a>
+            <a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank" class="info-button">Scholastic</a>
+            <a href="https://www.safe2saypa.org" target="_blank" class="info-button">Safe2Say</a>
+            <a href="https://mail.google.com/mail/" target="_blank" class="info-button">Gmail</a>
+            <a href="https://www.balfour.com/pennsylvania/middletown/middletown-area-high-school" target="_blank" class="info-button">Balfour</a>
+            <a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank" class="info-button">Linkit</a>
+            <a href="https://search.follettsoftware.com/metasearch/ui/53085" target="_blank" class="info-button">Destiny Discover</a>
+            <a href="https://sites.google.com/raiderweb.org/mams-library/home?authuser=0" target="_blank" class="info-button">MAMS Library</a>
+            <a href="https://mackinvia.com" target="_blank" class="info-button">MackinVIA</a>
+            <a href="https://www.noodletools.com" target="_blank" class="info-button">Noodletools</a>
+            <a href="https://www.worldbookonline.com/home/" target="_blank" class="info-button">Worldbook</a>
+            <a href="https://teens.powerlibrary.org/?ID=PL2509" target="_blank" class="info-button">Teens Power Library</a>
+            <a href="https://kids.powerlibrary.org/?ID=PL7321" target="_blank" class="info-button">Powerkids</a>
+        </div>
+    </div>
 </div>
 
-<!-- Bypassing Tools Panel -->
-<div class="panel" data-panel="bypassingTools">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-mask"></i> Bypassing Tools</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<button class="info-button" onclick="displayUpdateMessage('Bathroom bypass', 'bypassingToolsDisplay')">Bathroom bypass</button>
-<button class="info-button" onclick="displayUpdateMessage('Wifi Bypass', 'bypassingToolsDisplay')">Wifi Bypass</button>
-<button class="info-button" onclick="displayUpdateMessage('Teacher monitoring bypass', 'bypassingToolsDisplay')">Teacher monitoring bypass</button>
-<button class="info-button" onclick="displayUpdateMessage('Update Coming Soon (1)', 'bypassingToolsDisplay')">Update Coming Soon (1)</button>
-<button class="info-button" onclick="displayUpdateMessage('Update Coming Soon (2)', 'bypassingToolsDisplay')">Update Coming Soon (2)</button>
-<button class="info-button" onclick="displayUpdateMessage('Update Coming Soon (3)', 'bypassingToolsDisplay')">Update Coming Soon (3)</button>
-<div id="bypassingToolsDisplay" class="info-display-area">Click a tool for more info.</div>
-</div>
-</div>
-
-<!-- School Building Map Information Panel -->
-<div class="panel" data-panel="schoolMap">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-map-marked-alt"></i> School Building Map</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<button class="info-button" onclick="displayUpdateMessage('School Building Map', 'schoolMapDisplay')">Show Map</button>
-<div id="schoolMapDisplay" class="info-display-area">Click button for map information.</div>
-</div>
-</div>
-
-<!-- School Phone Directory Information Panel -->
-<div class="panel" data-panel="phoneDirectory">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-phone-alt"></i> School Phone Directory</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<button class="info-button" onclick="displayUpdateMessage('School Phone Directory', 'phoneDirectoryDisplay')">Show Directory</button>
-<div id="phoneDirectoryDisplay" class="info-display-area">Click button for directory information.</div>
-</div>
+<!-- Teacher Websites Information Modal -->
+<div id="teacherWebsitesModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-chalkboard-teacher"></i> Teacher Websites</h2>
+            <button onclick="togglePanel('teacherWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <a href="https://alo.acadiencelearning.org/login" target="_blank" class="info-button">Acadience Learning</a>
+            <a href="https://app.aimswebplus.com/#/login" target="_blank" class="info-button">AimswebPlus</a>
+            <a href="https://ep1.erplinq.com/MIDDLETOWN/" target="_blank" class="info-button">ERP Linq</a>
+            <a href="https://sso.barracuda.com/u/login/identifier?state=hKFo2SBFYnNBRjVRYmczc2t0ZjlSNmwxel9GT25LZWp3QzVDV6Fur3VuaXZlcnNhbC1sb2dpbqN0aWTZIDQ1U0hHOGVubzF0eE10WlhiSkRZRnNQSmJqY1dwcnFlo2NpZNkgQk1yY2JuRWdkS3BkSjZRWGVjN0hiRHdlTkpMUW1MSUk" target="_blank" class="info-button">Barracuda SSO</a>
+            <a href="https://shop.buyguernsey.com/thmBootstrapHome.aspx" target="_blank" class="info-button">Buy Guernsey</a>
+            <a href="https://middletownsd.instructure.com/login/ldap" target="_blank" class="info-button">Canvas (LDAP)</a>
+            <a href="https://caresolace.com/site/middletownarea" target="_blank" class="info-button">CareSolace</a>
+            <a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank" class="info-button">Clever</a>
+            <a href="https://www.discoveryeducation.com" target="_blank" class="info-button">Discovery Education</a>
+            <a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank" class="info-button">Rumba</a>
+            <a href="https://raiderweb.gofmx.com/login" target="_blank" class="info-button">FMX</a>
+            <a href="https://myhealthyzone.fitnessgram.net" target="_blank" class="info-button">FitnessGram</a>
+            <a href="https://login.frontlineeducation.com/login?signin=d0e98b785fd46dad06ce5509e61ef781&productId=ABSMGMT&clientId=ABSMGMT#/login" target="_blank" class="info-button">Frontline Education</a>
+            <a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank" class="info-button">Linkit</a>
+            <a href="https://id.naviance.com" target="_blank" class="info-button">Naviance</a>
+            <a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank" class="info-button">Follett Destiny</a>
+            <a href="https://paetep.edulinksolutions.com/login" target="_blank" class="info-button">PAETEP</a>
+            <a href="https://powerschool.raiderweb.org/teachers/pw.html" target="_blank" class="info-button">PowerSchool (Teachers)</a>
+            <a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank" class="info-button">Scholastic</a>
+            <a href="https://go.schoolmessenger.com/#/home" target="_blank" class="info-button">SchoolMessenger</a>
+            <a href="https://www.pdesas.org/standard/" target="_blank" class="info-button">PDE SAS</a>
+            <a href="https://www.pbisapps.org" target="_blank" class="info-button">PBISApps</a>
+            <a href="https://masd.happyfox.com/home/" target="_blank" class="info-button">HappyFox</a>
+            <a href="https://middletownasd-pa.safeschools.com/login" target="_blank" class="info-button">SafeSchools</a>
+            <a href="https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b"id_token"%3a%7b"xms_cc"%3a%7b"values"%3a%5b"CP1"%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8" target="_blank" class="info-button">Microsoft Outlook</a>
+        </div>
+    </div>
 </div>
 
-<!-- Music Websites Panel -->
-<div class="panel" data-panel="musicWebsites">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-music"></i> Music Websites</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<button class="info-button" onclick="displayUpdateMessage('Music Websites', 'musicWebsitesDisplay')">Show Music Sites</button>
-<div id="musicWebsitesDisplay" class="info-display-area">Click button for music websites.</div>
-</div>
-</div>
-
-<!-- Gaming Websites Panel -->
-<div class="panel" data-panel="gamingWebsites">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-gamepad"></i> Gaming Websites</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<button class="info-button" onclick="displayUpdateMessage('Gaming Websites', 'gamingWebsitesDisplay')">Show Gaming Sites</button>
-<div id="gamingWebsitesDisplay" class="info-display-area">Click button for gaming websites.</div>
-</div>
+<!-- School Information Modal -->
+<div id="schoolInfoModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-school"></i> School Information</h2>
+            <button onclick="togglePanel('schoolInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <button class="info-button" onclick="displaySchoolDetails()">Show School Details</button>
+            <div id="schoolInfoDisplay" class="info-display-area">Click button for school information.</div>
+        </div>
+    </div>
 </div>
 
-<!-- VPN Websites Panel -->
-<div class="panel" data-panel="vpnWebsites">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-globe-americas"></i> VPN Websites</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="content">
-<button class="info-button" onclick="displayUpdateMessage('VPN Websites', 'vpnWebsitesDisplay')">Show VPN Sites</button>
-<div id="vpnWebsitesDisplay" class="info-display-area">Click button for VPN websites.</div>
-</div>
-</div>
-
-<!-- Media Player Panel (Moved from modal to grid) -->
-<div class="panel" data-panel="mediaPlayer" id="mediaPlayer">
-<div class="panel-header">
-<div class="panel-title"><i class="fas fa-play-circle"></i> Media Player</div>
-<div class="panel-controls">
-<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
-</div>
-</div>
-<div class="media-container">
-<p class="media-player-warning info-display-area text-xs mb-2">
-<i class="fas fa-exclamation-triangle mr-1"></i> **Important:** This player uses an iframe and does NOT proxy content. Many websites prevent embedding for security reasons (X-Frame-Options, CSP). Functionality is limited by external site policies.
-</p>
-<div class="flex gap-2 mb-4">
-<input type="url" id="mediaUrl" class="media-input flex-grow" placeholder="Enter video/music URL (e.g., YouTube video link)...">
-<button class="tool-btn" onclick="loadMedia()"><i class="fas fa-play"></i> Load</button>
-</div>
-<iframe id="mediaFrame" class="media-frame" src="about:blank" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"></iframe>
-<div class="media-toolbar flex flex-wrap justify-center gap-2 mt-4">
-<button class="tool-btn" onclick="loadMediaFromToolbar('https://www.youtube.com/')"><i class="fab fa-youtube"></i> YouTube</button>
-<button class="tool-btn" onclick="loadMediaFromToolbar('https://www.spotify.com/us/')"><i class="fab fa-spotify"></i> Spotify</button>
-<button class="tool-btn" onclick="loadMediaFromToolbar('https://soundcloud.com/')"><i class="fab fa-soundcloud"></i> SoundCloud</button>
-<button class="tool-btn" onclick="loadMediaFromToolbar('https://twitch.tv/')"><i class="fab fa-twitch"></i> Twitch</button>
-<button class="tool-btn" onclick="loadMediaFromToolbar('https://vimeo.com/')"><i class="fab fa-vimeo-v"></i> Vimeo</button>
-<button class="tool-btn" onclick="loadMediaFromToolbar('https://music.youtube.com/')"><i class="fas fa-music"></i> YT Music</button>
-<button class="tool-btn" onclick="loadMediaFromToolbar('https://www.dailymotion.com/')"><i class="fas fa-tv"></i> Dailymotion</button>
-<button class="tool-btn" onclick="loadMediaFromToolbar('https://archive.org/details/movies')"><i class="fas fa-film"></i> Archive.org</button>
-</div>
-</div>
+<!-- Exploiting Tools Modal -->
+<div id="exploitingToolsModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-wrench"></i> Exploiting Tools</h2>
+            <button onclick="togglePanel('exploitingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <p class="text-red-400 text-xs mb-2">Warning: These tools are external. Use at your own risk. Not affiliated with this system.</p>
+            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Blooket Exploit</a>
+            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Kahoot Exploit</a>
+            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Gimkit Exploit</a>
+            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Quizlet Exploit</a>
+            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Quizzes Exploit</a>
+            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Quills Exploit</a>
+            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Edpuzzle Exploit</a>
+            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Nearpod Exploit</a>
+        </div>
+    </div>
 </div>
 
-<!-- END OF NEW PANELS -->
-
+<!-- Keyboard Tricks Modal -->
+<div id="keyboardTricksModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-keyboard"></i> Keyboard Tricks</h2>
+            <button onclick="togglePanel('keyboardTricksModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <button class="info-button" onclick="displayKeyboardShortcuts()">Show Keyboard Shortcuts</button>
+            <div id="keyboardShortcutsDisplay" class="info-display-area">Click button to show system shortcuts.</div>
+        </div>
+    </div>
 </div>
+
+<!-- Bypassing Tools Modal -->
+<div id="bypassingToolsModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-mask"></i> Bypassing Tools</h2>
+            <button onclick="togglePanel('bypassingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <button class="info-button" onclick="displayUpdateMessage('Bathroom bypass', 'bypassingToolsDisplay')">Bathroom bypass</button>
+            <button class="info-button" onclick="displayUpdateMessage('Wifi Bypass', 'bypassingToolsDisplay')">Wifi Bypass</button>
+            <button class="info-button" onclick="displayUpdateMessage('Teacher monitoring bypass', 'bypassingToolsDisplay')">Teacher monitoring bypass</button>
+            <button class="info-button" onclick="displayUpdateMessage('Update Coming Soon (1)', 'bypassingToolsDisplay')">Update Coming Soon (1)</button>
+            <button class="info-button" onclick="displayUpdateMessage('Update Coming Soon (2)', 'bypassingToolsDisplay')">Update Coming Soon (2)</button>
+            <button class="info-button" onclick="displayUpdateMessage('Update Coming Soon (3)', 'bypassingToolsDisplay')">Update Coming Soon (3)</button>
+            <div id="bypassingToolsDisplay" class="info-display-area">Click a tool for more info.</div>
+        </div>
+    </div>
+</div>
+
+<!-- School Building Map Information Modal -->
+<div id="schoolMapModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-map-marked-alt"></i> School Building Map</h2>
+            <button onclick="togglePanel('schoolMapModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <button class="info-button" onclick="displayUpdateMessage('School Building Map', 'schoolMapDisplay')">Show Map</button>
+            <div id="schoolMapDisplay" class="info-display-area">Click button for map information.</div>
+        </div>
+    </div>
+</div>
+
+<!-- School Phone Directory Information Modal -->
+<div id="phoneDirectoryModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-phone-alt"></i> School Phone Directory</h2>
+            <button onclick="togglePanel('phoneDirectoryModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <button class="info-button" onclick="displayUpdateMessage('School Phone Directory', 'phoneDirectoryDisplay')">Show Directory</button>
+            <div id="phoneDirectoryDisplay" class="info-display-area">Click button for directory information.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Music Websites Modal -->
+<div id="musicWebsitesModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-music"></i> Music Websites</h2>
+            <button onclick="togglePanel('musicWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <button class="info-button" onclick="displayUpdateMessage('Music Websites', 'musicWebsitesDisplay')">Show Music Sites</button>
+            <div id="musicWebsitesDisplay" class="info-display-area">Click button for music websites.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Gaming Websites Modal -->
+<div id="gamingWebsitesModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-gamepad"></i> Gaming Websites</h2>
+            <button onclick="togglePanel('gamingWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <button class="info-button" onclick="displayUpdateMessage('Gaming Websites', 'gamingWebsitesDisplay')">Show Gaming Sites</button>
+            <div id="gamingWebsitesDisplay" class="info-display-area">Click button for gaming websites.</div>
+        </div>
+    </div>
+</div>
+
+<!-- VPN Websites Modal -->
+<div id="vpnWebsitesModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-globe-americas"></i> VPN Websites</h2>
+            <button onclick="togglePanel('vpnWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="content">
+            <button class="info-button" onclick="displayUpdateMessage('VPN Websites', 'vpnWebsitesDisplay')">Show VPN Sites</button>
+            <div id="vpnWebsitesDisplay" class="info-display-area">Click button for VPN websites.</div>
+        </div>
+    </div>
+</div>
+
+<!-- Media Player Modal -->
+<div id="mediaPlayerModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-play-circle"></i> Media Player</h2>
+            <button onclick="togglePanel('mediaPlayerModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="media-container">
+            <p class="media-player-warning info-display-area text-xs mb-2">
+                <i class="fas fa-exclamation-triangle mr-1"></i> **Important:** This player uses an iframe and does NOT proxy content. Many websites prevent embedding for security reasons (X-Frame-Options, CSP). Functionality is limited by external site policies.
+            </p>
+            <div class="flex gap-2 mb-4">
+                <input type="url" id="mediaUrl" class="media-input flex-grow" placeholder="Enter video/music URL (e.g., YouTube video link)...">
+                <button class="tool-btn" onclick="loadMedia()"><i class="fas fa-play"></i> Load</button>
+            </div>
+            <iframe id="mediaFrame" class="media-frame" src="about:blank" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"></iframe>
+            <div class="media-toolbar flex flex-wrap justify-center gap-2 mt-4">
+                <button class="tool-btn" onclick="loadMediaFromToolbar('https://www.youtube.com/')"><i class="fab fa-youtube"></i> YouTube</button>
+                <button class="tool-btn" onclick="loadMediaFromToolbar('https://www.spotify.com/us/')"><i class="fab fa-spotify"></i> Spotify</button>
+                <button class="tool-btn" onclick="loadMediaFromToolbar('https://soundcloud.com/')"><i class="fab fa-soundcloud"></i> SoundCloud</button>
+                <button class="tool-btn" onclick="loadMediaFromToolbar('https://twitch.tv/')"><i class="fab fa-twitch"></i> Twitch</button>
+                <button class="tool-btn" onclick="loadMediaFromToolbar('https://vimeo.com/')"><i class="fab fa-vimeo-v"></i> Vimeo</button>
+                <button class="tool-btn" onclick="loadMediaFromToolbar('https://music.youtube.com/')"><i class="fas fa-music"></i> YT Music</button>
+                <button class="tool-btn" onclick="loadMediaFromToolbar('https://www.dailymotion.com/')"><i class="fas fa-tv"></i> Dailymotion</button>
+                <button class="tool-btn" onclick="loadMediaFromToolbar('https://archive.org/details/movies')"><i class="fas fa-film"></i> Archive.org</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- END OF NEW MODAL PANELS -->
+
 
 <!-- Settings Modal -->
 <div id="settingsModal" class="settings-modal">
@@ -3451,7 +3540,7 @@ canvas.addEventListener('mouseout', stopDrawing);
 }
 
 function startDrawing(e) {
-if (!ctx) return; // Ensure context exists
+if (!ctx || !canvas) return; // Ensure context and canvas exist
 isDrawing = true;
 const rect = canvas.getBoundingClientRect();
 const x = e.clientX - rect.left;
@@ -3462,7 +3551,7 @@ ctx.moveTo(x, y);
 }
 
 function draw(e) {
-if (!isDrawing || !ctx) return; // Ensure drawing state and context
+if (!isDrawing || !ctx || !canvas) return; // Ensure drawing state, context, and canvas
 
 const rect = canvas.getBoundingClientRect();
 const x = e.clientX - rect.left;
@@ -3512,13 +3601,8 @@ if (!panel) return; // Add null check
 
 const isVisible = panel.style.display === 'flex' || panel.style.display === 'block';
 
-// panels-grid panels don't use 'settings-modal' class, they should toggle between 'block' and 'none'
-// modals (like settingsModal, timerPanel, notesPanel) use 'flex' and 'none'
-if (panel.classList.contains('settings-modal')) {
-    panel.style.display = isVisible ? 'none' : 'flex';
-} else {
-    panel.style.display = isVisible ? 'none' : 'block';
-}
+// All new panels will be modals, so they will use 'flex'
+panel.style.display = isVisible ? 'none' : 'flex';
 
 
 if (!isVisible) {
@@ -3557,10 +3641,16 @@ function closePanel(button) {
 const panel = button.closest('.panel');
 if (!panel) return; // Add null check for panel
 
-panel.style.display = 'none';
+// Check if it's a modal panel or a grid panel
+if (panel.classList.contains('settings-modal')) {
+    panel.style.display = 'none'; // For modal panels, hide with 'none'
+} else {
+    panel.style.display = 'none'; // For grid panels, hide with 'none'
+}
+
 stats.panelsClosed++;
 stats.buttonPresses++;
-logActivity(`Panel closed: ${panel.dataset.panel}`);
+logActivity(`Panel closed: ${panel.dataset.panel || panel.id}`); // Log ID for modals
 updateStats();
 }
 
@@ -3574,7 +3664,7 @@ if (!query) return;
 stats.searchQueries++;
 logActivity(`Searched for: ${query}`);
 
-const panels = document.querySelectorAll('.panels-grid > .panel');
+const panels = document.querySelectorAll('.panels-grid > .panel'); // Only search in grid panels for now
 let found = false;
 panels.forEach(panel => {
 const text = panel.textContent.toLowerCase();
@@ -4161,8 +4251,11 @@ weight: [
 { value: 'lb', text: 'Pounds' },
 { value: 'oz', text: 'Ounces' }
 ],
-temperature: {
-},
+temperature: [
+{ value: 'c', text: 'Celsius' },
+{ value: 'f', text: 'Fahrenheit' },
+{ value: 'k', text: 'Kelvin' }
+],
 volume: [
 { value: 'l', text: 'Liters' },
 { value: 'ml', text: 'Milliliters' },
@@ -4212,12 +4305,9 @@ weight: {
 },
 temperature: {
 },
-volume: [
-{ value: 'l', text: 'Liters' },
-{ value: 'ml', text: 'Milliliters' },
-{ value: 'gal', text: 'Gallons' },
-{ value: 'qt', text: 'Quarts' }
-]
+volume: {
+'l': 1, 'ml': 0.001, 'gal': 3.78541, 'qt': 0.946353
+}
 };
 
 if (type === 'length') {
@@ -4718,7 +4808,7 @@ if (textNotesInput) {
 
 document.addEventListener('click', (e) => {
 // Check if the clicked element is a button (and not within panel controls or submit) or a quick-btn or info-button
-if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) || e.target.closest('.quick-btn') || e.target.classList.contains('info-button')) {
+if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) || e.target.closest('.quick-btn') || e.target.classList.contains('info-button') || e.target.closest('.feature-button-group')) { // Added feature-button-group
 stats.buttonPresses++;
 updateStats();
 }
