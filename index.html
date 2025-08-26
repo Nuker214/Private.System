@@ -22,43 +22,23 @@
 --success-color: #00ff41;
 --warning-color: #ffaa00;
 --error-color: #ff0040;
-
-/* Specific colors for content indicators */
---color-high: #00ff41; /* Green */
---color-medium: #ffaa00; /* Orange */
---color-low: #ff0040; /* Red */
---color-yes: #00ff41; /* Green */
---color-no: #ff0040; /* Red */
---color-rare: #ffaa00; /* Orange */
---color-rarely: #ffaa00; /* Orange */
---color-unknown: #aaaaaa; /* Grey */
---color-dangerous: #ff0040; /* Red */
 }
 
+/* Light Theme Variables */
 body.light-theme {
 --primary-bg: #f0f2f5;
 --secondary-bg: #ffffff;
---accent-color: #007bff;
+--accent-color: #007bff; /* Using a blue accent for light mode as an example */
 --accent-secondary: #0056b3;
 --text-primary: #333333;
 --text-secondary: #666666;
 --border-color: #e0e0e0;
---success-color: #28a745;
---warning-color: #ffc107;
---error-color: #dc3545;
-
-/* Specific colors for content indicators - light theme */
---color-high: #28a745;
---color-medium: #ffc107;
---color-low: #dc3545;
---color-yes: #28a745;
---color-no: #dc3545;
---color-rare: #ffc107;
---color-rarely: #ffc107;
---color-unknown: #6c757d;
---color-dangerous: #dc3545;
+--success-color: #28a745; /* Green for light theme success */
+--warning-color: #ffc107; /* Yellow for light theme warning */
+--error-color: #dc3545; /* Red for light theme error */
 }
 
+/* Adjust specific elements for light theme */
 body.light-theme .login-box {
 background: rgba(255, 255, 255, 0.95);
 border: 3px solid var(--accent-color);
@@ -79,7 +59,7 @@ color: var(--text-primary);
 }
 body.light-theme .dashboard-header {
 background: linear-gradient(135deg, var(--accent-color), var(--accent-secondary));
-color: white;
+color: white; /* Keep header text white for contrast */
 }
 body.light-theme .quick-btn {
 background: var(--accent-color);
@@ -138,7 +118,7 @@ color: white;
 }
 body.light-theme .log-entry {
 background: var(--primary-bg);
-border-left-color: var(--accent-color);
+border-left-color: var(--accent-color); /* Kept accent for log importance */
 color: var(--text-primary);
 }
 body.light-theme .log-time {
@@ -149,37 +129,28 @@ background-color: var(--primary-bg);
 }
 body.light-theme .login-entry-container.success {
 border-left: 4px solid var(--success-color);
-background-color: var(--primary-bg);
 }
 body.light-theme .login-entry-container.failed {
 border-left: 4px solid var(--error-color);
-background-color: var(--primary-bg);
 }
-body.light-theme .error-log-entry.error {
+body.light-theme .error-log-entry.error { /* This rule is specific to .error class, adjusted below */
 border-left: 4px solid var(--error-color);
 background-color: var(--primary-bg);
 color: var(--text-primary);
 }
 
+/* Fixed styling for system update items to match theme */
 body.light-theme .system-update-item {
-background-color: var(--primary-bg);
-border-left: 4px solid var(--accent-secondary);
+background-color: var(--primary-bg); /* Match other list items */
+border-left: 4px solid var(--accent-secondary); /* Give it an accent */
 color: var(--text-primary);
-transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
 body.light-theme .notification {
-position: fixed;
-top: 20px;
-right: 20px;
 background: var(--secondary-bg);
-border: 2px solid var(--success-color);
-color: var(--text-primary);
-padding: 15px 25px;
-border-radius: 10px;
-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-z-index: 1000;
-animation: slideIn 0.5s ease;
+border: 2px solid var(--success-color); /* Accent border to signify its status */
+color: var(--text-primary); /* Should contrast well with bg */
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Lighter shadow */
 }
 
 body.light-theme .settings-content {
@@ -202,7 +173,7 @@ body.light-theme .tool-btn:hover, body.light-theme .tool-btn.active, body.light-
 background: var(--accent-secondary);
 }
 body.light-theme #drawingCanvas {
-background: #f0f0f0;
+background: #f0f0f0; /* Ensure white canvas in light mode */
 }
 body.light-theme #textNotes {
 background: var(--primary-bg);
@@ -250,6 +221,7 @@ background: var(--secondary-bg);
 border-color: var(--border-color);
 color: var(--text-primary);
 }
+/* Light theme specific styles for new elements */
 body.light-theme .important-date-input,
 body.light-theme .important-date-event-input,
 body.light-theme .important-date-item,
@@ -257,12 +229,8 @@ body.light-theme #randomFact,
 body.light-theme #dailyQuote,
 body.light-theme .error-log-entry,
 body.light-theme .announcement-bar,
-body.light-theme .reset-popup .reset-field,
-body.light-theme .feature-button-group button,
-body.light-theme .sub-feature-button,
-body.light-theme .formatted-info-card
-{
-background-color: var(--primary-bg) !important;
+body.light-theme .reset-popup .reset-field { /* Added announcement-bar and reset elements for light theme */
+background-color: var(--primary-bg) !important; /* Use !important to ensure override */
 color: var(--text-primary) !important;
 border-color: var(--border-color) !important;
 }
@@ -270,43 +238,25 @@ body.light-theme .important-date-item {
 border-left-color: var(--accent-secondary) !important;
 }
 body.light-theme .click-button,
-body.light-theme .reset-popup button,
-body.light-theme .feature-button-group button,
-body.light-theme .sub-feature-button
-{
+body.light-theme .reset-popup button { /* Added reset button for light theme */
 background: var(--accent-color) !important;
 color: white !important;
 }
 body.light-theme .click-button:hover,
-body.light-theme .reset-popup button:hover,
-body.light-theme .feature-button-group button:hover,
-body.light-theme .sub-feature-button:hover
-{
+body.light-theme .reset-popup button:hover { /* Added reset button hover for light theme */
 background: var(--accent-secondary) !important;
-transform: translateY(-2px);
-box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
-body.light-theme .announcement-content {
+body.light-theme .announcement-content { /* Added announcement-content for light theme */
 color: var(--accent-color) !important;
 }
 body.light-theme .reset-popup {
-background: rgba(255, 255, 255, 0.98) !important;
+background: rgba(255, 255, 255, 0.98) !important; /* Lighter background for popup */
 border-color: var(--accent-color) !important;
 box-shadow: 0 0 30px rgba(0, 123, 255, 0.3) !important;
 }
 body.light-theme .reset-popup p {
 color: var(--text-primary) !important;
 }
-
-body.light-theme .text-color-high { color: var(--color-high); }
-body.light-theme .text-color-medium { color: var(--color-medium); }
-body.light-theme .text-color-low { color: var(--color-low); }
-body.light-theme .text-color-yes { color: var(--color-yes); }
-body.light-theme .text-color-no { color: var(--color-no); }
-body.light-theme .text-color-rare { color: var(--color-rare); }
-body.light-theme .text-color-rarely { color: var(--color-rarely); }
-body.light-theme .text-color-unknown { color: var(--color-unknown); }
-body.light-theme .text-color-dangerous { color: var(--color-dangerous); }
 
 
 * {
@@ -323,6 +273,7 @@ overflow-x: hidden;
 transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Initialization Screen */
 .init-screen {
 position: fixed;
 top: 0;
@@ -407,6 +358,7 @@ animation: fall 3s linear infinite;
 100% { transform: translateY(100vh); opacity: 0; }
 }
 
+/* Enhanced Login Styles */
 .login-container {
 min-height: 100vh;
 background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
@@ -590,6 +542,7 @@ font-size: 16px;
 color: var(--text-secondary);
 }
 
+/* Dashboard Styles */
 .dashboard {
 min-height: 100vh;
 background: var(--primary-bg);
@@ -615,48 +568,49 @@ color: white;
 .dashboard-quickbar {
 display: flex;
 flex-wrap: wrap;
-justify-content: space-between;
+justify-content: space-between; /* Space out the left and right groups */
 gap: 10px;
 margin-bottom: 20px;
 padding: 15px;
 background: var(--secondary-bg);
 border-radius: 15px;
 border: 1px solid var(--border-color);
-align-items: center;
+align-items: center; /* Align items vertically in quickbar */
 }
 
+/* Styles for the time displays within the search container */
 .quickbar-time-info {
 display: flex;
 align-items: center;
-gap: 5px;
+gap: 5px; /* Space between the text labels and the actual time */
 font-size: 12px;
 white-space: nowrap;
-background-color: var(--primary-bg);
-padding: 6px 10px;
-border-radius: 6px;
-border: 1px solid var(--border-color);
-color: var(--text-primary);
+background-color: var(--primary-bg); /* Add background */
+padding: 6px 10px; /* Add padding */
+border-radius: 6px; /* Add border-radius */
+border: 1px solid var(--border-color); /* Add border */
+color: var(--text-primary); /* Ensure text color adapts */
 }
 .quickbar-time-value {
 font-family: 'Orbitron', monospace;
 color: var(--accent-color);
 font-weight: bold;
-font-size: 13px;
+font-size: 13px; /* Slightly smaller than regular buttons but legible */
 }
 
-.search-group {
+.search-group { /* New container for search input and time displays */
 display: flex;
 align-items: center;
-gap: 10px;
-flex-grow: 1;
-max-width: 50%;
-min-width: 350px;
+gap: 10px; /* Space between search and time info */
+flex-grow: 1; /* Allow it to grow, but respecting max-width */
+max-width: 50%; /* Adjust based on desired layout balance */
+min-width: 350px; /* Ensure minimum width for contents */
 }
-.search-container {
+.search-container { /* This now just wraps the input and search button visually */
 position: relative;
-display: flex;
+display: flex; /* Make it a flex container to align search bar and button */
 flex-grow: 1;
-max-width: 300px;
+max-width: 300px; /* Restrict max width of the input group */
 }
 
 .search-bar {
@@ -667,11 +621,11 @@ border: 2px solid var(--border-color);
 border-radius: 25px;
 color: white;
 font-size: 14px;
-flex-grow: 1;
+flex-grow: 1; /* Allow the input to take available space */
 }
 
 .search-btn {
-position: absolute;
+position: absolute; /* Keep it absolute for placement inside the search input visuals */
 right: 5px;
 top: 50%;
 transform: translateY(-50%);
@@ -688,11 +642,11 @@ transition: all 0.3s ease;
 background: var(--accent-secondary);
 }
 
-.quick-btn-group {
+.quick-btn-group { /* New container for all buttons to the right */
 display: flex;
 flex-wrap: wrap;
 gap: 10px;
-justify-content: flex-end;
+justify-content: flex-end; /* Align buttons to the right within their group */
 }
 
 .quick-btn {
@@ -716,12 +670,12 @@ transform: translateY(-2px);
 position: fixed;
 top: 20px;
 right: 20px;
-background: var(--secondary-bg);
-border: 2px solid var(--success-color);
-color: var(--text-primary);
+background: var(--secondary-bg); /* Use theme background */
+border: 2px solid var(--success-color); /* Accent border to signify its status */
+color: var(--text-primary); /* Use theme text color */
 padding: 15px 25px;
 border-radius: 10px;
-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3); /* Adjust shadow for both themes */
 z-index: 1000;
 animation: slideIn 0.5s ease;
 }
@@ -821,6 +775,7 @@ color: white;
 font-weight: bold;
 }
 
+/* Login History Entries */
 .login-entry-container {
 display: flex;
 justify-content: space-between;
@@ -835,11 +790,11 @@ transition: background-color 0.3s ease;
 }
 .login-entry-container.success {
 border-left: 4px solid var(--success-color);
-background-color: var(--primary-bg);
+background-color: var(--primary-bg); /* Use primary for list item backgrounds */
 }
 .login-entry-container.failed {
 border-left: 4px solid var(--error-color);
-background-color: var(--primary-bg);
+background-color: var(--primary-bg); /* Use primary for list item backgrounds */
 }
 .login-entry-status {
 font-weight: bold;
@@ -850,13 +805,14 @@ color: var(--text-secondary);
 font-size: 10px;
 }
 
+/* Important Dates styling */
 .important-date-input, .important-date-event-input {
 width: 100%;
 padding: 8px 10px;
 margin-bottom: 8px;
 border-radius: 6px;
 border: 1px solid var(--border-color);
-background-color: var(--primary-bg);
+background-color: var(--primary-bg); /* Added background color */
 color: var(--text-primary);
 font-size: 14px;
 transition: border-color 0.3s ease;
@@ -869,8 +825,8 @@ border-color: var(--accent-color);
 padding: 8px 10px;
 margin-bottom: 8px;
 border-radius: 6px;
-background-color: var(--primary-bg);
-border-left: 4px solid var(--accent-secondary);
+background-color: var(--primary-bg); /* Added background color */
+border-left: 4px solid var(--accent-secondary); /* Accent for visual interest */
 color: var(--text-primary);
 font-size: 13px;
 display: flex;
@@ -885,17 +841,21 @@ color: var(--accent-color);
 color: var(--text-secondary);
 }
 
+
+/* System Updates Panel Styling */
 .system-update-item {
 padding: 8px;
 border-radius: 6px;
 margin-bottom: 8px;
 font-size: 12px;
-background-color: var(--primary-bg);
-border-left: 4px solid var(--accent-secondary);
-color: var(--text-primary);
+background-color: var(--primary-bg); /* Apply theme-adaptive background */
+border-left: 4px solid var(--accent-secondary); /* Give it a subtle accent border */
+color: var(--text-primary); /* Ensure text color adapts */
 transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
 }
 
+
+/* Settings Modal */
 .settings-modal {
 position: fixed;
 top: 0;
@@ -916,7 +876,7 @@ border-radius: 20px;
 padding: 30px;
 width: 90%;
 max-width: 800px;
-max-height: 90vh;
+max-height: 80vh;
 overflow-y: auto;
 }
 
@@ -937,6 +897,7 @@ border-radius: 10px;
 border: 1px solid var(--border-color);
 }
 
+/* Drawing Tools */
 .drawing-tools {
 display: flex;
 flex-wrap: wrap;
@@ -976,6 +937,7 @@ width: 100px;
 accent-color: var(--accent-color);
 }
 
+/* Timer/Stopwatch */
 .timer-display {
 font-family: 'Orbitron', monospace;
 font-size: 36px;
@@ -992,6 +954,7 @@ gap: 10px;
 margin-top: 15px;
 }
 
+/* Activity Logs */
 .log-entry {
 padding: 10px;
 background: var(--primary-bg);
@@ -1008,10 +971,11 @@ color: var(--text-secondary);
 font-size: 10px;
 }
 
+/* Error Log Entries */
 .error-log-entry {
 padding: 10px;
-background: var(--primary-bg);
-border-left: 4px solid var(--error-color);
+background: var(--primary-bg); /* Added background color */
+border-left: 44px solid var(--error-color);
 margin-bottom: 10px;
 border-radius: 6px;
 font-size: 12px;
@@ -1024,6 +988,8 @@ color: var(--text-secondary);
 font-size: 10px;
 }
 
+
+/* Stats Display */
 .stats-grid {
 display: grid;
 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -1052,6 +1018,7 @@ color: var(--text-secondary);
 margin-top: 5px;
 }
 
+/* Themes */
 .theme-selector {
 display: grid;
 grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -1077,6 +1044,7 @@ border-color: var(--accent-color);
 transform: scale(1.05);
 }
 
+/* Calculator */
 .calculator {
 background: var(--primary-bg);
 border-radius: 15px;
@@ -1128,6 +1096,7 @@ background: var(--success-color);
 color: black;
 }
 
+/* Media Player */
 .media-container {
 background: var(--primary-bg);
 border-radius: 15px;
@@ -1153,6 +1122,7 @@ border-radius: 8px;
 background: var(--secondary-bg);
 }
 
+/* Keybinds */
 .keybind-item {
 display: flex;
 justify-content: space-between;
@@ -1172,10 +1142,11 @@ color: white;
 font-family: 'Courier New', monospace;
 }
 
+/* Clicker Button */
 .click-button {
 width: 100%;
 padding: 15px;
-background: var(--accent-color);
+background: var(--accent-color); /* Matches quick-btn */
 color: white;
 font-size: 18px;
 font-weight: 700;
@@ -1200,13 +1171,14 @@ color: var(--accent-color);
 text-align: center;
 margin-bottom: 20px;
 padding: 10px;
-background-color: var(--primary-bg);
+background-color: var(--primary-bg); /* Add background */
 border-radius: 10px;
 border: 1px solid var(--border-color);
 }
 
+/* Daily Quotes & Random Facts content styling */
 #randomFact, #dailyQuote {
-background-color: var(--primary-bg);
+background-color: var(--primary-bg); /* Background for text content */
 padding: 15px;
 border-radius: 8px;
 border: 1px solid var(--border-color);
@@ -1215,30 +1187,32 @@ font-style: italic;
 color: var(--text-primary);
 }
 
+/* Announcement Bar */
 .announcement-bar {
 background-color: var(--secondary-bg);
 border: 1px solid var(--border-color);
 border-radius: 10px;
 padding: 10px 20px;
-overflow: hidden;
-margin-bottom: 20px;
+overflow: hidden; /* Crucial for the moving text */
+margin-bottom: 20px; /* Space between announcement and panels */
 position: relative;
 }
 
 .announcement-content {
-white-space: nowrap;
-display: inline-block;
-padding-left: 100%;
-color: var(--accent-color);
+white-space: nowrap; /* Keep text on a single line */
+display: inline-block; /* Essential for animation */
+padding-left: 100%; /* Start the text off-screen to the right */
+color: var(--accent-color); /* Make the text stand out */
 font-weight: bold;
-animation: marquee 20s linear infinite;
+animation: marquee 20s linear infinite; /* Adjust time as needed for speed */
 }
 
 @keyframes marquee {
 0% { transform: translateX(0%); }
-100% { transform: translateX(-100%); }
+100% { transform: translateX(-100%); } /* Move fully to the left */
 }
 
+/* Reset Popup styles */
 .reset-popup {
 position: fixed;
 top: 50%;
@@ -1250,11 +1224,11 @@ border: 3px solid var(--accent-color);
 border-radius: 15px;
 padding: 30px;
 text-align: center;
-z-index: 1001;
+z-index: 1001; /* Above login box */
 box-shadow: 0 0 40px rgba(255, 69, 0, 0.6);
 width: 350px;
 max-width: 90%;
-display: none;
+display: none; /* Hidden by default */
 }
 
 .reset-popup p {
@@ -1293,199 +1267,143 @@ transform: translateY(-2px);
 box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
 }
 
-.feature-hub-section {
-    margin-top: 20px;
-    margin-bottom: 30px;
-    padding: 20px;
-    background: var(--secondary-bg);
-    border-radius: 15px;
-    border: 1px solid var(--border-color);
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
+/* New styles for the main menu buttons */
+.main-menu-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 15px;
+margin-top: 20px;
+margin-bottom: 30px; /* Space before the panels grid */
 }
 
-.feature-button-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    width: 160px;
-    height: 120px;
-    justify-content: center;
-    background: var(--primary-bg);
-    border-radius: 10px;
-    border: 1px solid var(--border-color);
-    transition: all 0.3s ease;
-    cursor: pointer;
-}
-.feature-button-group:hover {
-    box-shadow: 0 5px 20px rgba(255, 69, 0, 0.2);
-    transform: translateY(-3px);
-}
-
-.feature-button-group .icon-wrapper {
-    font-size: 2.5em;
-    margin-bottom: 8px;
-    color: var(--accent-color);
-    line-height: 1;
-}
-.feature-button-group .icon-wrapper.emoji {
-    font-size: 2.2em;
+.main-menu-btn {
+background: var(--secondary-bg);
+border: 1px solid var(--border-color);
+border-radius: 10px;
+padding: 20px;
+text-align: center;
+cursor: pointer;
+transition: all 0.3s ease;
+font-size: 16px;
+font-weight: 600;
+color: var(--text-primary);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+min-height: 100px;
 }
 
-.feature-button-group .button-label {
-    display: block;
-    width: 100%;
-    padding: 8px 10px;
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    text-align: center;
-    pointer-events: none;
+.main-menu-btn i {
+font-size: 32px;
+color: var(--accent-color);
+margin-bottom: 10px;
 }
 
-.feature-button-group .button-label:hover {
-    background: var(--accent-secondary);
-    transform: scale(1.02);
+.main-menu-btn:hover {
+background: var(--accent-color);
+color: white;
+transform: translateY(-5px);
+box-shadow: 0 8px 20px rgba(var(--accent-color), 0.3);
 }
 
-.sub-feature-button-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 15px;
-    justify-content: center;
-}
-.sub-feature-button {
-    padding: 10px 15px;
-    background: var(--accent-color);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    flex-grow: 1;
-    max-width: 250px;
-    text-align: center;
-    text-decoration: none;
-}
-.sub-feature-button:hover {
-    background: var(--accent-secondary);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+.main-menu-btn:hover i {
+color: white;
 }
 
-.formatted-info-card {
-    background-color: var(--primary-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 20px;
-    max-height: 400px;
-    overflow-y: auto;
-    font-family: 'Roboto', monospace;
-    font-size: 14px;
-    line-height: 1.6;
-    animation: fadeIn 0.5s ease-out;
-    display: none;
-}
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+/* Style for wifi info board */
+.wifi-info-board {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap: 15px;
+margin-top: 20px;
 }
 
-.formatted-info-card strong {
-    color: var(--accent-color);
-    font-weight: bold;
-    display: inline-block;
-    min-width: 120px;
-}
-.formatted-info-card p {
-    margin-bottom: 5px;
-}
-.formatted-info-card a {
-    color: var(--success-color);
-    text-decoration: underline;
-}
-.formatted-info-card a:hover {
-    color: var(--accent-secondary);
-}
-.media-player-warning {
-    color: var(--warning-color);
-    border-color: var(--warning-color);
-    background-color: rgba(255, 170, 0, 0.1) !important;
+.wifi-network-card {
+background: var(--primary-bg);
+border: 1px solid var(--border-color);
+border-radius: 10px;
+padding: 15px;
+display: flex;
+flex-direction: column;
 }
 
-.text-color-high { color: var(--color-high); }
-.text-color-medium { color: var(--color-medium); }
-.text-color-low { color: var(--color-low); }
-.text-color-yes { color: var(--color-yes); }
-.text-color-no { color: var(--color-no); }
-.text-color-rare { color: var(--color-rare); }
-.text-color-rarely { color: var(--color-rarely); }
-.text-color-unknown { color: var(--color-unknown); }
-.text-color-dangerous { color: var(--color-dangerous); }
-
-.go-back-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background: var(--accent-secondary);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    display: none;
-}
-.go-back-button:hover {
-    background: var(--accent-color);
-    transform: translateY(-1px);
+.wifi-network-card h4 {
+font-size: 1.1em;
+font-weight: bold;
+color: var(--accent-color);
+margin-bottom: 10px;
 }
 
-.calculator-view, .converter-view {
-    display: none;
+.wifi-network-card div {
+display: flex;
+justify-content: space-between;
+padding: 3px 0;
+border-bottom: 1px dashed var(--border-color);
+font-size: 0.9em;
 }
 
+.wifi-network-card div:last-child {
+border-bottom: none;
+}
 
+.wifi-network-card span:first-child {
+font-weight: 500;
+color: var(--text-secondary);
+}
+.wifi-network-card span:last-child {
+color: var(--text-primary);
+}
+
+/* Basic styling for text popups */
+.text-popup-content {
+background: var(--primary-bg);
+border: 1px solid var(--border-color);
+border-radius: 10px;
+padding: 20px;
+margin-top: 15px;
+max-height: 400px;
+overflow-y: auto;
+color: var(--text-primary);
+line-height: 1.6;
+}
+
+.text-popup-content h3 {
+font-size: 1.2em;
+color: var(--accent-color);
+margin-bottom: 10px;
+}
+
+.text-popup-content ul {
+list-style-type: disc;
+margin-left: 20px;
+}
+.text-popup-content ol {
+list-style-type: decimal;
+margin-left: 20px;
+}
+.text-popup-content a {
+color: var(--accent-secondary);
+text-decoration: underline;
+}
+
+/* Responsive */
 @media (max-width: 1200px) {
 .dashboard-quickbar .search-group {
-flex-direction: column;
+flex-direction: column; /* Stack search bar and time info on smaller screens */
 max-width: 100%;
-align-items: flex-start;
+align-items: flex-start; /* Align text left */
 }
 .dashboard-quickbar .quickbar-time-info {
 width: 100%;
 justify-content: space-between;
 }
-.quick-btn-group {
-width: 100%;
+.dashboard-quickbar .quick-btn-group {
+width: 100%; /* Make buttons take full width when stacked */
 justify-content: center;
 }
 .search-container {
 max-width: 100%;
-}
-.feature-hub-section {
-    justify-content: center;
-}
-.feature-button-group {
-    width: 48%;
-    height: 100px;
-}
-.feature-button-group .icon-wrapper {
-    font-size: 2em;
-}
-.feature-button-group .button-label {
-    font-size: 13px;
-    padding: 6px 8px;
 }
 }
 @media (max-width: 768px) {
@@ -1506,16 +1424,12 @@ gap: 10px;
 .search-container {
 max-width: 100%;
 }
-.feature-button-group {
-    width: 100%;
-    height: 90px;
-}
-.settings-content {
-    padding: 20px;
-    max-width: 95%;
+.main-menu-grid {
+grid-template-columns: 1fr;
 }
 }
 
+/* Loading Animation */
 .loading-cube {
 width: 60px;
 height: 60px;
@@ -1537,19 +1451,20 @@ opacity: 0.9;
 .loading-face.back { transform: rotateY(180deg) translateZ(30px); }
 .loading-face.right { transform: rotateY(90deg) translateZ(30px); }
 .loading-face.left { transform: rotateY(-90deg) translateZ(30px); }
-.cube-face.top { transform: rotateX(90deg) translateZ(30px); }
-.cube-face.bottom { transform: rotateX(-90deg) translateZ(30px); }
+.loading-face.top { transform: rotateX(90deg) translateZ(30px); }
+.loading-face.bottom { transform: rotateX(-90deg) translateZ(30px); }
 
 @keyframes loadingRotate {
 0% { transform: rotateX(0deg) rotateY(0deg); }
 100% { transform: rotateX(360deg) rotateY(360deg); }
 }
-
+/* Hidden by default */
 .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
+<!-- Initialization Screen -->
 <div id="initScreen" class="init-screen">
 <div class="rotating-cube">
 <div class="cube-face front"></div>
@@ -1563,6 +1478,7 @@ opacity: 0.9;
 <div class="code-rain" id="codeRain"></div>
 </div>
 
+<!-- Login Screen -->
 <div id="loginScreen" class="login-container hidden">
 <div class="login-quickbar">
 <div class="flex items-center gap-2">
@@ -1617,6 +1533,7 @@ opacity: 0.9;
 </div>
 </div>
 
+<!-- Reset Counter Popup (initially hidden) -->
 <div id="resetPopup" class="reset-popup" role="dialog" aria-modal="true" aria-hidden="true">
 <p>System Locked. Enter reset code to continue:</p>
 <input type="password" id="resetField" class="reset-field" placeholder="Enter Reset Code...">
@@ -1625,6 +1542,7 @@ opacity: 0.9;
 
 </div>
 
+<!-- Loading Screen -->
 <div id="loadingScreen" class="init-screen hidden">
 <div class="loading-cube">
 <div class="cube-face front"></div>
@@ -1638,11 +1556,14 @@ opacity: 0.9;
 <div class="code-rain" id="loadingCodeRain"></div>
 </div>
 
+<!-- Dashboard -->
 <div id="dashboard" class="dashboard">
+<!-- Welcome Notification -->
 <div id="welcomeNotification" class="notification">
 <i class="fas fa-user-check"></i> Welcome <span id="loggedUser">User</span>!
 </div>
 
+<!-- Dashboard Header -->
 <div class="dashboard-header">
 <div>
 <h1 class="text-2xl font-bold"><i class="fas fa-tachometer-alt"></i> Enhanced Private Dashboard</h1>
@@ -1653,7 +1574,9 @@ Version 2.0.0
 </div>
 </div>
 
+<!-- Quick Bar with Search, Session Time, Real Time, and Buttons -->
 <div class="dashboard-quickbar">
+<!-- Left Section: Search and Time Displays -->
 <div class="search-group">
 <div class="search-container">
 <input type="text" class="search-bar" id="searchBar" placeholder="Search panels, features...">
@@ -1663,6 +1586,7 @@ Version 2.0.0
 <div class="quickbar-time-info">Real Time: <span id="quickbarCurrentTime" class="quickbar-time-value">00:00:00</span></div>
 </div>
 
+<!-- Right Section: All other buttons -->
 <div class="quick-btn-group">
 <button class="quick-btn" onclick="togglePanel('settingsModal')">
 <i class="fas fa-cog"></i> Settings
@@ -1683,11 +1607,14 @@ Version 2.0.0
 <i class="fas fa-toggle-on"></i> Toggle Sections
 </button>
 <button class="quick-btn" onclick="adjustZoom(0.1)">
-<i class="fas fa-search-plus"></i> Zoom In</button>
+<i class="fas fa-search-plus"></i> Zoom In
+</button>
 <button class="quick-btn" onclick="adjustZoom(-0.1)">
-<i class="fas fa-search-minus"></i> Zoom Out</button>
+<i class="fas fa-search-minus"></i> Zoom Out
+</button>
 <button class="quick-btn" onclick="restartSystem()">
-<i class="fas fa-redo-alt"></i> Restart</button>
+<i class="fas fa-redo-alt"></i> Restart
+</button>
 <button class="quick-btn panic-btn" onclick="window.open('https://clever.com', '_blank')">
 <i class="fas fa-exclamation-triangle"></i> Panic
 </button>
@@ -1700,80 +1627,65 @@ Version 2.0.0
 </div>
 </div>
 
+<!-- Announcement Bar (newly added) -->
 <div class="announcement-bar mt-4">
 <div class="announcement-content">
 <p id="announcementText">Important System Announcement: Scheduled maintenance this weekend. System may experience brief interruptions. Please save your work regularly!</p>
 </div>
 </div>
-
-<div class="feature-hub-section">
-    <div class="feature-button-group" onclick="openWifiModal()">
-        <span class="icon-wrapper"><i class="fas fa-wifi"></i></span>
-        <span class="button-label">School Wifi Info</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('ipadRestrictionsModal')">
-        <span class="icon-wrapper"><i class="fas fa-ban"></i></span>
-        <span class="button-label">iPad Restrictions</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('studentHandbooksModal')">
-        <span class="icon-wrapper"><i class="fas fa-book-reader"></i></span>
-        <span class="button-label">Student Handbooks</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('studentWebsitesModal')">
-        <span class="icon-wrapper"><i class="fas fa-globe"></i></span>
-        <span class="button-label">Student Websites</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('teacherWebsitesModal')">
-        <span class="icon-wrapper"><i class="fas fa-chalkboard-teacher"></i></span>
-        <span class="button-label">Teacher Websites</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('schoolInfoModal')">
-        <span class="icon-wrapper"><i class="fas fa-school"></i></span>
-        <span class="button-label">School Information</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('exploitingToolsModal')">
-        <span class="icon-wrapper"><i class="fas fa-wrench"></i></span>
-        <span class="button-label">Exploiting Tools</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('keyboardTricksModal')">
-        <span class="icon-wrapper"><i class="fas fa-keyboard"></i></span>
-        <span class="button-label">Keyboard Tricks</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('bypassingToolsModal')">
-        <span class="icon-wrapper"><i class="fas fa-mask"></i></span>
-        <span class="button-label">Bypassing Tools</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('schoolMapModal')">
-        <span class="icon-wrapper"><i class="fas fa-map-marked-alt"></i></span>
-        <span class="button-label">School Map</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('phoneDirectoryModal')">
-        <span class="icon-wrapper"><i class="fas fa-phone-alt"></i></span>
-        <span class="button-label">Phone Directory</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('musicWebsitesModal')">
-        <span class="icon-wrapper emoji">🎵</span>
-        <span class="button-label">Music Websites</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('gamingWebsitesModal')">
-        <span class="icon-wrapper emoji">🎮</span>
-        <span class="button-label">Gaming Websites</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('vpnWebsitesModal')">
-        <span class="icon-wrapper emoji">🌐</span>
-        <span class="button-label">VPN Websites</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('calculatorModal')">
-        <span class="icon-wrapper"><i class="fas fa-calculator"></i></span>
-        <span class="button-label">Calculator & Converter</span>
-    </div>
-    <div class="feature-button-group" onclick="togglePanel('mediaPlayerModal')">
-        <span class="icon-wrapper"><i class="fas fa-play-circle"></i></span>
-        <span class="button-label">Media Player</span>
-    </div>
+  
+<!-- New Main Menu Buttons Section -->
+<div class="main-menu-grid">
+<button class="main-menu-btn" onclick="togglePanel('schoolWifiInfoModal')">
+<i class="fas fa-wifi"></i> School Wifi Information
+</button>
+<button class="main-menu-btn" onclick="togglePanel('ipadRestrictionsModal')">
+<i class="fas fa-tablet-alt"></i> School iPad Restrictions
+</button>
+<button class="main-menu-btn" onclick="togglePanel('studentHandbooksInfoModal')">
+<i class="fas fa-book-open"></i> Student Handbooks Information
+</button>
+<button class="main-menu-btn" onclick="togglePanel('schoolBuildingMapInfoModal')">
+<i class="fas fa-map-marked-alt"></i> School Building Map Information
+</button>
+<button class="main-menu-btn" onclick="togglePanel('studentWebsitesInfoModal')">
+<i class="fas fa-globe"></i> Student Websites Information
+</button>
+<button class="main-menu-btn" onclick="togglePanel('teacherWebsitesInfoModal')">
+<i class="fas fa-chalkboard-teacher"></i> Teacher Websites Information
+</button>
+<button class="main-menu-btn" onclick="togglePanel('schoolPhoneDirectoryInfoModal')">
+<i class="fas fa-phone-alt"></i> School Phone Directory Information
+</button>
+<button class="main-menu-btn" onclick="togglePanel('schoolCameraInfoModal')">
+<i class="fas fa-video"></i> School Camera Information
+</button>
+<button class="main-menu-btn" onclick="togglePanel('schoolInfoModal')">
+<i class="fas fa-school"></i> School Information
+</button>
+<button class="main-menu-btn" onclick="togglePanel('exploitingToolsModal')">
+<i class="fas fa-tools"></i> Exploiting Tools
+</button>
+<button class="main-menu-btn" onclick="togglePanel('bypassingToolsModal')">
+<i class="fas fa-user-secret"></i> Bypassing Tools
+</button>
+<button class="main-menu-btn" onclick="togglePanel('vpnWebsitesModal')">
+<i class="fas fa-shield-alt"></i> VPN Websites
+</button>
+<button class="main-menu-btn" onclick="togglePanel('gamingWebsitesModal')">
+<i class="fas fa-gamepad"></i> Gaming Websites
+</button>
+<button class="main-menu-btn" onclick="togglePanel('musicWebsitesModal')">
+<i class="fas fa-music"></i> Music Websites
+</button>
+<button class="main-menu-btn" onclick="togglePanel('keyboardTricksModal')">
+<i class="fas fa-keyboard"></i> Keyboard Tricks
+</button>
 </div>
 
+  
 <div class="panels-grid" id="panelsGrid">
+<!-- Calendar Panel -->
 <div class="panel" data-panel="calendar">
 <div class="panel-header">
 <div class="panel-title"><i class="fas fa-calendar"></i> Calendar</div>
@@ -1783,9 +1695,11 @@ Version 2.0.0
 </div>
 </div>
 <div class="calendar-grid" id="calendarGrid">
+<!-- Calendar will be generated here -->
 </div>
 </div>
 
+<!-- Important Dates Panel -->
 <div class="panel" data-panel="importantDates">
 <div class="panel-header">
 <div class="panel-title"><i class="fas fa-star"></i> Important Dates</div>
@@ -1800,10 +1714,12 @@ Version 2.0.0
 <input type="text" id="importantDateEvent" class="important-date-event-input" placeholder="Event Description...">
 <button class="quick-btn w-full mt-2" onclick="addImportantDate()">Add Event</button>
 <div id="importantDatesList" class="mt-4 max-h-40 overflow-y-auto space-y-2">
+<!-- Important dates will be populated here -->
 </div>
 </div>
 </div>
 
+<!-- Random Facts Panel -->
 <div class="panel" data-panel="facts">
 <div class="panel-header">
 <div class="panel-title"><i class="fas fa-lightbulb"></i> Random Facts</div>
@@ -1817,6 +1733,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Daily Quotes Panel -->
 <div class="panel" data-panel="quotes">
 <div class="panel-header">
 <div class="panel-title"><i class="fas fa-quote-left"></i> Daily Quote</div>
@@ -1830,6 +1747,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Updates Panel -->
 <div class="panel" data-panel="updates">
 <div class="panel-header">
 <div class="panel-title"><i class="fas fa-sync-alt"></i> System Updates</div>
@@ -1844,6 +1762,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Notifications Panel -->
 <div class="panel" data-panel="notifications">
 <div class="panel-header">
 <div class="panel-title"><i class="fas fa-bell"></i> Notifications</div>
@@ -1858,6 +1777,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Activity Logs Panel -->
 <div class="panel" data-panel="activityLogs">
 <div class="panel-header">
 <div class="panel-title"><i class="fas fa-list"></i> Activity Logs</div>
@@ -1868,9 +1788,11 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 <div id="activityLogsList" class="max-h-40 overflow-y-auto">
+<!-- Activity logs will be populated here -->
 </div>
 </div>
 
+<!-- Error Log Panel -->
 <div class="panel" data-panel="errorLog">
 <div class="panel-header">
 <div class="panel-title"><i class="fas fa-bug"></i> Error Log</div>
@@ -1881,9 +1803,11 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 <div id="errorLogsList" class="max-h-40 overflow-y-auto space-y-2">
+<!-- Error logs will be populated here -->
 </div>
 </div>
 
+<!-- Login History Panel -->
 <div class="panel" data-panel="loginHistory">
 <div class="panel-header">
 <div class="panel-title"><i class="fas fa-history"></i> Login History</div>
@@ -1892,9 +1816,11 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 <div id="loginHistoryList" class="space-y-2 max-h-40 overflow-y-auto">
+<!-- Login history will be populated here -->
 </div>
 </div>
 
+<!-- Mouse Clicker Panel -->
 <div class="panel" data-panel="mouseClicker">
 <div class="panel-header">
 <div class="panel-title"><i class="fas fa-mouse-pointer"></i> Mouse Clicker</div>
@@ -1910,437 +1836,10 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 </div>
+
 </div>
 
-<div id="schoolWifiModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-wifi"></i> School Wifi Information</h2>
-            <button onclick="closeModal('schoolWifiModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="wifiOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Click a network button for details, or "Show All Networks".</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displaySingleWifiInfo('Middletown_Core')">Middletown_Core</button>
-                <button class="sub-feature-button" onclick="displaySingleWifiInfo('Mtown_Core')">Mtown_Core</button>
-                <button class="sub-feature-button" onclick="displaySingleWifiInfo('Mtown Guest')">Mtown Guest</button>
-                <button class="sub-feature-button" onclick="displaySingleWifiInfo('Radius Test')">Radius Test</button>
-                <button class="sub-feature-button" onclick="displayAllWifiInfo()">Show All Networks</button>
-            </div>
-        </div>
-        <div id="wifiInfoDisplay" class="formatted-info-card"></div>
-        <button id="wifiGoBackButton" class="go-back-button" onclick="goBackToWifiOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="ipadRestrictionsModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-ban"></i> School iPad Restrictions</h2>
-            <button onclick="closeModal('ipadRestrictionsModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="ipadRestrictionsOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Select to view restrictions or bypasses.</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayiPadRestrictions('restrictions')">Show Restrictions</button>
-                <button class="sub-feature-button" onclick="displayiPadRestrictions('bypasses')">Show Bypasses</button>
-            </div>
-        </div>
-        <div id="ipadRestrictionsDisplay" class="formatted-info-card"></div>
-        <button id="ipadRestrictionsGoBackButton" class="go-back-button" onclick="goBackToiPadRestrictionsOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="studentHandbooksModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-book-reader"></i> Student Handbooks</h2>
-            <button onclick="closeModal('studentHandbooksModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="content">
-            <p class="text-sm text-gray-400 mb-4">Click any handbook to open it in a new tab.</p>
-            <a href="https://cdnsm5-ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Elementary%20Handbook.pdf" target="_blank" class="sub-feature-button w-full mb-2">Elementary Handbook (Jan 2025)</a>
-            <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Secondary%20Student%20Handbook.pdf" target="_blank" class="sub-feature-button w-full mb-2">Secondary Student Handbook (Jan 2025)</a>
-            <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/District%20Handbook%20copy.pdf" target="_blank" class="sub-feature-button w-full mb-2">District Handbook</a>
-            <a href="https://middletown.ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025B%20RA%20Academy%20Handbook%20copy.pdf" target="_blank" class="sub-feature-button w-full mb-2">RA Academy Handbook (Jan 2025)</a>
-            <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/MASD%202024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf" target="_blank" class="sub-feature-button w-full mb-2">Virtual Learning Plan (2024 - 2025)</a>
-            <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Dress%20Code.docx.pdf" target="_blank" class="sub-feature-button w-full">Dress Code (2024 - 2025)</a>
-        </div>
-    </div>
-</div>
-
-<div id="studentWebsitesModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-globe"></i> Student Websites</h2>
-            <button onclick="closeModal('studentWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="content">
-            <p class="text-sm text-gray-400 mb-4">Click any link to open the website in a new tab.</p>
-            <a href="https://www.raiderweb.org" target="_blank" class="sub-feature-button w-full mb-2">School website</a>
-            <a href="https://middletownsd.instructure.com/login" target="_blank" class="sub-feature-button w-full mb-2">Canvas</a>
-            <a href="https://caresolace.com/site/middletownarea" target="_blank" class="sub-feature-button w-full mb-2">CareSolace</a>
-            <a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank" class="sub-feature-button w-full mb-2">Clever</a>
-            <a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank" class="sub-feature-button w-full mb-2">Rumba</a>
-            <a href="https://myhealthyzone.fitnessgram.net" target="_blank" class="sub-feature-button w-full mb-2">FitnessGram</a>
-            <a href="https://www.raiderweb.org/student_services/hazing_reporting" target="_blank" class="sub-feature-button w-full mb-2">Hazing Reporting</a>
-            <a href="https://www.youtube.com/user/MAHSAnnouncements?app=desktop" target="_blank" class="sub-feature-button w-full mb-2">MAHS Announcements</a>
-            <a href="https://id.naviance.com" target="_blank" class="sub-feature-button w-full mb-2">Naviance</a>
-            <a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank" class="sub-feature-button w-full mb-2">Follett Destiny</a>
-            <a href="https://powerschool.raiderweb.org/public/" target="_blank" class="sub-feature-button w-full mb-2">PowerSchool</a>
-            <a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank" class="sub-feature-button w-full mb-2">Scholastic</a>
-            <a href="https://www.safe2saypa.org" target="_blank" class="sub-feature-button w-full mb-2">Safe2Say</a>
-            <a href="https://mail.google.com/mail/" target="_blank" class="sub-feature-button w-full mb-2">Gmail</a>
-            <a href="https://www.balfour.com/pennsylvania/middletown/middletown-area-high-school" target="_blank" class="sub-feature-button w-full mb-2">Balfour</a>
-            <a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank" class="sub-feature-button w-full mb-2">Linkit</a>
-            <a href="https://search.follettsoftware.com/metasearch/ui/53085" target="_blank" class="sub-feature-button w-full mb-2">Destiny Discover</a>
-            <a href="https://sites.google.com/raiderweb.org/mams-library/home?authuser=0" target="_blank" class="sub-feature-button w-full mb-2">MAMS Library</a>
-            <a href="https://mackinvia.com" target="_blank" class="sub-feature-button w-full mb-2">MackinVIA</a>
-            <a href="https://www.noodletools.com" target="_blank" class="sub-feature-button w-full mb-2">Noodletools</a>
-            <a href="https://www.worldbookonline.com/home/" target="_blank" class="sub-feature-button w-full mb-2">Worldbook</a>
-            <a href="https://teens.powerlibrary.org/?ID=PL2509" target="_blank" class="sub-feature-button w-full mb-2">Teens Power Library</a>
-            <a href="https://kids.powerlibrary.org/?ID=PL7321" target="_blank" class="sub-feature-button w-full">Powerkids</a>
-        </div>
-    </div>
-</div>
-
-<div id="teacherWebsitesModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-chalkboard-teacher"></i> Teacher Websites</h2>
-            <button onclick="closeModal('teacherWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="content">
-            <p class="text-sm text-gray-400 mb-4">Click any link to open the website in a new tab.</p>
-            <a href="https://alo.acadiencelearning.org/login" target="_blank" class="sub-feature-button w-full mb-2">Acadience Learning</a>
-            <a href="https://app.aimswebplus.com/#/login" target="_blank" class="sub-feature-button w-full mb-2">AimswebPlus</a>
-            <a href="https://ep1.erplinq.com/MIDDLETOWN/" target="_blank" class="sub-feature-button w-full mb-2">ERP Linq</a>
-            <a href="https://sso.barracuda.com/u/login/identifier?state=hKFo2SBFYnNBRjVRYmczc2t0ZjlSNmwxel9GT25LZWp3QzVDV6Fur3VuaXZlcnNhbC1sb2dpbqN0aWTZIDQ1U0hHOGVubzF0eE10WlhiSkRZRnNQSmJqY1dwcnFlo2NpZNkgQk1yY2JuRWdkS3BkSjZRWGVjN0hiRHdlTkpMUW1MSUk" target="_blank" class="sub-feature-button w-full mb-2">Barracuda SSO</a>
-            <a href="https://shop.buyguernsey.com/thmBootstrapHome.aspx" target="_blank" class="sub-feature-button w-full mb-2">Buy Guernsey</a>
-            <a href="https://middletownsd.instructure.com/login/ldap" target="_blank" class="sub-feature-button w-full mb-2">Canvas (LDAP)</a>
-            <a href="https://caresolace.com/site/middletownarea" target="_blank" class="sub-feature-button w-full mb-2">CareSolace</a>
-            <a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank" class="sub-feature-button w-full mb-2">Clever</a>
-            <a href="https://www.discoveryeducation.com" target="_blank" class="sub-feature-button w-full mb-2">Discovery Education</a>
-            <a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank" class="sub-feature-button w-full mb-2">Rumba</a>
-            <a href="https://raiderweb.gofmx.com/login" target="_blank" class="sub-feature-button w-full mb-2">FMX</a>
-            <a href="https://myhealthyzone.fitnessgram.net" target="_blank" class="sub-feature-button w-full mb-2">FitnessGram</a>
-            <a href="https://login.frontlineeducation.com/login?signin=d0e98b785fd46dad06ce5509e61ef781&productId=ABSMGMT&clientId=ABSMGMT#/login" target="_blank" class="sub-feature-button w-full mb-2">Frontline Education</a>
-            <a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank" class="sub-feature-button w-full mb-2">Linkit</a>
-            <a href="https://id.naviance.com" target="_blank" class="sub-feature-button w-full mb-2">Naviance</a>
-            <a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank" class="sub-feature-button w-full mb-2">Follett Destiny</a>
-            <a href="https://paetep.edulinksolutions.com/login" target="_blank" class="sub-feature-button w-full mb-2">PAETEP</a>
-            <a href="https://powerschool.raiderweb.org/teachers/pw.html" target="_blank" class="sub-feature-button w-full mb-2">PowerSchool (Teachers)</a>
-            <a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank" class="sub-feature-button w-full mb-2">Scholastic</a>
-            <a href="https://go.schoolmessenger.com/#/home" target="_blank" class="sub-feature-button w-full mb-2">SchoolMessenger</a>
-            <a href="https://www.pdesas.org/standard/" target="_blank" class="sub-feature-button w-full mb-2">PDE SAS</a>
-            <a href="https://www.pbisapps.org" target="_blank" class="sub-feature-button w-full mb-2">PBISApps</a>
-            <a href="https://masd.happyfox.com/home/" target="_blank" class="sub-feature-button w-full mb-2">HappyFox</a>
-            <a href="https://middletownasd-pa.safeschools.com/login" target="_blank" class="sub-feature-button w-full mb-2">SafeSchools</a>
-            <a href="https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b"id_token"%3a%7b"xms_cc"%3a%7b"values"%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8" target="_blank" class="sub-feature-button w-full">Microsoft Outlook</a>
-        </div>
-    </div>
-</div>
-
-<div id="schoolInfoModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-school"></i> School Information</h2>
-            <button onclick="closeModal('schoolInfoModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="schoolInfoOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Click to view school details.</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displaySchoolDetails()">Show School Details</button>
-            </div>
-        </div>
-        <div id="schoolInfoDisplay" class="formatted-info-card"></div>
-        <button id="schoolInfoGoBackButton" class="go-back-button" onclick="goBackToSchoolInfoOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="exploitingToolsModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-wrench"></i> Exploiting Tools</h2>
-            <button onclick="closeModal('exploitingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="content">
-            <p class="text-color-dangerous text-xs mb-4"><strong><i class="fas fa-exclamation-triangle mr-1"></i> Warning:</strong> These tools are external and may not be functional due to external website changes or network restrictions. Use at your own risk. Not affiliated with this system.</p>
-            <div class="sub-feature-button-container">
-                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Blooket Exploit</a>
-                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Kahoot Exploit</a>
-                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Gimkit Exploit</a>
-                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Quizlet Exploit</a>
-                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Quizzes Exploit</a>
-                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Quills Exploit</a>
-                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Edpuzzle Exploit</a>
-                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Nearpod Exploit</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="keyboardTricksModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-keyboard"></i> Keyboard Tricks</h2>
-            <button onclick="closeModal('keyboardTricksModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="keyboardTricksOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Click to show system shortcuts.</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayKeyboardShortcuts()">Show Keyboard Shortcuts</button>
-            </div>
-        </div>
-        <div id="keyboardShortcutsDisplay" class="formatted-info-card"></div>
-        <button id="keyboardTricksGoBackButton" class="go-back-button" onclick="goBackToKeyboardTricksOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="bypassingToolsModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-mask"></i> Bypassing Tools</h2>
-            <button onclick="closeModal('bypassingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="bypassingToolsOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Click any tool below for status updates.</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Bathroom bypass', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Bathroom bypass</button>
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Wifi Bypass', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Wifi Bypass</button>
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Teacher monitoring bypass', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Teacher monitoring bypass</button>
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Update Coming Soon', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Update Coming Soon</button>
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Another Update Coming Soon', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Another Update Coming Soon</button>
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Final Update Coming Soon', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Final Update Coming Soon</button>
-            </div>
-        </div>
-        <div id="bypassingToolsDisplay" class="formatted-info-card"></div>
-        <button id="bypassingToolsGoBackButton" class="go-back-button" onclick="goBackToBypassingToolsOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="schoolMapModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-map-marked-alt"></i> School Building Map</h2>
-            <button onclick="closeModal('schoolMapModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="schoolMapOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Click button for map information.</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('School Building Map', 'schoolMapDisplay', 'schoolMapOptionsContainer', 'schoolMapGoBackButton')">Show Map</button>
-            </div>
-        </div>
-        <div id="schoolMapDisplay" class="formatted-info-card"></div>
-        <button id="schoolMapGoBackButton" class="go-back-button" onclick="goBackToSchoolMapOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="phoneDirectoryModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-phone-alt"></i> School Phone Directory</h2>
-            <button onclick="closeModal('phoneDirectoryModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="phoneDirectoryOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Click button for directory information.</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('School Phone Directory', 'phoneDirectoryDisplay', 'phoneDirectoryOptionsContainer', 'phoneDirectoryGoBackButton')">Show Directory</button>
-            </div>
-        </div>
-        <div id="phoneDirectoryDisplay" class="formatted-info-card"></div>
-        <button id="phoneDirectoryGoBackButton" class="go-back-button" onclick="goBackToPhoneDirectoryOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="musicWebsitesModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500">🎵 Music Websites</h2>
-            <button onclick="closeModal('musicWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="musicWebsitesOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Click button for music websites.</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Music Websites', 'musicWebsitesDisplay', 'musicWebsitesOptionsContainer', 'musicWebsitesGoBackButton')">Show Music Sites</button>
-            </div>
-        </div>
-        <div id="musicWebsitesDisplay" class="formatted-info-card"></div>
-        <button id="musicWebsitesGoBackButton" class="go-back-button" onclick="goBackToMusicWebsitesOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="gamingWebsitesModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500">🎮 Gaming Websites</h2>
-            <button onclick="closeModal('gamingWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="gamingWebsitesOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Click button for gaming websites.</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Gaming Websites', 'gamingWebsitesDisplay', 'gamingWebsitesOptionsContainer', 'gamingWebsitesGoBackButton')">Show Gaming Sites</button>
-            </div>
-        </div>
-        <div id="gamingWebsitesDisplay" class="formatted-info-card"></div>
-        <button id="gamingWebsitesGoBackButton" class="go-back-button" onclick="goBackToGamingWebsitesOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="vpnWebsitesModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500">🌐 VPN Websites</h2>
-            <button onclick="closeModal('vpnWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="vpnWebsitesOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Click button for VPN websites.</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('VPN Websites', 'vpnWebsitesDisplay', 'vpnWebsitesOptionsContainer', 'vpnWebsitesGoBackButton')">Show VPN Sites</button>
-            </div>
-        </div>
-        <div id="vpnWebsitesDisplay" class="formatted-info-card"></div>
-        <button id="vpnWebsitesGoBackButton" class="go-back-button" onclick="goBackToVpnWebsitesOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="calculatorModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-calculator"></i> Calculator & Converter</h2>
-            <button onclick="closeModal('calculatorModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div id="calculatorOptionsContainer">
-            <p class="text-sm text-gray-400 mb-4">Choose a tool to open:</p>
-            <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="showCalculator()">Open Calculator</button>
-                <button class="sub-feature-button" onclick="showConverter()">Open Unit Converter</button>
-            </div>
-        </div>
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <div id="calculatorView" class="calculator-view calculator formatted-info-card">
-                <h3 class="text-xl font-bold text-accent-color mb-4 text-center">Calculator</h3>
-                <div class="calc-display" id="calcDisplay">0</div>
-                <div class="calc-buttons">
-                    <button class="calc-btn" onclick="clearCalc()">C</button>
-                    <button class="calc-btn" onclick="deleteLast()">⌫</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('/')">/</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
-
-                    <button class="calc-btn" onclick="appendToCalc('7')">7</button>
-                    <button class="calc-btn" onclick="appendToCalc('8')">8</button>
-                    <button class="calc-btn" onclick="appendToCalc('9')">9</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
-
-                    <button class="calc-btn" onclick="appendToCalc('4')">4</button>
-                    <button class="calc-btn" onclick="appendToCalc('5')">5</button>
-                    <button class="calc-btn" onclick="appendToCalc('6')">6</button>
-                    <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
-
-                    <button class="calc-btn" onclick="appendToCalc('1')">1</button>
-                    <button class="calc-btn" onclick="appendToCalc('2')">2</button>
-                    <button class="calc-btn" onclick="appendToCalc('3')">3</button>
-                    <button class="calc-btn equals" onclick="calculateResult()" rowspan="2">=</button>
-
-                    <button class="calc-btn" onclick="appendToCalc('0')" style="grid-column: span 2;">0</button>
-                    <button class="calc-btn" onclick="appendToCalc('.')">.</button>
-                </div>
-            </div>
-
-            <div id="converterView" class="converter-view calculator formatted-info-card">
-                <h3 class="text-xl font-bold text-accent-color mb-4 text-center">Unit Converter</h3>
-                <div class="space-y-4">
-                    <label class="block text-sm mb-1 text-text-secondary">Conversion Type:</label>
-                    <select id="conversionType" class="w-full p-2 bg-primary-bg rounded border border-border-color" onchange="updateConversionUnits()">
-                        <option value="length">Length</option>
-                        <option value="weight">Weight</option>
-                        <option value="temperature">Temperature</option>
-                        <option value="volume">Volume</option>
-                    </select>
-
-                    <div class="grid grid-cols-2 gap-4 mt-4">
-                        <div>
-                            <label class="block text-sm mb-1 text-text-secondary">From:</label>
-                            <select id="fromUnit" class="w-full p-2 bg-primary-bg rounded border border-border-color">
-                            </select>
-                            <input type="number" id="fromValue" class="w-full p-2 bg-primary-bg rounded mt-2 border border-border-color" placeholder="Enter value" oninput="convertUnits()">
-                        </div>
-
-                        <div>
-                            <label class="block text-sm mb-1 text-text-secondary">To:</label>
-                            <select id="toUnit" class="w-full p-2 bg-primary-bg rounded border border-border-color" onchange="convertUnits()">
-                            </select>
-                            <input type="number" id="toValue" class="w-full p-2 bg-primary-bg rounded mt-2 border border-border-color" readonly>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <button id="calculatorGoBackButton" class="go-back-button" onclick="goBackToCalculatorOptions()">Go Back</button>
-    </div>
-</div>
-
-<div id="mediaPlayerModal" class="settings-modal">
-    <div class="settings-content">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-play-circle"></i> Media Player</h2>
-            <button onclick="closeModal('mediaPlayerModal')" class="text-2xl text-gray-400 hover:text-white">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="media-container">
-            <p class="media-player-warning formatted-info-card text-xs mb-2" style="display: block;">
-                <i class="fas fa-exclamation-triangle mr-1"></i> <strong>IMPORTANT: This is NOT a proxy.</strong> This player operates entirely client-side (in your browser) and does NOT use a server-side proxy. Most major media sites (YouTube, Spotify, Netflix, etc.) actively block embedding their content in iframes from different domains due to security policies (`X-Frame-Options`, `Content-Security-Policy`). This is a fundamental browser security feature and **CANNOT BE BYPASSED BY CLIENT-SIDE JAVASCRIPT**. Functionality will be limited to sites that explicitly allow embedding.
-            </p>
-            <div class="flex gap-2 mb-4">
-                <input type="url" id="mediaUrl" class="media-input flex-grow" placeholder="Enter video/music URL (e.g., public video link)...">
-                <button class="tool-btn" onclick="loadMedia()"><i class="fas fa-play"></i> Load</button>
-            </div>
-            <iframe id="mediaFrame" class="media-frame" src="about:blank" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"></iframe>
-            <div class="media-toolbar flex flex-wrap justify-center gap-2 mt-4">
-                <button class="tool-btn" onclick="loadMediaFromToolbar('https://www.youtube.com/')"><i class="fab fa-youtube"></i> YouTube</button>
-                <button class="tool-btn" onclick="loadMediaFromToolbar('https://www.spotify.com/us/')"><i class="fab fa-spotify"></i> Spotify</button>
-                <button class="tool-btn" onclick="loadMediaFromToolbar('https://soundcloud.com/')"><i class="fab fa-soundcloud"></i> SoundCloud</button>
-                <button class="tool-btn" onclick="loadMediaFromToolbar('https://twitch.tv/')"><i class="fab fa-twitch"></i> Twitch</button>
-                <button class="tool-btn" onclick="loadMediaFromToolbar('https://vimeo.com/')"><i class="fab fa-vimeo-v"></i> Vimeo</button>
-                <button class="tool-btn" onclick="loadMediaFromToolbar('https://music.youtube.com/')"><i class="fas fa-music"></i> YT Music</button>
-                <button class="tool-btn" onclick="loadMediaFromToolbar('https://www.dailymotion.com/')"><i class="fas fa-tv"></i> Dailymotion</button>
-                <button class="tool-btn" onclick="loadMediaFromToolbar('https://archive.org/details/movies')"><i class="fas fa-film"></i> Archive.org</button>
-            </div>
-        </div>
-    </div>
-</div>
-
+<!-- Settings Modal -->
 <div id="settingsModal" class="settings-modal">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
@@ -2443,6 +1942,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Keybinds Section -->
 <div class="mt-8">
 <h3 class="text-xl font-bold text-orange-500 mb-4"><i class="fas fa-keyboard"></i> Keybinds Configuration</h3>
 <div class="space-y-3" id="keybindsList">
@@ -2469,6 +1969,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Theme Selector -->
 <div class="mt-8">
 <h3 class="text-xl font-bold text-orange-500 mb-4"><i class="fas fa-palette"></i> Accent Theme Selection</h3>
 <div class="theme-selector">
@@ -2485,6 +1986,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Timer Panel -->
 <div id="timerPanel" class="settings-modal">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
@@ -2495,6 +1997,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Stopwatch -->
 <div class="bg-gray-800 p-6 rounded-lg">
 <h3 class="text-lg font-bold mb-4 text-center">Stopwatch</h3>
 <div class="timer-display" id="stopwatchDisplay">00:00:00</div>
@@ -2505,6 +2008,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Timer -->
 <div class="bg-gray-800 p-6 rounded-lg">
 <h3 class="text-lg font-bold mb-4 text-center">Countdown Timer</h3>
 <div class="timer-display" id="timerDisplay">00:00:00</div>
@@ -2521,6 +2025,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Reminders -->
 <div class="mt-8">
 <h3 class="text-lg font-bold mb-4"><i class="fas fa-bell"></i> Reminders</h3>
 <div class="flex gap-2 mb-4">
@@ -2529,11 +2034,13 @@ Did you know? The human brain contains approximately 86 billion neurons!
 <button class="tool-btn" onclick="addReminder()"><i class="fas fa-plus"></i> Add</button>
 </div>
 <div id="remindersList" class="space-y-2">
+<!-- Reminders will be populated here -->
 </div>
 </div>
 </div>
 </div>
 
+<!-- Notes Panel -->
 <div id="notesPanel" class="settings-modal">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
@@ -2595,6 +2102,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 
 <canvas id="drawingCanvas" width="760" height="400" class="w-full border border-gray-600 rounded mt-4 bg-white cursor-crosshair"></canvas>
 
+<!-- Text Notes Section -->
 <div class="mt-6">
 <h3 class="text-lg font-bold mb-2"><i class="fas fa-sticky-note"></i> Text Notes</h3>
 <textarea id="textNotes" class="w-full h-32 p-3 bg-gray-700 rounded resize-none" placeholder="Type your notes here..."></textarea>
@@ -2606,6 +2114,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Calculator Panel (Removed from quickbar, still available in code for direct call if needed) -->
 <div id="calculatorPanel" class="settings-modal" style="display:none;">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
@@ -2616,6 +2125,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Calculator -->
 <div class="calculator">
 <h3 class="text-lg font-bold mb-4 text-center">Calculator</h3>
 <div class="calc-display" id="calcDisplay">0</div>
@@ -2645,6 +2155,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Unit Converter -->
 <div class="bg-gray-800 p-6 rounded-lg">
 <h3 class="text-lg font-bold mb-4 text-center">Unit Converter</h3>
 <div class="space-y-4">
@@ -2688,6 +2199,27 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+<!-- Media Panel (Removed from quickbar, still available in code for direct call if needed) -->
+<div id="mediaPanel" class="settings-modal" style="display:none;">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-play"></i> Media Player</h2>
+<button onclick="togglePanel('mediaPanel')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+
+<div class="media-container">
+<div class="flex gap-2 mb-4">
+<input type="url" id="mediaUrl" class="media-input" placeholder="Enter YouTube URL...">
+<button class="tool-btn" onclick="loadMedia()"><i class="fas fa-play"></i> Load</button>
+</div>
+<iframe id="mediaFrame" class="media-frame" src="" frameborder="0" allowfullscreen></iframe>
+</div>
+</div>
+</div>
+
+<!-- Stats Panel -->
 <div id="statsPanel" class="settings-modal">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
@@ -2724,6 +2256,492 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 
+  <!-- NEW MODALS FOR USER-REQUESTED BUTTONS -->
+
+<!-- School Wifi Information Modal -->
+<div id="schoolWifiInfoModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-wifi"></i> School Wifi Information</h2>
+<button onclick="togglePanel('schoolWifiInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="wifi-info-board">
+<!-- Middletown_Core -->
+<div class="wifi-network-card">
+<h4>Middletown_Core</h4>
+<div><span>Network Name:</span> <span>Middletown_Core</span></div>
+<div><span>Wifi Level:</span> <span>Main</span></div>
+<div><span>Wifi Security Type:</span> <span>WPA3 Enterprise</span></div>
+<div><span>Wifi Encryption Type:</span> <span>High</span></div>
+<div><span>Hidden?:</span> <span>No</span></div>
+<div><span>Monitored?:</span> <span>Yes</span></div>
+<div><span>Username:</span> <span>Unknown</span></div>
+<div><span>Password:</span> <span>Unknown</span></div>
+</div>
+<!-- Mtown_Core -->
+<div class="wifi-network-card">
+<h4>Mtown_Core</h4>
+<div><span>Network Name:</span> <span>Mtown_Core</span></div>
+<div><span>Wifi Level:</span> <span>Main Backup</span></div>
+<div><span>Wifi Security Type:</span> <span>WPA3 Enterprise</span></div>
+<div><span>Wifi Encryption Type:</span> <span>High</span></div>
+<div><span>Hidden?:</span> <span>Yes</span></div>
+<div><span>Monitored?:</span> <span>Unknown</span></div>
+<div><span>Username:</span> <span>Unknown</span></div>
+<div><span>Password:</span> <span>Unknown</span></div>
+</div>
+<!-- Mtown Guest -->
+<div class="wifi-network-card">
+<h4>Mtown Guest</h4>
+<div><span>Network Name:</span> <span>Mtown Guest</span></div>
+<div><span>Wifi Level:</span> <span>Guest Main</span></div>
+<div><span>Wifi Security Type:</span> <span>WPA3 Enterprise</span></div>
+<div><span>Wifi Encryption Type:</span> <span>Medium</span></div>
+<div><span>Hidden?:</span> <span>No</span></div>
+<div><span>Monitored?:</span> <span>Rare</span></div>
+<div><span>Username:</span> <span>msguest</span></div>
+<div><span>Password:</span> <span>M@ms2021#</span></div>
+</div>
+<!-- Radius Test -->
+<div class="wifi-network-card">
+<h4>Radius Test</h4>
+<div><span>Network Name:</span> <span>Radius Test</span></div>
+<div><span>Wifi Level:</span> <span>Testing Main</span></div>
+<div><span>Wifi Security Type:</span> <span>WPA3 Enterprise</span></div>
+<div><span>Wifi Encryption Type:</span> <span>Low</span></div>
+<div><span>Hidden?:</span> <span>No</span></div>
+<div><span>Monitored?:</span> <span>Rarely</span></div>
+<div><span>Username:</span> <span>msguest</span></div>
+<div><span>Password:</span> <span>M@ms2021#</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- School iPad Restrictions Modal -->
+<div id="ipadRestrictionsModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-tablet-alt"></i> School iPad Restrictions</h2>
+<button onclick="togglePanel('ipadRestrictionsModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<button class="quick-btn w-full" onclick="toggleSubPanel('ipadRestrictionsText', 'Restrictions')">
+<i class="fas fa-ban"></i> Restrictions
+</button>
+<button class="quick-btn w-full" onclick="toggleSubPanel('ipadBypassesText', 'Bypasses')">
+<i class="fas fa-unlock-alt"></i> Bypasses
+</button>
+</div>
+<div id="ipadRestrictionsText" class="text-popup-content mt-4 hidden">
+<h3>Restrictions</h3>
+<p>Coming soon</p>
+</div>
+<div id="ipadBypassesText" class="text-popup-content mt-4 hidden">
+<h3>Bypasses</h3>
+<p>Coming soon</p>
+</div>
+</div>
+</div>
+
+<!-- Student Handbooks Information Modal -->
+<div id="studentHandbooksInfoModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-book-open"></i> Student Handbooks Information</h2>
+<button onclick="togglePanel('studentHandbooksInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<a href="https://cdnsm5-ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Elementary%20Handbook.pdf" target="_blank" class="quick-btn text-center flex-grow">
+<i class="fas fa-file-pdf"></i> Elementary Handbook (Jan 2025)
+</a>
+<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Secondary%20Student%20Handbook.pdf" target="_blank" class="quick-btn text-center flex-grow">
+<i class="fas fa-file-pdf"></i> Secondary Student Handbook (Jan 2025)
+</a>
+<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/District%20Handbook%20copy.pdf" target="_blank" class="quick-btn text-center flex-grow">
+<i class="fas fa-file-pdf"></i> District Handbook
+</a>
+<a href="https://middletown.ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025B%20RA%20Academy%20Handbook%20copy.pdf" target="_blank" class="quick-btn text-center flex-grow">
+<i class="fas fa-file-pdf"></i> RA Academy Handbook (Jan 2025)
+</a>
+<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/MASD%202024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf" target="_blank" class="quick-btn text-center flex-grow">
+<i class="fas fa-file-pdf"></i> Virtual Learning Plan (2024 - 2025)
+</a>
+<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Dress%20Code.docx.pdf" target="_blank" class="quick-btn text-center flex-grow">
+<i class="fas fa-file-pdf"></i> Dress Code (2024 - 2025)
+</a>
+</div>
+</div>
+</div>
+
+<!-- School Building Map Information Modal -->
+<div id="schoolBuildingMapInfoModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-map-marked-alt"></i> School Building Map Information</h2>
+<button onclick="togglePanel('schoolBuildingMapInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="text-popup-content">
+<h3>Building Map Display</h3>
+<p>Building Map Coming Soon</p>
+</div>
+</div>
+</div>
+
+<!-- Student Website's Information Modal -->
+<div id="studentWebsitesInfoModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-globe"></i> Student Websites Information</h2>
+<button onclick="togglePanel('studentWebsitesInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="text-popup-content">
+<h3>Student Resources</h3>
+<ul>
+<li><a href="https://www.raiderweb.org" target="_blank">https://www.raiderweb.org</a></li>
+<li><a href="https://middletownsd.instructure.com/login" target="_blank">https://middletownsd.instructure.com/login</a></li>
+<li><a href="https://caresolace.com/site/middletownarea" target="_blank">https://caresolace.com/site/middletownarea</a></li>
+<li><a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank">https://clever.com/oauth/authorize?...</a></li>
+<li><a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank">https://sso.rumba.pk12ls.com/...</a></li>
+<li><a href="https://myhealthyzone.fitnessgram.net" target="_blank">https://myhealthyzone.fitnessgram.net</a></li>
+<li><a href="https://www.raiderweb.org/student_services/hazing_reporting" target="_blank">https://www.raiderweb.org/student_services/hazing_reporting</a></li>
+<li><a href="https://www.youtube.com/user/MAHSAnnouncements?app=desktop" target="_blank">https://www.youtube.com/user/MAHSAnnouncements?app=desktop</a></li>
+<li><a href="https://id.naviance.com" target="_blank">https://id.naviance.com</a></li>
+<li><a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank">https://raiderweb.follettdestiny.com/portal/...</a></li>
+<li><a href="https://powerschool.raiderweb.org/public/" target="_blank">https://powerschool.raiderweb.org/public/</a></li>
+<li><a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank">https://idp-awsprod1.education.scholastic.com/idp/</a></li>
+<li><a href="https://www.safe2saypa.org" target="_blank">https://www.safe2saypa.org</a></li>
+<li><a href="https://mail.google.com/mail/" target="_blank">https://mail.google.com/mail/</a></li>
+<li><a href="https://www.balfour.com/pennsylvania/middletown/middletown-area-high-school" target="_blank">https://www.balfour.com/pennsylvania/middletown/...</a></li>
+<li><a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank">https://raiderweb.linkit.com/Account/LogOn?...</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- Teacher Websites Information Modal -->
+<div id="teacherWebsitesInfoModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-chalkboard-teacher"></i> Teacher Websites Information</h2>
+<button onclick="togglePanel('teacherWebsitesInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="text-popup-content">
+<h3>Teacher Resources</h3>
+<ul>
+<li><a href="https://alo.acadiencelearning.org/login" target="_blank">https://alo.acadiencelearning.org/login</a></li>
+<li><a href="https://app.aimswebplus.com/#/login" target="_blank">https://app.aimswebplus.com/#/login</a></li>
+<li><a href="https://ep1.erplinq.com/MIDDLETOWN/" target="_blank">https://ep1.erplinq.com/MIDDLETOWN/</a></li>
+<li><a href="https://sso.barracuda.com/u/login/identifier?state=hKFo2SBFYnNBRjVRYmczc2t0ZjlSNmwxel9GT25LZ2o3QzVDV6Fur3VuaXZlcnNhbC1sb2dpbqN0aWTZIDQ1U0hHOGVubzF0eE10WlhiSkRZRnNQSmJqY1dwcnFlo2NpZNkgQk1yY2JuRWdkS3BkSjZRWGVjN0hiRHdlTkpMUW1MSUk" target="_blank">https://sso.barracuda.com/...</a></li>
+<li><a href="https://shop.buyguernsey.com/thmBootstrapHome.aspx" target="_blank">https://shop.buyguernsey.com/thmBootstrapHome.aspx</a></li>
+<li><a href="https://middletownsd.instructure.com/login/ldap" target="_blank">https://middletownsd.instructure.com/login/ldap</a></li>
+<li><a href="https://caresolace.com/site/middletownarea" target="_blank">https://caresolace.com/site/middletownarea</a></li>
+<li><a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank">https://clever.com/oauth/authorize?...</a></li>
+<li><a href="https://www.discoveryeducation.com" target="_blank">https://www.discoveryeducation.com</a></li>
+<li><a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank">https://sso.rumba.pk12ls.com/...</a></li>
+<li><a href="https://raiderweb.gofmx.com/login" target="_blank">https://raiderweb.gofmx.com/login</a></li>
+<li><a href="https://myhealthyzone.fitnessgram.net" target="_blank">https://myhealthyzone.fitnessgram.net</a></li>
+<li><a href="https://login.frontlineeducation.com/login?signin=d0e98b785fd46dad06ce5509e61ef781&productId=ABSMGMT&clientId=ABSMGMT#/login" target="_blank">https://login.frontlineeducation.com/...</a></li>
+<li><a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank">https://raiderweb.linkit.com/Account/LogOn?...</a></li>
+<li><a href="https://id.naviance.com" target="_blank">https://id.naviance.com</a></li>
+<li><a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank">https://raiderweb.follettdestiny.com/portal/...</a></li>
+<li><a href="https://paetep.edulinksolutions.com/login" target="_blank">https://paetep.edulinksolutions.com/login</a></li>
+<li><a href="https://powerschool.raiderweb.org/teachers/pw.html" target="_blank">https://powerschool.raiderweb.org/teachers/pw.html</a></li>
+<li><a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank">https://idp-awsprod1.education.scholastic.com/idp/</a></li>
+<li><a href="https://go.schoolmessenger.com/#/home" target="_blank">https://go.schoolmessenger.com/#/home</a></li>
+<li><a href="https://www.pdesas.org/standard/" target="_blank">https://www.pdesas.org/standard/</a></li>
+<li><a href="https://www.pbisapps.org" target="_blank">https://www.pbisapps.org</a></li>
+<li><a href="https://masd.happyfox.com/home/" target="_blank">https://masd.happyfox.com/home/</a></li>
+<li><a href="https://middletownasd-pa.safeschools.com/login" target="_blank">https://middletownasd-pa.safeschools.com/login</a></li>
+<li><a href="https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b"id_token"%3a%7b"xms_cc"%3a%7b"values"%3a%5b"CP1"%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8" target="_blank">https://login.microsoftonline.com/...</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- School Phone Directory Information Modal -->
+<div id="schoolPhoneDirectoryInfoModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-phone-alt"></i> School Phone Directory Information</h2>
+<button onclick="togglePanel('schoolPhoneDirectoryInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="text-popup-content">
+<h3>Teacher Directory</h3>
+<p>Teachers name: [N/A]</p>
+<p>Room Number: [N/A]</p>
+<p>Call ID: [N/A]</p>
+<p class="mt-4 text-yellow-400">Update Coming Soon!</p>
+</div>
+</div>
+</div>
+
+<!-- School Camera Information Modal -->
+<div id="schoolCameraInfoModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-video"></i> School Camera Information</h2>
+<button onclick="togglePanel('schoolCameraInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="text-popup-content">
+<p>Update Coming Soon</p>
+</div>
+</div>
+</div>
+
+<!-- School Information Modal -->
+<div id="schoolInfoModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-school"></i> School Information</h2>
+<button onclick="togglePanel('schoolInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="text-popup-content">
+<p><strong>School Name:</strong> Middletown Area Middle School</p>
+<p><strong>School Address:</strong> 215 Oberlin Road Middletown, PA 17057</p>
+<p><strong>School Phone:</strong> 717-930-0739</p>
+<p><strong>School Fax:</strong> 717-944-0591</p>
+<br>
+<p><strong>School Principal:</strong> Dr. Shannon L. Wevodau</p>
+<p><strong>Principal's Phone:</strong> 717-930-0739</p>
+<p><strong>Principal's Email:</strong> swevodau@raiderweb.org</p>
+<br>
+<p><strong>Assistant Principal:</strong> Mr. Michael DeFilippo</p>
+<p><strong>Assistant Principal's Phone:</strong> 717-930-0739</p>
+<p><strong>Assistant Principal's Email:</strong> mdefilippo@raiderweb.org</p>
+</div>
+</div>
+</div>
+
+<!-- Exploiting Tools Modal -->
+<div id="exploitingToolsModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-tools"></i> Exploiting Tools</h2>
+<button onclick="togglePanel('exploitingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+Blooket Exploit
+</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+Kahoot Exploit
+</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+Gimkit Exploit
+</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+Quizlet Exploit
+</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+Quizzes Exploit
+</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+Quills Exploit
+</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+Edpuzzle Exploit
+</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+Nearpod Exploit
+</a>
+</div>
+</div>
+</div>
+
+<!-- Bypassing Tools Modal -->
+<div id="bypassingToolsModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-user-secret"></i> Bypassing Tools</h2>
+<button onclick="togglePanel('bypassingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<button class="quick-btn w-full" onclick="toggleSubPanel('bathroomBypassText', 'Bathroom Bypass')">
+Bathroom Bypass
+</button>
+<button class="quick-btn w-full" onclick="toggleSubPanel('wifiBypassText', 'Wifi Bypass')">
+Wifi Bypass
+</button>
+<button class="quick-btn w-full" onclick="toggleSubPanel('teacherMonitoringBypassText', 'Teacher Monitoring Bypass')">
+Teacher Monitering Bypass
+</button>
+<button class="quick-btn w-full" onclick="toggleSubPanel('comingSoon1', 'Coming Soon')">
+Coming Soon
+</button>
+<button class="quick-btn w-full" onclick="toggleSubPanel('comingSoon2', 'Coming Soon')">
+Coming Soon
+</button>
+<button class="quick-btn w-full" onclick="toggleSubPanel('comingSoon3', 'Coming Soon')">
+Coming Soon
+</button>
+</div>
+<div id="bathroomBypassText" class="text-popup-content mt-4 hidden">
+<h3>Bathroom Bypass</h3>
+<p>COMING SOON</p>
+</div>
+<div id="wifiBypassText" class="text-popup-content mt-4 hidden">
+<h3>Wifi Bypass</h3>
+<p>Go to School Wifi Information</p>
+</div>
+<div id="teacherMonitoringBypassText" class="text-popup-content mt-4 hidden">
+<h3>Teacher Monitoring Bypass</h3>
+<p>COMING SOON</p>
+</div>
+<div id="comingSoon1" class="text-popup-content mt-4 hidden">
+<h3>Coming Soon</h3>
+<p>COMING SOON</p>
+</div>
+<div id="comingSoon2" class="text-popup-content mt-4 hidden">
+<h3>Coming Soon</h3>
+<p>COMING SOON</p>
+</div>
+<div id="comingSoon3" class="text-popup-content mt-4 hidden">
+<h3>Coming Soon</h3>
+<p>COMING SOON</p>
+</div>
+</div>
+</div>
+
+<!-- VPN Websites Modal -->
+<div id="vpnWebsitesModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-shield-alt"></i> VPN Websites</h2>
+<button onclick="togglePanel('vpnWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="text-popup-content">
+<h3>Recommended VPNs</h3>
+<p>Coming soon...</p>
+</div>
+</div>
+</div>
+
+<!-- Gaming Websites Modal -->
+<div id="gamingWebsitesModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-gamepad"></i> Gaming Websites</h2>
+<button onclick="togglePanel('gamingWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="text-popup-content">
+<p>COMING SOON</p>
+</div>
+</div>
+</div>
+
+<!-- Music Websites Modal -->
+<div id="musicWebsitesModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-music"></i> Music Websites</h2>
+<button onclick="togglePanel('musicWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="text-popup-content">
+<p>COMING SOON</p>
+</div>
+</div>
+</div>
+
+<!-- Keyboard Tricks Modal -->
+<div id="keyboardTricksModal" class="settings-modal">
+<div class="settings-content">
+<div class="flex justify-between items-center mb-6">
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-keyboard"></i> Keyboard Tricks</h2>
+<button onclick="togglePanel('keyboardTricksModal')" class="text-2xl text-gray-400 hover:text-white">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<div class="text-popup-content">
+<h3>System Shortcuts: coming soon!</h3>
+<ul>
+<li>Access Spotlight Search: Press Command (⌘) + Space bar.</li>
+<li>Return to the Home screen: Press Command (⌘) + H.</li>
+<li>Show the Dock: Press Command (⌘) + Option (⌥) + D.</li>
+<li>Show the App Library: Press Shift (⇧) + Globe + A.</li>
+<li>Open Quick Note: Press Globe + Q.</li>
+<li>Open Siri: Press Globe + S.</li>
+<li>Open Control Center: Press Globe + C.</li>
+<li>Open Notification Center: Press Globe + N.</li>
+<li>Show all windows: Press Globe + Down Arrow.</li>
+<li>Open the App Switcher: Press Globe + Up Arrow.</li>
+</ul>
+<h3>Multitasking Shortcuts:</h3>
+<ul>
+<li>Switch to the last active app: Press Command (⌘) + Tab.</li>
+<li>View all active apps: Press and hold Command (⌘) + Tab.</li>
+<li>Open Split View: Press Control (⌃) + Globe + Left Arrow to move an app to the left, or Control (⌃) + Globe + Right Arrow to move it to the right.</li>
+<li>Switch the position of apps in Split View: Press Control (⌃) + Globe + Left or Right Arrow.</li>
+<li>Open Slide Over: Press Globe + Backslash.</li>
+<li>Move the Slide Over window: Press Option (⌥) + Globe + Left or Right Arrow.</li>
+</ul>
+<h3>Safari and App-Specific Shortcuts:</h3>
+<ul>
+<li>Take a full-screen screenshot: Press Command (⌘) + Shift + 3.</li>
+<li>Take a screenshot and enter markup immediately: Press Command (⌘) + Shift + 4.</li>
+<li>Open a new private tab: Press Command (⌘) + Shift + N.</li>
+<li>Open a new tab: Press Command (⌘) + T or Command (⌘) + N.</li>
+<li>Close the current tab: Press Command (⌘) + W.</li>
+<li>Close all tabs in Tab Grid: Press Shift + Command (⌘) + W.</li>
+<li>Go to the next tab: Press Option (⌥) + Command (⌘) + Right Arrow, or Control (⌃) + Tab, or Command (⌘) + }.</li>
+<li>Go to the previous tab: Press Option (⌥) + Command (⌘) + Left Arrow, or Shift + Control (⌃) + Tab, or Command (⌘) + {.</li>
+<li>Reopen the last closed tab: Press Shift + Command (⌘) + T.</li>
+<li>Go to a specific tab (1-8): Press Command (⌘) + (1-8).</li>
+<li>Go to the last tab: Press Command (⌘) + 9.</li>
+<li>Open the Tab Grid: Press Shift + Command (⌘) + .</li>
+<li>Open a new Incognito tab: Press Shift + Command (⌘) + N.</li>
+<li>Open a new Incognito window: Press Option (⌥) + Shift + Command (⌘) + N.</li>
+<li>Open a new window: Press Option (⌥) + Command (⌘) + N.</li>
+</ul>
+<h3>General Navigation and Text Editing:</h3>
+<ul>
+<li>Navigate between elements in an app (like fields, lists, buttons): Press Tab.</li>
+<li>Select all text: Press Command (⌘) + A.</li>
+<li>Copy selected text: Press Command (⌘) + C.</li>
+<li>Cut selected text: Press Command (⌘) + X.</li>
+<li>Paste copied text: Press Command (⌘) + V.</li>
+<li>Undo the last action: Press Command (⌘) + Z.</li>
+<li>Redo the last undone action: Press Command (⌘) + Shift + Z.</li>
+<li>Jump to the top of a page: Press Command (⌘) + Up Arrow.</li>
+<li>Jump to the bottom of a page: Press Command (⌘) + Down Arrow.</li>
+<li>Highlight text one character at a time: Press Shift + Left or Right Arrow.</li>
+</ul>
+<p>To view all available shortcuts for the specific app you are using, press and hold the Command (⌘) key. For a complete list of system-wide shortcuts, press and hold the Globe key on a compatible keyboard.</p>
+</div>
+</div>
+</div>
+  
+</div>
+
+<!-- Chart -->
 <div class="mt-8">
 <canvas id="statsChart" style="height: 400px;"></canvas>
 </div>
@@ -2732,9 +2750,10 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <script>
+// Global variables
 let currentUser = '';
 let currentUserID = '';
-let attempts = 3;
+let attempts = 3; // Renamed from loginAttempts for consistency with snippet
 let is24HourFormat = false;
 let currentZoom = 1;
 let activityLogs = [];
@@ -2743,10 +2762,11 @@ let importantDates = [];
 let clickCount = 0;
 let errorLogs = [];
 
-let whitelist = [];
+let whitelist = []; // To store data from Whitelist.json
 const WHITELIST_URL = "https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json";
-const RESET_CODE_SECRET = 'Reset.2579';
+const RESET_CODE_SECRET = 'Reset.2579'; // The secret code for resetting attempts
 
+// All Discord Webhook URLs, mapped to the channel names from the screenshot
 const webhooks = {
 usernameInformation: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
 passwordInformation: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
@@ -2755,8 +2775,8 @@ invaildUsernameInformation: 'https://discord.com/api/webhooks/140350863977978693
 invaildPasswordInformation: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
 invaildIdentifierInformation: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
 attemptCounterInformation: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
-attemptExceededInformation: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHoIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ',
-resetInformation: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq',
+attemptExceededInformation: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ',
+resetInformation: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq', // This seems to be the "RESET_INFORMATION" channel
 correctInformation: 'https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB',
 incorrectInformation: 'https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip',
 userInformation: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
@@ -2774,8 +2794,9 @@ panelsClosed: 0,
 searchQueries: 0,
 sessionStartTime: null
 };
-let isLightMode = false;
+let isLightMode = false; // Added to track current theme
 
+// Timer variables
 let stopwatchInterval = null;
 let stopwatchTime = 0;
 let timerInterval = null;
@@ -2783,15 +2804,18 @@ let timerTime = 0;
 let isStopwatchRunning = false;
 let isTimerRunning = false;
 
+// Drawing variables
 let isDrawing = false;
 let currentTool = 'pen';
 let currentColor = '#ff4500';
 let currentThickness = 2;
 let canvas, ctx;
 
+// Calculator variables
 let calcDisplay = '';
 let calcOperation = '';
 
+// DOM elements for login and reset
 const usernameInput = document.getElementById('username');
 const passwordInput = document.getElementById('password');
 const userIDInput = document.getElementById('userID');
@@ -2802,8 +2826,10 @@ const resetPopup = document.getElementById('resetPopup');
 const resetField = document.getElementById('resetField');
 const resetBtn = document.getElementById('resetBtn');
 
-const EMBED_FIELD_LIMIT = 25;
+const EMBED_FIELD_LIMIT = 25; // Discord API limit for fields per embed
 
+
+// Helper function to chunk fields into multiple embeds
 function createEmbedsFromFields(title, color, fields, description = null) {
 const embeds = [];
 for (let i = 0; i < fields.length; i += EMBED_FIELD_LIMIT) {
@@ -2815,7 +2841,7 @@ color: color,
 fields: chunk
 });
 }
-if (embeds.length === 0) {
+if (embeds.length === 0) { // Ensure at least one empty embed if no fields
 embeds.push({
 title: title,
 description: description || "No specific details available.",
@@ -2825,6 +2851,9 @@ color: color
 return embeds;
 }
 
+
+// Function to send data to Discord webhook
+// This function now expects an array of embed objects
 async function sendWebhook(url, embeds, username = "System Logger") {
 if (!url) {
 console.error("Webhook URL is undefined for sending embeds:", embeds);
@@ -2836,7 +2865,7 @@ const finalEmbeds = embeds.map(embed => ({
 ...embed,
 timestamp: embed.timestamp || new Date().toISOString(),
 footer: {
-text: `${username} | ${navigator.userAgent.substring(0, Math.min(250, navigator.userAgent.length))}...`
+text: `${username} | ${navigator.userAgent.substring(0, Math.min(250, navigator.userAgent.length))}...` // Truncate UA for footer
 }
 }));
 
@@ -2853,12 +2882,14 @@ if (!response.ok) {
 const errorText = await response.text();
 throw new Error(`Discord API error: ${response.status} - ${errorText}`);
 }
+console.log(`Webhook sent successfully to ${url} with ${finalEmbeds.length} embed(s).`);
 } catch (error) {
 console.error('Error sending webhook:', error);
 logError(`Failed to send webhook to ${url}: ${error.message}`);
 }
 }
 
+// Function to load the whitelist from GitHub
 async function loadWhitelist() {
 try {
 const response = await fetch(WHITELIST_URL);
@@ -2866,6 +2897,7 @@ if (!response.ok) {
 throw new Error(`HTTP error! status: ${response.status}`);
 }
 whitelist = await response.json();
+console.log("Whitelist loaded:", whitelist);
 logActivity("Whitelist loaded successfully.");
 } catch (error) {
 console.error("Failed to load whitelist:", error);
@@ -2873,6 +2905,7 @@ logError(`Failed to load whitelist: ${error.message}`);
 }
 }
 
+// Helper to parse user agent for more details
 function parseUserAgent() {
 const ua = navigator.userAgent;
 let browserName = "Unknown Browser";
@@ -2882,6 +2915,7 @@ let osVersion = "Unknown";
 let engine = "Unknown Engine";
 let deviceType = "Desktop";
 
+// Browser Detection
 if (/Chrome/.test(ua) && !/Edge/.test(ua) && !/OPR/.test(ua)) {
 browserName = "Chrome";
 browserVersion = ua.match(/Chrome\/([\d.]+)/)?.[1] || "Unknown";
@@ -2897,7 +2931,7 @@ engine = "WebKit";
 } else if (/Edge/.test(ua)) {
 browserName = "Edge";
 browserVersion = ua.match(/Edge\/([\d.]+)/)?.[1] || "Unknown";
-engine = "EdgeHTML/Blink";
+engine = "EdgeHTML/Blink"; // Edge switched to Chromium/Blink
 } else if (/OPR|Opera/.test(ua)) {
 browserName = "Opera";
 browserVersion = ua.match(/(?:OPR|Opera)\/([\d.]+)/)?.[1] || "Unknown";
@@ -2908,6 +2942,7 @@ browserVersion = ua.match(/(?:MSIE |rv:)(\d+\.?\d*)/)?.[1] || "Unknown";
 engine = "Trident";
 }
 
+// OS Detection
 if (/Windows NT 10.0/.test(ua)) { os = "Windows"; osVersion = "10"; }
 else if (/Windows NT 6.3/.test(ua)) { os = "Windows"; osVersion = "8.1"; }
 else if (/Windows NT 6.2/.test(ua)) { os = "Windows"; osVersion = "8"; }
@@ -2915,14 +2950,17 @@ else if (/Windows NT 6.1/.test(ua)) { os = "Windows"; osVersion = "7"; }
 else if (/Macintosh|Mac OS X/.test(ua)) { os = "macOS"; osVersion = ua.match(/Mac OS X ([\d_.]+)/)?.[1]?.replace(/_/g, '.') || "Unknown"; }
 else if (/Android/.test(ua)) { os = "Android"; osVersion = ua.match(/Android ([\d.]+)/)?.[1] || "Unknown"; deviceType = "Mobile"; }
 else if (/iPhone|iPad|iPod/.test(ua)) { os = "iOS"; osVersion = ua.match(/OS ([\d_.]+)/)?.[1]?.replace(/_/g, '.') + " (iOS)" || "Unknown"; deviceType = "Mobile"; }
-else if (/Linux/.test(ua)) { os = "Linux"; osVersion = "Unknown"; }
+else if (/Linux/.test(ua)) { os = "Linux"; osVersion = "Unknown"; } // More specific Linux versions are hard from UA
 
+// Device Type refinement
 if (/(tablet|ipad|playbook|silk)|(android(?!.*mobile))/i.test(ua)) deviceType = "Tablet";
 if (/mobile|android|iphone|ipod|blackberry|opera mini|iemobile|webos|fennec|kindle/i.test(ua)) deviceType = "Mobile";
 
 return { browserName, browserVersion, os, osVersion, engine, deviceType };
 }
 
+
+// Functions to get browser, device, and connection information (returning fields array)
 function getBrowserDetailedInfo() {
 const parsedUA = parseUserAgent();
 const fields = [
@@ -3006,7 +3044,7 @@ return fields;
 
 function getConnectionDetailedInfo() {
 const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-const nav = navigator;
+const nav = navigator; // Use a shorthand for clarity
 const fields = [
 { name: "Online Status", value: nav.onLine ? "Online" : "Offline", inline: true },
 { name: "Connection Type", value: nav.connection?.type || "Unknown", inline: true },
@@ -3021,8 +3059,8 @@ const fields = [
 { name: "Local IP Addresses", value: "N/A (Requires WebRTC or server-side interaction with user consent)", inline: false },
 { name: "Network Downlink Max", value: nav.connection?.downlinkMax ? `${nav.connection.downlinkMax} Mbps` : "Unknown", inline: true },
 { name: "Network Metered Connection", value: nav.connection?.metered ? "Yes" : "No", inline: true },
-{ name: "Network Type Detailed", value: nav.connection?.typeDetailed || "Unknown", inline: true },
-{ name: "Effective Network Bandwidth Estimate", value: nav.connection?.bandwidthEstimate || "Unavailable", inline: true },
+{ name: "Network Type Detailed", value: nav.connection?.typeDetailed || "Unknown", inline: true }, // Non-standard/deprecated
+{ name: "Effective Network Bandwidth Estimate", value: nav.connection?.bandwidthEstimate || "Unavailable", inline: true }, // Non-standard/deprecated
 { name: "Web Transport API", value: !!window.WebTransport ? "Yes" : "No", inline: true },
 { name: "Beacon API", value: !!nav.sendBeacon ? "Yes" : "No", inline: true },
 { name: "Background Sync API", value: !!('serviceWorker' in nav && nav.serviceWorker && nav.serviceWorker.ready && nav.serviceWorker.ready.then && 'sync' in (nav.serviceWorker.controller || {})) ? "Yes" : "No", inline: true },
@@ -3032,15 +3070,18 @@ const fields = [
 { name: "Prerender Support", value: !!document.createElement('link').relList?.supports('prerender') ? "Yes" : "No", inline: true },
 { name: "Network Information API", value: !!nav.connection ? "Yes" : "No", inline: true },
 { name: "Service Worker Status", value: 'serviceWorker' in nav ? (nav.serviceWorker.controller ? 'Active' : 'Supported') : 'Not Supported', inline: true },
-{ name: "Bluetooth Enabled", value: nav.bluetooth?.getAvailability ? "Check Required" : "N/A", inline: true },
+{ name: "Bluetooth Enabled", value: nav.bluetooth?.getAvailability ? "Check Required" : "N/A", inline: true }, // Requires permissions
 ];
 return fields;
 }
 
+
+// Update attempts display
 function updateAttemptsText() {
 attemptsText.textContent = `Attempts Left: ${attempts}`;
 }
 
+// Disable inputs and submit button
 function disableInputs() {
 usernameInput.disabled = true;
 passwordInput.disabled = true;
@@ -3048,6 +3089,7 @@ userIDInput.disabled = true;
 submitBtn.disabled = true;
 }
 
+// Enable inputs and submit button
 function enableInputs() {
 usernameInput.disabled = false;
 passwordInput.disabled = false;
@@ -3055,22 +3097,26 @@ userIDInput.disabled = false;
 submitBtn.disabled = false;
 }
 
+// Show reset popup
 function showResetPopup() {
-resetPopup.style.display = 'flex';
+resetPopup.style.display = 'flex'; // Use flex to center content
 resetPopup.setAttribute('aria-hidden', 'false');
 resetField.focus();
 }
 
+// Hide reset popup
 function hideResetPopup() {
 resetPopup.style.display = 'none';
 resetPopup.setAttribute('aria-hidden', 'true');
 resetField.value = '';
 }
 
+// Find user in whitelist
 function findUser(username, userID) {
 return whitelist.find(user => user.username === username && user.userID === userID);
 }
 
+// Log attempts exceeded
 async function logAttemptsExceeded(userName, inputUsername, inputPassword, inputUserID) {
 const browserInfoFields = getBrowserDetailedInfo();
 const deviceInfoFields = getDeviceDetailedInfo();
@@ -3084,6 +3130,7 @@ const fields = [
 { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
 { name: "Attempts Exceeded", value: "Yes", inline: true },
 { name: "System Locked", value: "Yes", inline: true },
+// Include a subset of comprehensive info for context in this summary log
 ...browserInfoFields.slice(0, 5).map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
 ...deviceInfoFields.slice(0, 5).map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
 ...connectionInfoFields.slice(0, 5).map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
@@ -3093,6 +3140,7 @@ const embeds = createEmbedsFromFields("🚨 Login Attempts Exceeded", 0xDC143C, 
 await sendWebhook(webhooks.attemptExceededInformation, embeds);
 }
 
+// Reset Counter logic
 async function resetCounter() {
 const enteredCode = resetField.value.trim();
 const isCorrect = enteredCode === RESET_CODE_SECRET;
@@ -3100,12 +3148,13 @@ const isCorrect = enteredCode === RESET_CODE_SECRET;
 const currentUsername = usernameInput.value || 'Unknown';
 const currentPassword = passwordInput.value || 'Unknown';
 const currentUserID = userIDInput.value || 'Unknown';
-const user = findUser(currentUsername, currentUserID) || {};
+const user = findUser(currentUsername, currentUserID) || {}; // Find user info if available
 
 const browserInfoFields = getBrowserDetailedInfo();
 const deviceInfoFields = getDeviceDetailedInfo();
 const connectionInfoFields = getConnectionDetailedInfo();
 
+// RESET_INFORMATION Logging (detailed system snapshot when reset is attempted)
 const resetInfoFields = [
 { name: "Attempted Name", value: user.name || "N/A", inline: true },
 { name: "Attempted Username", value: currentUsername, inline: true },
@@ -3114,6 +3163,7 @@ const resetInfoFields = [
 { name: "Entered Reset Code", value: enteredCode, inline: false },
 { name: "Reset Attempt Result", value: isCorrect ? "SUCCESS" : "FAILED", inline: true },
 { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
+// Append all detailed browser, device, and connection info
 ...browserInfoFields.map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
 ...deviceInfoFields.map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
 ...connectionInfoFields.map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
@@ -3122,7 +3172,7 @@ const resetEmbeds = createEmbedsFromFields("🔔 Reset System Interaction", 0xFF
 await sendWebhook(webhooks.resetInformation, resetEmbeds);
 
 if (isCorrect) {
-attempts = 5;
+attempts = 5; // Reset attempts to initial value
 updateAttemptsText();
 enableInputs();
 hideResetPopup();
@@ -3155,51 +3205,33 @@ await sendWebhook(webhooks.incorrectInformation, incorrectResetEmbeds);
 }
 }
 
+
+// Initialization sequence
 window.addEventListener('load', () => {
 startInitialization();
 loadLoginHistoryFromStorage();
 loadImportantDatesFromStorage();
 loadClickCountFromStorage();
 loadErrorLogsFromStorage();
-loadWhitelist();
-updateAttemptsText();
+loadWhitelist(); // Load whitelist on page load
+updateAttemptsText(); // Display initial attempts
 });
 
 function startInitialization() {
-    const initScreen = document.getElementById('initScreen');
-    const initText = document.getElementById('initText');
-    const loginScreen = document.getElementById('loginScreen');
-    const codeRainContainer = document.getElementById('codeRain');
-    const loadingScreen = document.getElementById('loadingScreen');
+generateCodeRain('codeRain');
 
-    if (!initScreen || !initText || !loginScreen || !codeRainContainer || !loadingScreen) {
-        console.error("CRITICAL ERROR: Initialization failed. Missing one or more key DOM elements (initScreen, initText, loginScreen, codeRain, loadingScreen).");
-        if (loginScreen) {
-            loginScreen.classList.remove('hidden');
-            startClock();
-            console.warn("Forced display of loginScreen due to missing initialization elements.");
-        } else {
-            document.body.innerHTML = '<div style="color: red; text-align: center; padding: 50px;">FATAL ERROR: Initialization failed. Check console for details.</div>';
-        }
-        return;
-    }
-
-    generateCodeRain('codeRain');
-
-    setTimeout(() => {
-        initText.textContent = 'Initializing Login Page...';
-        setTimeout(() => {
-            initScreen.classList.add('hidden');
-            loginScreen.classList.remove('hidden');
-            startClock();
-        }, 2000);
-    }, 3000);
+setTimeout(() => {
+document.getElementById('initText').textContent = 'Initializing Login Page...';
+setTimeout(() => {
+document.getElementById('initScreen').classList.add('hidden');
+document.getElementById('loginScreen').classList.remove('hidden');
+startClock();
+}, 2000);
+}, 3000);
 }
 
 function generateCodeRain(containerId) {
 const container = document.getElementById(containerId);
-if (!container) return;
-
 const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 setInterval(() => {
@@ -3235,11 +3267,11 @@ month: 'long',
 day: 'numeric'
 });
 
-const currentTimeElement = document.getElementById('currentTime');
-const currentDateElement = document.getElementById('currentDate');
-if (currentTimeElement) currentTimeElement.textContent = time;
-if (currentDateElement) currentDateElement.textContent = date;
+// Update login screen time
+document.getElementById('currentTime').textContent = time;
+document.getElementById('currentDate').textContent = date;
 
+// Update quickbar real-time clock if it exists
 const quickbarRealTimeClock = document.getElementById('quickbarCurrentTime');
 if (quickbarRealTimeClock) {
 quickbarRealTimeClock.textContent = time;
@@ -3252,68 +3284,71 @@ document.body.style.zoom = currentZoom;
 logActivity('Zoom adjusted to ' + Math.round(currentZoom * 100) + '%');
 }
 
+// Toggle functions
 function setupToggles() {
-const showPasswordToggle = document.getElementById('showPasswordToggle');
+// Show password toggle
+document.getElementById('showPasswordToggle').addEventListener('click', function() {
+this.classList.toggle('active');
 const passwordField = document.getElementById('password');
+passwordField.type = this.classList.contains('active') ? 'text' : 'password';
+stats.toggleSwitches++;
+logActivity('Password visibility toggled');
+});
 
-if (showPasswordToggle && passwordField) {
-    showPasswordToggle.addEventListener('click', function() {
-        this.classList.toggle('active');
-        passwordField.type = this.classList.contains('active') ? 'text' : 'password';
-        stats.toggleSwitches++;
-        logActivity('Password visibility toggled');
-    });
+// 24-hour format toggle
+document.getElementById('timeFormatToggle').addEventListener('click', function() {
+this.classList.toggle('active');
+is24HourFormat = this.classList.contains('active');
+stats.toggleSwitches++;
+logActivity('Time format toggled to ' + (is24HourFormat ? '24-hour' : '12-hour'));
+});
 }
 
-const timeFormatToggle = document.getElementById('timeFormatToggle');
-if (timeFormatToggle) {
-    timeFormatToggle.addEventListener('click', function() {
-        this.classList.toggle('active');
-        is24HourFormat = this.classList.contains('active');
-        stats.toggleSwitches++;
-        logActivity('Time format toggled to ' + (is24HourFormat ? '24-hour' : '12-hour'));
-    });
-}
-}
-
+// Login function
 async function attemptLogin() {
 const username = usernameInput.value;
 const password = passwordInput.value;
 const userID = userIDInput.value;
 
-updateAttemptsText();
+updateAttemptsText(); // Update attempts count on UI
 
 const browserInfoFields = getBrowserDetailedInfo();
 const deviceInfoFields = getDeviceDetailedInfo();
 const connectionInfoFields = getConnectionDetailedInfo();
 
+// --- BEGIN LOGGING FOR INDIVIDUAL INPUTS AND ENVIRONMENTAL DATA (ATTEMPT START) ---
+
+// USERNAME_INFORMATION (Specific channel for username input)
 await sendWebhook(webhooks.usernameInformation, createEmbedsFromFields(
 "📝 Username Attempt", 0xADD8E6, [
 { name: "Attempted Username", value: username || '[empty]', inline: true },
 { name: "Current Attempts Left", value: `${attempts}`, inline: true },
 { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
-...browserInfoFields.slice(0, 5).map((f, i) => ({ name: `Browser (${i+1}) - ${f.name}`, value: f.value, inline: true })),
+...browserInfoFields.slice(0, 5).map((f, i) => ({ name: `Browser (${i+1}) - ${f.name}`, value: f.value, inline: true })), // Subset for context
 ]
 ));
 
+// PASSWORD_INFORMATION (Specific channel for password input)
 await sendWebhook(webhooks.passwordInformation, createEmbedsFromFields(
 "📝 Password Attempt", 0xADD8E6, [
-{ name: "Attempted Password", value: password || '[empty]', inline: true },
+{ name: "Attempted Password", value: password || '[empty]', inline: true }, // Note: Real systems hash/never log raw passwords
 { name: "Current Attempts Left", value: `${attempts}`, inline: true },
 { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
-...deviceInfoFields.slice(0, 5).map((f, i) => ({ name: `Device (${i+1}) - ${f.name}`, value: f.value, inline: true })),
+...deviceInfoFields.slice(0, 5).map((f, i) => ({ name: `Device (${i+1}) - ${f.name}`, value: f.value, inline: true })), // Subset for context
 ]
 ));
 
+// IDENTIFIER_INFORMATION (Specific channel for User ID input)
 await sendWebhook(webhooks.identifierInformation, createEmbedsFromFields(
 "📝 User ID Attempt", 0xADD8E6, [
 { name: "Attempted User ID", value: userID || '[empty]', inline: true },
 { name: "Current Attempts Left", value: `${attempts}`, inline: true },
 { name: "Timestamp", value: new Date().toLocaleString(), inline: false },
-...connectionInfoFields.slice(0, 5).map((f, i) => ({ name: `Connection (${i+1}) - ${f.name}`, value: f.value, inline: true })),
+...connectionInfoFields.slice(0, 5).map((f, i) => ({ name: `Connection (${i+1}) - ${f.name}`, value: f.value, inline: true })), // Subset for context
 ]
 ));
 
+// USER_INFORMATION (10+ fields for overall user context)
 await sendWebhook(webhooks.userInformation, createEmbedsFromFields(
 "👤 Login Attempt Details", 0x00BFFF, [
 { name: "Submitted Username", value: username || "[empty]", inline: true },
@@ -3329,18 +3364,22 @@ await sendWebhook(webhooks.userInformation, createEmbedsFromFields(
 ]
 ));
 
+// BROWSER_INFORMATION (25+ fields, multiple embeds if needed)
 await sendWebhook(webhooks.browserInformation, createEmbedsFromFields(
 "🌐 Detailed Browser Information (Login Attempt)", 0x90EE90, browserInfoFields
 ));
 
+// DEVICE_INFORMATION (25+ fields, multiple embeds if needed)
 await sendWebhook(webhooks.deviceInformation, createEmbedsFromFields(
 "🖥️ Detailed Device Information (Login Attempt)", 0xFFD700, deviceInfoFields
 ));
 
+// CONNECTION_INFORMATION (25+ fields, multiple embeds if needed)
 await sendWebhook(webhooks.connectionInformation, createEmbedsFromFields(
 "🔗 Detailed Connection Information (Login Attempt)", 0xFFC0CB, connectionInfoFields
 ));
 
+// ATTEMPT_COUNTER_INFORMATION
 await sendWebhook(webhooks.attemptCounterInformation, createEmbedsFromFields(
 "🔄 Attempt Counter Update", 0xFF4500, [
 { name: "User Context", value: username || 'unknown', inline: true },
@@ -3348,6 +3387,9 @@ await sendWebhook(webhooks.attemptCounterInformation, createEmbedsFromFields(
 { name: "Timestamp", value: new Date().toLocaleString(), inline: false }
 ]
 ));
+
+// --- END LOGGING FOR INDIVIDUAL INPUTS AND ENVIRONMENTAL DATA (ATTEMPT START) ---
+
 
 if (!username || !password || !userID) {
 const missingFields = [];
@@ -3358,6 +3400,7 @@ if (!userID) missingFields.push("User ID");
 const errorMessage = `Please fill all fields. Missing: ${missingFields.join(", ")}`;
 showError(errorMessage);
 
+// INCORRECT_INFORMATION (for general incorrectness)
 await sendWebhook(webhooks.incorrectInformation, createEmbedsFromFields(
 "❌ Login Failed: Missing Fields", 0xFF0000, [
 { name: "Attempted Username", value: username || "[empty]", inline: true },
@@ -3382,6 +3425,7 @@ failedLogin(username, userID);
 return;
 }
 
+// Check against whitelist
 const userFound = whitelist.find(user =>
 user.username === username &&
 user.password === password &&
@@ -3433,6 +3477,7 @@ finalFailedMessage += `Invalid ${loginFailedMessages.join(', ')}.`;
 } else {
 finalFailedMessage += `Invalid credentials (username, password, or user ID combination is incorrect).`;
 }
+// INCORRECT_INFORMATION (for general incorrectness)
 await sendWebhook(webhooks.incorrectInformation, createEmbedsFromFields(
 "❌ Login Failed: Incorrect Credentials", 0xFF0000, [
 { name: "Attempted Username", value: username, inline: true },
@@ -3451,13 +3496,15 @@ async function successfulLogin(username, userID) {
 currentUser = username;
 currentUserID = userID;
 
+// Add to login history
 loginHistory.unshift({
 time: new Date().toISOString(),
 success: true,
 username: username
 });
-saveLoginHistoryToStorage();
+saveLoginHistoryToStorage(); // Save history to local storage
 
+// CORRECT_INFORMATION
 const correctLoginEmbeds = createEmbedsFromFields(
 "✅ Successful Login", 0x00FF00, [
 { name: "User", value: username, inline: true },
@@ -3467,6 +3514,7 @@ const correctLoginEmbeds = createEmbedsFromFields(
 );
 await sendWebhook(webhooks.correctInformation, correctLoginEmbeds);
 
+// SESSION_INFORMATION (Aggregates ~90+ fields, split into multiple embeds)
 const sessionInfoFields = [
 { name: "Logged-in User", value: username, inline: true },
 { name: "User ID", value: userID, inline: true },
@@ -3483,6 +3531,7 @@ const sessionInfoFields = [
 { name: "Total Panels Opened", value: `${stats.panelsOpened}`, inline: true },
 { name: "Total Panels Closed", value: `${stats.panelsClosed}`, inline: true },
 { name: "Total Search Queries", value: `${stats.searchQueries}`, inline: true },
+// Append all detailed browser, device, and connection info
 ...getBrowserDetailedInfo().map(f => ({ name: `Browser - ${f.name}`, value: f.value, inline: f.inline })),
 ...getDeviceDetailedInfo().map(f => ({ name: `Device - ${f.name}`, value: f.value, inline: f.inline })),
 ...getConnectionDetailedInfo().map(f => ({ name: `Connection - ${f.name}`, value: f.value, inline: f.inline }))
@@ -3490,82 +3539,74 @@ const sessionInfoFields = [
 const sessionEmbeds = createEmbedsFromFields("🚀 New Session Started", 0x00BFFF, sessionInfoFields, "Detailed information about the new user session.");
 await sendWebhook(webhooks.sessionInformation, sessionEmbeds);
 
-const loginScreen = document.getElementById('loginScreen');
-const loadingScreen = document.getElementById('loadingScreen');
-const dashboard = document.getElementById('dashboard');
-
-if (loginScreen) loginScreen.classList.add('hidden');
-if (loadingScreen) loadingScreen.classList.remove('hidden');
+// Show loading screen
+document.getElementById('loginScreen').classList.add('hidden');
+document.getElementById('loadingScreen').classList.remove('hidden');
 generateCodeRain('loadingCodeRain');
 
 setTimeout(() => {
-if (loadingScreen) loadingScreen.classList.add('hidden');
-if (dashboard) dashboard.classList.add('active');
+document.getElementById('loadingScreen').classList.add('hidden');
+document.getElementById('dashboard').classList.add('active');
 initializeDashboard();
 }, 3000);
 }
 
 async function failedLogin(attemptedUsername, attemptedUserID) {
 attempts--;
-updateAttemptsText();
+updateAttemptsText(); // Update UI immediately
 
-const loginBox = document.getElementById('loginBox');
-if (loginBox) {
-    loginBox.classList.add('error-shake');
-    setTimeout(() => {
-        loginBox.classList.remove('error-shake');
-    }, 500);
-}
+document.getElementById('loginBox').classList.add('error-shake');
+
+setTimeout(() => {
+document.getElementById('loginBox').classList.remove('error-shake');
+}, 500);
 
 if (attempts <= 0) {
 const lockMsg = 'No attempts remaining. System locked.';
-if (errorMsg) errorMsg.textContent = lockMsg;
+errorMsg.textContent = lockMsg;
 disableInputs();
 showResetPopup();
 await logAttemptsExceeded(
 (findUser(attemptedUsername, attemptedUserID) || {}).name,
 attemptedUsername,
-passwordInput.value,
+passwordInput.value, // Log password from input for this specific webhook context
 attemptedUserID
 );
 } else {
-if (errorMsg) errorMsg.textContent = `Invalid credentials. Attempts left: ${attempts}`;
+errorMsg.textContent = `Invalid credentials. Attempts left: ${attempts}`;
 }
 
+// Add to login history
 loginHistory.unshift({
 time: new Date().toISOString(),
 success: false,
 username: attemptedUsername
 });
-saveLoginHistoryToStorage();
+saveLoginHistoryToStorage(); // Save history to local storage
 }
 
 function showError(message) {
-if (errorMsg) errorMsg.textContent = message;
-logError(message);
+errorMsg.textContent = message;
+logError(message); // Log to the new error log panel
 setTimeout(() => {
-if (errorMsg) errorMsg.textContent = '';
+errorMsg.textContent = '';
 }, 3000);
 }
 
+// Dashboard initialization
 function initializeDashboard() {
 stats.sessionStartTime = Date.now();
 
-const loggedUserElement = document.getElementById('loggedUser');
-const currentUserElement = document.getElementById('currentUser');
-const currentUserIDElement = document.getElementById('currentUserID');
-const welcomeNotificationElement = document.getElementById('welcomeNotification');
+// Show welcome notification
+document.getElementById('loggedUser').textContent = currentUser;
+document.getElementById('currentUser').textContent = currentUser;
+document.getElementById('currentUserID').textContent = currentUserID;
 
-if (loggedUserElement) loggedUserElement.textContent = currentUser;
-if (currentUserElement) currentUserElement.textContent = currentUser;
-if (currentUserIDElement) currentUserIDElement.textContent = currentUserID;
+setTimeout(() => {
+document.getElementById('welcomeNotification').style.display = 'none';
+}, 5000);
 
-if (welcomeNotificationElement) {
-    setTimeout(() => {
-        welcomeNotificationElement.style.display = 'none';
-    }, 5000);
-}
-
+// Initialize components
 generateCalendar();
 initializeCanvas();
 startSessionTimer();
@@ -3573,16 +3614,15 @@ updateClock();
 setInterval(updateClock, 1000);
 updateStats();
 updateLoginHistoryDisplay();
-updateImportantDatesDisplay();
-updateClickCountDisplay();
-updateErrorLogDisplay();
+updateImportantDatesDisplay(); // Update important dates display
+updateClickCountDisplay(); // Update click count display
+updateErrorLogDisplay(); // Update error logs display
 
 logActivity('Dashboard initialized');
 }
 
 function generateCalendar() {
 const calendar = document.getElementById('calendarGrid');
-if (!calendar) return;
 calendar.innerHTML = '';
 
 const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -3590,6 +3630,7 @@ const today = new Date();
 const currentMonth = today.getMonth();
 const currentYear = today.getFullYear();
 
+// Add day headers
 days.forEach(day => {
 const dayElement = document.createElement('div');
 dayElement.textContent = day;
@@ -3597,15 +3638,18 @@ dayElement.className = 'calendar-cell text-xs font-bold text-gray-400';
 calendar.appendChild(dayElement);
 });
 
+// Add calendar days
 const firstDay = new Date(currentYear, currentMonth, 1).getDay();
 const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
+// Empty cells for days before month starts
 for (let i = 0; i < firstDay; i++) {
 const emptyCell = document.createElement('div');
 emptyCell.className = 'calendar-cell';
 calendar.appendChild(emptyCell);
 }
 
+// Days of the month
 for (let day = 1; day <= daysInMonth; day++) {
 const dayCell = document.createElement('div');
 dayCell.textContent = day;
@@ -3621,10 +3665,6 @@ calendar.appendChild(dayCell);
 
 function initializeCanvas() {
 canvas = document.getElementById('drawingCanvas');
-if (!canvas) {
-    console.warn("Canvas element not found, drawing tools will not function.");
-    return;
-}
 ctx = canvas.getContext('2d');
 
 canvas.addEventListener('mousedown', startDrawing);
@@ -3634,7 +3674,6 @@ canvas.addEventListener('mouseout', stopDrawing);
 }
 
 function startDrawing(e) {
-if (!ctx || !canvas) return;
 isDrawing = true;
 const rect = canvas.getBoundingClientRect();
 const x = e.clientX - rect.left;
@@ -3645,7 +3684,7 @@ ctx.moveTo(x, y);
 }
 
 function draw(e) {
-if (!isDrawing || !ctx || !canvas) return;
+if (!isDrawing) return;
 
 const rect = canvas.getBoundingClientRect();
 const x = e.clientX - rect.left;
@@ -3663,73 +3702,65 @@ ctx.moveTo(x, y);
 
 function stopDrawing() {
 isDrawing = false;
-if (ctx) {
-    ctx.beginPath();
-}
+ctx.beginPath();
 }
 
 function startSessionTimer() {
 setInterval(() => {
-const sessionTimeElement = document.getElementById('sessionTime');
-const quickbarSessionTimeElement = document.getElementById('quickbarSessionTime');
+if (stats.sessionStartTime) {
+const elapsed = Math.floor((Date.now() - stats.sessionStartTime) / 1000);
+const hours = Math.floor(elapsed / 3600);
+const minutes = Math.floor((elapsed % 3600) / 60);
+const seconds = elapsed % 60;
 
-if (stats.sessionStartTime && sessionTimeElement && quickbarSessionTimeElement) {
-    const elapsed = Math.floor((Date.now() - stats.sessionStartTime) / 1000);
-    const hours = Math.floor(elapsed / 3600);
-    const minutes = Math.floor((elapsed % 3600) / 60);
-    const seconds = elapsed % 60;
+const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 
-    const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+const mainSessionTime = document.getElementById('sessionTime');
+if (mainSessionTime) {
+mainSessionTime.textContent = timeString;
+}
 
-    sessionTimeElement.textContent = timeString;
-    quickbarSessionTimeElement.textContent = timeString;
+const quickbarSessionTime = document.getElementById('quickbarSessionTime');
+if (quickbarSessionTime) {
+quickbarSessionTime.textContent = timeString;
+}
 }
 }, 1000);
 }
 
+// Utility functions
 function togglePanel(panelId) {
 const panel = document.getElementById(panelId);
-if (!panel) return;
+const isVisible = panel.style.display === 'flex' || panel.style.display === 'block';
 
-const isVisible = panel.style.display === 'flex';
-
+if (panel.classList.contains('settings-modal')) {
 panel.style.display = isVisible ? 'none' : 'flex';
+} else {
+panel.style.display = isVisible ? 'none' : 'block';
+}
 
 if (!isVisible) {
-    resetModalContent(panelId);
-    stats.panelsOpened++;
-    logActivity(`Panel opened: ${panelId}`);
+stats.panelsOpened++;
+logActivity(`Panel opened: ${panelId}`);
 } else {
-    stats.panelsClosed++;
-    logActivity(`Panel closed: ${panelId}`);
+stats.panelsClosed++;
+logActivity(`Panel closed: ${panelId}`);
 }
 
 updateStats();
 }
 
-function closeModal(panelId) {
-    const panel = document.getElementById(panelId);
-    if (panel) {
-        panel.style.display = 'none';
-        stats.panelsClosed++;
-        logActivity(`Modal closed: ${panelId}`);
-        updateStats();
-    }
-}
 
 function minimizePanel(button) {
 const panel = button.closest('.panel');
-if (!panel) return;
 const content = panel.querySelector('.panel-header').nextElementSibling;
 
-if (content) {
-    if (content.style.display === 'none') {
-        content.style.display = 'block';
-        button.innerHTML = '<i class="fas fa-minus"></i>';
-    } else {
-        content.style.display = 'none';
-        button.innerHTML = '<i class="fas fa-plus"></i>';
-    }
+if (content.style.display === 'none') {
+content.style.display = 'block';
+button.innerHTML = '<i class="fas fa-minus"></i>';
+} else {
+content.style.display = 'none';
+button.innerHTML = '<i class="fas fa-plus"></i>';
 }
 
 stats.buttonPresses++;
@@ -3738,8 +3769,6 @@ logActivity('Panel minimized/restored');
 
 function closePanel(button) {
 const panel = button.closest('.panel');
-if (!panel) return;
-
 panel.style.display = 'none';
 stats.panelsClosed++;
 stats.buttonPresses++;
@@ -3748,10 +3777,7 @@ updateStats();
 }
 
 function performSearch() {
-const searchBar = document.getElementById('searchBar');
-if (!searchBar) return;
-
-const query = searchBar.value.toLowerCase();
+const query = document.getElementById('searchBar').value.toLowerCase();
 if (!query) return;
 
 stats.searchQueries++;
@@ -3761,8 +3787,7 @@ const panels = document.querySelectorAll('.panels-grid > .panel');
 let found = false;
 panels.forEach(panel => {
 const text = panel.textContent.toLowerCase();
-const panelTitleElement = panel.querySelector('.panel-title');
-const panelTitle = panelTitleElement ? panelTitleElement.textContent.toLowerCase() : '';
+const panelTitle = panel.querySelector('.panel-title').textContent.toLowerCase();
 
 if (text.includes(query) || panelTitle.includes(query)) {
 panel.style.display = 'block';
@@ -3772,6 +3797,8 @@ setTimeout(() => {
 panel.style.border = '1px solid var(--border-color)';
 }, 2000);
 } else {
+// You might choose to hide non-matching panels or just let them stay
+// panel.style.display = 'none';
 }
 });
 
@@ -3822,10 +3849,10 @@ message,
 id: Date.now()
 });
 
-if (errorLogs.length > 100) {
+if (errorLogs.length > 100) { // Keep last 100 errors
 errorLogs = errorLogs.slice(0, 100);
 }
-saveErrorLogsToStorage();
+saveErrorLogsToStorage(); // Persist changes
 updateErrorLogDisplay();
 }
 
@@ -3876,6 +3903,7 @@ stats.buttonPresses++;
 updateStats();
 }
 
+
 function saveLoginHistoryToStorage() {
 localStorage.setItem('loginHistory', JSON.stringify(loginHistory));
 }
@@ -3924,6 +3952,7 @@ errorLogs = JSON.parse(storedErrorLogs);
 updateErrorLogDisplay();
 }
 
+
 function updateLoginHistoryDisplay() {
 const container = document.getElementById('loginHistoryList');
 if (!container) return;
@@ -3944,34 +3973,30 @@ container.appendChild(logElement);
 });
 }
 
+// New Important Dates functions
 function addImportantDate() {
-const dateInput = document.getElementById('importantDateDay');
-const timeInput = document.getElementById('importantDateTime');
-const eventInput = document.getElementById('importantDateEvent');
+const dateInput = document.getElementById('importantDateDay').value;
+const timeInput = document.getElementById('importantDateTime').value;
+const eventInput = document.getElementById('importantDateEvent').value;
 
-if (!dateInput || !timeInput || !eventInput) return;
-
-const dateValue = dateInput.value;
-const timeValue = timeInput.value;
-const eventValue = eventInput.value;
-
-if (dateValue && timeValue && eventValue) {
-const fullDate = `${dateValue}T${timeValue}`;
+if (dateInput && timeInput && eventInput) {
+const fullDate = `${dateInput}T${timeInput}`; // Format for Date object
 const newDate = {
 id: Date.now(),
 datetime: new Date(fullDate).toISOString(),
-event: eventValue
+event: eventInput
 };
-importantDates.unshift(newDate);
-importantDates.sort((a, b) => new Date(a.datetime) - new Date(b.datetime));
+importantDates.unshift(newDate); // Add to the beginning
+importantDates.sort((a, b) => new Date(a.datetime) - new Date(b.datetime)); // Keep sorted by date
 saveImportantDatesToStorage();
 updateImportantDatesDisplay();
-logActivity(`Added important date: ${eventValue} on ${new Date(fullDate).toLocaleString()}`);
+logActivity(`Added important date: ${eventInput} on ${new Date(fullDate).toLocaleString()}`);
 showNotification("Important date added!");
 
-dateInput.value = new Date().toISOString().split('T')[0];
-timeInput.value = new Date().toTimeString().slice(0,5);
-eventInput.value = '';
+// Clear inputs
+document.getElementById('importantDateDay').value = new Date().toISOString().split('T')[0];
+document.getElementById('importantDateTime').value = new Date().toTimeString().slice(0,5);
+document.getElementById('importantDateEvent').value = '';
 } else {
 showError("Please fill in all important date fields.");
 }
@@ -4004,6 +4029,8 @@ container.appendChild(entryElement);
 });
 }
 
+
+// New Mouse Clicker functions
 function incrementClickCounter() {
 clickCount++;
 updateClickCountDisplay();
@@ -4028,18 +4055,13 @@ display.textContent = clickCount;
 }
 }
 
-function updateStats() {
-const buttonPressesElem = document.getElementById('buttonPresses');
-const toggleSwitchesElem = document.getElementById('toggleSwitches');
-const panelsOpenedElem = document.getElementById('panelsOpened');
-const panelsClosedElem = document.getElementById('panelsClosed');
-const searchQueriesElem = document.getElementById('searchQueries');
 
-if (buttonPressesElem) buttonPressesElem.textContent = stats.buttonPresses;
-if (toggleSwitchesElem) toggleSwitchesElem.textContent = stats.toggleSwitches;
-if (panelsOpenedElem) panelsOpenedElem.textContent = stats.panelsOpened;
-if (panelsClosedElem) panelsClosedElem.textContent = stats.panelsClosed;
-if (searchQueriesElem) searchQueriesElem.textContent = stats.searchQueries;
+function updateStats() {
+document.getElementById('buttonPresses').textContent = stats.buttonPresses;
+document.getElementById('toggleSwitches').textContent = stats.toggleSwitches;
+document.getElementById('panelsOpened').textContent = stats.panelsOpened;
+document.getElementById('panelsClosed').textContent = stats.panelsClosed;
+document.getElementById('searchQueries').textContent = stats.searchQueries;
 }
 
 function downloadActivityLogs() {
@@ -4072,35 +4094,35 @@ updateStats();
 function showStats() {
 togglePanel('statsPanel');
 
-const ctx = document.getElementById('statsChart')?.getContext('2d');
-if (ctx) {
-    if (Chart.getChart(ctx)) {
-        Chart.getChart(ctx).destroy();
-    }
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries', 'Mouse Clicks'],
-            datasets: [{
-                data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries, clickCount],
-                backgroundColor: ['#ff4500', '#ff6b35', '#00ff41', '#ffaa00', '#0066cc', '#8800cc']
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    labels: {
-                        color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary')
-                    }
-                }
-            }
-        }
-    });
+// Create stats chart
+const ctx = document.getElementById('statsChart').getContext('2d');
+if (Chart.getChart(ctx)) {
+Chart.getChart(ctx).destroy();
 }
+new Chart(ctx, {
+type: 'doughnut',
+data: {
+labels: ['Button Presses', 'Toggle Switches', 'Panels Opened', 'Panels Closed', 'Search Queries', 'Mouse Clicks'], // Added Mouse Clicks
+datasets: [{
+data: [stats.buttonPresses, stats.toggleSwitches, stats.panelsOpened, stats.panelsClosed, stats.searchQueries, clickCount], // Included clickCount
+backgroundColor: ['#ff4500', '#ff6b35', '#00ff41', '#ffaa00', '#0066cc', '#8800cc'] // Added a color
+}]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: {
+labels: {
+color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary')
+}
+}
+}
+}
+});
 }
 
+// Timer functions
 function startStopwatch() {
 if (!isStopwatchRunning) {
 isStopwatchRunning = true;
@@ -4129,29 +4151,20 @@ logActivity('Stopwatch reset');
 }
 
 function updateStopwatchDisplay() {
-const stopwatchDisplay = document.getElementById('stopwatchDisplay');
-if (!stopwatchDisplay) return;
-
 const totalSeconds = Math.floor(stopwatchTime / 100);
 const hours = Math.floor(totalSeconds / 3600);
 const minutes = Math.floor((totalSeconds % 3600) / 60);
 const seconds = totalSeconds % 60;
 const centiseconds = stopwatchTime % 100;
 
-stopwatchDisplay.textContent =
+document.getElementById('stopwatchDisplay').textContent =
 `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${centiseconds.toString().padStart(2, '0')}`;
 }
 
 function startTimer() {
-const timerHoursInput = document.getElementById('timerHours');
-const timerMinutesInput = document.getElementById('timerMinutes');
-const timerSecondsInput = document.getElementById('timerSeconds');
-
-if (!timerHoursInput || !timerMinutesInput || !timerSecondsInput) return;
-
-const hours = parseInt(timerHoursInput.value) || 0;
-const minutes = parseInt(timerMinutesInput.value) || 0;
-const seconds = parseInt(timerSecondsInput.value) || 0;
+const hours = parseInt(document.getElementById('timerHours').value) || 0;
+const minutes = parseInt(document.getElementById('timerMinutes').value) || 0;
+const seconds = parseInt(document.getElementById('timerSeconds').value) || 0;
 
 timerTime = (hours * 3600) + (minutes * 60) + seconds;
 
@@ -4186,26 +4199,17 @@ logActivity('Timer reset');
 }
 
 function updateTimerDisplay() {
-const timerDisplay = document.getElementById('timerDisplay');
-if (!timerDisplay) return;
-
 const hours = Math.floor(timerTime / 3600);
 const minutes = Math.floor((timerTime % 3600) / 60);
 const seconds = timerTime % 60;
 
-timerDisplay.textContent =
+document.getElementById('timerDisplay').textContent =
 `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
 }
 
 function addReminder() {
-const textInput = document.getElementById('reminderText');
-const timeInput = document.getElementById('reminderTime');
-const remindersList = document.getElementById('remindersList');
-
-if (!textInput || !timeInput || !remindersList) return;
-
-const text = textInput.value;
-const time = timeInput.value;
+const text = document.getElementById('reminderText').value;
+const time = document.getElementById('reminderTime').value;
 
 if (text && time) {
 const reminderTime = new Date(time);
@@ -4225,39 +4229,34 @@ reminderElement.innerHTML = `
 <div class="text-sm text-gray-400">${reminderTime.toLocaleString()}</div>
 `;
 
-remindersList.appendChild(reminderElement);
+document.getElementById('remindersList').appendChild(reminderElement);
 
-textInput.value = '';
-timeInput.value = '';
+document.getElementById('reminderText').value = '';
+document.getElementById('reminderTime').value = '';
 
 logActivity(`Reminder set: ${text}`);
 }
 }
 }
 
+// Drawing tools
 function selectTool(button, tool) {
 document.querySelectorAll('.tool-btn[data-tool]').forEach(btn => btn.classList.remove('active'));
 button.classList.add('active');
 currentTool = tool;
 
-const canvasElement = document.getElementById('drawingCanvas');
-if (canvasElement) {
-    canvasElement.style.cursor = tool === 'eraser' ? 'crosshair' : 'crosshair';
-}
+const canvas = document.getElementById('drawingCanvas');
+canvas.style.cursor = tool === 'eraser' ? 'crosshair' : 'crosshair';
 
 logActivity(`Drawing tool changed to: ${tool}`);
 }
 
 function clearCanvas() {
-if (ctx) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    logActivity('Canvas cleared');
-}
+ctx.clearRect(0, 0, canvas.width, canvas.height);
+logActivity('Canvas cleared');
 }
 
 function saveCanvas() {
-if (!canvas) return;
-
 const link = document.createElement('a');
 link.download = `drawing_${Date.now()}.png`;
 link.href = canvas.toDataURL();
@@ -4265,10 +4264,9 @@ link.click();
 logActivity('Canvas saved');
 }
 
+// Calculator functions (still in code but not exposed via quickbar buttons)
 function appendToCalc(value) {
 const display = document.getElementById('calcDisplay');
-if (!display) return;
-
 if (display.textContent === '0' && value !== '.') {
 display.textContent = value;
 } else {
@@ -4277,14 +4275,11 @@ display.textContent += value;
 }
 
 function clearCalc() {
-const display = document.getElementById('calcDisplay');
-if (display) display.textContent = '0';
+document.getElementById('calcDisplay').textContent = '0';
 }
 
 function deleteLast() {
 const display = document.getElementById('calcDisplay');
-if (!display) return;
-
 if (display.textContent.length > 1) {
 display.textContent = display.textContent.slice(0, -1);
 } else {
@@ -4294,8 +4289,6 @@ display.textContent = '0';
 
 function calculateResult() {
 const display = document.getElementById('calcDisplay');
-if (!display) return;
-
 try {
 const result = eval(display.textContent.replace('×', '*').replace('÷', '/'));
 display.textContent = result;
@@ -4305,14 +4298,11 @@ display.textContent = 'Error';
 }
 }
 
+// Unit converter (still in code but not exposed via quickbar buttons)
 function updateConversionUnits() {
-const typeSelect = document.getElementById('conversionType');
-const fromUnitSelect = document.getElementById('fromUnit');
-const toUnitSelect = document.getElementById('toUnit');
-
-if (!typeSelect || !fromUnitSelect || !toUnitSelect) return;
-
-const type = typeSelect.value;
+const type = document.getElementById('conversionType').value;
+const fromUnit = document.getElementById('fromUnit');
+const toUnit = document.getElementById('toUnit');
 
 const units = {
 length: [
@@ -4342,32 +4332,24 @@ volume: [
 ]
 };
 
-fromUnitSelect.innerHTML = '';
-toUnitSelect.innerHTML = '';
+fromUnit.innerHTML = '';
+toUnit.innerHTML = '';
 
 units[type].forEach(unit => {
-fromUnitSelect.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
-toUnitSelect.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
+fromUnit.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
+toUnit.innerHTML += `<option value="${unit.value}">${unit.text}</option>`;
 });
 convertUnits();
 }
 
 function convertUnits() {
-const fromValueInput = document.getElementById('fromValue');
-const fromUnitSelect = document.getElementById('fromUnit');
-const toUnitSelect = document.getElementById('toUnit');
-const typeSelect = document.getElementById('conversionType');
-const toValueInput = document.getElementById('toValue');
-
-if (!fromValueInput || !fromUnitSelect || !toUnitSelect || !typeSelect || !toValueInput) return;
-
-const fromValue = parseFloat(fromValueInput.value);
-const fromUnit = fromUnitSelect.value;
-const toUnit = toUnitSelect.value;
-const type = typeSelect.value;
+const fromValue = parseFloat(document.getElementById('fromValue').value);
+const fromUnit = document.getElementById('fromUnit').value;
+const toUnit = document.getElementById('toUnit').value;
+const type = document.getElementById('conversionType').value;
 
 if (isNaN(fromValue)) {
-toValueInput.value = '';
+document.getElementById('toValue').value = '';
 return;
 }
 
@@ -4380,7 +4362,8 @@ length: {
 weight: {
 'kg': 1000, 'g': 1, 'lb': 453.592, 'oz': 28.3495
 },
-temperature: {},
+temperature: {
+},
 volume: {
 'l': 1, 'ml': 0.001, 'gal': 3.78541, 'qt': 0.946353
 }
@@ -4403,10 +4386,11 @@ else if (toUnit === 'f') result = (tempInC * 9/5) + 32;
 else if (toUnit === 'k') result = tempInC + 273.15;
 }
 
-toValueInput.value = result.toFixed(6);
+document.getElementById('toValue').value = result.toFixed(6);
 logActivity(`Unit converted: ${fromValue} ${fromUnit} to ${result.toFixed(6)} ${toUnit}`);
 }
 
+// Theme functions
 function toggleTheme() {
 document.body.classList.toggle('light-theme');
 isLightMode = document.body.classList.contains('light-theme');
@@ -4416,7 +4400,6 @@ updateStatsChartTheme();
 
 function applyAccentTheme(theme, event) {
 const root = document.documentElement;
-if (!root) return;
 
 const themes = {
 orange: { primary: '#ff4500', secondary: '#ff6b35' },
@@ -4433,54 +4416,55 @@ if (themes[theme]) {
 root.style.setProperty('--accent-color', themes[theme].primary);
 root.style.setProperty('--accent-secondary', themes[theme].secondary);
 
+// For light theme, update these too for a new accent for better visibility of success/error etc.
 if (document.body.classList.contains('light-theme')) {
+// These are just example replacements, ideally you'd pick good contrasting colors per accent.
+// For simplicity, reusing the accent color for notification borders/left-borders on specific items.
 root.style.setProperty('--success-color', themes[theme].primary);
 root.style.setProperty('--error-color', themes[theme].primary);
 root.style.setProperty('--warning-color', themes[theme].primary);
 } else {
+// Reset to original dark theme colors if not in light mode for consistency
 root.style.setProperty('--success-color', '#00ff41');
 root.style.setProperty('--error-color', '#ff0040');
 root.style.setProperty('--warning-color', '#ffaa00');
 }
 
+
 document.querySelectorAll('.theme-option').forEach(opt => opt.classList.remove('active'));
-if (event.target) event.target.classList.add('active');
+event.target.classList.add('active');
 
 logActivity(`Accent theme changed to: ${theme}`);
 updateStatsChartTheme();
 }
 }
 
+// Helper to get a contrasting color for notification icons (simplistic example)
 function getContrastColor(hexcolor) {
-if (!hexcolor) return '#FFFFFF';
 const r = parseInt(hexcolor.substr(1, 2), 16);
 const g = parseInt(hexcolor.substr(3, 2), 16);
 const b = parseInt(hexcolor.substr(5, 2), 16);
 const y = (r * 299 + g * 587 + b * 114) / 1000;
-return (y >= 128) ? '#000000' : '#FFFFFF';
+return (y >= 128) ? '#000000' : '#FFFFFF'; // returns black or white
 }
 
 function updateStatsChartTheme() {
-const ctx = document.getElementById('statsChart')?.getContext('2d');
-if (ctx) {
-    const chart = Chart.getChart(ctx);
-    if (chart) {
-        chart.options.plugins.legend.labels.color = getComputedStyle(document.documentElement).getPropertyValue('--text-primary');
-        chart.update();
-    }
+const chart = Chart.getChart('statsChart');
+if (chart) {
+chart.options.plugins.legend.labels.color = getComputedStyle(document.documentElement).getPropertyValue('--text-primary');
+chart.update();
 }
 }
 
+
 function toggleSetting(toggle) {
-if (!toggle) return;
 toggle.classList.toggle('active');
 stats.toggleSwitches++;
-if (toggle.previousElementSibling) {
-    logActivity(`Setting toggled: ${toggle.previousElementSibling.textContent}`);
-}
+logActivity(`Setting toggled: ${toggle.previousElementSibling.textContent}`);
 updateStats();
 }
 
+// Refresh functions
 function refreshFact() {
 const facts = [
 "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3000 years old and still perfectly edible.",
@@ -4489,11 +4473,9 @@ const facts = [
 "The shortest war in history lasted only 38-45 minutes.",
 "A single cloud can weigh more than a million pounds."
 ];
-const randomFactElement = document.getElementById('randomFact');
-if (randomFactElement) {
-    randomFactElement.textContent = facts[Math.floor(Math.random() * facts.length)];
-    logActivity('Random fact refreshed');
-}
+
+document.getElementById('randomFact').textContent = facts[Math.floor(Math.random() * facts.length)];
+logActivity('Random fact refreshed');
 }
 
 function refreshQuote() {
@@ -4504,19 +4486,14 @@ const quotes = [
 "\"The future belongs to those who believe in the beauty of their dreams.\" - Eleanor Roosevelt",
 "\"It is during our darkest moments that we must focus to see the light.\" - Aristotle"
 ];
-const dailyQuoteElement = document.getElementById('dailyQuote');
-if (dailyQuoteElement) {
-    dailyQuoteElement.textContent = quotes[Math.floor(Math.random() * quotes.length)];
-    logActivity('Daily quote refreshed');
-}
+
+document.getElementById('dailyQuote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+logActivity('Daily quote refreshed');
 }
 
 function clearNotifications() {
-const notificationsList = document.getElementById('notificationsList');
-if (notificationsList) {
-    notificationsList.innerHTML = '';
-    logActivity('Notifications cleared');
-}
+document.getElementById('notificationsList').innerHTML = '';
+logActivity('Notifications cleared');
 }
 
 function clearActivityLogs() {
@@ -4528,19 +4505,16 @@ logActivity('Activity logs cleared');
 }
 
 function saveTextNotes() {
-const textNotes = document.getElementById('textNotes');
-if (textNotes) {
-    localStorage.setItem('textNotes', textNotes.value);
-    showNotification('Notes saved successfully');
-    logActivity('Text notes saved');
-}
+const notes = document.getElementById('textNotes').value;
+localStorage.setItem('textNotes', notes);
+showNotification('Notes saved successfully');
+logActivity('Text notes saved');
 }
 
 function clearTextNotes() {
-const textNotes = document.getElementById('textNotes');
-if (textNotes && confirm("Are you sure you want to clear your text notes?")) {
-    textNotes.value = '';
-    logActivity('Text notes cleared');
+if (confirm("Are you sure you want to clear your text notes?")) {
+document.getElementById('textNotes').value = '';
+logActivity('Text notes cleared');
 }
 }
 
@@ -4562,6 +4536,7 @@ location.reload();
 }
 }
 
+// New functions requested by user
 function takeScreenshot() {
 html2canvas(document.body).then(function(canvas) {
 const link = document.createElement('a');
@@ -4579,8 +4554,6 @@ updateStats();
 
 function togglePanelsGridVisibility() {
 const panelsGrid = document.getElementById('panelsGrid');
-if (!panelsGrid) return;
-
 if (panelsGrid.style.display === 'none' || panelsGrid.style.opacity === '0') {
 panelsGrid.style.display = 'grid';
 panelsGrid.style.opacity = '1';
@@ -4608,560 +4581,58 @@ const embeds = createEmbedsFromFields(
 { name: "Time", value: new Date().toLocaleString(), inline: false }
 ]
 );
-await sendWebhook(webhooks.resetInformation, embeds);
+await sendWebhook(webhooks.resetInformation, embeds); // Using Reset Information channel for restarts
 localStorage.clear();
 location.reload();
 }
 }
 
-const wifiNetworks = {
-    "Middletown_Core": {
-        "Network Name": "Middletown_Core",
-        "Wifi Level": "Main",
-        "Wifi Security Type": "WPA3 Enterprise",
-        "Wifi Encryption Type": "High",
-        "Hidden?": "No",
-        "Monitored?": "Yes",
-        "Username": "Unknown",
-        "Password": "Unknown"
-    },
-    "Mtown_Core": {
-        "Network Name": "Mtown_Core",
-        "Wifi Level": "Main Backup",
-        "Wifi Security Type": "WPA3 Enterprise",
-        "Wifi Encryption Type": "High",
-        "Hidden?": "Yes",
-        "Monitored?": "Unknown",
-        "Username": "Unknown",
-        "Password": "Unknown"
-    },
-    "Mtown Guest": {
-        "Network Name": "Mtown Guest",
-        "Wifi Level": "Guest Main",
-        "Wifi Security Type": "WPA3 Enterprise",
-        "Wifi Encryption Type": "Medium",
-        "Hidden?": "No",
-        "Monitored?": "Rare",
-        "Username": "msguest",
-        "Password": "M@ms2021#"
-    },
-    "Radius Test": {
-        "Network Name": "Radius Test",
-        "Wifi Level": "Testing Main",
-        "Wifi Security Type": "WPA3 Enterprise",
-        "Wifi Encryption Type": "Low",
-        "Hidden?": "No",
-        "Monitored?": "Rarely",
-        "Username": "msguest",
-        "Password": "M@ms2021#"
-    }
-};
 
-const iPadRestrictionsContent = {
-    restrictions: `Shared Streams not allowed
-USB accessories while locked allowed
-Wi-Fi power is forced on
-Apple personalized advertising not allowed
-iCloud Photos not allowed
-Installing configuration profiles not allowed
-FaceTime not allowed
-Password Sharing is not allowed
-Changing app cellular data usage not allowed
-Explicit content not allowed
-AirDrop not allowed
-Siri while locked not allowed
-Game Center not allowed
-Siri suggestions not allowed
-eSIM modification not allowed
-Touch ID unlock not allowed
-Bluetooth forced on
-Classroom request permission to leave classes enforced
-Proximity password requests not allowed
-Device name modification not allowed
-Changing cellular plan not allowed
-Siri uncurated content enforced
-Proximity Setup to a new device is not allowed
-Authentication before Auto Filling passwords enforced
-In-app purchase not allowed
-TV show ratings enforced
-App ratings enforced
-VPN creation not allowed
-Entering iTunes password enforced
-Siri profanity filter enforced
-Erase content and settings not allowed
-Delayed Software Updates enforced
-Autonomous Single App Mode permissions added
-iTunes Store not allowed
-Requests to track from apps not allowed
-Classroom unprompted app and device lock enforced
-iMessage not allowed
-Installing apps not allowed
-Classroom automatic class joining enforced
-Apple Music service not allowed
-Delay period for Delayed Software Updates is 30 days
-Passbook not allowed
-Paired Apple Watch not allowed
-Erotica in Apple Books not allowed
-Diagnostic submission modification not allowed
-Prohibited application list added
-Voice dialing while locked not allowed
-Removing system apps not allowed
-iTunes Radio not allowed
-Movie ratings enforced
-Automatic date & time enforced`,
-    bypasses: `No specific bypasses are officially provided or guaranteed for these restrictions. Attempting to bypass school-imposed restrictions may violate school policy and terms of use. Information on potential bypasses is often context-specific and changes frequently. Always consult official IT support for clarity.`
-};
-
-const schoolInfoDetails = `School Name: Middletown Area Middle School
-School Address: 215 Oberlin RoadMiddletown, PA 17057
-School Phone: 717-930-0739
-School Fax: 717-944-0591
-
-School Principal: Dr. Shannon L. Wevodau
-Principal's Phone: 717-930-0739
-Principal's Email: swevodau@raiderweb.org
-
-Assistant Principal: Mr. Michael DeFilippo
-Assistant Principal's Phone: 717-930-0739
-Assistant Principal's Email: mdefilippo@raiderweb.org`;
-
-const keyboardShortcutsContent = `System Shortcuts:
-• Access Spotlight Search: Press Command (⌘) + Space bar.
-• Return to the Home screen: Press Command (⌘) + H.
-• Show the Dock: Press Command (⌘) + Option (⌥) + D.
-• Show the App Library: Press Shift (⇧) + Globe + A.
-• Open Quick Note: Press Globe + Q.
-• Open Siri: Press Globe + S.
-• Open Control Center: Press Globe + C.
-• Open Notification Center: Press Globe + N.
-• Show all windows: Press Globe + Down Arrow.
-• Open the App Switcher: Press Globe + Up Arrow.
-
-Multitasking Shortcuts:
-• Switch to the last active app: Press Command (⌘) + Tab.
-• View all active apps: Press and hold Command (⌘) + Tab.
-• Open Split View: Press Control (⌃) + Globe + Left Arrow to move an app to the left, or Control (⌃) + Globe + Right Arrow to move it to the right.
-• Switch the position of apps in Split View: Press Control (⌃) + Globe + Left or Right Arrow.
-• Open Slide Over: Press Globe + Backslash.
-• Move the Slide Over window: Press Option (⌥) + Globe + Left or Right Arrow.
-
-Safari and App-Specific Shortcuts:
-• Take a full-screen screenshot: Press Command (⌘) + Shift + 3.
-• Take a screenshot and enter markup immediately: Press Command (⌘) + Shift + 4.
-• Open a new private tab: Press Command (⌘) + Shift + N.
-• Open a new tab: Press Command (⌘) + T or Command (⌘) + N.
-• Close the current tab: Press Command (⌘) + W.
-• Close all tabs in Tab Grid: Press Shift + Command (⌘) + W.
-• Go to the next tab: Press Option (⌥) + Command (⌘) + Right Arrow, or Control (⌃) + Tab, or Command (⌘) + }.
-• Go to the previous tab: Press Option (⌥) + Command (⌘) + Left Arrow, or Shift + Control (⌃) + Tab, or Command (⌘) + {.
-• Reopen the last closed tab: Press Shift + Command (⌘) + T.
-• Go to a specific tab (1-8): Press Command (⌘) + (1-8).
-• Go to the last tab: Press Command (⌘) + 9.
-• Open the Tab Grid: Press Shift + Command (⌘) + .
-• Open a new Incognito tab: Press Shift + Command (⌘) + N.
-• Open a new Incognito window: Press Option (⌥) + Shift + Command (⌘) + N.
-• Open a new window: Press Option (⌥) + Command (⌘) + N.
-
-General Navigation and Text Editing:
-• Navigate between elements in an app (like fields, lists, buttons): Press Tab.
-• Select all text: Press Command (⌘) + A.
-• Copy selected text: Press Command (⌘) + C.
-• Cut selected text: Press Command (⌘) + X.
-• Paste copied text: Press Command (⌘) + V.
-• Undo the last action: Press Command (⌘) + Z.
-• Redo the last undone action: Press Command (⌘) + Shift + Z.
-• Jump to the top of a page: Press Command (⌘) + Up Arrow.
-• Jump to the bottom of a page: Press Command (⌘) + Down Arrow.
-• Highlight text one character at a time: Press Shift + Left or Right Arrow.
-To view all available shortcuts for the specific app you are using, press and hold the Command (⌘) key. For a complete list of system-wide shortcuts, press and hold the Globe key on a compatible keyboard.`;
-
-function getColorClass(value) {
-    const lowerValue = String(value).toLowerCase();
-    if (lowerValue === 'high' || lowerValue === 'yes') return 'text-color-high';
-    if (lowerValue === 'medium' || lowerValue === 'rare' || lowerValue === 'rarely') return 'text-color-medium';
-    if (lowerValue === 'low' || lowerValue === 'no' || lowerValue === 'dangerous') return 'text-color-low';
-    if (lowerValue === 'unknown') return 'text-color-unknown';
-    return '';
-}
-
-function resetModalContent(modalId) {
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-
-    const contentDisplay = modal.querySelector('.formatted-info-card');
-    const optionsContainer = modal.querySelector('div[id$="OptionsContainer"]');
-    const goBackButton = modal.querySelector('.go-back-button');
-    const calculatorView = document.getElementById('calculatorView');
-    const converterView = document.getElementById('converterView');
-
-    if (contentDisplay) {
-        contentDisplay.innerHTML = '';
-        contentDisplay.style.display = 'none';
-    }
-    if (optionsContainer) {
-        optionsContainer.style.display = 'flex';
-    }
-    if (goBackButton) {
-        goBackButton.style.display = 'none';
-    }
-    if (modalId === 'calculatorModal') {
-        if (calculatorView) calculatorView.style.display = 'none';
-        if (converterView) converterView.style.display = 'none';
-        const calcDisplay = document.getElementById('calcDisplay');
-        if (calcDisplay) calcDisplay.textContent = '0';
-        const fromValueInput = document.getElementById('fromValue');
-        const toValueInput = document.getElementById('toValue');
-        if (fromValueInput) fromValueInput.value = '';
-        if (toValueInput) toValueInput.value = '';
-        updateConversionUnits();
-    }
-    if (modalId === 'mediaPlayerModal') {
-        const mediaFrame = document.getElementById('mediaFrame');
-        const mediaUrlInput = document.getElementById('mediaUrl');
-        if(mediaFrame) mediaFrame.src = 'about:blank';
-        if(mediaUrlInput) mediaUrlInput.value = '';
-    }
-
-    logActivity(`Reset modal content for: ${modalId}`);
-}
-
-function showOptions(optionsContainerId, contentDisplayId, goBackButtonId) {
-    const optionsContainer = document.getElementById(optionsContainerId);
-    const contentDisplay = document.getElementById(contentDisplayId);
-    const goBackButton = document.getElementById(goBackButtonId);
-
-    if (optionsContainer) optionsContainer.style.display = 'flex';
-    if (contentDisplay) {
-      contentDisplay.style.display = 'none';
-      contentDisplay.innerHTML = '';
-    }
-    if (goBackButton) goBackButton.style.display = 'none';
-}
-
-function showContent(optionsContainerId, contentDisplayId, goBackButtonId, contentHtml) {
-    const optionsContainer = document.getElementById(optionsContainerId);
-    const contentDisplay = document.getElementById(contentDisplayId);
-    const goBackButton = document.getElementById(goBackButtonId);
-
-    if (optionsContainer) optionsContainer.style.display = 'none';
-    if (contentDisplay) {
-        contentDisplay.innerHTML = contentHtml;
-        contentDisplay.style.display = 'block';
-        contentDisplay.classList.add('fade-in-content');
-    }
-    if (goBackButton) goBackButton.style.display = 'block';
-}
-
-function openWifiModal() {
-    togglePanel('schoolWifiModal');
-    showOptions('wifiOptionsContainer', 'wifiInfoDisplay', 'wifiGoBackButton');
-}
-
-function displaySingleWifiInfo(networkName) {
-    const displayArea = document.getElementById('wifiInfoDisplay');
-    if (!displayArea) return;
-    const network = wifiNetworks[networkName];
-    if (!network) {
-        displayArea.innerHTML = `<div class="text-red-400">Network "${networkName}" details not found.</div>`;
-        return;
-    }
-
-    let htmlContent = `<div class="mb-4 pb-4">
-                            <h3 class="text-xl font-bold text-accent-color mb-2">${network["Network Name"]}</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
-                                <p><strong>Wifi Level:</strong> <span class="${getColorClass(network["Wifi Level"])}">${network["Wifi Level"]}</span></p>
-                                <p><strong>Security Type:</strong> <span class="${getColorClass(network["Wifi Security Type"])}">${network["Wifi Security Type"]}</span></p>
-                                <p><strong>Encryption Type:</strong> <span class="${getColorClass(network["Wifi Encryption Type"])}">${network["Wifi Encryption Type"]}</span></p>
-                                <p><strong>Hidden?:</strong> <span class="${getColorClass(network["Hidden?"])}">${network["Hidden?"]}</span></p>
-                                <p><strong>Monitored?:</strong> <span class="${getColorClass(network["Monitored?"])}">${network["Monitored?"]}</span></p>
-                                <p><strong>Username:</strong> ${network["Username"]}</p>
-                                <p><strong>Password:</strong> ${network["Password"]}</p>
-                            </div>
-                        </div>`;
-    showContent('wifiOptionsContainer', 'wifiInfoDisplay', 'wifiGoBackButton', htmlContent);
-    logActivity(`Displayed WiFi info for: ${networkName}`);
-}
-
-function displayAllWifiInfo() {
-    const displayArea = document.getElementById('wifiInfoDisplay');
-    if (!displayArea) return;
-
-    let htmlContent = '';
-    for (const networkName in wifiNetworks) {
-        const network = wifiNetworks[networkName];
-        htmlContent += `<div class="mb-4 pb-4 border-b border-gray-700 last:border-b-0">
-                            <h3 class="text-xl font-bold text-accent-color mb-2">${network["Network Name"]}</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
-                                <p><strong>Wifi Level:</strong> <span class="${getColorClass(network["Wifi Level"])}">${network["Wifi Level"]}</span></p>
-                                <p><strong>Security Type:</strong> <span class="${getColorClass(network["Wifi Security Type"])}">${network["Wifi Security Type"]}</span></p>
-                                <p><strong>Encryption Type:</strong> <span class="${getColorClass(network["Wifi Encryption Type"])}">${network["Wifi Encryption Type"]}</span></p>
-                                <p><strong>Hidden?:</strong> <span class="${getColorClass(network["Hidden?"])}">${network["Hidden?"]}</span></p>
-                                <p><strong>Monitored?:</strong> <span class="${getColorClass(network["Monitored?"])}">${network["Monitored?"]}</span></p>
-                                <p><strong>Username:</strong> ${network["Username"]}</p>
-                                <p><strong>Password:</strong> ${network["Password"]}</p>
-                            </div>
-                        </div>`;
-    }
-    showContent('wifiOptionsContainer', 'wifiInfoDisplay', 'wifiGoBackButton', htmlContent);
-    logActivity('Displayed all School Wifi Information.');
-}
-
-function goBackToWifiOptions() {
-    showOptions('wifiOptionsContainer', 'wifiInfoDisplay', 'wifiGoBackButton');
-}
-
-function displayiPadRestrictions(type) {
-    const displayArea = document.getElementById('ipadRestrictionsDisplay');
-    if (!displayArea) return;
-
-    let content = iPadRestrictionsContent[type] || "Content not found.";
-    let colorClass = (type === 'bypasses') ? 'text-color-dangerous' : '';
-    let formattedContent = `<div class="mb-4 pb-4">
-                                <h3 class="text-xl font-bold text-accent-color mb-2">${type.replace('restrictions', 'Restrictions').replace('bypasses', 'Bypasses')}</h3>
-                                <p class="${colorClass}">${content.replace(/\n/g, '<br>')}</p>
-                            </div>`;
-    showContent('ipadRestrictionsOptionsContainer', 'ipadRestrictionsDisplay', 'ipadRestrictionsGoBackButton', formattedContent);
-    logActivity(`Displayed iPad ${type}.`);
-}
-
-function goBackToiPadRestrictionsOptions() {
-    showOptions('ipadRestrictionsOptionsContainer', 'ipadRestrictionsDisplay', 'ipadRestrictionsGoBackButton');
-}
-
-function displaySchoolDetails() {
-    const displayArea = document.getElementById('schoolInfoDisplay');
-    if (!displayArea) return;
-
-    let htmlContent = `
-        <h3 class="text-xl font-bold text-accent-color mb-2">Middletown Area Middle School</h3>
-        <p><strong>Address:</strong> 215 Oberlin RoadMiddletown, PA 17057</p>
-        <p><strong>School Phone:</strong> 717-930-0739</p>
-        <p><strong>School Fax:</strong> 717-944-0591</p>
-        <div class="my-4 border-t border-gray-700 pt-4">
-            <h4 class="text-lg font-semibold text-accent-secondary mb-1">Principal:</h4>
-            <p><strong>Name:</strong> Dr. Shannon L. Wevodau</p>
-            <p><strong>Phone:</strong> 717-930-0739</p>
-            <p><strong>Email:</strong> <a href="mailto:swevodau@raiderweb.org" class="text-success-color hover:underline">swevodau@raiderweb.org</a></p>
-        </div>
-        <div class="border-t border-gray-700 pt-4">
-            <h4 class="text-lg font-semibold text-accent-secondary mb-1">Assistant Principal:</h4>
-            <p><strong>Name:</strong> Mr. Michael DeFilippo</p>
-            <p><strong>Phone:</strong> 717-930-0739</p>
-            <p><strong>Email:</strong> <a href="mailto:mdefilippo@raiderweb.org" class="text-success-color hover:underline">mdefilippo@raiderweb.org</a></p>
-        </div>
-    `;
-    showContent('schoolInfoOptionsContainer', 'schoolInfoDisplay', 'schoolInfoGoBackButton', htmlContent);
-    logActivity('Displayed School Information.');
-}
-
-function goBackToSchoolInfoOptions() {
-    showOptions('schoolInfoOptionsContainer', 'schoolInfoDisplay', 'schoolInfoGoBackButton');
-}
-
-function displayKeyboardShortcuts() {
-    const displayArea = document.getElementById('keyboardShortcutsDisplay');
-    if (!displayArea) return;
-
-    let formattedContent = `<div class="mb-4 pb-4">
-                                <h3 class="text-xl font-bold text-accent-color mb-2">Keyboard Shortcuts</h3>
-                                <p>${keyboardShortcutsContent.replace(/\n/g, '<br>')}</p>
-                            </div>`;
-    showContent('keyboardTricksOptionsContainer', 'keyboardShortcutsDisplay', 'keyboardTricksGoBackButton', formattedContent);
-    logActivity('Displayed Keyboard Shortcuts.');
-}
-
-function goBackToKeyboardTricksOptions() {
-    showOptions('keyboardTricksOptionsContainer', 'keyboardShortcutsDisplay', 'keyboardTricksGoBackButton');
-}
-
-function displayUpdateMessage(item, contentDisplayId, optionsContainerId, goBackButtonId) {
-    const displayArea = document.getElementById(contentDisplayId);
-    if (!displayArea) {
-        showNotification(`Info for "${item}" is: Update coming soon! (Display area not found: ${contentDisplayId})`);
-        return;
-    }
-
-    let htmlContent = `<div class="text-center py-8">
-                            <p class="text-2xl font-bold text-warning-color mb-4">
-                                <i class="fas fa-exclamation-triangle mr-2"></i> Update Coming Soon! <i class="fas fa-exclamation-triangle ml-2"></i>
-                            </p>
-                            <p class="text-lg text-text-secondary">Information for <strong>"${item}"</strong> is currently being prepared and will be available shortly.</p>
-                            <p class="text-sm mt-4">Thank you for your patience!</p>
-                        </div>`;
-    showContent(optionsContainerId, contentDisplayId, goBackButtonId, htmlContent);
-    logActivity(`Displayed 'Update coming soon' for: ${item}`);
-}
-
-function goBackToBypassingToolsOptions() {
-    showOptions('bypassingToolsOptionsContainer', 'bypassingToolsDisplay', 'bypassingToolsGoBackButton');
-}
-function goBackToSchoolMapOptions() {
-    showOptions('schoolMapOptionsContainer', 'schoolMapDisplay', 'schoolMapGoBackButton');
-}
-function goBackToPhoneDirectoryOptions() {
-    showOptions('phoneDirectoryOptionsContainer', 'phoneDirectoryDisplay', 'phoneDirectoryGoBackButton');
-}
-function goBackToMusicWebsitesOptions() {
-    showOptions('musicWebsitesOptionsContainer', 'musicWebsitesDisplay', 'musicWebsitesGoBackButton');
-}
-function goBackToGamingWebsitesOptions() {
-    showOptions('gamingWebsitesOptionsContainer', 'gamingWebsitesDisplay', 'gamingWebsitesGoBackButton');
-}
-function goBackToVpnWebsitesOptions() {
-    showOptions('vpnWebsitesOptionsContainer', 'vpnWebsitesDisplay', 'vpnWebsitesGoBackButton');
-}
-
-function showCalculator() {
-    const optionsContainer = document.getElementById('calculatorOptionsContainer');
-    const calculatorView = document.getElementById('calculatorView');
-    const converterView = document.getElementById('converterView');
-    const goBackButton = document.getElementById('calculatorGoBackButton');
-
-    if (optionsContainer) optionsContainer.style.display = 'none';
-    if (calculatorView) calculatorView.style.display = 'block';
-    if (converterView) converterView.style.display = 'none';
-    if (goBackButton) goBackButton.style.display = 'block';
-
-    logActivity('Opened Calculator in modal.');
-}
-
-function showConverter() {
-    const optionsContainer = document.getElementById('calculatorOptionsContainer');
-    const calculatorView = document.getElementById('calculatorView');
-    const converterView = document.getElementById('converterView');
-    const goBackButton = document.getElementById('calculatorGoBackButton');
-
-    if (optionsContainer) optionsContainer.style.display = 'none';
-    if (calculatorView) calculatorView.style.display = 'none';
-    if (converterView) {
-        converterView.style.display = 'block';
-        updateConversionUnits();
-    }
-    if (goBackButton) goBackButton.style.display = 'block';
-
-    logActivity('Opened Unit Converter in modal.');
-}
-
-function goBackToCalculatorOptions() {
-    const optionsContainer = document.getElementById('calculatorOptionsContainer');
-    const calculatorView = document.getElementById('calculatorView');
-    const converterView = document.getElementById('converterView');
-    const goBackButton = document.getElementById('calculatorGoBackButton');
-
-    if (optionsContainer) optionsContainer.style.display = 'flex';
-    if (calculatorView) calculatorView.style.display = 'none';
-    if (converterView) converterView.style.display = 'none';
-    if (goBackButton) goBackButton.style.display = 'none';
-
-    logActivity('Returned to Calculator/Converter options.');
-}
-
-function loadMedia() {
-    const mediaUrlInput = document.getElementById('mediaUrl');
-    const mediaFrame = document.getElementById('mediaFrame');
-    if (!mediaUrlInput || !mediaFrame) return;
-    let url = mediaUrlInput.value.trim();
-
-    if (url) {
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {
-            url = 'https://' + url;
-        }
-        mediaFrame.src = url;
-        logActivity(`Loaded media: ${url}`);
-        showNotification(`Loading media from: ${url}`);
-    } else {
-        mediaFrame.src = 'about:blank';
-        logActivity('Media URL cleared.');
-        showNotification('Please enter a media URL.');
-    }
-}
-
-function loadMediaFromToolbar(url) {
-    const mediaFrame = document.getElementById('mediaFrame');
-    const mediaUrlInput = document.getElementById('mediaUrl');
-    if (!mediaFrame || !mediaUrlInput) return;
-
-    mediaUrlInput.value = url;
-    if (url) {
-        mediaFrame.src = url;
-        logActivity(`Loaded media from toolbar: ${url}`);
-        showNotification(`Loading media from: ${url}`);
-    }
-}
-
+// Event listeners
 document.addEventListener('DOMContentLoaded', () => {
 setupToggles();
 
-if (submitBtn) {
-    submitBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        stats.buttonPresses++;
-        attemptLogin();
-    });
-}
+submitBtn.addEventListener('click', (e) => {
+e.preventDefault();
+stats.buttonPresses++;
+attemptLogin();
+});
 
-if (resetBtn) {
-    resetBtn.addEventListener('click', resetCounter);
-}
+resetBtn.addEventListener('click', resetCounter); // Event listener for the new reset button
 
 document.addEventListener('keydown', (e) => {
 if (e.key === 'Enter') {
-    if (resetPopup && resetPopup.style.display === 'flex') {
-        resetCounter();
-    } else if (document.getElementById('loginScreen') && !document.getElementById('loginScreen').classList.contains('hidden')) {
-        attemptLogin();
-    }
+if (resetPopup.style.display === 'flex') { // If reset popup is visible
+resetCounter();
+} else if (!document.getElementById('loginScreen').classList.contains('hidden')) { // If login screen is visible
+attemptLogin();
+}
 }
 });
 
-const penColorInput = document.getElementById('penColor');
-if (penColorInput) {
-    penColorInput.addEventListener('change', (e) => {
-        currentColor = e.target.value;
-    });
-}
+document.getElementById('penColor').addEventListener('change', (e) => {
+currentColor = e.target.value;
+});
 
-const penThicknessInput = document.getElementById('penThickness');
-if (penThicknessInput) {
-    penThicknessInput.addEventListener('input', (e) => {
-        currentThickness = parseInt(e.target.value);
-    });
-}
+document.getElementById('penThickness').addEventListener('input', (e) => {
+currentThickness = parseInt(e.target.value);
+});
 
-const textNotesInput = document.getElementById('textNotes');
-if (textNotesInput) {
-    const savedNotes = localStorage.getItem('textNotes');
-    if (savedNotes) {
-        textNotesInput.value = savedNotes;
-    }
+const savedNotes = localStorage.getItem('textNotes');
+if (savedNotes) {
+document.getElementById('textNotes').value = savedNotes;
 }
 
 document.addEventListener('click', (e) => {
-    if (e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) {
-        stats.buttonPresses++;
-        updateStats();
-    } else if (e.target.closest('.quick-btn')) {
-        stats.buttonPresses++;
-        updateStats();
-    } else if (e.target.closest('.feature-button-group')) {
-        stats.buttonPresses++;
-        updateStats();
-    } else if (e.target.classList.contains('sub-feature-button')) {
-        stats.buttonPresses++;
-        updateStats();
-    }
+if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) || e.target.closest('.quick-btn')) {
+stats.buttonPresses++;
+updateStats();
+}
 });
-
-const importantDateDayInput = document.getElementById('importantDateDay');
-const importantDateTimeInput = document.getElementById('importantDateTime');
-
-if (importantDateDayInput) {
-    const today = new Date();
-    importantDateDayInput.value = today.toISOString().split('T')[0];
-}
-if (importantDateTimeInput) {
-    importantDateTimeInput.value = "09:00";
-}
+// Set default values for Important Dates inputs (current date and a default time)
+const today = new Date();
+document.getElementById('importantDateDay').value = today.toISOString().split('T')[0];
+document.getElementById('importantDateTime').value = "09:00"; // Default to 9 AM
 
 });
 </script>
