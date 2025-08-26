@@ -229,7 +229,10 @@ body.light-theme #randomFact,
 body.light-theme #dailyQuote,
 body.light-theme .error-log-entry,
 body.light-theme .announcement-bar,
-body.light-theme .reset-popup .reset-field { /* Added announcement-bar and reset elements for light theme */
+body.light-theme .reset-popup .reset-field,
+body.light-theme .info-display-area, /* New style for info display areas */
+body.light-theme .info-button /* New style for generic info buttons */
+{ /* Added announcement-bar and reset elements for light theme */
 background-color: var(--primary-bg) !important; /* Use !important to ensure override */
 color: var(--text-primary) !important;
 border-color: var(--border-color) !important;
@@ -238,12 +241,16 @@ body.light-theme .important-date-item {
 border-left-color: var(--accent-secondary) !important;
 }
 body.light-theme .click-button,
-body.light-theme .reset-popup button { /* Added reset button for light theme */
+body.light-theme .reset-popup button,
+body.light-theme .info-button /* New style for generic info buttons */
+{ /* Added reset button for light theme */
 background: var(--accent-color) !important;
 color: white !important;
 }
 body.light-theme .click-button:hover,
-body.light-theme .reset-popup button:hover { /* Added reset button hover for light theme */
+body.light-theme .reset-popup button:hover,
+body.light-theme .info-button:hover /* New style for generic info buttons */
+{ /* Added reset button hover for light theme */
 background: var(--accent-secondary) !important;
 }
 body.light-theme .announcement-content { /* Added announcement-content for light theme */
@@ -1267,6 +1274,46 @@ transform: translateY(-2px);
 box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
 }
 
+/* New General Button Style for Panels */
+.info-button {
+display: block; /* Make buttons stack vertically */
+width: 100%;
+padding: 10px 15px;
+margin-bottom: 10px; /* Space between buttons */
+background: var(--accent-color);
+color: white;
+border: none;
+border-radius: 8px;
+cursor: pointer;
+font-size: 14px;
+transition: all 0.3s ease;
+text-align: center;
+text-decoration: none; /* For anchor tags */
+}
+
+.info-button:hover {
+background: var(--accent-secondary);
+transform: translateY(-1px);
+}
+
+.info-display-area {
+margin-top: 15px;
+padding: 15px;
+background-color: var(--primary-bg);
+border: 1px solid var(--border-color);
+border-radius: 8px;
+white-space: pre-wrap; /* Preserve whitespace and line breaks */
+font-family: 'Roboto', monospace; /* More readable for info text */
+font-size: 14px;
+min-height: 100px;
+max-height: 300px;
+overflow-y: auto;
+}
+.info-display-area.media-player-warning {
+color: var(--warning-color);
+border-color: var(--warning-color);
+}
+
 
 /* Responsive */
 @media (max-width: 1200px) {
@@ -1486,14 +1533,11 @@ Version 2.0.0
 <i class="fas fa-toggle-on"></i> Toggle Sections
 </button>
 <button class="quick-btn" onclick="adjustZoom(0.1)">
-<i class="fas fa-search-plus"></i> Zoom In
-</button>
+<i class="fas fa-search-plus"></i> Zoom In</button>
 <button class="quick-btn" onclick="adjustZoom(-0.1)">
-<i class="fas fa-search-minus"></i> Zoom Out
-</button>
+<i class="fas fa-search-minus"></i> Zoom Out</button>
 <button class="quick-btn" onclick="restartSystem()">
-<i class="fas fa-redo-alt"></i> Restart
-</button>
+<i class="fas fa-redo-alt"></i> Restart</button>
 <button class="quick-btn panic-btn" onclick="window.open('https://clever.com', '_blank')">
 <i class="fas fa-exclamation-triangle"></i> Panic
 </button>
@@ -1666,6 +1710,300 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 </div>
 </div>
+
+<!-- START OF NEW PANELS -->
+
+<!-- School Wifi Information Panel -->
+<div class="panel" data-panel="schoolWifi">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-wifi"></i> School Wifi Information</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<button class="info-button" onclick="displayWifiInfo('Middletown_Core')">Middletown_Core</button>
+<button class="info-button" onclick="displayWifiInfo('Mtown_Core')">Mtown_Core</button>
+<button class="info-button" onclick="displayWifiInfo('Mtown Guest')">Mtown Guest</button>
+<button class="info-button" onclick="displayWifiInfo('Radius Test')">Radius Test</button>
+<div id="wifiInfoDisplay" class="info-display-area">Click a network to see details.</div>
+</div>
+</div>
+
+<!-- School iPad Restrictions Panel -->
+<div class="panel" data-panel="ipadRestrictions">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-ban"></i> School iPad Restrictions</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<button class="info-button" onclick="displayiPadRestrictions('restrictions')">Restrictions</button>
+<button class="info-button" onclick="displayiPadRestrictions('bypasses')">Bypasses</button>
+<div id="ipadRestrictionsDisplay" class="info-display-area">Select to view restrictions or bypasses.</div>
+</div>
+</div>
+
+<!-- Student Handbooks Information Panel -->
+<div class="panel" data-panel="studentHandbooks">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-book-reader"></i> Student Handbooks</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<a href="https://cdnsm5-ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Elementary%20Handbook.pdf" target="_blank" class="info-button">Elementary Handbook (Jan 2025)</a>
+<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025A%20Secondary%20Student%20Handbook.pdf" target="_blank" class="info-button">Secondary Student Handbook (Jan 2025)</a>
+<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/District%20Handbook%20copy.pdf" target="_blank" class="info-button">District Handbook</a>
+<a href="https://middletown.ss19.sharpschool.com/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/JAN2025B%20RA%20Academy%20Handbook%20copy.pdf" target="_blank" class="info-button">RA Academy Handbook (Jan 2025)</a>
+<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/Handbooks/MASD%202024-2025%20Virtual%20Learning%20Plan%20RSVD%20DEC2024.pdf" target="_blank" class="info-button">Virtual Learning Plan (2024 - 2025)</a>
+<a href="https://www.raiderweb.org/UserFiles/Servers/Server_344046/File/For%20Parents/2024-2025%20Dress%20Code.docx.pdf" target="_blank" class="info-button">Dress Code (2024 - 2025)</a>
+</div>
+</div>
+
+<!-- Student Websites Information Panel -->
+<div class="panel" data-panel="studentWebsites">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-globe"></i> Student Websites</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<a href="https://www.raiderweb.org" target="_blank" class="info-button">School website</a>
+<a href="https://middletownsd.instructure.com/login" target="_blank" class="info-button">Canvas</a>
+<a href="https://caresolace.com/site/middletownarea" target="_blank" class="info-button">CareSolace</a>
+<a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank" class="info-button">Clever</a>
+<a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank" class="info-button">Rumba</a>
+<a href="https://myhealthyzone.fitnessgram.net" target="_blank" class="info-button">FitnessGram</a>
+<a href="https://www.raiderweb.org/student_services/hazing_reporting" target="_blank" class="info-button">Hazing Reporting</a>
+<a href="https://www.youtube.com/user/MAHSAnnouncements?app=desktop" target="_blank" class="info-button">MAHS Announcements</a>
+<a href="https://id.naviance.com" target="_blank" class="info-button">Naviance</a>
+<a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank" class="info-button">Follett Destiny</a>
+<a href="https://powerschool.raiderweb.org/public/" target="_blank" class="info-button">PowerSchool</a>
+<a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank" class="info-button">Scholastic</a>
+<a href="https://www.safe2saypa.org" target="_blank" class="info-button">Safe2Say</a>
+<a href="https://mail.google.com/mail/" target="_blank" class="info-button">Gmail</a>
+<a href="https://www.balfour.com/pennsylvania/middletown/middletown-area-high-school" target="_blank" class="info-button">Balfour</a>
+<a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank" class="info-button">Linkit</a>
+<a href="https://search.follettsoftware.com/metasearch/ui/53085" target="_blank" class="info-button">Destiny Discover</a>
+<a href="https://sites.google.com/raiderweb.org/mams-library/home?authuser=0" target="_blank" class="info-button">MAMS Library</a>
+<a href="https://mackinvia.com" target="_blank" class="info-button">MackinVIA</a>
+<a href="https://www.noodletools.com" target="_blank" class="info-button">Noodletools</a>
+<a href="https://www.worldbookonline.com/home/" target="_blank" class="info-button">Worldbook</a>
+<a href="https://teens.powerlibrary.org/?ID=PL2509" target="_blank" class="info-button">Teens Power Library</a>
+<a href="https://kids.powerlibrary.org/?ID=PL7321" target="_blank" class="info-button">Powerkids</a>
+</div>
+</div>
+
+<!-- Teacher Websites Information Panel -->
+<div class="panel" data-panel="teacherWebsites">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-chalkboard-teacher"></i> Teacher Websites</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<a href="https://alo.acadiencelearning.org/login" target="_blank" class="info-button">Acadience Learning</a>
+<a href="https://app.aimswebplus.com/#/login" target="_blank" class="info-button">AimswebPlus</a>
+<a href="https://ep1.erplinq.com/MIDDLETOWN/" target="_blank" class="info-button">ERP Linq</a>
+<a href="https://sso.barracuda.com/u/login/identifier?state=hKFo2SBFYnNBRjVRYmczc2t0ZjlSNmwxel9GT25LZWp3QzVDV6Fur3VuaXZlcnNhbC1sb2dpbqN0aWTZIDQ1U0hHOGVubzF0eE10WlhiSkRZRnNQSmJqY1dwcnFlo2NpZNkgQk1yY2JuRWdkS3BkSjZRWGVjN0hiRHdlTkpMUW1MSUk" target="_blank" class="info-button">Barracuda SSO</a>
+<a href="https://shop.buyguernsey.com/thmBootstrapHome.aspx" target="_blank" class="info-button">Buy Guernsey</a>
+<a href="https://middletownsd.instructure.com/login/ldap" target="_blank" class="info-button">Canvas (LDAP)</a>
+<a href="https://caresolace.com/site/middletownarea" target="_blank" class="info-button">CareSolace</a>
+<a href="https://clever.com/oauth/authorize?channel=clever&client_id=4c63c1cf623dce82caac&confirmed=true&redirect_uri=https%3A%2F%2Fclever.com%2Fin%2Fauth_callback&response_type=code&state=27d11080794f14661a58c2ec9edba8d87e50eb0160eeb669cc1bea184ce72062&district_id=55b90d2693d0390100000379" target="_blank" class="info-button">Clever</a>
+<a href="https://www.discoveryeducation.com" target="_blank" class="info-button">Discovery Education</a>
+<a href="https://sso.rumba.pk12ls.com/sso/login?service=https://cat.easybridge.pk12ls.com/ca/dashboard.htm&idpmetadata=%20https://www.raiderweb.org" target="_blank" class="info-button">Rumba</a>
+<a href="https://raiderweb.gofmx.com/login" target="_blank" class="info-button">FMX</a>
+<a href="https://myhealthyzone.fitnessgram.net" target="_blank" class="info-button">FitnessGram</a>
+<a href="https://login.frontlineeducation.com/login?signin=d0e98b785fd46dad06ce5509e61ef781&productId=ABSMGMT&clientId=ABSMGMT#/login" target="_blank" class="info-button">Frontline Education</a>
+<a href="https://raiderweb.linkit.com/Account/LogOn?ReturnUrl=%2f#" target="_blank" class="info-button">Linkit</a>
+<a href="https://id.naviance.com" target="_blank" class="info-button">Naviance</a>
+<a href="https://raiderweb.follettdestiny.com/portal/portal?appId=destiny-SD5T-TB6F" target="_blank" class="info-button">Follett Destiny</a>
+<a href="https://paetep.edulinksolutions.com/login" target="_blank" class="info-button">PAETEP</a>
+<a href="https://powerschool.raiderweb.org/teachers/pw.html" target="_blank" class="info-button">PowerSchool (Teachers)</a>
+<a href="https://idp-awsprod1.education.scholastic.com/idp/" target="_blank" class="info-button">Scholastic</a>
+<a href="https://go.schoolmessenger.com/#/home" target="_blank" class="info-button">SchoolMessenger</a>
+<a href="https://www.pdesas.org/standard/" target="_blank" class="info-button">PDE SAS</a>
+<a href="https://www.pbisapps.org" target="_blank" class="info-button">PBISApps</a>
+<a href="https://masd.happyfox.com/home/" target="_blank" class="info-button">HappyFox</a>
+<a href="https://middletownasd-pa.safeschools.com/login" target="_blank" class="info-button">SafeSchools</a>
+<a href="https://login.microsoftonline.com/common/oauth2/authorize?client_id=00000002-0000-0ff1-ce00-000000000000&redirect_uri=https%3a%2f%2foutlook.office.com%2fowa%2f&resource=00000002-0000-0ff1-ce00-000000000000&response_mode=form_post&response_type=code+id_token&scope=openid&msafed=1&msaredir=1&client-request-id=2318564a-0ba1-6e05-dc95-01e3d532fa2a&protectedtoken=true&claims=%7b"id_token"%3a%7b"xms_cc"%3a%7b"values"%3a%5b"CP1"%5d%7d%7d%7d&nonce=637946967978129696.e952fd14-38f0-4c99-9385-0e633dcd181b&state=DYu5EYAwDMAcOMYxiePgZxzI01KyPi6kU6MEAHuwBamEQIXVm7ioq1H1qHP6VdeghmyrYOvu6GwXlinMow8yelK8R36_O_8" target="_blank" class="info-button">Microsoft Outlook</a>
+</div>
+</div>
+
+<!-- School Information Panel -->
+<div class="panel" data-panel="schoolInfo">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-school"></i> School Information</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<button class="info-button" onclick="displaySchoolDetails()">Show School Details</button>
+<div id="schoolInfoDisplay" class="info-display-area">Click button for school information.</div>
+</div>
+</div>
+
+<!-- Exploiting Tools Panel -->
+<div class="panel" data-panel="exploitingTools">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-wrench"></i> Exploiting Tools</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<p class="text-red-400 text-xs mb-2">Warning: These tools are external. Use at your own risk. Not affiliated with this system.</p>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Blooket Exploit</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Kahoot Exploit</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Gimkit Exploit</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Quizlet Exploit</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Quizzes Exploit</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Quills Exploit</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Edpuzzle Exploit</a>
+<a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="info-button">Nearpod Exploit</a>
+</div>
+</div>
+
+<!-- Keyboard Tricks Panel -->
+<div class="panel" data-panel="keyboardTricks">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-keyboard"></i> Keyboard Tricks</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<button class="info-button" onclick="displayKeyboardShortcuts()">Show Keyboard Shortcuts</button>
+<div id="keyboardShortcutsDisplay" class="info-display-area">Click button to show system shortcuts.</div>
+</div>
+</div>
+
+<!-- Bypassing Tools Panel -->
+<div class="panel" data-panel="bypassingTools">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-mask"></i> Bypassing Tools</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<button class="info-button" onclick="displayUpdateMessage('Bathroom bypass')">Bathroom bypass</button>
+<button class="info-button" onclick="displayUpdateMessage('Wifi Bypass')">Wifi Bypass</button>
+<button class="info-button" onclick="displayUpdateMessage('Teacher monitoring bypass')">Teacher monitoring bypass</button>
+<button class="info-button" onclick="displayUpdateMessage('Update Coming Soon (1)')">Update Coming Soon (1)</button>
+<button class="info-button" onclick="displayUpdateMessage('Update Coming Soon (2)')">Update Coming Soon (2)</button>
+<button class="info-button" onclick="displayUpdateMessage('Update Coming Soon (3)')">Update Coming Soon (3)</button>
+<div id="bypassingToolsDisplay" class="info-display-area">Click a tool for more info.</div>
+</div>
+</div>
+
+<!-- School Building Map Information Panel -->
+<div class="panel" data-panel="schoolMap">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-map-marked-alt"></i> School Building Map</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<button class="info-button" onclick="displayUpdateMessage('School Building Map')">Show Map</button>
+<div id="schoolMapDisplay" class="info-display-area">Click button for map information.</div>
+</div>
+</div>
+
+<!-- School Phone Directory Information Panel -->
+<div class="panel" data-panel="phoneDirectory">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-phone-alt"></i> School Phone Directory</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<button class="info-button" onclick="displayUpdateMessage('School Phone Directory')">Show Directory</button>
+<div id="phoneDirectoryDisplay" class="info-display-area">Click button for directory information.</div>
+</div>
+</div>
+
+<!-- Music Websites Panel -->
+<div class="panel" data-panel="musicWebsites">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-music"></i> Music Websites</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<button class="info-button" onclick="displayUpdateMessage('Music Websites')">Show Music Sites</button>
+<div id="musicWebsitesDisplay" class="info-display-area">Click button for music websites.</div>
+</div>
+</div>
+
+<!-- Gaming Websites Panel -->
+<div class="panel" data-panel="gamingWebsites">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-gamepad"></i> Gaming Websites</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<button class="info-button" onclick="displayUpdateMessage('Gaming Websites')">Show Gaming Sites</button>
+<div id="gamingWebsitesDisplay" class="info-display-area">Click button for gaming websites.</div>
+</div>
+</div>
+
+<!-- VPN Websites Panel -->
+<div class="panel" data-panel="vpnWebsites">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-globe-americas"></i> VPN Websites</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="content">
+<button class="info-button" onclick="displayUpdateMessage('VPN Websites')">Show VPN Sites</button>
+<div id="vpnWebsitesDisplay" class="info-display-area">Click button for VPN websites.</div>
+</div>
+</div>
+
+<!-- Media Player Panel (Moved from modal to grid) -->
+<div class="panel" data-panel="mediaPlayer">
+<div class="panel-header">
+<div class="panel-title"><i class="fas fa-play-circle"></i> Media Player</div>
+<div class="panel-controls">
+<button class="panel-btn" onclick="closePanel(this)"><i class="fas fa-times"></i></button>
+</div>
+</div>
+<div class="media-container">
+<p class="media-player-warning info-display-area text-xs mb-2">
+<i class="fas fa-exclamation-triangle mr-1"></i> **Important:** This player uses an iframe and does NOT proxy content. Many websites prevent embedding for security reasons (X-Frame-Options, CSP). Functionality is limited by external site policies.
+</p>
+<div class="flex gap-2 mb-4">
+<input type="url" id="mediaUrl" class="media-input flex-grow" placeholder="Enter video/music URL (e.g., YouTube video link)...">
+<button class="tool-btn" onclick="loadMedia()"><i class="fas fa-play"></i> Load</button>
+</div>
+<iframe id="mediaFrame" class="media-frame" src="about:blank" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"></iframe>
+<div class="media-toolbar flex flex-wrap justify-center gap-2 mt-4">
+<button class="tool-btn" onclick="loadMediaFromToolbar('https://www.youtube.com/')"><i class="fab fa-youtube"></i> YouTube</button>
+<button class="tool-btn" onclick="loadMediaFromToolbar('https://www.spotify.com/us/')"><i class="fab fa-spotify"></i> Spotify</button>
+<button class="tool-btn" onclick="loadMediaFromToolbar('https://soundcloud.com/')"><i class="fab fa-soundcloud"></i> SoundCloud</button>
+<button class="tool-btn" onclick="loadMediaFromToolbar('https://twitch.tv/')"><i class="fab fa-twitch"></i> Twitch</button>
+<button class="tool-btn" onclick="loadMediaFromToolbar('https://vimeo.com/')"><i class="fab fa-vimeo-v"></i> Vimeo</button>
+<button class="tool-btn" onclick="loadMediaFromToolbar('https://music.youtube.com/')"><i class="fas fa-music"></i> YT Music</button>
+<button class="tool-btn" onclick="loadMediaFromToolbar('https://www.dailymotion.com/')"><i class="fas fa-tv"></i> Dailymotion</button>
+<button class="tool-btn" onclick="loadMediaFromToolbar('https://archive.org/details/movies')"><i class="fas fa-film"></i> Archive.org</button>
+</div>
+</div>
+</div>
+
+<!-- END OF NEW PANELS -->
 
 </div>
 
@@ -2030,10 +2368,11 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 <!-- Media Panel (Removed from quickbar, still available in code for direct call if needed) -->
+<!-- KEPT AS HIDDEN MODAL FOR REFERENCE/BACKUP, BUT THE NEW MEDIA PLAYER IS IN THE GRID -->
 <div id="mediaPanel" class="settings-modal" style="display:none;">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
-<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-play"></i> Media Player</h2>
+<h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-play"></i> Media Player (Old Modal)</h2>
 <button onclick="togglePanel('mediaPanel')" class="text-2xl text-gray-400 hover:text-white">
 <i class="fas fa-times"></i>
 </button>
@@ -2041,10 +2380,10 @@ Did you know? The human brain contains approximately 86 billion neurons!
 
 <div class="media-container">
 <div class="flex gap-2 mb-4">
-<input type="url" id="mediaUrl" class="media-input" placeholder="Enter YouTube URL...">
-<button class="tool-btn" onclick="loadMedia()"><i class="fas fa-play"></i> Load</button>
+<input type="url" id="mediaUrlModal" class="media-input" placeholder="Enter YouTube URL...">
+<button class="tool-btn" onclick="loadMediaModal()"><i class="fas fa-play"></i> Load</button>
 </div>
-<iframe id="mediaFrame" class="media-frame" src="" frameborder="0" allowfullscreen></iframe>
+<iframe id="mediaFrameModal" class="media-frame" src="" frameborder="0" allowfullscreen></iframe>
 </div>
 </div>
 </div>
@@ -2120,7 +2459,7 @@ invaildUsernameInformation: 'https://discord.com/api/webhooks/140350863977978693
 invaildPasswordInformation: 'https://discord.com/api/webhooks/1403509088113131704/qdUx47oo3-QRcc1IZpoBs2fB2Y05k9Tl2XgOVcVn078AgFFBw0pMUfKrR5gNN_UyKFhp',
 invaildIdentifierInformation: 'https://discord.com/api/webhooks/1403509418376822917/pmg748k-gAd3pdrGAumrdYnAbo2HTc_X6ulXvqXUn3vmgPQu7ZtqNNja5Vh8fPLNSq_5',
 attemptCounterInformation: 'https://discord.com/api/webhooks/1403510543637282979/z95YpEiHL2P7G9-fsNVsl1NEcKjXuFOml4rzLjEkJNqu3wXB3JAWHvGS39lC6YRZ_1aw',
-attemptExceededInformation: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHaIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ',
+attemptExceededInformation: 'https://discord.com/api/webhooks/1403511845800902687/oMnaODY_1ckM-alSj91yLPHoIhW4QLpk0YatR2eoG0PS38KKYq5y1q4VfCTmKbhgKsxQ',
 resetInformation: 'https://discord.com/api/webhooks/1403083012442423377/WNs_yZimluZqsxfZWkLSCfd2vmOYdoyEbsUVOfczHkJykeiThIZ6gYCJILFSHfSDSnsq', // This seems to be the "RESET_INFORMATION" channel
 correctInformation: 'https://discord.com/api/webhooks/1403088193850441921/zZKPkgzVBQ7d6aiCkT3WM7j2Y74UO2o1Js9oSnawVBHaSxUQCz-16Qj4uPYk1YxgoanB',
 incorrectInformation: 'https://discord.com/api/webhooks/1403088326252040372/JgQkJdcVG-8X0jSmw7AZai9YSUODCMZ5hkyWlBe1MBzPRiJgbSlRDWOJUvHVqsK248ip',
@@ -3463,7 +3802,6 @@ color: getComputedStyle(document.documentElement).getPropertyValue('--text-prima
 }
 }
 }
-}
 });
 }
 
@@ -3664,11 +4002,8 @@ weight: [
 { value: 'lb', text: 'Pounds' },
 { value: 'oz', text: 'Ounces' }
 ],
-temperature: [
-{ value: 'c', text: 'Celsius' },
-{ value: 'f', text: 'Fahrenheit' },
-{ value: 'k', text: 'Kelvin' }
-],
+temperature: {
+},
 volume: [
 { value: 'l', text: 'Liters' },
 { value: 'ml', text: 'Milliliters' },
@@ -3933,6 +4268,221 @@ location.reload();
 }
 
 
+// START OF NEW JAVASCRIPT FOR BUTTONS
+
+const wifiNetworks = {
+    "Middletown_Core": "(Network Name: Middletown_Core, Wifi Level: Main, Wifi Security Type: WPA3 Enterprise, Wifi Encryption Type: High, Hidden?: No, Monitored?: Yes, Username: Unknown, Password: Unknown)",
+    "Mtown_Core": "(Network Name: Mtown_Core, Wifi Level: Main Backup, Wifi Security Type: WPA3 Enterprise, Wifi Encryption Type: High, Hidden?: Yes, Monitored?: Unknown, Username: Unknown, Password: Unknown)",
+    "Mtown Guest": "(Network Name: Mtown Guest, Wifi Level: Guest Main, Wifi Security Type: WPA3 Enterprise, Wifi Encryption Type: Medium, Hidden?: No, Monitored?: Rare, Username: msguest, Password: M@ms2021#)",
+    "Radius Test": "(Network Name: Radius Test, Wifi Level: Testing Main, Wifi Security Type: WPA3 Enterprise, Wifi Encryption Type: Low, Hidden?: No, Monitored?: Rarely, Username: msguest, Password: M@ms2021#)"
+};
+
+const iPadRestrictionsContent = {
+    restrictions: `Shared Streams not allowed
+USB accessories while locked allowed
+Wi-Fi power is forced on
+Apple personalized advertising not allowed
+iCloud Photos not allowed
+Installing configuration profiles not allowed
+FaceTime not allowed
+Password Sharing is not allowed
+Changing app cellular data usage not allowed
+Explicit content not allowed
+AirDrop not allowed
+Siri while locked not allowed
+Game Center not allowed
+Siri suggestions not allowed
+eSIM modification not allowed
+Touch ID unlock not allowed
+Bluetooth forced on
+Classroom request permission to leave classes enforced
+Proximity password requests not allowed
+Device name modification not allowed
+Changing cellular plan not allowed
+Siri uncurated content enforced
+Proximity Setup to a new device is not allowed
+Authentication before Auto Filling passwords enforced
+In-app purchase not allowed
+TV show ratings enforced
+App ratings enforced
+VPN creation not allowed
+Entering iTunes password enforced
+Siri profanity filter enforced
+Erase content and settings not allowed
+Delayed Software Updates enforced
+Autonomous Single App Mode permissions added
+iTunes Store not allowed
+Requests to track from apps not allowed
+Classroom unprompted app and device lock enforced
+iMessage not allowed
+Installing apps not allowed
+Classroom automatic class joining enforced
+Apple Music service not allowed
+Delay period for Delayed Software Updates is 30 days
+Passbook not allowed
+Paired Apple Watch not allowed
+Erotica in Apple Books not allowed
+Diagnostic submission modification not allowed
+Prohibited application list added
+Voice dialing while locked not allowed
+Removing system apps not allowed
+iTunes Radio not allowed
+Movie ratings enforced
+Automatic date & time enforced`,
+    bypasses: `No specific bypasses are officially provided or guaranteed for these restrictions. Attempting to bypass school-imposed restrictions may violate school policy and terms of use. Information on potential bypasses is often context-specific and changes frequently. Always consult official IT support for clarity.`
+};
+
+const schoolInfoDetails = `School Name: Middletown Area Middle School
+School Address: 215 Oberlin RoadMiddletown, PA 17057
+School Phone: 717-930-0739
+School Fax: 717-944-0591
+
+School Principal: Dr. Shannon L. Wevodau
+Principal's Phone: 717-930-0739
+Principal's Email: swevodau@raiderweb.org
+
+Assistant Principal: Mr. Michael DeFilippo
+Assistant Principal's Phone: 717-930-0739
+Assistant Principal's Email: mdefilippo@raiderweb.org`;
+
+const keyboardShortcutsContent = `System Shortcuts:
+• Access Spotlight Search: Press Command (⌘) + Space bar.
+• Return to the Home screen: Press Command (⌘) + H.
+• Show the Dock: Press Command (⌘) + Option (⌥) + D.
+• Show the App Library: Press Shift (⇧) + Globe + A.
+• Open Quick Note: Press Globe + Q.
+• Open Siri: Press Globe + S.
+• Open Control Center: Press Globe + C.
+• Open Notification Center: Press Globe + N.
+• Show all windows: Press Globe + Down Arrow.
+• Open the App Switcher: Press Globe + Up Arrow.
+
+Multitasking Shortcuts:
+• Switch to the last active app: Press Command (⌘) + Tab.
+• View all active apps: Press and hold Command (⌘) + Tab.
+• Open Split View: Press Control (⌃) + Globe + Left Arrow to move an app to the left, or Control (⌃) + Globe + Right Arrow to move it to the right.
+• Switch the position of apps in Split View: Press Control (⌃) + Globe + Left or Right Arrow.
+• Open Slide Over: Press Globe + Backslash.
+• Move the Slide Over window: Press Option (⌥) + Globe + Left or Right Arrow.
+
+Safari and App-Specific Shortcuts:
+• Take a full-screen screenshot: Press Command (⌘) + Shift + 3.
+• Take a screenshot and enter markup immediately: Press Command (⌘) + Shift + 4.
+• Open a new private tab: Press Command (⌘) + Shift + N.
+• Open a new tab: Press Command (⌘) + T or Command (⌘) + N.
+• Close the current tab: Press Command (⌘) + W.
+• Close all tabs in Tab Grid: Press Shift + Command (⌘) + W.
+• Go to the next tab: Press Option (⌥) + Command (⌘) + Right Arrow, or Control (⌃) + Tab, or Command (⌘) + }.
+• Go to the previous tab: Press Option (⌥) + Command (⌘) + Left Arrow, or Shift + Control (⌃) + Tab, or Command (⌘) + {.
+• Reopen the last closed tab: Press Shift + Command (⌘) + T.
+• Go to a specific tab (1-8): Press Command (⌘) + (1-8).
+• Go to the last tab: Press Command (⌘) + 9.
+• Open the Tab Grid: Press Shift + Command (⌘) + .
+• Open a new Incognito tab: Press Shift + Command (⌘) + N.
+• Open a new Incognito window: Press Option (⌥) + Shift + Command (⌘) + N.
+• Open a new window: Press Option (⌥) + Command (⌘) + N.
+
+General Navigation and Text Editing:
+• Navigate between elements in an app (like fields, lists, buttons): Press Tab.
+• Select all text: Press Command (⌘) + A.
+• Copy selected text: Press Command (⌘) + C.
+• Cut selected text: Press Command (⌘) + X.
+• Paste copied text: Press Command (⌘) + V.
+• Undo the last action: Press Command (⌘) + Z.
+• Redo the last undone action: Press Command (⌘) + Shift + Z.
+• Jump to the top of a page: Press Command (⌘) + Up Arrow.
+• Jump to the bottom of a page: Press Command (⌘) + Down Arrow.
+• Highlight text one character at a time: Press Shift + Left or Right Arrow.
+To view all available shortcuts for the specific app you are using, press and hold the Command (⌘) key. For a complete list of system-wide shortcuts, press and hold the Globe key on a compatible keyboard.`;
+
+
+function displayWifiInfo(networkName) {
+    const displayArea = document.getElementById('wifiInfoDisplay');
+    displayArea.textContent = wifiNetworks[networkName] || "Network details not found.";
+    logActivity(`Displayed WiFi info for: ${networkName}`);
+}
+
+function displayiPadRestrictions(type) {
+    const displayArea = document.getElementById('ipadRestrictionsDisplay');
+    displayArea.textContent = iPadRestrictionsContent[type] || "Content not found.";
+    logActivity(`Displayed iPad ${type}.`);
+}
+
+function displaySchoolDetails() {
+    const displayArea = document.getElementById('schoolInfoDisplay');
+    displayArea.textContent = schoolInfoDetails;
+    logActivity('Displayed School Information.');
+}
+
+function displayKeyboardShortcuts() {
+    const displayArea = document.getElementById('keyboardShortcutsDisplay');
+    displayArea.textContent = keyboardShortcutsContent;
+    logActivity('Displayed Keyboard Shortcuts.');
+}
+
+function displayUpdateMessage(item) {
+    const displayAreaId = item.toLowerCase().replace(/[^a-z0-9]/g, '') + 'display'; // Generic ID for display areas
+    const displayArea = document.getElementById(displayAreaId);
+    if (displayArea) {
+        displayArea.textContent = `Update coming soon for "${item}"`;
+    } else {
+        showNotification(`Info for "${item}" is: Update coming soon!`);
+    }
+    logActivity(`Displayed 'Update coming soon' for: ${item}`);
+}
+
+function loadMedia() {
+    const mediaUrlInput = document.getElementById('mediaUrl');
+    const mediaFrame = document.getElementById('mediaFrame');
+    let url = mediaUrlInput.value.trim();
+
+    if (url) {
+        // Basic URL validation
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'https://' + url; // Prepend https if missing
+        }
+        mediaFrame.src = url;
+        logActivity(`Loaded media: ${url}`);
+        showNotification(`Loading media from: ${url}`);
+    } else {
+        mediaFrame.src = 'about:blank'; // Clear iframe if input is empty
+        logActivity('Media URL cleared.');
+        showNotification('Please enter a media URL.');
+    }
+}
+
+// Function for the new media player toolbar buttons
+function loadMediaFromToolbar(url) {
+    const mediaFrame = document.getElementById('mediaFrame');
+    document.getElementById('mediaUrl').value = url; // Also update the input field
+    if (url) {
+        mediaFrame.src = url;
+        logActivity(`Loaded media from toolbar: ${url}`);
+        showNotification(`Loading media from: ${url}`);
+    }
+}
+
+// Function for the OLD MODAL media player, kept for backward compatibility if you uncomment it
+function loadMediaModal() {
+    const mediaUrlInput = document.getElementById('mediaUrlModal');
+    const mediaFrame = document.getElementById('mediaFrameModal');
+    let url = mediaUrlInput.value.trim();
+
+    if (url) {
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'https://' + url;
+        }
+        mediaFrame.src = url;
+        logActivity(`Loaded media (modal): ${url}`);
+        showNotification(`Loading media from (modal): ${url}`);
+    } else {
+        mediaFrame.src = 'about:blank';
+        logActivity('Media (modal) URL cleared.');
+        showNotification('Please enter a media URL for modal player.');
+    }
+}
+
+
 // Event listeners
 document.addEventListener('DOMContentLoaded', () => {
 setupToggles();
@@ -3969,7 +4519,7 @@ document.getElementById('textNotes').value = savedNotes;
 }
 
 document.addEventListener('click', (e) => {
-if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) || e.target.closest('.quick-btn')) {
+if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) || e.target.closest('.quick-btn') || e.target.classList.contains('info-button')) { // Added info-button
 stats.buttonPresses++;
 updateStats();
 }
