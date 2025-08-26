@@ -22,6 +22,17 @@
 --success-color: #00ff41;
 --warning-color: #ffaa00;
 --error-color: #ff0040;
+
+/* Specific colors for content indicators */
+--color-high: #00ff41; /* Green */
+--color-medium: #ffaa00; /* Orange */
+--color-low: #ff0040; /* Red */
+--color-yes: #00ff41; /* Green */
+--color-no: #ff0040; /* Red */
+--color-rare: #ffaa00; /* Orange */
+--color-rarely: #ffaa00; /* Orange */
+--color-unknown: #aaaaaa; /* Grey */
+--color-dangerous: #ff0040; /* Red */
 }
 
 /* Light Theme Variables */
@@ -36,6 +47,17 @@ body.light-theme {
 --success-color: #28a745; /* Green for light theme success */
 --warning-color: #ffc107; /* Yellow for light theme warning */
 --error-color: #dc3545; /* Red for light theme error */
+
+/* Specific colors for content indicators - light theme */
+--color-high: #28a745;
+--color-medium: #ffc107;
+--color-low: #dc3545;
+--color-yes: #28a745;
+--color-no: #dc3545;
+--color-rare: #ffc107;
+--color-rarely: #ffc107;
+--color-unknown: #6c757d;
+--color-dangerous: #dc3545;
 }
 
 /* Adjust specific elements for light theme */
@@ -279,6 +301,17 @@ box-shadow: 0 0 30px rgba(0, 123, 255, 0.3) !important;
 body.light-theme .reset-popup p {
 color: var(--text-primary) !important;
 }
+
+/* Content indicator colors - light theme */
+body.light-theme .text-color-high { color: var(--color-high); }
+body.light-theme .text-color-medium { color: var(--color-medium); }
+body.light-theme .text-color-low { color: var(--color-low); }
+body.light-theme .text-color-yes { color: var(--color-yes); }
+body.light-theme .text-color-no { color: var(--color-no); }
+body.light-theme .text-color-rare { color: var(--color-rare); }
+body.light-theme .text-color-rarely { color: var(--color-rarely); }
+body.light-theme .text-color-unknown { color: var(--color-unknown); }
+body.light-theme .text-color-dangerous { color: var(--color-dangerous); }
 
 
 * {
@@ -1308,37 +1341,45 @@ box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
     flex-direction: column;
     align-items: center; /* Center icon and text */
     text-align: center;
-    min-width: 120px; /* Ensure buttons have a minimum width */
-    max-width: 180px; /* Max width to keep them from getting too wide */
-    flex-grow: 1;
+    width: 160px; /* Fixed width for rectangular buttons */
+    height: 120px; /* Fixed height */
+    justify-content: center; /* Vertically center content */
+    background: var(--primary-bg); /* Background for the button group itself */
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    cursor: pointer; /* Make the whole group clickable */
+}
+.feature-button-group:hover {
+    box-shadow: 0 5px 20px rgba(255, 69, 0, 0.2);
+    transform: translateY(-3px);
 }
 
 .feature-button-group .icon-wrapper {
-    font-size: 3em; /* Large icon size */
-    margin-bottom: 10px;
+    font-size: 2.5em; /* Large icon size */
+    margin-bottom: 8px;
     color: var(--accent-color); /* Apply accent color to icons */
     line-height: 1; /* Adjust line height for emojis */
 }
+/* Style for custom emojis if they are not FontAwesome */
+.feature-button-group .icon-wrapper.emoji {
+    font-size: 2.2em; /* Slightly smaller for better emoji rendering */
+}
 
-.feature-button-group button {
+.feature-button-group .button-label {
     display: block;
     width: 100%;
-    padding: 12px 15px;
+    padding: 8px 10px;
     background: var(--accent-color);
     color: white;
     border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
+    border-radius: 6px;
+    font-size: 14px;
     font-weight: 500;
     transition: all 0.3s ease;
     white-space: nowrap;
-}
-
-.feature-button-group button:hover {
-    background: var(--accent-secondary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    pointer-events: none; /* Prevent inner button from capturing click, outer div handles it */
 }
 
 /* Styles for sub-buttons within the modals */
@@ -1358,10 +1399,15 @@ box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
     cursor: pointer;
     font-size: 14px;
     transition: all 0.3s ease;
+    flex-grow: 1; /* Allow them to grow, but set a max-width if needed */
+    max-width: 250px; /* Example max width */
+    text-align: center;
+    text-decoration: none; /* For anchor tags */
 }
 .sub-feature-button:hover {
     background: var(--accent-secondary);
     transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Styles for formatted info cards */
@@ -1377,6 +1423,7 @@ box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
     font-size: 14px;
     line-height: 1.6;
     animation: fadeIn 0.5s ease-out; /* Fade-in animation */
+    display: none; /* Hidden by default until content is loaded */
 }
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
@@ -1402,15 +1449,42 @@ box-shadow: 0 4px 12px rgba(255, 69, 0, 0.3);
 .media-player-warning {
     color: var(--warning-color);
     border-color: var(--warning-color);
-    background-color: rgba(var(--warning-color-rgb), 0.1) !important; /* Lighter background for warning */
+    background-color: rgba(255, 170, 0, 0.1) !important; /* Lighter background for warning */
 }
-/* Ensure warning-color-rgb is defined for light theme override */
-body.light-theme {
-    --warning-color-rgb: 255, 193, 7; /* Equivalent to #ffc107 */
+
+/* Content indicator colors - dark theme */
+.text-color-high { color: var(--color-high); }
+.text-color-medium { color: var(--color-medium); }
+.text-color-low { color: var(--color-low); }
+.text-color-yes { color: var(--color-yes); }
+.text-color-no { color: var(--color-no); }
+.text-color-rare { color: var(--color-rare); }
+.text-color-rarely { color: var(--color-rarely); }
+.text-color-unknown { color: var(--color-unknown); }
+.text-color-dangerous { color: var(--color-dangerous); }
+
+.go-back-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background: var(--accent-secondary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: none; /* Hidden by default */
 }
-:root {
-    --warning-color-rgb: 255, 170, 0; /* Equivalent to #ffaa00 */
+.go-back-button:hover {
+    background: var(--accent-color);
+    transform: translateY(-1px);
 }
+
+/* Specific styling for calculator/converter views */
+.calculator-view, .converter-view {
+    display: none; /* Hidden by default */
+}
+
 
 /* Responsive */
 @media (max-width: 1200px) {
@@ -1434,9 +1508,15 @@ max-width: 100%;
     justify-content: center; /* Center buttons on smaller screens */
 }
 .feature-button-group {
-    min-width: unset; /* Remove min-width to allow more flexibility */
     width: 48%; /* Adjust width for 2 columns */
-    max-width: 250px; /* Prevent them from getting too big on medium screens */
+    height: 100px; /* Adjusted height */
+}
+.feature-button-group .icon-wrapper {
+    font-size: 2em; /* Smaller icon size for smaller buttons */
+}
+.feature-button-group .button-label {
+    font-size: 13px; /* Smaller font for buttons */
+    padding: 6px 8px;
 }
 }
 @media (max-width: 768px) {
@@ -1459,6 +1539,7 @@ max-width: 100%;
 }
 .feature-button-group {
     width: 100%; /* Full width on very small screens */
+    height: 90px;
 }
 .settings-content {
     padding: 20px;
@@ -1671,65 +1752,69 @@ Version 2.0.0
 
 <!-- NEW: Feature Hub - Buttons with Icons for new categories -->
 <div class="feature-hub-section">
-    <div class="feature-button-group">
+    <div class="feature-button-group" onclick="openWifiModal()">
         <span class="icon-wrapper"><i class="fas fa-wifi"></i></span>
-        <button onclick="openWifiModal()">School Wifi Info</button>
+        <span class="button-label">School Wifi Info</span>
     </div>
-    <div class="feature-button-group">
+    <div class="feature-button-group" onclick="togglePanel('ipadRestrictionsModal')">
         <span class="icon-wrapper"><i class="fas fa-ban"></i></span>
-        <button onclick="togglePanel('ipadRestrictionsModal')">iPad Restrictions</button>
+        <span class="button-label">iPad Restrictions</span>
     </div>
-    <div class="feature-button-group">
-        <span class="icon-wrapper"><i class="fas fa-book-open"></i></span>
-        <button onclick="togglePanel('studentHandbooksModal')">Student Handbooks</button>
+    <div class="feature-button-group" onclick="togglePanel('studentHandbooksModal')">
+        <span class="icon-wrapper"><i class="fas fa-book-reader"></i></span>
+        <span class="button-label">Student Handbooks</span>
     </div>
-    <div class="feature-button-group">
-        <span class="icon-wrapper"><i class="fas fa-globe-americas"></i></span>
-        <button onclick="togglePanel('studentWebsitesModal')">Student Websites</button>
+    <div class="feature-button-group" onclick="togglePanel('studentWebsitesModal')">
+        <span class="icon-wrapper"><i class="fas fa-globe"></i></span>
+        <span class="button-label">Student Websites</span>
     </div>
-    <div class="feature-button-group">
+    <div class="feature-button-group" onclick="togglePanel('teacherWebsitesModal')">
         <span class="icon-wrapper"><i class="fas fa-chalkboard-teacher"></i></span>
-        <button onclick="togglePanel('teacherWebsitesModal')">Teacher Websites</button>
+        <span class="button-label">Teacher Websites</span>
     </div>
-    <div class="feature-button-group">
+    <div class="feature-button-group" onclick="togglePanel('schoolInfoModal')">
         <span class="icon-wrapper"><i class="fas fa-school"></i></span>
-        <button onclick="togglePanel('schoolInfoModal')">School Information</button>
+        <span class="button-label">School Information</span>
     </div>
-    <div class="feature-button-group">
-        <span class="icon-wrapper"><i class="fas fa-user-secret"></i></span> <!-- Changed to a more generic "secret" icon -->
-        <button onclick="togglePanel('exploitingToolsModal')">Exploiting Tools</button>
+    <div class="feature-button-group" onclick="togglePanel('exploitingToolsModal')">
+        <span class="icon-wrapper"><i class="fas fa-wrench"></i></span>
+        <span class="button-label">Exploiting Tools</span>
     </div>
-    <div class="feature-button-group">
+    <div class="feature-button-group" onclick="togglePanel('keyboardTricksModal')">
         <span class="icon-wrapper"><i class="fas fa-keyboard"></i></span>
-        <button onclick="togglePanel('keyboardTricksModal')">Keyboard Tricks</button>
+        <span class="button-label">Keyboard Tricks</span>
     </div>
-    <div class="feature-button-group">
+    <div class="feature-button-group" onclick="togglePanel('bypassingToolsModal')">
         <span class="icon-wrapper"><i class="fas fa-mask"></i></span>
-        <button onclick="togglePanel('bypassingToolsModal')">Bypassing Tools</button>
+        <span class="button-label">Bypassing Tools</span>
     </div>
-    <div class="feature-button-group">
-        <span class="icon-wrapper"><i class="fas fa-map"></i></span>
-        <button onclick="togglePanel('schoolMapModal')">School Map</button>
+    <div class="feature-button-group" onclick="togglePanel('schoolMapModal')">
+        <span class="icon-wrapper"><i class="fas fa-map-marked-alt"></i></span>
+        <span class="button-label">School Map</span>
     </div>
-    <div class="feature-button-group">
-        <span class="icon-wrapper"><i class="fas fa-phone"></i></span>
-        <button onclick="togglePanel('phoneDirectoryModal')">Phone Directory</button>
+    <div class="feature-button-group" onclick="togglePanel('phoneDirectoryModal')">
+        <span class="icon-wrapper"><i class="fas fa-phone-alt"></i></span>
+        <span class="button-label">Phone Directory</span>
     </div>
-    <div class="feature-button-group">
-        <span class="icon-wrapper">🎵</span> <!-- Custom Emoji -->
-        <button onclick="togglePanel('musicWebsitesModal')">Music Websites</button>
+    <div class="feature-button-group" onclick="togglePanel('musicWebsitesModal')">
+        <span class="icon-wrapper emoji">🎵</span>
+        <span class="button-label">Music Websites</span>
     </div>
-    <div class="feature-button-group">
-        <span class="icon-wrapper">🎮</span> <!-- Custom Emoji -->
-        <button onclick="togglePanel('gamingWebsitesModal')">Gaming Websites</button>
+    <div class="feature-button-group" onclick="togglePanel('gamingWebsitesModal')">
+        <span class="icon-wrapper emoji">🎮</span>
+        <span class="button-label">Gaming Websites</span>
     </div>
-    <div class="feature-button-group">
-        <span class="icon-wrapper">🌐</span> <!-- Custom Emoji -->
-        <button onclick="togglePanel('vpnWebsitesModal')">VPN Websites</button>
+    <div class="feature-button-group" onclick="togglePanel('vpnWebsitesModal')">
+        <span class="icon-wrapper emoji">🌐</span>
+        <span class="button-label">VPN Websites</span>
     </div>
-    <div class="feature-button-group">
+    <div class="feature-button-group" onclick="togglePanel('calculatorModal')">
+        <span class="icon-wrapper"><i class="fas fa-calculator"></i></span>
+        <span class="button-label">Calculator & Converter</span>
+    </div>
+    <div class="feature-button-group" onclick="togglePanel('mediaPlayerModal')">
         <span class="icon-wrapper"><i class="fas fa-play-circle"></i></span>
-        <button onclick="togglePanel('mediaPlayerModal')">Media Player</button>
+        <span class="button-label">Media Player</span>
     </div>
 </div>
 <!-- END NEW: Feature Hub -->
@@ -1891,23 +1976,29 @@ Did you know? The human brain contains approximately 86 billion neurons!
 </div>
 
 
-<!-- START OF NEW MODAL PANELS (formerly grid panels) -->
+<!-- START OF NEW MODAL PANELS (converted from grid panels) -->
 
 <!-- School Wifi Information Modal -->
 <div id="schoolWifiModal" class="settings-modal">
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-wifi"></i> School Wifi Information</h2>
-            <button onclick="togglePanel('schoolWifiModal')" class="text-2xl text-gray-400 hover:text-white">
+            <button onclick="closeModal('schoolWifiModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="content">
+        <div id="wifiOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Click a network button for details, or "Show All Networks".</p>
             <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayAllWifiInfo()">Show All Wifi Networks</button>
+                <button class="sub-feature-button" onclick="displaySingleWifiInfo('Middletown_Core')">Middletown_Core</button>
+                <button class="sub-feature-button" onclick="displaySingleWifiInfo('Mtown_Core')">Mtown_Core</button>
+                <button class="sub-feature-button" onclick="displaySingleWifiInfo('Mtown Guest')">Mtown Guest</button>
+                <button class="sub-feature-button" onclick="displaySingleWifiInfo('Radius Test')">Radius Test</button>
+                <button class="sub-feature-button" onclick="displayAllWifiInfo()">Show All Networks</button>
             </div>
-            <div id="wifiInfoDisplay" class="formatted-info-card">Click the button to show details.</div>
         </div>
+        <div id="wifiInfoDisplay" class="formatted-info-card"></div>
+        <button id="wifiGoBackButton" class="go-back-button" onclick="goBackToWifiOptions()">Go Back</button>
     </div>
 </div>
 
@@ -1916,17 +2007,19 @@ Did you know? The human brain contains approximately 86 billion neurons!
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-ban"></i> School iPad Restrictions</h2>
-            <button onclick="togglePanel('ipadRestrictionsModal')" class="text-2xl text-gray-400 hover:text-white">
+            <button onclick="closeModal('ipadRestrictionsModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="content">
+        <div id="ipadRestrictionsOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Select to view restrictions or bypasses.</p>
             <div class="sub-feature-button-container">
                 <button class="sub-feature-button" onclick="displayiPadRestrictions('restrictions')">Show Restrictions</button>
                 <button class="sub-feature-button" onclick="displayiPadRestrictions('bypasses')">Show Bypasses</button>
             </div>
-            <div id="ipadRestrictionsDisplay" class="formatted-info-card">Select to view restrictions or bypasses.</div>
         </div>
+        <div id="ipadRestrictionsDisplay" class="formatted-info-card"></div>
+        <button id="ipadRestrictionsGoBackButton" class="go-back-button" onclick="goBackToiPadRestrictionsOptions()">Go Back</button>
     </div>
 </div>
 
@@ -1934,8 +2027,8 @@ Did you know? The human brain contains approximately 86 billion neurons!
 <div id="studentHandbooksModal" class="settings-modal">
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-book-open"></i> Student Handbooks</h2>
-            <button onclick="togglePanel('studentHandbooksModal')" class="text-2xl text-gray-400 hover:text-white">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-book-reader"></i> Student Handbooks</h2>
+            <button onclick="closeModal('studentHandbooksModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -1955,8 +2048,8 @@ Did you know? The human brain contains approximately 86 billion neurons!
 <div id="studentWebsitesModal" class="settings-modal">
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-globe-americas"></i> Student Websites</h2>
-            <button onclick="togglePanel('studentWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-globe"></i> Student Websites</h2>
+            <button onclick="closeModal('studentWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -1994,7 +2087,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-chalkboard-teacher"></i> Teacher Websites</h2>
-            <button onclick="togglePanel('teacherWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+            <button onclick="closeModal('teacherWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
@@ -2034,16 +2127,18 @@ Did you know? The human brain contains approximately 86 billion neurons!
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-school"></i> School Information</h2>
-            <button onclick="togglePanel('schoolInfoModal')" class="text-2xl text-gray-400 hover:text-white">
+            <button onclick="closeModal('schoolInfoModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="content">
+        <div id="schoolInfoOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Click to view school details.</p>
             <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displaySchoolDetails()">Show Details</button>
+                <button class="sub-feature-button" onclick="displaySchoolDetails()">Show School Details</button>
             </div>
-            <div id="schoolInfoDisplay" class="formatted-info-card">Click button for school information.</div>
         </div>
+        <div id="schoolInfoDisplay" class="formatted-info-card"></div>
+        <button id="schoolInfoGoBackButton" class="go-back-button" onclick="goBackToSchoolInfoOptions()">Go Back</button>
     </div>
 </div>
 
@@ -2051,21 +2146,23 @@ Did you know? The human brain contains approximately 86 billion neurons!
 <div id="exploitingToolsModal" class="settings-modal">
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-user-secret"></i> Exploiting Tools</h2>
-            <button onclick="togglePanel('exploitingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-wrench"></i> Exploiting Tools</h2>
+            <button onclick="closeModal('exploitingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         <div class="content">
-            <p class="text-red-400 text-xs mb-2">Warning: These tools are external. Use at your own risk. Not affiliated with this system.</p>
-            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button w-full mb-2">Blooket Exploit</a>
-            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button w-full mb-2">Kahoot Exploit</a>
-            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button w-full mb-2">Gimkit Exploit</a>
-            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button w-full mb-2">Quizlet Exploit</a>
-            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button w-full mb-2">Quizzes Exploit</a>
-            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button w-full mb-2">Quills Exploit</a>
-            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button w-full mb-2">Edpuzzle Exploit</a>
-            <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button w-full">Nearpod Exploit</a>
+            <p class="text-color-dangerous text-xs mb-4"><strong><i class="fas fa-exclamation-triangle mr-1"></i> Warning:</strong> These tools are external and may not be functional due to external website changes or network restrictions. Use at your own risk. Not affiliated with this system.</p>
+            <div class="sub-feature-button-container">
+                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Blooket Exploit</a>
+                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Kahoot Exploit</a>
+                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Gimkit Exploit</a>
+                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Quizlet Exploit</a>
+                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Quizzes Exploit</a>
+                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Quills Exploit</a>
+                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Edpuzzle Exploit</a>
+                <a href="https://sites.google.com/view/tools-2/blooket-exploit" target="_blank" class="sub-feature-button">Nearpod Exploit</a>
+            </div>
         </div>
     </div>
 </div>
@@ -2075,16 +2172,18 @@ Did you know? The human brain contains approximately 86 billion neurons!
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-keyboard"></i> Keyboard Tricks</h2>
-            <button onclick="togglePanel('keyboardTricksModal')" class="text-2xl text-gray-400 hover:text-white">
+            <button onclick="closeModal('keyboardTricksModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="content">
+        <div id="keyboardTricksOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Click to show system shortcuts.</p>
             <div class="sub-feature-button-container">
                 <button class="sub-feature-button" onclick="displayKeyboardShortcuts()">Show Keyboard Shortcuts</button>
             </div>
-            <div id="keyboardShortcutsDisplay" class="formatted-info-card">Click button to show system shortcuts.</div>
         </div>
+        <div id="keyboardShortcutsDisplay" class="formatted-info-card"></div>
+        <button id="keyboardTricksGoBackButton" class="go-back-button" onclick="goBackToKeyboardTricksOptions()">Go Back</button>
     </div>
 </div>
 
@@ -2093,21 +2192,23 @@ Did you know? The human brain contains approximately 86 billion neurons!
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-mask"></i> Bypassing Tools</h2>
-            <button onclick="togglePanel('bypassingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
+            <button onclick="closeModal('bypassingToolsModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="content">
+        <div id="bypassingToolsOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Click any tool below for status updates.</p>
             <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Bathroom bypass', 'bypassingToolsDisplay')">Bathroom bypass</button>
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Wifi Bypass', 'bypassingToolsDisplay')">Wifi Bypass</button>
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Teacher monitoring bypass', 'bypassingToolsDisplay')">Teacher monitoring bypass</button>
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Update Coming Soon (1)', 'bypassingToolsDisplay')">Update Coming Soon (1)</button>
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Update Coming Soon (2)', 'bypassingToolsDisplay')">Update Coming Soon (2)</button>
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Update Coming Soon (3)', 'bypassingToolsDisplay')">Update Coming Soon (3)</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('Bathroom bypass', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Bathroom bypass</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('Wifi Bypass', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Wifi Bypass</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('Teacher monitoring bypass', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Teacher monitoring bypass</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('General Update', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Update Coming Soon</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('Feature 2 Update', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Another Update Coming Soon</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('Final Feature Update', 'bypassingToolsDisplay', 'bypassingToolsOptionsContainer', 'bypassingToolsGoBackButton')">Final Update Coming Soon</button>
             </div>
-            <div id="bypassingToolsDisplay" class="formatted-info-card">Click a tool for more info.</div>
         </div>
+        <div id="bypassingToolsDisplay" class="formatted-info-card"></div>
+        <button id="bypassingToolsGoBackButton" class="go-back-button" onclick="goBackToBypassingToolsOptions()">Go Back</button>
     </div>
 </div>
 
@@ -2115,17 +2216,19 @@ Did you know? The human brain contains approximately 86 billion neurons!
 <div id="schoolMapModal" class="settings-modal">
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-map"></i> School Building Map</h2>
-            <button onclick="togglePanel('schoolMapModal')" class="text-2xl text-gray-400 hover:text-white">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-map-marked-alt"></i> School Building Map</h2>
+            <button onclick="closeModal('schoolMapModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="content">
+        <div id="schoolMapOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Click button for map information.</p>
             <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('School Building Map', 'schoolMapDisplay')">Show Map</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('School Building Map', 'schoolMapDisplay', 'schoolMapOptionsContainer', 'schoolMapGoBackButton')">Show Map</button>
             </div>
-            <div id="schoolMapDisplay" class="formatted-info-card">Click button for map information.</div>
         </div>
+        <div id="schoolMapDisplay" class="formatted-info-card"></div>
+        <button id="schoolMapGoBackButton" class="go-back-button" onclick="goBackToSchoolMapOptions()">Go Back</button>
     </div>
 </div>
 
@@ -2133,17 +2236,19 @@ Did you know? The human brain contains approximately 86 billion neurons!
 <div id="phoneDirectoryModal" class="settings-modal">
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-phone"></i> School Phone Directory</h2>
-            <button onclick="togglePanel('phoneDirectoryModal')" class="text-2xl text-gray-400 hover:text-white">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-phone-alt"></i> School Phone Directory</h2>
+            <button onclick="closeModal('phoneDirectoryModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="content">
+        <div id="phoneDirectoryOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Click button for directory information.</p>
             <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('School Phone Directory', 'phoneDirectoryDisplay')">Show Directory</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('School Phone Directory', 'phoneDirectoryDisplay', 'phoneDirectoryOptionsContainer', 'phoneDirectoryGoBackButton')">Show Directory</button>
             </div>
-            <div id="phoneDirectoryDisplay" class="formatted-info-card">Click button for directory information.</div>
         </div>
+        <div id="phoneDirectoryDisplay" class="formatted-info-card"></div>
+        <button id="phoneDirectoryGoBackButton" class="go-back-button" onclick="goBackToPhoneDirectoryOptions()">Go Back</button>
     </div>
 </div>
 
@@ -2152,16 +2257,18 @@ Did you know? The human brain contains approximately 86 billion neurons!
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-orange-500">🎵 Music Websites</h2>
-            <button onclick="togglePanel('musicWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+            <button onclick="closeModal('musicWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="content">
+        <div id="musicWebsitesOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Click button for music websites.</p>
             <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Music Websites', 'musicWebsitesDisplay')">Show Music Sites</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('Music Websites', 'musicWebsitesDisplay', 'musicWebsitesOptionsContainer', 'musicWebsitesGoBackButton')">Show Music Sites</button>
             </div>
-            <div id="musicWebsitesDisplay" class="formatted-info-card">Click button for music websites.</div>
         </div>
+        <div id="musicWebsitesDisplay" class="formatted-info-card"></div>
+        <button id="musicWebsitesGoBackButton" class="go-back-button" onclick="goBackToMusicWebsitesOptions()">Go Back</button>
     </div>
 </div>
 
@@ -2170,16 +2277,18 @@ Did you know? The human brain contains approximately 86 billion neurons!
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-orange-500">🎮 Gaming Websites</h2>
-            <button onclick="togglePanel('gamingWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+            <button onclick="closeModal('gamingWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="content">
+        <div id="gamingWebsitesOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Click button for gaming websites.</p>
             <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('Gaming Websites', 'gamingWebsitesDisplay')">Show Gaming Sites</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('Gaming Websites', 'gamingWebsitesDisplay', 'gamingWebsitesOptionsContainer', 'gamingWebsitesGoBackButton')">Show Gaming Sites</button>
             </div>
-            <div id="gamingWebsitesDisplay" class="formatted-info-card">Click button for gaming websites.</div>
         </div>
+        <div id="gamingWebsitesDisplay" class="formatted-info-card"></div>
+        <button id="gamingWebsitesGoBackButton" class="go-back-button" onclick="goBackToGamingWebsitesOptions()">Go Back</button>
     </div>
 </div>
 
@@ -2188,16 +2297,101 @@ Did you know? The human brain contains approximately 86 billion neurons!
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-orange-500">🌐 VPN Websites</h2>
-            <button onclick="togglePanel('vpnWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
+            <button onclick="closeModal('vpnWebsitesModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        <div class="content">
+        <div id="vpnWebsitesOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Click button for VPN websites.</p>
             <div class="sub-feature-button-container">
-                <button class="sub-feature-button" onclick="displayUpdateMessage('VPN Websites', 'vpnWebsitesDisplay')">Show VPN Sites</button>
+                <button class="sub-feature-button" onclick="displayUpdateMessage('VPN Websites', 'vpnWebsitesDisplay', 'vpnWebsitesOptionsContainer', 'vpnWebsitesGoBackButton')">Show VPN Sites</button>
             </div>
-            <div id="vpnWebsitesDisplay" class="formatted-info-card">Click button for VPN websites.</div>
         </div>
+        <div id="vpnWebsitesDisplay" class="formatted-info-card"></div>
+        <button id="vpnWebsitesGoBackButton" class="go-back-button" onclick="goBackToVpnWebsitesOptions()">Go Back</button>
+    </div>
+</div>
+
+<!-- Calculator & Converter Modal (NEW) -->
+<div id="calculatorModal" class="settings-modal">
+    <div class="settings-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-calculator"></i> Calculator & Converter</h2>
+            <button onclick="closeModal('calculatorModal')" class="text-2xl text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="calculatorOptionsContainer">
+            <p class="text-sm text-gray-400 mb-4">Choose a tool to open:</p>
+            <div class="sub-feature-button-container">
+                <button class="sub-feature-button" onclick="showCalculator()">Open Calculator</button>
+                <button class="sub-feature-button" onclick="showConverter()">Open Unit Converter</button>
+            </div>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- Calculator -->
+            <div id="calculatorView" class="calculator-view calculator formatted-info-card">
+                <h3 class="text-xl font-bold text-accent-color mb-4 text-center">Calculator</h3>
+                <div class="calc-display" id="calcDisplay">0</div>
+                <div class="calc-buttons">
+                    <button class="calc-btn" onclick="clearCalc()">C</button>
+                    <button class="calc-btn" onclick="deleteLast()">⌫</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('/')">/</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('*')">×</button>
+
+                    <button class="calc-btn" onclick="appendToCalc('7')">7</button>
+                    <button class="calc-btn" onclick="appendToCalc('8')">8</button>
+                    <button class="calc-btn" onclick="appendToCalc('9')">9</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('-')">-</button>
+
+                    <button class="calc-btn" onclick="appendToCalc('4')">4</button>
+                    <button class="calc-btn" onclick="appendToCalc('5')">5</button>
+                    <button class="calc-btn" onclick="appendToCalc('6')">6</button>
+                    <button class="calc-btn operator" onclick="appendToCalc('+')">+</button>
+
+                    <button class="calc-btn" onclick="appendToCalc('1')">1</button>
+                    <button class="calc-btn" onclick="appendToCalc('2')">2</button>
+                    <button class="calc-btn" onclick="appendToCalc('3')">3</button>
+                    <button class="calc-btn equals" onclick="calculateResult()" rowspan="2">=</button>
+
+                    <button class="calc-btn" onclick="appendToCalc('0')" style="grid-column: span 2;">0</button>
+                    <button class="calc-btn" onclick="appendToCalc('.')">.</button>
+                </div>
+            </div>
+
+            <!-- Unit Converter -->
+            <div id="converterView" class="converter-view calculator formatted-info-card"> <!-- Reusing calculator styling for structure -->
+                <h3 class="text-xl font-bold text-accent-color mb-4 text-center">Unit Converter</h3>
+                <div class="space-y-4">
+                    <label class="block text-sm mb-1 text-text-secondary">Conversion Type:</label>
+                    <select id="conversionType" class="w-full p-2 bg-primary-bg rounded border border-border-color" onchange="updateConversionUnits()">
+                        <option value="length">Length</option>
+                        <option value="weight">Weight</option>
+                        <option value="temperature">Temperature</option>
+                        <option value="volume">Volume</option>
+                    </select>
+
+                    <div class="grid grid-cols-2 gap-4 mt-4">
+                        <div>
+                            <label class="block text-sm mb-1 text-text-secondary">From:</label>
+                            <select id="fromUnit" class="w-full p-2 bg-primary-bg rounded border border-border-color">
+                                <!-- Options populated by JS -->
+                            </select>
+                            <input type="number" id="fromValue" class="w-full p-2 bg-primary-bg rounded mt-2 border border-border-color" placeholder="Enter value" oninput="convertUnits()">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm mb-1 text-text-secondary">To:</label>
+                            <select id="toUnit" class="w-full p-2 bg-primary-bg rounded border border-border-color" onchange="convertUnits()">
+                                <!-- Options populated by JS -->
+                            </select>
+                            <input type="number" id="toValue" class="w-full p-2 bg-primary-bg rounded mt-2 border border-border-color" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="calculatorGoBackButton" class="go-back-button" onclick="goBackToCalculatorOptions()">Go Back</button>
     </div>
 </div>
 
@@ -2206,16 +2400,16 @@ Did you know? The human brain contains approximately 86 billion neurons!
     <div class="settings-content">
         <div class="flex justify-between items-center mb-6">
             <h2 class="text-2xl font-bold text-orange-500"><i class="fas fa-play-circle"></i> Media Player</h2>
-            <button onclick="togglePanel('mediaPlayerModal')" class="text-2xl text-gray-400 hover:text-white">
+            <button onclick="closeModal('mediaPlayerModal')" class="text-2xl text-gray-400 hover:text-white">
                 <i class="fas fa-times"></i>
             </button>
         </div>
         <div class="media-container">
-            <p class="media-player-warning formatted-info-card text-xs mb-2">
-                <i class="fas fa-exclamation-triangle mr-1"></i> **Important:** This player uses an iframe and does NOT proxy content. Many websites prevent embedding for security reasons (X-Frame-Options, CSP). Functionality is limited by external site policies.
+            <p class="media-player-warning formatted-info-card text-xs mb-2" style="display: block;">
+                <i class="fas fa-exclamation-triangle mr-1"></i> <strong>IMPORTANT: This is NOT a proxy.</strong> This player operates entirely client-side (in your browser) and does NOT use a server-side proxy. Most major media sites (YouTube, Spotify, Netflix, etc.) actively block embedding their content in iframes from different domains due to security policies (`X-Frame-Options`, `Content-Security-Policy`). This is a fundamental browser security feature and **CANNOT BE BYPASSED BY CLIENT-SIDE JAVASCRIPT**. Functionality will be limited to sites that explicitly allow embedding.
             </p>
             <div class="flex gap-2 mb-4">
-                <input type="url" id="mediaUrl" class="media-input flex-grow" placeholder="Enter video/music URL (e.g., YouTube video link)...">
+                <input type="url" id="mediaUrl" class="media-input flex-grow" placeholder="Enter video/music URL (e.g., public video link)...">
                 <button class="tool-btn" onclick="loadMedia()"><i class="fas fa-play"></i> Load</button>
             </div>
             <iframe id="mediaFrame" class="media-frame" src="about:blank" frameborder="0" allowfullscreen sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-presentation"></iframe>
@@ -2236,7 +2430,7 @@ Did you know? The human brain contains approximately 86 billion neurons!
 <!-- END OF NEW MODAL PANELS -->
 
 
-<!-- Settings Modal -->
+<!-- Settings Modal (Existing) -->
 <div id="settingsModal" class="settings-modal">
 <div class="settings-content">
 <div class="flex justify-between items-center mb-6">
@@ -3412,9 +3606,8 @@ await sendWebhook(webhooks.incorrectInformation, createEmbedsFromFields(
 { name: "Validation Issue", value: loginFailedMessages.length > 0 ? `Invalid ${loginFailedMessages.join(", ")}` : "Combination Mismatch", inline: false },
 { name: "Timestamp", value: new Date().toLocaleString(), inline: false }
 ]
-));
-
-failedLogin(username, userID);
+);
+await sendWebhook(webhooks.incorrectInformation, incorrectLoginEmbeds);
 }
 }
 
@@ -3557,8 +3750,8 @@ setInterval(updateClock, 1000);
 updateStats();
 updateLoginHistoryDisplay();
 updateImportantDatesDisplay(); // Update important dates display
-updateClickCountDisplay(); // Update click count display
-updateErrorLogDisplay(); // Update error logs display
+updateClickCountDisplay(); // Update error logs display
+updateErrorLogDisplay(); // Corrected error log call
 
 logActivity('Dashboard initialized');
 }
@@ -3684,16 +3877,28 @@ const isVisible = panel.style.display === 'flex'; // Modals use 'flex'
 
 panel.style.display = isVisible ? 'none' : 'flex';
 
-
+// Reset modal content when opening for a fresh start
 if (!isVisible) {
-stats.panelsOpened++;
-logActivity(`Panel opened: ${panelId}`);
+    resetModalContent(panelId);
+    stats.panelsOpened++;
+    logActivity(`Panel opened: ${panelId}`);
 } else {
-stats.panelsClosed++;
-logActivity(`Panel closed: ${panelId}`);
+    stats.panelsClosed++;
+    logActivity(`Panel closed: ${panelId}`);
 }
 
 updateStats();
+}
+
+// Custom function to close a modal by ID, used in the modal's 'X' button
+function closeModal(panelId) {
+    const panel = document.getElementById(panelId);
+    if (panel) {
+        panel.style.display = 'none';
+        stats.panelsClosed++;
+        logActivity(`Modal closed: ${panelId}`);
+        updateStats();
+    }
 }
 
 
@@ -3717,14 +3922,15 @@ stats.buttonPresses++;
 logActivity('Panel minimized/restored');
 }
 
-function closePanel(button) {
-const panel = button.closest('.settings-modal') || button.closest('.panel');
+
+function closePanel(button) { // Kept for existing grid panels, but new modals use closeModal
+const panel = button.closest('.panel');
 if (!panel) return; // Add null check for panel
 
-panel.style.display = 'none'; // For both modal and grid panels
+panel.style.display = 'none'; // For existing grid panels
 stats.panelsClosed++;
 stats.buttonPresses++;
-logActivity(`Panel closed: ${panel.dataset.panel || panel.id}`); // Log ID for modals
+logActivity(`Panel closed: ${panel.dataset.panel}`);
 updateStats();
 }
 
@@ -4259,10 +4465,10 @@ link.click();
 logActivity('Canvas saved');
 }
 
-// Calculator functions (still in code but not exposed via quickbar buttons)
+// Calculator functions (now part of the calculatorModal)
 function appendToCalc(value) {
 const display = document.getElementById('calcDisplay');
-if (!display) return; // Add null check
+if (!display) return;
 
 if (display.textContent === '0' && value !== '.') {
 display.textContent = value;
@@ -4300,13 +4506,13 @@ display.textContent = 'Error';
 }
 }
 
-// Unit converter (still in code but not exposed via quickbar buttons)
+// Unit converter functions (now part of the calculatorModal)
 function updateConversionUnits() {
 const typeSelect = document.getElementById('conversionType');
 const fromUnitSelect = document.getElementById('fromUnit');
 const toUnitSelect = document.getElementById('toUnit');
 
-if (!typeSelect || !fromUnitSelect || !toUnitSelect) return; // Add null checks
+if (!typeSelect || !fromUnitSelect || !toUnitSelect) return;
 
 const type = typeSelect.value;
 
@@ -4355,7 +4561,7 @@ const toUnitSelect = document.getElementById('toUnit');
 const typeSelect = document.getElementById('conversionType');
 const toValueInput = document.getElementById('toValue');
 
-if (!fromValueInput || !fromUnitSelect || !toUnitSelect || !typeSelect || !toValueInput) return; // Add null checks
+if (!fromValueInput || !fromUnitSelect || !toUnitSelect || !typeSelect || !toValueInput) return;
 
 const fromValue = parseFloat(fromValueInput.value);
 const fromUnit = fromUnitSelect.value;
@@ -4377,8 +4583,7 @@ length: {
 weight: {
 'kg': 1000, 'g': 1, 'lb': 453.592, 'oz': 28.3495
 },
-temperature: {
-},
+temperature: {}, /* Temperature conversions are handled separately below */
 volume: {
 'l': 1, 'ml': 0.001, 'gal': 3.78541, 'qt': 0.946353
 }
@@ -4404,6 +4609,7 @@ else if (toUnit === 'k') result = tempInC + 273.15;
 toValueInput.value = result.toFixed(6);
 logActivity(`Unit converted: ${fromValue} ${fromUnit} to ${result.toFixed(6)} ${toUnit}`);
 }
+
 
 // Theme functions
 function toggleTheme() {
@@ -4788,13 +4994,124 @@ General Navigation and Text Editing:
 To view all available shortcuts for the specific app you are using, press and hold the Command (⌘) key. For a complete list of system-wide shortcuts, press and hold the Globe key on a compatible keyboard.`;
 
 
-// Function to open the Wifi modal and display all networks
-function openWifiModal() {
-    togglePanel('schoolWifiModal');
-    displayAllWifiInfo(); // Automatically display all info when modal opens
+// Helper function to get color class based on text value
+function getColorClass(value) {
+    const lowerValue = String(value).toLowerCase();
+    if (lowerValue === 'high' || lowerValue === 'yes') return 'text-color-high';
+    if (lowerValue === 'medium' || lowerValue === 'rare' || lowerValue === 'rarely') return 'text-color-medium';
+    if (lowerValue === 'low' || lowerValue === 'no' || lowerValue === 'dangerous') return 'text-color-low';
+    if (lowerValue === 'unknown') return 'text-color-unknown';
+    return ''; // No specific color
 }
 
-// Displays ALL WiFi network information, formatted nicely
+// Resets a modal's content to its initial sub-button state
+function resetModalContent(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+
+    const contentDisplay = modal.querySelector('.formatted-info-card, #wifiInfoDisplay');
+    const optionsContainer = modal.querySelector('div[id$="OptionsContainer"], .content > .sub-feature-button-container');
+    const goBackButton = modal.querySelector('.go-back-button');
+    const calculatorView = document.getElementById('calculatorView');
+    const converterView = document.getElementById('converterView');
+
+    if (contentDisplay) {
+        contentDisplay.innerHTML = ''; // Clear content
+        contentDisplay.style.display = 'none'; // Hide content
+    }
+    if (optionsContainer) {
+        optionsContainer.style.display = 'flex'; // Show sub-buttons
+    }
+    if (goBackButton) {
+        goBackButton.style.display = 'none'; // Hide go back button
+    }
+    // Specific reset for Calculator/Converter
+    if (modalId === 'calculatorModal') {
+        if (calculatorView) calculatorView.style.display = 'none';
+        if (converterView) converterView.style.display = 'none';
+        const calcDisplay = document.getElementById('calcDisplay');
+        if (calcDisplay) calcDisplay.textContent = '0';
+        const fromValueInput = document.getElementById('fromValue');
+        const toValueInput = document.getElementById('toValue');
+        if (fromValueInput) fromValueInput.value = '';
+        if (toValueInput) toValueInput.value = '';
+        updateConversionUnits(); // Reset unit converter options
+    }
+    // Specific reset for Media Player if needed
+    if (modalId === 'mediaPlayerModal') {
+        const mediaFrame = document.getElementById('mediaFrame');
+        const mediaUrlInput = document.getElementById('mediaUrl');
+        if(mediaFrame) mediaFrame.src = 'about:blank';
+        if(mediaUrlInput) mediaUrlInput.value = '';
+    }
+
+    logActivity(`Reset modal content for: ${modalId}`);
+}
+
+// Generic function to display options and hide content
+function showOptions(optionsContainerId, contentDisplayId, goBackButtonId) {
+    const optionsContainer = document.getElementById(optionsContainerId);
+    const contentDisplay = document.getElementById(contentDisplayId);
+    const goBackButton = document.getElementById(goBackButtonId);
+
+    if (optionsContainer) optionsContainer.style.display = 'flex';
+    if (contentDisplay) contentDisplay.style.display = 'none';
+    if (goBackButton) goBackButton.style.display = 'none';
+
+    // Clear content when going back
+    if (contentDisplay) contentDisplay.innerHTML = '';
+}
+
+// Generic function to display content and hide options
+function showContent(optionsContainerId, contentDisplayId, goBackButtonId, contentHtml) {
+    const optionsContainer = document.getElementById(optionsContainerId);
+    const contentDisplay = document.getElementById(contentDisplayId);
+    const goBackButton = document.getElementById(goBackButtonId);
+
+    if (optionsContainer) optionsContainer.style.display = 'none';
+    if (contentDisplay) {
+        contentDisplay.innerHTML = contentHtml;
+        contentDisplay.style.display = 'block'; // Show content
+        contentDisplay.classList.add('fade-in-content'); // Apply fade-in animation
+    }
+    if (goBackButton) goBackButton.style.display = 'block';
+}
+
+
+// MODAL SPECIFIC FUNCTIONS
+
+// WiFi Modal
+function openWifiModal() {
+    togglePanel('schoolWifiModal');
+    // We want all buttons first, not content, so options should be visible
+    showOptions('wifiOptionsContainer', 'wifiInfoDisplay', 'wifiGoBackButton');
+}
+
+function displaySingleWifiInfo(networkName) {
+    const displayArea = document.getElementById('wifiInfoDisplay');
+    if (!displayArea) return;
+    const network = wifiNetworks[networkName];
+    if (!network) {
+        displayArea.innerHTML = `<div class="text-red-400">Network "${networkName}" details not found.</div>`;
+        return;
+    }
+
+    let htmlContent = `<div class="mb-4 pb-4">
+                            <h3 class="text-xl font-bold text-accent-color mb-2">${network["Network Name"]}</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
+                                <p><strong>Wifi Level:</strong> <span class="${getColorClass(network["Wifi Level"])}">${network["Wifi Level"]}</span></p>
+                                <p><strong>Security Type:</strong> <span class="${getColorClass(network["Wifi Security Type"])}">${network["Wifi Security Type"]}</span></p>
+                                <p><strong>Encryption Type:</strong> <span class="${getColorClass(network["Wifi Encryption Type"])}">${network["Wifi Encryption Type"]}</span></p>
+                                <p><strong>Hidden?:</strong> <span class="${getColorClass(network["Hidden?"])}">${network["Hidden?"]}</span></p>
+                                <p><strong>Monitored?:</strong> <span class="${getColorClass(network["Monitored?"])}">${network["Monitored?"]}</span></p>
+                                <p><strong>Username:</strong> ${network["Username"]}</p>
+                                <p><strong>Password:</strong> ${network["Password"]}</p>
+                            </div>
+                        </div>`;
+    showContent('wifiOptionsContainer', 'wifiInfoDisplay', 'wifiGoBackButton', htmlContent);
+    logActivity(`Displayed WiFi info for: ${networkName}`);
+}
+
 function displayAllWifiInfo() {
     const displayArea = document.getElementById('wifiInfoDisplay');
     if (!displayArea) return;
@@ -4804,35 +5121,47 @@ function displayAllWifiInfo() {
         const network = wifiNetworks[networkName];
         htmlContent += `<div class="mb-4 pb-4 border-b border-gray-700 last:border-b-0">
                             <h3 class="text-xl font-bold text-accent-color mb-2">${network["Network Name"]}</h3>
-                            <p><strong>Wifi Level:</strong> ${network["Wifi Level"]}</p>
-                            <p><strong>Security Type:</strong> ${network["Wifi Security Type"]}</p>
-                            <p><strong>Encryption Type:</strong> ${network["Wifi Encryption Type"]}</p>
-                            <p><strong>Hidden?:</strong> ${network["Hidden?"]}</p>
-                            <p><strong>Monitored?:</strong> ${network["Monitored?"]}</p>
-                            <p><strong>Username:</strong> ${network["Username"]}</p>
-                            <p><strong>Password:</strong> ${network["Password"]}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-2">
+                                <p><strong>Wifi Level:</strong> <span class="${getColorClass(network["Wifi Level"])}">${network["Wifi Level"]}</span></p>
+                                <p><strong>Security Type:</strong> <span class="${getColorClass(network["Wifi Security Type"])}">${network["Wifi Security Type"]}</span></p>
+                                <p><strong>Encryption Type:</strong> <span class="${getColorClass(network["Wifi Encryption Type"])}">${network["Wifi Encryption Type"]}</span></p>
+                                <p><strong>Hidden?:</strong> <span class="${getColorClass(network["Hidden?"])}">${network["Hidden?"]}</span></p>
+                                <p><strong>Monitored?:</strong> <span class="${getColorClass(network["Monitored?"])}">${network["Monitored?"]}</span></p>
+                                <p><strong>Username:</strong> ${network["Username"]}</p>
+                                <p><strong>Password:</strong> ${network["Password"]}</p>
+                            </div>
                         </div>`;
     }
-    displayArea.innerHTML = htmlContent;
+    showContent('wifiOptionsContainer', 'wifiInfoDisplay', 'wifiGoBackButton', htmlContent);
     logActivity('Displayed all School Wifi Information.');
 }
 
+function goBackToWifiOptions() {
+    showOptions('wifiOptionsContainer', 'wifiInfoDisplay', 'wifiGoBackButton');
+}
 
-// Displays iPad restrictions or bypasses
+
+// iPad Restrictions Modal
 function displayiPadRestrictions(type) {
     const displayArea = document.getElementById('ipadRestrictionsDisplay');
     if (!displayArea) return;
 
     let content = iPadRestrictionsContent[type] || "Content not found.";
+    let colorClass = (type === 'bypasses') ? 'text-color-dangerous' : ''; // Highlight bypasses as dangerous
     let formattedContent = `<div class="mb-4 pb-4">
                                 <h3 class="text-xl font-bold text-accent-color mb-2">${type.replace('restrictions', 'Restrictions').replace('bypasses', 'Bypasses')}</h3>
-                                <p>${content.replace(/\n/g, '<br>')}</p>
+                                <p class="${colorClass}">${content.replace(/\n/g, '<br>')}</p>
                             </div>`;
-    displayArea.innerHTML = formattedContent;
+    showContent('ipadRestrictionsOptionsContainer', 'ipadRestrictionsDisplay', 'ipadRestrictionsGoBackButton', formattedContent);
     logActivity(`Displayed iPad ${type}.`);
 }
 
-// Displays general school details
+function goBackToiPadRestrictionsOptions() {
+    showOptions('ipadRestrictionsOptionsContainer', 'ipadRestrictionsDisplay', 'ipadRestrictionsGoBackButton');
+}
+
+
+// School Information Modal
 function displaySchoolDetails() {
     const displayArea = document.getElementById('schoolInfoDisplay');
     if (!displayArea) return;
@@ -4855,11 +5184,15 @@ function displaySchoolDetails() {
             <p><strong>Email:</strong> <a href="mailto:mdefilippo@raiderweb.org" class="text-success-color hover:underline">mdefilippo@raiderweb.org</a></p>
         </div>
     `;
-    displayArea.innerHTML = htmlContent;
+    showContent('schoolInfoOptionsContainer', 'schoolInfoDisplay', 'schoolInfoGoBackButton', htmlContent);
     logActivity('Displayed School Information.');
 }
 
-// Displays keyboard shortcuts
+function goBackToSchoolInfoOptions() {
+    showOptions('schoolInfoOptionsContainer', 'schoolInfoDisplay', 'schoolInfoGoBackButton');
+}
+
+// Keyboard Tricks Modal
 function displayKeyboardShortcuts() {
     const displayArea = document.getElementById('keyboardShortcutsDisplay');
     if (!displayArea) return;
@@ -4868,25 +5201,137 @@ function displayKeyboardShortcuts() {
                                 <h3 class="text-xl font-bold text-accent-color mb-2">Keyboard Shortcuts</h3>
                                 <p>${keyboardShortcutsContent.replace(/\n/g, '<br>')}</p>
                             </div>`;
-    displayArea.innerHTML = formattedContent;
+    showContent('keyboardTricksOptionsContainer', 'keyboardShortcutsDisplay', 'keyboardTricksGoBackButton', formattedContent);
     logActivity('Displayed Keyboard Shortcuts.');
 }
 
-// Displays "Update Coming Soon" message with formatting
-function displayUpdateMessage(item, displayAreaId) {
-    const displayArea = document.getElementById(displayAreaId);
+function goBackToKeyboardTricksOptions() {
+    showOptions('keyboardTricksOptionsContainer', 'keyboardShortcutsDisplay', 'keyboardTricksGoBackButton');
+}
+
+
+// "Update Coming Soon" Modals (Bypassing Tools, Map, Directory, Music, Gaming, VPN)
+// The displayUpdateMessage is now more generic and handles the hide/show logic.
+function displayUpdateMessage(item, contentDisplayId, optionsContainerId, goBackButtonId) {
+    const displayArea = document.getElementById(contentDisplayId);
     if (!displayArea) {
-        showNotification(`Info for "${item}" is: Update coming soon! (Display area not found: ${displayAreaId})`);
+        showNotification(`Info for "${item}" is: Update coming soon! (Display area not found: ${contentDisplayId})`);
         return;
     }
 
     let htmlContent = `<div class="text-center py-8">
-                            <p class="text-2xl font-bold text-warning-color mb-4">🚧 Update Coming Soon! 🚧</p>
+                            <p class="text-2xl font-bold text-warning-color mb-4">
+                                <i class="fas fa-exclamation-triangle mr-2"></i> Update Coming Soon! <i class="fas fa-exclamation-triangle ml-2"></i>
+                            </p>
                             <p class="text-lg text-text-secondary">Information for <strong>"${item}"</strong> is currently being prepared and will be available shortly.</p>
                             <p class="text-sm mt-4">Thank you for your patience!</p>
                         </div>`;
-    displayArea.innerHTML = htmlContent;
+    showContent(optionsContainerId, contentDisplayId, goBackButtonId, htmlContent);
     logActivity(`Displayed 'Update coming soon' for: ${item}`);
+}
+
+// Go Back functions for generic "Update Coming Soon" modals
+function goBackToBypassingToolsOptions() {
+    showOptions('bypassingToolsOptionsContainer', 'bypassingToolsDisplay', 'bypassingToolsGoBackButton');
+}
+function goBackToSchoolMapOptions() {
+    showOptions('schoolMapOptionsContainer', 'schoolMapDisplay', 'schoolMapGoBackButton');
+}
+function goBackToPhoneDirectoryOptions() {
+    showOptions('phoneDirectoryOptionsContainer', 'phoneDirectoryDisplay', 'phoneDirectoryGoBackButton');
+}
+function goBackToMusicWebsitesOptions() {
+    showOptions('musicWebsitesOptionsContainer', 'musicWebsitesDisplay', 'musicWebsitesGoBackButton');
+}
+function goBackToGamingWebsitesOptions() {
+    showOptions('gamingWebsitesOptionsContainer', 'gamingWebsitesDisplay', 'gamingWebsitesGoBackButton');
+}
+function goBackToVpnWebsitesOptions() {
+    showOptions('vpnWebsitesOptionsContainer', 'vpnWebsitesDisplay', 'vpnWebsitesGoBackButton');
+}
+
+
+// Calculator & Converter Modal
+function showCalculator() {
+    const optionsContainer = document.getElementById('calculatorOptionsContainer');
+    const calculatorView = document.getElementById('calculatorView');
+    const converterView = document.getElementById('converterView');
+    const goBackButton = document.getElementById('calculatorGoBackButton');
+
+    if (optionsContainer) optionsContainer.style.display = 'none';
+    if (calculatorView) calculatorView.style.display = 'block';
+    if (converterView) converterView.style.display = 'none'; // Hide converter if visible
+    if (goBackButton) goBackButton.style.display = 'block';
+
+    logActivity('Opened Calculator in modal.');
+}
+
+function showConverter() {
+    const optionsContainer = document.getElementById('calculatorOptionsContainer');
+    const calculatorView = document.getElementById('calculatorView');
+    const converterView = document.getElementById('converterView');
+    const goBackButton = document.getElementById('calculatorGoBackButton');
+
+    if (optionsContainer) optionsContainer.style.display = 'none';
+    if (calculatorView) calculatorView.style.display = 'none'; // Hide calculator if visible
+    if (converterView) {
+        converterView.style.display = 'block';
+        updateConversionUnits(); // Initialize/update units when opening converter
+    }
+    if (goBackButton) goBackButton.style.display = 'block';
+
+    logActivity('Opened Unit Converter in modal.');
+}
+
+function goBackToCalculatorOptions() {
+    const optionsContainer = document.getElementById('calculatorOptionsContainer');
+    const calculatorView = document.getElementById('calculatorView');
+    const converterView = document.getElementById('converterView');
+    const goBackButton = document.getElementById('calculatorGoBackButton');
+
+    if (optionsContainer) optionsContainer.style.display = 'flex';
+    if (calculatorView) calculatorView.style.display = 'none';
+    if (converterView) converterView.style.display = 'none';
+    if (goBackButton) goBackButton.style.display = 'none';
+
+    logActivity('Returned to Calculator/Converter options.');
+}
+
+
+// Media Player Modal
+function loadMedia() {
+    const mediaUrlInput = document.getElementById('mediaUrl');
+    const mediaFrame = document.getElementById('mediaFrame');
+    if (!mediaUrlInput || !mediaFrame) return; // Add null checks
+    let url = mediaUrlInput.value.trim();
+
+    if (url) {
+        // Basic URL validation
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = 'https://' + url; // Prepend https if missing
+        }
+        mediaFrame.src = url;
+        logActivity(`Loaded media: ${url}`);
+        showNotification(`Loading media from: ${url}`);
+    } else {
+        mediaFrame.src = 'about:blank'; // Clear iframe if input is empty
+        logActivity('Media URL cleared.');
+        showNotification('Please enter a media URL.');
+    }
+}
+
+// Function for the new media player toolbar buttons
+function loadMediaFromToolbar(url) {
+    const mediaFrame = document.getElementById('mediaFrame');
+    const mediaUrlInput = document.getElementById('mediaUrl');
+    if (!mediaFrame || !mediaUrlInput) return; // Add null checks
+
+    mediaUrlInput.value = url; // Also update the input field
+    if (url) {
+        mediaFrame.src = url;
+        logActivity(`Loaded media from toolbar: ${url}`);
+        showNotification(`Loading media from: ${url}`);
+    }
 }
 
 
@@ -4945,12 +5390,21 @@ if (textNotesInput) {
 
 
 document.addEventListener('click', (e) => {
-// Check if the clicked element is a button (and not within panel controls or submit) or a quick-btn or info-button
-// Also check for sub-feature-button
-if ((e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) || e.target.closest('.quick-btn') || e.target.closest('.feature-button-group button') || e.target.classList.contains('sub-feature-button')) {
-stats.buttonPresses++;
-updateStats();
-}
+    // Check if the clicked element is a button (and not within panel controls or submit) or a quick-btn or any of the new feature buttons
+    if (e.target.tagName === 'BUTTON' && !e.target.closest('.panel-controls') && !e.target.classList.contains('submit-btn')) {
+        stats.buttonPresses++;
+        updateStats();
+    } else if (e.target.closest('.quick-btn')) {
+        stats.buttonPresses++;
+        updateStats();
+    } else if (e.target.closest('.feature-button-group')) { /* Now the whole feature-button-group is clickable */
+        stats.buttonPresses++;
+        updateStats();
+        // The onclick handler on the div itself will trigger the modal
+    } else if (e.target.classList.contains('sub-feature-button')) {
+        stats.buttonPresses++;
+        updateStats();
+    }
 });
 // Set default values for Important Dates inputs (current date and a default time)
 const importantDateDayInput = document.getElementById('importantDateDay');
