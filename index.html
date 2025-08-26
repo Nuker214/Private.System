@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Private Dashboard (Demo)</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --panel: #121821;
+      --border: #223045;
+      --text: #e8eef6;
+      --muted: #9fb3c8;
+      --accent: #ff6a3d;
+      --accent-2: #ff9354;
+      --success: #00d08a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text);
+      background: radial-gradient(1000px 600px at 20% -20%, #182132 0%, transparent 60%),
+                  radial-gradient(1000px 600px at 100% 0%, #101827 0%, transparent 60%),
+                  var(--bg);
+      min-height: 100vh;
+    }
+    header {
+      padding: 32px 20px 16px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+      margin: 0 0 6px;
+      background: linear-gradient(90deg, var(--text), #cfe0f5 40%, var(--text));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle { color: var(--muted); margin: 0; }
+    .container { max-width: 1100px; margin: 0 auto; padding: 16px 20px 40px; }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)), var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.25);
+    }
+    .card h3 { margin: 0 0 10px; font-size: 16px; color: #e9f1ff; letter-spacing: 0.3px; }
+    .col-4 { grid-column: span 4; }
+    .col-6 { grid-column: span 6; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; border: 1px solid var(--border);
+      background: linear-gradient(180deg, var(--accent-2), var(--accent));
+      color: #0b0f14; font-weight: 700; padding: 10px 14px; border-radius: 10px;
+      cursor: pointer; transition: transform 120ms ease, filter 120ms ease;
+    }
+    .btn:hover { transform: translateY(-1px); filter: brightness(1.03); }
+    .muted { color: var(--muted); font-size: 13px; }
+    .input, textarea {
+      width: 100%; padding: 10px 12px; border-radius: 10px; outline: none;
+      border: 1px solid var(--border); color: var(--text); background: #0e141d;
+    }
+    .row { display: grid; gap: 10px; grid-template-columns: 1fr 1fr; }
+    .label { font-size: 12px; color: var(--muted); margin-bottom: 6px; display: block; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .pill { background: #0e141d; border: 1px solid var(--border); color: var(--muted); padding: 6px 10px; border-radius: 999px; font-size: 12px; }
+    .ok { color: var(--success); font-weight: 700; }
+    .footer { text-align: center; color: var(--muted); font-size: 12px; padding: 18px; }
+    @media (max-width: 900px) { .col-4, .col-6, .col-8 { grid-column: span 12; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 class="title">Private Dashboard (Demo)</h1>
+    <p class="subtitle">A static, client‑side demo ready for Render. No tracking, no webhooks, no data exfiltration.</p>
+  </header>
+  <div class="container">
+    <div class="grid">
+      <div class="card col-4" id="loginCard">
+        <h3>Demo Login</h3>
+        <p class="muted">This form never leaves your browser. It is only used to personalize the demo session.</p>
+        <label class="label" for="u">Username</label>
+        <input class="input" id="u" autocomplete="off" placeholder="Your name">
+        <div class="row" style="margin-top:10px;">
+          <div>
+            <label class="label" for="p">Password (not sent anywhere)</label>
+            <input class="input" id="p" type="password" autocomplete="off" placeholder="••••••••">
+          </div>
+          <div>
+            <label class="label" for="id">User ID</label>
+            <input class="input" id="id" autocomplete="off" placeholder="#1234">
+          </div>
+        </div>
+        <div class="toolbar" style="margin-top:12px;">
+          <button class="btn" id="loginBtn">Launch Demo</button>
+          <span class="pill">Client‑side only</span>
+          <span class="pill">CSP enforced</span>
+        </div>
+      </div>
+
+      <div class="card col-8" id="welcomeCard" style="display:none;">
+        <h3>Welcome</h3>
+        <p>Hello, <strong id="who">User</strong> — this is your local demo session.</p>
+        <p class="muted">Current time: <span id="clock">--:--:--</span></p>
+        <div class="toolbar" style="margin-top:8px;">
+          <span class="pill">Session: <span id="session" class="ok">00:00:00</span></span>
+          <button class="btn" id="logoutBtn">End Demo</button>
+        </div>
+      </div>
+
+      <div class="card col-6" id="notesCard" style="display:none;">
+        <h3>Notes</h3>
+        <textarea id="notes" rows="8" placeholder="Type notes… (saved locally)"></textarea>
+        <div class="toolbar" style="margin-top:10px;">
+          <button class="btn" id="saveNotes">Save</button>
+          <span class="muted" id="saveStatus">Unsaved</span>
+        </div>
+      </div>
+
+      <div class="card col-6" id="timerCard" style="display:none;">
+        <h3>Stopwatch</h3>
+        <div class="toolbar">
+          <span class="pill" id="stopwatch">00:00:00.00</span>
+          <button class="btn" id="start">Start</button>
+          <button class="btn" id="pause">Pause</button>
+          <button class="btn" id="reset">Reset</button>
+        </div>
+      </div>
+
+      <div class="card col-12">
+        <h3>About this demo</h3>
+        <ul class="muted" style="margin:8px 0 0 18px; line-height:1.6;">
+          <li>All logic runs entirely in your browser. No requests are made to third‑party services.</li>
+          <li>Strong Content Security Policy blocks external scripts and connections.</li>
+          <li>Safe to deploy as a Render Static Site using the included <code>render.yaml</code>.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer">© <span id="year"></span> Demo Interface. Local‑only demo. No data collection.</div>
+  </div>
+
+  <script>
+    (function() {
+      const $ = (id) => document.getElementById(id);
+      const loginBtn = $('loginBtn');
+      const logoutBtn = $('logoutBtn');
+      const loginCard = $('loginCard');
+      const welcomeCard = $('welcomeCard');
+      const notesCard = $('notesCard');
+      const timerCard = $('timerCard');
+      const who = $('who');
+      const clock = $('clock');
+      const session = $('session');
+      const notes = $('notes');
+      const saveNotes = $('saveNotes');
+      const saveStatus = $('saveStatus');
+      const year = $('year');
+
+      let sessionStart = 0;
+      let clockTimer = null;
+      let swTimer = null;
+      let swTicks = 0; // centiseconds
+      let swRunning = false;
+
+      year.textContent = String(new Date().getFullYear());
+
+      function fmtHMS(totalSeconds) {
+        const h = Math.floor(totalSeconds / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = Math.floor(totalSeconds % 60);
+        return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      }
+
+      function fmtHMSCs(cs) {
+        const totalSeconds = Math.floor(cs / 100);
+        const h = Math.floor(totalSeconds / 3600);
+        const m = Math.floor((totalSeconds % 3600) / 60);
+        const s = Math.floor(totalSeconds % 60);
+        const c = cs % 100;
+        return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(c).padStart(2,'0')}`;
+      }
+
+      function startClock() {
+        function tick() {
+          const now = new Date();
+          clock.textContent = now.toLocaleTimeString();
+          if (sessionStart) session.textContent = fmtHMS((Date.now() - sessionStart) / 1000);
+        }
+        tick();
+        clockTimer = setInterval(tick, 1000);
+      }
+
+      function stopClock() {
+        if (clockTimer) clearInterval(clockTimer);
+        clockTimer = null;
+      }
+
+      function startStopwatch() { if (!swRunning) { swRunning = true; swTimer = setInterval(() => { swTicks++; $('stopwatch').textContent = fmtHMSCs(swTicks); }, 10); } }
+      function pauseStopwatch() { if (swRunning) { swRunning = false; clearInterval(swTimer); } }
+      function resetStopwatch() { swRunning = false; clearInterval(swTimer); swTicks = 0; $('stopwatch').textContent = '00:00:00.00'; }
+
+      $('start').addEventListener('click', startStopwatch);
+      $('pause').addEventListener('click', pauseStopwatch);
+      $('reset').addEventListener('click', resetStopwatch);
+
+      // Load notes
+      try { notes.value = localStorage.getItem('demo_notes') || ''; } catch(e) {}
+      notes.addEventListener('input', () => { saveStatus.textContent = 'Unsaved'; });
+      saveNotes.addEventListener('click', () => {
+        try { localStorage.setItem('demo_notes', notes.value); saveStatus.textContent = 'Saved'; } catch(e) { saveStatus.textContent = 'Save failed'; }
+      });
+
+      loginBtn.addEventListener('click', () => {
+        const name = $('u').value.trim();
+        const pwd = $('p').value.trim();
+        const id = $('id').value.trim();
+        if (!name || !pwd || !id) { alert('Please fill Username, Password, and User ID to continue the demo.'); return; }
+        who.textContent = name;
+        sessionStart = Date.now();
+        startClock();
+        loginCard.style.display = 'none';
+        welcomeCard.style.display = 'block';
+        notesCard.style.display = 'block';
+        timerCard.style.display = 'block';
+      });
+
+      logoutBtn.addEventListener('click', () => {
+        stopClock();
+        resetStopwatch();
+        sessionStart = 0;
+        $('u').value = '';
+        $('p').value = '';
+        $('id').value = '';
+        welcomeCard.style.display = 'none';
+        notesCard.style.display = 'none';
+        timerCard.style.display = 'none';
+        loginCard.style.display = 'block';
+      });
+    })();
+  </script>
+</body>
+</html>
