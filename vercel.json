@@ -1,1 +1,47 @@
-
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/**/*.js",  
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "includeFiles": [
+          "api/models/**/*.js",
+          "api/utils/**/*.js",
+          "package.json",
+          "package-lock.json",
+          ".env"
+        ]
+      }
+    },
+    {
+      "src": "frontend-user/**",
+      "use": "@vercel/static-build",
+      "config": {
+        "outputDirectory": "static" 
+      }
+    },
+    {
+      "src": "frontend-admin/**",
+      "use": "@vercel/static-build",
+      "config": {
+        "outputDirectory": "admin-static"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1" 
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/frontend-admin/$1" 
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend-user/$1" 
+    }
+  ]
+}
