@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Control Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans">
+
+    <!-- Admin Login Screen -->
+    <div id="adminLoginScreen" class="min-h-screen flex items-center justify-center bg-gray-900">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-lg max-w-md w-full border border-orange-500">
+            <h2 class="text-3xl font-bold text-center mb-6 text-orange-400">Admin Login</h2>
+            <div class="mb-4">
+                <label for="adminUsername" class="block text-gray-300 text-sm font-bold mb-2">Username:</label>
+                <input type="text" id="adminUsername" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600">
+            </div>
+            <div class="mb-6">
+                <label for="adminPassword" class="block text-gray-300 text-sm font-bold mb-2">Password:</label>
+                <input type="password" id="adminPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600">
+            </div>
+            <button id="adminLoginBtn" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-300">
+                Login
+            </button>
+            <p id="adminErrorMsg" class="text-red-500 text-xs italic mt-4"></p>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="hidden min-h-screen flex">
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-800 p-6 flex flex-col justify-between">
+            <div>
+                <h1 class="text-2xl font-bold text-orange-400 mb-6"><i class="fas fa-terminal mr-2"></i> Admin Panel</h1>
+                <nav>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-gray-300" onclick="showSection('users')">
+                        <i class="fas fa-users mr-2"></i> Online Users
+                    </a>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-gray-300" onclick="showSection('commands')">
+                        <i class="fas fa-bolt mr-2"></i> Send Command
+                    </a>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-gray-300" onclick="showSection('announcements')">
+                        <i class="fas fa-bullhorn mr-2"></i> Announcements
+                    </a>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-gray-300" onclick="showSection('logs')">
+                        <i class="fas fa-file-alt mr-2"></i> System Logs
+                    </a>
+                    <a href="#" class="block py-2.5 px-4 rounded transition duration-200 hover:bg-gray-700 text-gray-300" onclick="showSection('user-management')">
+                      <i class="fas fa-user-plus mr-2"></i> User Management
+                    </a>
+                </nav>
+            </div>
+            <div class="text-sm text-gray-500">
+                Logged in as <span id="loggedInAdmin" class="text-orange-400"></span><br>
+                <button onclick="adminLogout()" class="mt-4 bg-gray-700 hover:bg-gray-600 text-gray-300 py-1 px-3 rounded w-full">
+                    <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-8 overflow-y-auto">
+            <h2 class="text-3xl font-bold text-gray-200 mb-6" id="mainContentTitle"></h2>
+
+            <!-- Online Users Section -->
+            <section id="usersSection" class="content-section">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="onlineUsersList">
+                    <!-- Online users will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Commands Section -->
+            <section id="commandsSection" class="content-section hidden">
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                    <h3 class="text-xl font-bold mb-4 text-orange-400">Broadcast Commands</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded transition duration-300" onclick="sendBroadcastCommand('logout')"><i class="fas fa-sign-out-alt mr-2"></i> Logout All Users</button>
+                        <button class="bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded transition duration-300" onclick="sendBroadcastCommand('lockScreen')"><i class="fas fa-lock mr-2"></i> Lock All Dashboards</button>
+                        <button class="bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded transition duration-300" onclick="sendBroadcastCommand('panic')"><i class="fas fa-exclamation-triangle mr-2"></i> Panic All Users</button>
+                        <button class="bg-red-700 hover:bg-red-800 text-white font-bold py-3 px-4 rounded transition duration-300" onclick="sendBroadcastCommand('shutdown')"><i class="fas fa-power-off mr-2"></i> Shutdown All Dashboards</button>
+                        <button class="bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-3 px-4 rounded transition duration-300" onclick="sendBroadcastCommand('restart')"><i class="fas fa-redo-alt mr-2"></i> Restart All Dashboards</button>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition duration-300" onclick="sendBroadcastCommand('sendMessage', { message: prompt('Enter message to broadcast:') })"><i class="fas fa-comment-dots mr-2"></i> Broadcast Message</button>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition duration-300" onclick="sendBroadcastCommand('toggleTheme')"><i class="fas fa-palette mr-2"></i> Toggle All Themes</button>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition duration-300" onclick="sendBroadcastCommand('setZoom', { level: parseFloat(prompt('Enter zoom level (e.g., 1.0 for 100%):')) })"><i class="fas fa-magnifying-glass-plus mr-2"></i> Set All Zoom</button>
+                        <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded transition duration-300" onclick="sendBroadcastCommand('setBackgroundColor', { color: prompt('Enter background color (e.g., #0a0a0a or red):') })"><i class="fas fa-fill-drip mr-2"></i> Set All BG Color</button>
+
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-4 text-orange-400">Targeted Commands</h3>
+                    <div class="mb-4">
+                        <label for="commandSelect" class="block text-gray-300 text-sm font-bold mb-2">Select Command:</label>
+                        <select id="commandSelect" class="block appearance-none w-full bg-gray-700 border border-gray-600 text-white py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-gray-600 focus:border-gray-500">
+                            <option value="">-- Choose a Command --</option>
+                            <optgroup label="Core System">
+                                <option value="logout">Logout User</option>
+                                <option value="restart">Restart Dashboard</option>
+                                <option value="shutdown">Shutdown Dashboard</option>
+                                <option value="panic">Trigger Panic Button</option>
+                                <option value="lockScreen">Lock Dashboard Screen</option>
+                                <option value="sendMessage">Send Custom Message (Payload: {"message": "..."})</option>
+                                <option value="takeScreenshot">Take Screenshot</option>
+                            </optgroup>
+                            <optgroup label="Panel Visibility">
+                                <option value="togglePanel" data-payload-prompt="Enter Panel ID to toggle (e.g., 'notesPanel', 'calendar'):">Toggle Panel</option>
+                                <option value="showPanel" data-payload-prompt="Enter Panel ID to show:">Show Panel</option>
+                                <option value="hidePanel" data-payload-prompt="Enter Panel ID to hide:">Hide Panel</option>
+                                <option value="minimizePanel" data-payload-prompt="Enter Panel ID to minimize:">Minimize Panel</option>
+                                <option value="maximizePanel" data-payload-prompt="Enter Panel ID to maximize:">Maximize Panel</option>
+                            </optgroup>
+                            <optgroup label="Data & Content">
+                                <option value="clearActivityLogs">Clear Activity Logs</option>
+                                <option value="clearErrorLogs">Clear Error Logs</option>
+                                <option value="clearImportantDates">Clear Important Dates</option>
+                                <option value="clearNotes">Clear Text Notes</option>
+                                <option value="resetClickCounter">Reset Click Counter</option>
+                                <option value="downloadLogs" data-payload-prompt="Enter Log Type to download ('activity' or 'error'):">Download Logs</option>
+                                <option value="performSearch" data-payload-prompt="Enter search query:">Perform Search</option>
+                                <option value="refreshFact">Refresh Random Fact</option>
+                                <option value="refreshQuote">Refresh Daily Quote</option>
+                                <option value="clearNotifications">Clear Notifications</option>
+                            </optgroup>
+                            <optgroup label="Appearance & Theme">
+                                <option value="toggleTheme">Toggle Theme (Light/Dark)</option>
+                                <option value="setTheme" data-payload-prompt="Enter theme ('light' or 'dark'):">Set Theme</option>
+                                <option value="setAccentTheme" data-payload-prompt="Enter accent color ('orange', 'blue', 'green', etc.):">Set Accent Theme</option>
+                                <option value="setZoom" data-payload-prompt="Enter zoom level (e.g., 1.0, 1.2):">Set Zoom Level</option>
+                                <option value="setBackgroundColor" data-payload-prompt="Enter background color (e.g., '#0a0a0a', 'blue'):">Set Background Color</option>
+                            </optgroup>
+                            <optgroup label="Drawing Tools">
+                                <option value="selectDrawingTool" data-payload-prompt="Enter tool ('pen', 'brush', 'eraser', etc.):">Select Drawing Tool</option>
+                                <option value="setPenColor" data-payload-prompt="Enter hex color (e.g., '#FF0000'):">Set Pen Color</option>
+                                <option value="setPenThickness" data-payload-prompt="Enter thickness (number, e.g., 5):">Set Pen Thickness</option>
+                                <option value="clearDrawingCanvas">Clear Drawing Canvas</option>
+                            </optgroup>
+                            <optgroup label="Timers">
+                                <option value="startStopwatch">Start Stopwatch</option>
+                                <option value="pauseStopwatch">Pause Stopwatch</option>
+                                <option value="resetStopwatch">Reset Stopwatch</option>
+                                <option value="startTimer" data-payload-prompt="Enter JSON: {'hours':0, 'minutes':5, 'seconds':0}">Start Timer</option>
+                                <option value="pauseTimer">Pause Timer</option>
+                                <option value="resetTimer">Reset Timer</option>
+                            </optgroup>
+                            <!-- Add more commands as optgroups/options -->
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="commandPayload" class="block text-gray-300 text-sm font-bold mb-2">Payload (JSON):</label>
+                        <textarea id="commandPayload" rows="3" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600" placeholder='e.g., {"panelId": "notesPanel"}'></textarea>
+                        <p class="text-xs text-gray-500 mt-1" id="payloadHint">Some commands require a JSON payload. Leave empty if not needed.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Announcements Section -->
+            <section id="announcementsSection" class="content-section hidden">
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-4 text-orange-400">Manage Announcements</h3>
+                    <div class="mb-4">
+                        <label for="announcementMessage" class="block text-gray-300 text-sm font-bold mb-2">Announcement Message:</label>
+                        <textarea id="announcementMessage" rows="4" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600" placeholder="Type your announcement here..."></textarea>
+                    </div>
+                    <div class="mb-6 flex items-center">
+                        <input type="checkbox" id="announcementActive" class="form-checkbox h-5 w-5 text-orange-600 bg-gray-700 border-gray-600 rounded">
+                        <label for="announcementActive" class="ml-2 text-gray-300">Active</label>
+                    </div>
+                    <button id="setAnnouncementBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-300">
+                        Set Announcement
+                    </button>
+                    <p class="text-xs text-gray-500 mt-2">This will instantly update the announcement on all active user dashboards.</p>
+                </div>
+            </section>
+
+            <!-- System Logs Section -->
+            <section id="logsSection" class="content-section hidden">
+                <div class="mb-6 bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-4 text-orange-400">Logs Filtering & Actions</h3>
+                    <div class="flex flex-wrap gap-4 mb-4">
+                        <button class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300" onclick="fetchLogs('activity')"><i class="fas fa-list mr-2"></i> Fetch Activity Logs</button>
+                        <button class="flex-1 bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded transition duration-300" onclick="fetchLogs('error')"><i class="fas fa-bug mr-2"></i> Fetch Error Logs</button>
+                        <button class="flex-1 bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition duration-300" onclick="fetchLogs('login-history')"><i class="fas fa-history mr-2"></i> Fetch Login History</button>
+                    </div>
+                    <div class="flex flex-wrap gap-4">
+                        <button class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300" onclick="clearLogs('activity')"><i class="fas fa-trash-alt mr-2"></i> Clear Activity Logs (DB)</button>
+                        <button class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300" onclick="clearLogs('error')"><i class="fas fa-trash-alt mr-2"></i> Clear Error Logs (DB)</button>
+                        <button class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-300" onclick="clearLogs('login-history')"><i class="fas fa-trash-alt mr-2"></i> Clear Login History (DB)</button>
+                    </div>
+                </div>
+
+                <div class="bg-gray-800 p-6 rounded-lg shadow-lg">
+                    <h3 class="text-xl font-bold mb-4 text-orange-400">Log Display</h3>
+                    <div id="logDisplay" class="max-h-96 overflow-y-auto bg-gray-900 p-4 rounded text-sm">
+                        <p class="text-gray-400">Select a log type to display.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- User Management Section (New) -->
+            <section id="user-managementSection" class="content-section hidden">
+              <div class="bg-gray-800 p-6 rounded-lg shadow-lg mb-6">
+                  <h3 class="text-xl font-bold mb-4 text-orange-400">Register New Dashboard User</h3>
+                  <div class="mb-4">
+                      <label for="newUserUsername" class="block text-gray-300 text-sm font-bold mb-2">Username:</label>
+                      <input type="text" id="newUserUsername" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600" placeholder="e.g., beta_user">
+                  </div>
+                  <div class="mb-4">
+                      <label for="newUserPassword" class="block text-gray-300 text-sm font-bold mb-2">Password:</label>
+                      <input type="password" id="newUserPassword" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600" placeholder="Strong password">
+                  </div>
+                  <div class="mb-4">
+                      <label for="newUserUserID" class="block text-gray-300 text-sm font-bold mb-2">User ID:</label>
+                      <input type="text" id="newUserUserID" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600" placeholder="Unique user identifier (e.g., 12345)">
+                  </div>
+                   <div class="mb-6">
+                      <label for="newUserName" class="block text-gray-300 text-sm font-bold mb-2">Name (Optional):</label>
+                      <input type="text" id="newUserName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 border-gray-600" placeholder="e.g., John Doe">
+                  </div>
+                  <button id="registerUserBtn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full transition duration-300">
+                      Register User
+                  </button>
+                  <p id="registerUserMsg" class="text-xs italic mt-4"></p>
+              </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+<script src="script.js"></script>
+</html>
