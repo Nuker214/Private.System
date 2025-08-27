@@ -1,1 +1,40 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
 
+.content-section {
+    min-height: calc(100vh - 120px); /* Adjust based on header/footer height */
+}
+
+/* Custom styling for log entries for better readability */
+.log-entry-item {
+    background-color: #2d3748; /* bg-gray-700 */
+    border-left: 4px solid var(--log-border-color, #f6ad55); /* orange-400 by default */
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    font-size: 0.875rem; /* text-sm */
+    color: #e2e8f0; /* text-gray-200 */
+}
+
+.log-entry-item.error {
+    --log-border-color: #ef4444; /* red-500 */
+}
+
+.log-entry-item.login-success {
+    --log-border-color: #38a169; /* green-600 */
+}
+
+.log-entry-item.login-failed {
+    --log-border-color: #f56565; /* red-600 */
+}
+
+.log-entry-timestamp {
+    color: #a0aec0; /* text-gray-400 */
+    font-size: 0.75rem; /* text-xs */
+    white-space: nowrap;
+    margin-left: 15px;
+}
